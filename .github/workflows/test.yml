@@ -45,8 +45,11 @@ jobs:
 
       - name: Generate test result and coverage report
         run: |
+          echo "::info Installing tools";
           cargo install cargo2junit cargo-tarpaulin;
+          echo "::info Running tests";
           cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml;
+          echo "::info Converting test results";
           cat cobertura.xml | cargo2junit > results.xml;
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
