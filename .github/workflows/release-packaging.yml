@@ -1,7 +1,9 @@
 on:
-  push:
+  pull_request:
     branches:
       - main
+    types:
+      - merged
 
 name: Release Packaging
 
