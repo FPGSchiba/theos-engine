@@ -45,13 +45,9 @@ jobs:
 
       - name: Generate test result and coverage report
         run: |
-          cargo install cargo2junit grcov rust-covfix;
-          cargo test --features coverage -- -Z unstable-options --format json | cargo2junit > results.xml;
-          echo "::warning `ls -lia`"
-          echo "::warning `find . \( -name "theos_engine*.gc*" \) -print`";
-          zip -0 ccov.zip `find . \( -name "theos_engine*.gc*" \) -print`;
-          grcov ccov.zip -s . -t lcov --llvm --branch --ignore-not-existing --ignore "/*" -o lcov.info;
-          rust-covfix -o lcov_correct.info lcov.info;
+          cargo install cargo2junit cargo-tarpaulin;
+          cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 120 --out xml;
+          echo "warning:: ls -lia"
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
