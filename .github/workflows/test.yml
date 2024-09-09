@@ -51,17 +51,16 @@ jobs:
           cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml;
           echo "::info Converting test results";
           echo "::info Out: `cat cobertura.xml`";
-          cat cobertura.xml | cargo2junit > results.xml;
+          cat target/tarpaulin/theos_engine-coverage.json | cargo2junit > results.xml;
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           check_name: Test Results
-          files: cobertura.xml
+          files: results.xml
 
       - name: Upload to CodeCov
         uses: codecov/codecov-action@v4
         with:
           # required for private repositories:
           token: ${{ secrets.CODECOV_TOKEN }}
-          files: lcov.info
           fail_ci_if_error: true
