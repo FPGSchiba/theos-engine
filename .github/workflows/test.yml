@@ -47,6 +47,7 @@ jobs:
         run: |
           cargo install cargo2junit cargo-tarpaulin;
           cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml;
+          cat cobertura.xml | cargo2junit > results.xml;
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
