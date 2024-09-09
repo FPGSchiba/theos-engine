@@ -46,13 +46,12 @@ jobs:
       - name: Generate test result and coverage report
         run: |
           cargo install cargo2junit cargo-tarpaulin;
-          cargo +nightly tarpaulin --verbose --all-features --workspace --timeout 120 --out xml;
-          echo "warning:: ls -lia"
+          cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml;
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
           check_name: Test Results
-          files: results.xml
+          files: cobertura.xml
 
       - name: Upload to CodeCov
         uses: codecov/codecov-action@v4
