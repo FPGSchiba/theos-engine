@@ -15,13 +15,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: actions-rs/toolchain@v1
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+      - uses: clechasseur/rs-cargo@v2
         with:
-          profile: minimal
-          toolchain: stable
-          override: true
-      - name: Release Build
-        run: cargo build --release
+          command: build
+          args: --release --all-features
       - name: "Upload Artifact"
         uses: actions/upload-artifact@v2
         with:
