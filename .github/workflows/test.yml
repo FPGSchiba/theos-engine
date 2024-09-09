@@ -48,7 +48,8 @@ jobs:
           echo "::info Installing tools";
           cargo install cargo2junit cargo-tarpaulin;
           echo "::info Running tests";
-          cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml -Z unstable-options -- --format json | cargo2junit > results.xml;
+          cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml;
+          cargo test -Z unstable-options -- --format json | cargo2junit > results.xml;
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
         with:
