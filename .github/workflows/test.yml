@@ -50,6 +50,7 @@ jobs:
           echo "::info Running tests";
           cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml;
           echo "::info Converting test results";
+          echo "::info Out: `cat cobertura.xml`";
           cat cobertura.xml | cargo2junit > results.xml;
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
