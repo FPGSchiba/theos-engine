@@ -8,7 +8,7 @@ edition = "2021"
 coverage = []
 
 [dependencies]
-winit = { version = "0.29", features = ["rwh_05"] }
-env_logger = "0.10"
-log = "0.4"
-wgpu = "22.0"
+winit = { version = "0.30.5", features = ["rwh_05"] }
+env_logger = "0.11.5"
+log = "0.4.22"
+wgpu = "22.1.0"

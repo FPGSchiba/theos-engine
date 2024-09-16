@@ -2,8 +2,6 @@
 
 [![codecov](https://codecov.io/github/FPGSchiba/theos-engine/graph/badge.svg?token=LO0I49QP9F)](https://codecov.io/github/FPGSchiba/theos-engine)
 
-This Project is intended to build the game: `Tower of Theos`.
+This Project is intended to build the game: `Tower of Theos`, that uses Bevy as its Game Engine. This should only be a wrapper/Editor for fast prototyping levels and new Content. 
 
-Many aspects are unkown.
-
-Following the structure of an Event Based architecture and I must have editor for 2D Maps and Sprites.
+It is a very tailored Editor for Bevy and this specific Game.
