@@ -1,14 +1,15 @@
 [package]
 name = "theos_engine"
 version = "0.1.0"
-authors = ["craftzockerlp@gmail.com"]
 edition = "2021"
+authors = ["FPG Schiba <craftzockerlp@gmail.com>"]
+build = "build.rs"
+description = ""
 
-[features]
-coverage = []
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-eframe = "0.28"
-image = "0.24"
-env_logger = "0.11"
-bevy = "0.14"
+slint = "1.8.0"
+
+[build-dependencies]
+slint-build = "1.8.0"
