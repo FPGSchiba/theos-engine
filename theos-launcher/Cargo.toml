@@ -1,0 +1,8 @@
+﻿[package]
+name = "theos-launcher"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+theos-shared = { workspace = true }
+theos-core = { workspace = true }

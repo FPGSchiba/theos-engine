@@ -17,7 +17,41 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
       - uses: clechasseur/rs-cargo@v2
+        with:name: Release Packaging
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  release:
+    name: Release Packaging
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions-rust-lang/setup-rust-toolchain@v1
+
+      - name: Build Release
+        run: cargo build --release --workspace --all-features
+
+      - name: Upload Launcher
+        uses: actions/upload-artifact@v4
         with:
+          name: theos-launcher
+          path: target/release/theos-launcher
+
+      - name: Upload Game (PIE)
+        uses: actions/upload-artifact@v4
+        with:
+          name: theos-game
+          path: target/release/theos-game
+
+      - name: Upload Editor
+        uses: actions/upload-artifact@v4
+        with:
+          name: theos-editor
+          path: target/release/theos-editor
           command: build
           args: --release --all-features
       - name: "Upload Artifact"

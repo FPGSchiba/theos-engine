@@ -1,0 +1,36 @@
+version: 2
+updates:
+  # 1. GitHub Actions Updates
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      github-actions:
+        patterns:
+          - "*"
+
+  # 2. Main Theos Engine Workspace
+  - package-ecosystem: "cargo"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+    groups:
+      # Group all crates owned by the workspace into one PR
+      theos-engine-deps:
+        patterns:
+          - "*"
+    ignore:
+      # Ignore unreleased versions or specific noisy crates if needed
+      - dependency-name: "wgpu"
+        versions: ["*-alpha", "*-beta"]
+
+  # 3. Plugins Workspace (Tier-1 plugins)
+  - package-ecosystem: "cargo"
+    directory: "/plugins"
+    schedule:
+      interval: "weekly"
+    groups:
+      theos-plugin-deps:
+        patterns:
+          - "*"

@@ -1,0 +1,5 @@
+﻿[workspace]
+members = [
+    "theos-audio",
+]
+resolver = "2"

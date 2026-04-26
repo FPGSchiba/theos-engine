@@ -1,10 +1,10 @@
+name: Check and Lint
+
 on:
   pull_request:
   push:
     branches:
       - "**"
-
-name: Check and Lint
 
 jobs:
   check:
@@ -13,9 +13,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - uses: clechasseur/rs-cargo@v2
-        with:
-          command: check
+      - run: cargo check --workspace --all-targets
 
   fmt:
     name: Rustfmt
@@ -23,19 +21,37 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - run: rustup component add rustfmt
-      - uses: clechasseur/rs-cargo@v2
         with:
-          command: fmt
-          args: --all -- --check
+          components: rustfmt
+      - run: cargo fmt --all -- --check
 
-  clippy:
-    name: Clippy
+  clippy-and-policy:
+    name: Clippy & Unsafe Policy
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
       - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - uses: clechasseur/rs-cargo@v2
         with:
-          command: clippy
-          args: --all-targets --all-features
+          components: clippy
+
+      - name: Clippy (Enforce Spec §6.4 Unsafe Lints)
+        run: >
+          cargo clippy --workspace --all-targets -- 
+          -D clippy::undocumented_unsafe_blocks 
+          -D clippy::multiple_unsafe_ops_per_block 
+          -D warnings
+
+      - name: Forbid-unsafe verification
+        run: |
+          for c in theos-shared theos-ecs theos-assets theos-ai theos-scripting \
+                   theos-render theos-physics theos-core theos-launcher \
+                   theos-editor theos-game; do
+            grep -q "^#!\[forbid(unsafe_code)\]" "$c/src/lib.rs" "$c/src/main.rs" 2>/dev/null \
+              || { echo "::error::$c is missing #![forbid(unsafe_code)]"; exit 1; }
+          done
+
+      - name: Install cargo-geiger
+        uses: taiki-e/install-action@cargo-geiger
+
+      - name: Unsafe audit (cargo-geiger)
+        run: cargo geiger --workspace --output-format GitHubActions
