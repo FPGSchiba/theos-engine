@@ -1,6 +1,6 @@
-use std::process::Output;
 use assert_cmd::Command;
 use regex::Regex;
+use std::process::Output;
 
 /// Remove common ANSI escape sequences so text-based assertions are stable.
 fn strip_ansi(input: &str) -> String {
@@ -17,7 +17,11 @@ fn choose_output(output: &Output) -> (String, (Vec<u8>, Vec<u8>)) {
     let stdout = output.stdout.clone();
     let stderr = output.stderr.clone();
 
-    let chosen_bytes = if !stdout.is_empty() { stdout.clone() } else { stderr.clone() };
+    let chosen_bytes = if !stdout.is_empty() {
+        stdout.clone()
+    } else {
+        stderr.clone()
+    };
     let chosen = String::from_utf8_lossy(&chosen_bytes).into_owned();
 
     (chosen, (stdout, stderr))
@@ -74,7 +78,13 @@ fn invalid_rust_log_does_not_crash_and_falls_back() {
     let clean_text = strip_ansi(&raw_text);
 
     // Ensure we see at least one log level token (INFO/WARN/ERROR)
-    if !(clean_text.contains("[INFO]") || clean_text.contains("[WARN]") || clean_text.contains("[ERROR]")) {
-        panic!("expected fallback log level token in output, got:\n{}", clean_text);
+    if !(clean_text.contains("[INFO]")
+        || clean_text.contains("[WARN]")
+        || clean_text.contains("[ERROR]"))
+    {
+        panic!(
+            "expected fallback log level token in output, got:\n{}",
+            clean_text
+        );
     }
 }

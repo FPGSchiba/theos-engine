@@ -1,6 +1,6 @@
 //! Shared logging setup for all Theos binaries
-use std::{fmt, io};
 use std::io::Write;
+use std::{fmt, io};
 use tracing::{Event, Subscriber};
 use tracing_subscriber::fmt::time::{FormatTime, UtcTime};
 use tracing_subscriber::fmt::{format, FmtContext, FormatEvent, FormatFields};
