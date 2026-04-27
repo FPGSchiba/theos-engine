@@ -1,11 +1,11 @@
 #![forbid(unsafe_code)]
 
-use theos_core::get_engine_version;
+use theos_core::{get_engine_version, logging};
 
 fn main() {
+    logging::init();
+
     let version = get_engine_version();
     // AC2: Required output string
-    println!("Theos Engine v{} - Kernel starting...", version);
-
-    std::process::exit(0);
+    tracing::info!("Theos Engine v{} - Kernel starting...", version);
 }

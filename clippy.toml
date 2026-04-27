@@ -1,0 +1,5 @@
+disallowed-macros = [
+    "std::println",
+    "std::eprintln",
+    "std::dbg",
+]

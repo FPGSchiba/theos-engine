@@ -1,15 +1,17 @@
-#![forbid(unsafe_code)]
-#![warn(missing_docs)]
-
 //! Core interfaces and kernel-facing abstractions for the Theos engine.
 //!
 //! This crate defines the `TheosModule` lifecycle contract and re-exports
 //! core module-facing types for convenient downstream use.
 
+#![forbid(unsafe_code)]
+#![warn(missing_docs)]
+
 pub mod error;
+pub mod logging;
 pub mod module;
 
 pub use error::{ModuleError, ModuleResult};
+pub use logging::init;
 pub use module::{KernelContext, TheosModule};
 
 use theos_shared::VERSION;

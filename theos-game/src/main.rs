@@ -1,5 +1,9 @@
 #![forbid(unsafe_code)]
 
+use theos_core::logging;
+
 fn main() {
-    println!("Hello, world!");
+    logging::init();
+
+    tracing::info!("Hello, world!");
 }

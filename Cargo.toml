@@ -60,7 +60,7 @@ postcard            = { version = "1", features = ["use-std"] }
 shared_memory       = "0.12"
 # --- Logging & Errors ---
 tracing             = "0.1"
-tracing-subscriber  = { version = "0.3", features = ["env-filter", "json"] }
+tracing-subscriber  = { version = "0.3", features = ["env-filter", "json", "fmt", "time"] }
 thiserror           = "1"
 # --- Editor shell ---
 tauri               = { version = "2", features = [] }
