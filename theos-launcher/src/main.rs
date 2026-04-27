@@ -1,4 +1,4 @@
-﻿#![forbid(unsafe_code)]
+#![forbid(unsafe_code)]
 
 use theos_core::get_engine_version;
 
@@ -9,4 +9,3 @@ fn main() {
 
     std::process::exit(0);
 }
-

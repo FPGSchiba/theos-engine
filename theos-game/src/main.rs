@@ -1,6 +1,5 @@
-﻿#![forbid(unsafe_code)]
+#![forbid(unsafe_code)]
 
 fn main() {
     println!("Hello, world!");
 }
-
