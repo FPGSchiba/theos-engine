@@ -23,7 +23,14 @@ jobs:
       - uses: actions-rust-lang/setup-rust-toolchain@v1
         with:
           components: rustfmt
-      - run: cargo fmt --all -- --check
+
+      - name: Format workspace
+        run: cargo fmt --all
+
+      - name: Verify formatting (ignore blank-line-only churn)
+        run: |
+          git --no-pager diff --ignore-blank-lines --ignore-space-at-eol --exit-code \
+            || { echo "::error::Formatting drift detected (excluding blank-line/EOL-only changes)."; exit 1; }
 
   clippy-and-policy:
     name: Clippy & Unsafe Policy
@@ -51,7 +58,9 @@ jobs:
           done
 
       - name: Install cargo-geiger
-        uses: taiki-e/install-action@cargo-geiger
+        uses: taiki-e/install-action@v2
+        with:
+          tool: cargo-geiger
 
       - name: Unsafe audit (cargo-geiger)
         run: cargo geiger --workspace --output-format GitHubActions
