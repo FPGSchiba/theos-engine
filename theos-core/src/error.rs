@@ -49,7 +49,11 @@ impl Display for ModuleError {
                 write!(f, "module '{}' already registered", name)
             }
             ModuleError::DependencyMissing { module, dependency } => {
-                write!(f, "dependency '{}' missing from module '{}'", dependency, module)
+                write!(
+                    f,
+                    "dependency '{}' missing from module '{}'",
+                    dependency, module
+                )
             }
             ModuleError::CircularDependency { cycle } => {
                 write!(f, "circular dependency cycle: {}", cycle)
@@ -82,57 +86,98 @@ mod tests {
 
     #[test]
     fn display_module_not_found_is_human_readable() {
-        let error = ModuleError::ModuleNotFound { name: "TestModule".to_string() };
+        let error = ModuleError::ModuleNotFound {
+            name: "TestModule".to_string(),
+        };
         assert_eq!(format!("{}", error), "module 'TestModule' not found");
     }
 
     #[test]
     fn display_module_already_registered_is_human_readable() {
-        let error = ModuleError::ModuleAlreadyRegistered { name: "TestModule".to_string() };
-        assert_eq!(format!("{}", error), "module 'TestModule' already registered");
+        let error = ModuleError::ModuleAlreadyRegistered {
+            name: "TestModule".to_string(),
+        };
+        assert_eq!(
+            format!("{}", error),
+            "module 'TestModule' already registered"
+        );
     }
 
     #[test]
     fn display_dependency_missing_mentions_both_parts() {
-        let error = ModuleError::DependencyMissing { module: "TestModule".to_string(), dependency: "TestModule".to_string() };
-        assert_eq!(format!("{}", error), "dependency 'TestModule' missing from module 'TestModule'");
+        let error = ModuleError::DependencyMissing {
+            module: "TestModule".to_string(),
+            dependency: "TestModule".to_string(),
+        };
+        assert_eq!(
+            format!("{}", error),
+            "dependency 'TestModule' missing from module 'TestModule'"
+        );
     }
 
     #[test]
     fn display_circular_dependency_mentions_cycle() {
-        let error = ModuleError::CircularDependency { cycle: "Module A -> Module B -> Module A".to_string() };
-        assert_eq!(format!("{}", error), "circular dependency cycle: Module A -> Module B -> Module A");
+        let error = ModuleError::CircularDependency {
+            cycle: "Module A -> Module B -> Module A".to_string(),
+        };
+        assert_eq!(
+            format!("{}", error),
+            "circular dependency cycle: Module A -> Module B -> Module A"
+        );
     }
 
     #[test]
     fn display_initialization_failed_mentions_module_and_reason() {
-        let error = ModuleError::InitializationFailed { module: "TestModule".to_string(), reason: "Reason".to_string() };
-        assert_eq!(format!("{}", error), "module 'TestModule' failed to initialize: Reason");
+        let error = ModuleError::InitializationFailed {
+            module: "TestModule".to_string(),
+            reason: "Reason".to_string(),
+        };
+        assert_eq!(
+            format!("{}", error),
+            "module 'TestModule' failed to initialize: Reason"
+        );
     }
 
     #[test]
     fn error_source_is_none_for_all_variants() {
-        let error = ModuleError::InitializationFailed { module: "TestModule".to_string(), reason: "Reason".to_string() };
+        let error = ModuleError::InitializationFailed {
+            module: "TestModule".to_string(),
+            reason: "Reason".to_string(),
+        };
         assert!(error.source().is_none());
-        let error = ModuleError::ModuleNotFound { name: "TestModule".to_string() };
+        let error = ModuleError::ModuleNotFound {
+            name: "TestModule".to_string(),
+        };
         assert!(error.source().is_none());
-        let error = ModuleError::CircularDependency { cycle: "Module A -> Module B".to_string() };
+        let error = ModuleError::CircularDependency {
+            cycle: "Module A -> Module B".to_string(),
+        };
         assert!(error.source().is_none());
-        let error = ModuleError::DependencyMissing { module: "TestModule".to_string(), dependency: "TestModule".to_string() };
+        let error = ModuleError::DependencyMissing {
+            module: "TestModule".to_string(),
+            dependency: "TestModule".to_string(),
+        };
         assert!(error.source().is_none());
-        let error = ModuleError::ModuleAlreadyRegistered { name: "TestModule".to_string() };
+        let error = ModuleError::ModuleAlreadyRegistered {
+            name: "TestModule".to_string(),
+        };
         assert!(error.source().is_none());
     }
 
     #[test]
     fn module_error_converts_to_theos_error_wrapped() {
-        let error = ModuleError::CircularDependency { cycle: "Module A -> Module B -> Module A".to_string() };
+        let error = ModuleError::CircularDependency {
+            cycle: "Module A -> Module B -> Module A".to_string(),
+        };
         let theos_error: TheosError = error.into();
         match theos_error {
             TheosError::Wrapped(boxed) => {
                 let source = boxed.source();
                 assert!(source.is_none());
-                assert_eq!(format!("{}", boxed), "circular dependency cycle: Module A -> Module B -> Module A");
+                assert_eq!(
+                    format!("{}", boxed),
+                    "circular dependency cycle: Module A -> Module B -> Module A"
+                );
             }
             _ => panic!("Expected TheosError::Wrapped variant"),
         }
@@ -140,8 +185,12 @@ mod tests {
 
     #[test]
     fn module_result_alias_compiles_and_is_usable() {
-        let error = ModuleError::CircularDependency { cycle: "Module A -> Module B".to_string() };
+        let error = ModuleError::CircularDependency {
+            cycle: "Module A -> Module B".to_string(),
+        };
         let theos_error: TheosError = error.into();
-        assert!(theos_error.to_string().contains("circular dependency cycle: Module A -> Module B"));
+        assert!(theos_error
+            .to_string()
+            .contains("circular dependency cycle: Module A -> Module B"));
     }
 }
