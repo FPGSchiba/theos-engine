@@ -63,4 +63,4 @@ jobs:
           tool: cargo-geiger
 
       - name: Unsafe audit (cargo-geiger)
-        run: cargo geiger --workspace --output-format GitHubActions
+        run: cargo geiger --workspace --output-format github

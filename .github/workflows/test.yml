@@ -38,7 +38,7 @@ jobs:
           cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml
           
           echo "::info Generating JUnit results";
-          cargo +nightly test --workspace --all-features -Z unstable-options --format json | cargo2junit > results.xml
+          cargo +nightly test --workspace --all-features -- -Z unstable-options --format json | cargo2junit > results.xml
 
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2
