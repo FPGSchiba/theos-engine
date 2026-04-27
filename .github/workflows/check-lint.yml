@@ -64,5 +64,18 @@ jobs:
 
       - name: Unsafe audit (cargo-geiger)
         run: |
-          packages=$(cargo metadata --no-deps --format-version 1 | python3 -c "import json,sys; print(' '.join('--package='+p['name'] for p in json.load(sys.stdin)['packages']))")
-          cargo geiger $packages
+          set -euo pipefail
+          mapfile -t manifests < <(cargo metadata --no-deps --format-version 1 | python3 -c "import json,sys; m=json.load(sys.stdin); ws=set(m['workspace_members']); paths=sorted({p['manifest_path'] for p in m['packages'] if p['id'] in ws}); [print(x) for x in paths]")
+
+          if [ "${#manifests[@]}" -eq 0 ]; then
+            echo "::error::No workspace package manifests found for cargo-geiger."
+            exit 1
+          fi
+
+          for manifest in "${manifests[@]}"; do
+            crate_dir="$(dirname "$manifest")"
+            crate_name="$(basename "$crate_dir")"
+            echo "::group::cargo-geiger :: ${crate_name}"
+            (cd "$crate_dir" && cargo geiger --all-features --manifest-path "$manifest")
+            echo "::endgroup::"
+          done
