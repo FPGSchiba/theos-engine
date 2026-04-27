@@ -1,0 +1,7 @@
+#!/usr/bin/env sh
+
+set -eu
+
+# Keep local commits aligned with CI formatting checks.
+cargo fmt --all
+

@@ -115,6 +115,14 @@ cargo run -p theos-launcher
 cargo clippy --workspace -- -D warnings
 ```
 
+Enable the repository pre-commit hook once per clone:
+
+```powershell
+git config core.hooksPath .githooks
+```
+
+The hook runs `cargo fmt --all` before each commit to keep CI formatting checks green.
+
 ## Notes
 
 - The workspace uses `resolver = "2"` and shared internal path dependencies in root `Cargo.toml`.
