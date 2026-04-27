@@ -76,7 +76,7 @@ fn module_path_is_present() {
 
     let captures = re
         .captures(&clean_text)
-        .expect(&format!("regex should match in:\n{}", clean_text));
+        .unwrap_or_else(|| panic!("regex should match in:\n{}", clean_text));
 
     assert_eq!(&captures[1], "theos_launcher");
 }
