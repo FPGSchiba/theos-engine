@@ -1,28 +1,11 @@
+name: Release Packaging
+
 on:
   pull_request:
     branches:
       - main
     types:
       - merged
-
-name: Release Packaging
-
-jobs:
-  release:
-    name: Release Packaging
-    env:
-      PROJECT_NAME_UNDERSCORE: theos_engine
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions-rust-lang/setup-rust-toolchain@v1
-      - uses: clechasseur/rs-cargo@v2
-        with:name: Release Packaging
-
-on:
-  push:
-    branches:
-      - main
 
 jobs:
   release:

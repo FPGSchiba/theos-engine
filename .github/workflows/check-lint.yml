@@ -63,4 +63,6 @@ jobs:
           tool: cargo-geiger
 
       - name: Unsafe audit (cargo-geiger)
-        run: cargo geiger --workspace
+        run: |
+          packages=$(cargo metadata --no-deps --format-version 1 | python3 -c "import json,sys; print(' '.join('--package='+p['name'] for p in json.load(sys.stdin)['packages']))")
+          cargo geiger $packages
