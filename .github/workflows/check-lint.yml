@@ -72,10 +72,27 @@ jobs:
             exit 1
           fi
 
+          # 1. Initialize the Job Summary header
+          echo "## ☢️ Cargo Geiger Safety Report" >> $GITHUB_STEP_SUMMARY
+
           for manifest in "${manifests[@]}"; do
             crate_dir="$(dirname "$manifest")"
             crate_name="$(basename "$crate_dir")"
+
             echo "::group::cargo-geiger :: ${crate_name}"
-            (cd "$crate_dir" && cargo geiger --all-features --manifest-path "$manifest")
+
+            # 2. Open a collapsible HTML details block for each crate
+            echo "<details><summary><b>${crate_name}</b></summary>" >> $GITHUB_STEP_SUMMARY
+            echo "" >> $GITHUB_STEP_SUMMARY
+            echo '```text' >> $GITHUB_STEP_SUMMARY
+
+            # 3. Run the audit, pipe both stdout and stderr to the summary, and use '|| true' 
+            # so a non-zero exit code doesn't halt the script.
+            (cd "$crate_dir" && cargo geiger --all-features --manifest-path "$manifest" --color never >> $GITHUB_STEP_SUMMARY 2>&1 || true)
+
+            # 4. Close the code block and details block
+            echo '```' >> $GITHUB_STEP_SUMMARY
+            echo "</details>" >> $GITHUB_STEP_SUMMARY
+
             echo "::endgroup::"
           done
