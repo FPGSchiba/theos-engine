@@ -114,15 +114,27 @@ impl<'a, 'w> tracing::field::Visit for FieldVisitor<'a, 'w> {
             return;
         }
 
+        // Add spacing before non-message fields
         if !self.first {
             let _ = write!(self.writer, " ");
         }
-
         self.first = false;
 
+        // Format field name and value with ANSI coloring
         if self.ansi {
-            let _ = write!(self.writer, "\x1b[33m{}=\x1b[0m", field.name()); // yellow field name
-            let _ = write!(self.writer, "\x1b[32m{value:?}\x1b[0m"); // green value
+            // Special formatting for error fields
+            let _ = match field.name() {
+                "error" => write!(
+                    self.writer,
+                    "\x1b[31m{}\x1b[0m=\x1b[31m{value:?}\x1b[0m",
+                    field.name()
+                ),
+                _ => write!(
+                    self.writer,
+                    "\x1b[33m{}\x1b[0m=\x1b[32m{value:?}\x1b[0m",
+                    field.name()
+                ),
+            };
         } else {
             let _ = write!(self.writer, "{}={value:?}", field.name());
         }
