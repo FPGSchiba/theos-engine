@@ -10,17 +10,9 @@ use std::fmt::Debug;
 pub trait Event: Send + Sync + 'static + Debug {}
 
 /// A simple event bus for sending and receiving events of various types.
-#[derive(Debug)]
+#[derive(Debug,Default)]
 pub struct EventBus {
     channel_map: HashMap<TypeId, Box<dyn Any + Send + Sync>>,
-}
-
-impl Default for EventBus {
-    fn default() -> Self {
-        Self {
-            channel_map: HashMap::new(),
-        }
-    }
 }
 
 impl EventBus {
