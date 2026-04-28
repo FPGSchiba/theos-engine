@@ -15,33 +15,23 @@ pub struct EventBus {
     channel_map: HashMap<TypeId, Box<dyn Any + Send + Sync>>,
 }
 
-impl EventBus {
-    /// Initializes a new EventBus with an empty channel map
-    pub fn new() -> Self {
+impl Default for EventBus {
+    fn default() -> Self {
         Self {
             channel_map: HashMap::new(),
         }
     }
+}
 
+impl EventBus {
     /// Registers a new event type `E` with the EventBus, creating a new channel for it.
     /// If the event type is already registered, a warning is logged and an error is returned.
-    pub fn register<E: Event>(&mut self) -> EventBusResult<()> {
+    pub fn register<E: Event>(&mut self) {
         let type_id = TypeId::of::<E>();
-        if !self.channel_map.contains_key(&type_id) {
-            let (sender, receiver) = crossbeam::channel::unbounded::<E>();
-            self.channel_map
-                .insert(type_id, Box::new((sender, receiver)));
-            Ok(())
-        } else {
-            tracing::warn!(
-                "Event type {} is already registered",
-                std::any::type_name::<E>()
-            );
-            Err(EventBusError::RegistrationFailed {
-                event_type: std::any::type_name::<E>().to_string(),
-                wrapped: None,
-            })
-        }
+        let (sender, receiver) = crossbeam::channel::unbounded::<E>();
+        self.channel_map
+            .entry(type_id)
+            .or_insert(Box::new((sender, receiver)));
     }
 
     /// Sends an event of type `E` through the EventBus.
@@ -166,49 +156,40 @@ mod tests {
     impl Event for Test2Event {}
 
     #[test]
-    fn register_succeeds_first_time() {
-        let mut bus = EventBus::new();
-        let result = bus.register::<TestEvent>();
-        assert!(result.is_ok());
-    }
-
-    #[test]
-    fn register_fails_second_time() {
-        let mut bus = EventBus::new();
-        let result = bus.register::<TestEvent>();
-        assert!(result.is_ok());
-        let result = bus.register::<TestEvent>();
-        assert!(result.is_err());
+    fn register_does_not_fail() {
+        let mut bus = EventBus::default();
+        let num_registrations = 5;
+        for _ in 0..num_registrations {
+            bus.register::<TestEvent>();
+        }
     }
 
     #[test]
     fn send_fails_when_unregistered() {
-        let bus = EventBus::new();
+        let bus = EventBus::default();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_err());
     }
 
     #[test]
     fn send_succeeds_when_registered() {
-        let mut bus = EventBus::new();
-        let result = bus.register::<TestEvent>();
-        assert!(result.is_ok());
+        let mut bus = EventBus::default();
+        bus.register::<TestEvent>();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
     }
 
     #[test]
     fn drain_fails_when_unregistered() {
-        let mut bus = EventBus::new();
+        let mut bus = EventBus::default();
         let result = bus.drain::<TestEvent>();
         assert!(result.is_err());
     }
 
     #[test]
     fn drain_returns_sent_events_and_empties_queue() {
-        let mut bus = EventBus::new();
-        let result = bus.register::<TestEvent>();
-        assert!(result.is_ok());
+        let mut bus = EventBus::default();
+        bus.register::<TestEvent>();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
         let result = bus.drain::<TestEvent>();
@@ -222,9 +203,8 @@ mod tests {
 
     #[test]
     fn drain_preserves_fifo_ordering_per_event_type() {
-        let mut bus = EventBus::new();
-        let result = bus.register::<TestEvent>();
-        assert!(result.is_ok());
+        let mut bus = EventBus::default();
+        bus.register::<TestEvent>();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
         let result = bus.send::<TestEvent>(TestEvent::Dummy2);
@@ -240,9 +220,9 @@ mod tests {
 
     #[test]
     fn type_isolation_between_channels() {
-        let mut bus = EventBus::new();
-        bus.register::<TestEvent>().unwrap();
-        bus.register::<Test2Event>().unwrap();
+        let mut bus = EventBus::default();
+        bus.register::<TestEvent>();
+        bus.register::<Test2Event>();
         bus.send(TestEvent::Dummy).unwrap();
         let result = bus.drain::<TestEvent>().unwrap();
         assert_eq!(result.len(), 1);
@@ -252,8 +232,8 @@ mod tests {
 
     #[test]
     fn concurrent_sends_are_safe() {
-        let mut bus = EventBus::new();
-        bus.register::<TestEvent>().unwrap();
+        let mut bus = EventBus::default();
+        bus.register::<TestEvent>();
         let bus = Arc::new(bus);
 
         let threads = 4usize;
@@ -280,8 +260,8 @@ mod tests {
 
     #[test]
     fn idempotent_drain_when_no_new_events() {
-        let mut bus = EventBus::new();
-        bus.register::<TestEvent>().unwrap();
+        let mut bus = EventBus::default();
+        bus.register::<TestEvent>();
         let bus = Arc::new(bus);
         let threads = 4usize;
         let per = 1_000usize;

@@ -5,8 +5,8 @@ const BATCH: usize = 1024;
 
 #[test]
 fn allocation_check_typed_event_bus() {
-    let mut bus = EventBus::new();
-    bus.register::<GameEvent>().unwrap();
+    let mut bus = EventBus::default();
+    bus.register::<GameEvent>();
 
     let (stats, ()) = alloc_count!({
         let sender = bus.sender_for::<GameEvent>().expect("registered");

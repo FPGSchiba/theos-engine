@@ -8,8 +8,8 @@ const BATCH: usize = 1024;
 fn bench_send_then_drain_typed(c: &mut Criterion) {
     c.bench_function("send_then_drain_typed_batch_1024", |b| {
         b.iter(|| {
-            let mut bus = EventBus::new();
-            bus.register::<GameEvent>().unwrap();
+            let mut bus = EventBus::default();
+            bus.register::<GameEvent>();
 
             let sender = bus.sender_for::<GameEvent>().expect("registered");
 
