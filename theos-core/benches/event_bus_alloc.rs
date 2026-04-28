@@ -1,3 +1,5 @@
+#![allow(clippy::disallowed_macros)]
+
 use alloc_count::alloc_count;
 use theos_core::event::{EventBus, GameEvent};
 

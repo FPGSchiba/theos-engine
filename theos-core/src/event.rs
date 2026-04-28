@@ -10,7 +10,7 @@ use std::fmt::Debug;
 pub trait Event: Send + Sync + 'static + Debug {}
 
 /// A simple event bus for sending and receiving events of various types.
-#[derive(Debug,Default)]
+#[derive(Debug, Default)]
 pub struct EventBus {
     channel_map: HashMap<TypeId, Box<dyn Any + Send + Sync>>,
 }
@@ -189,7 +189,7 @@ mod tests {
         if let Ok(events) = result {
             assert_eq!(events.len(), 1);
         } else {
-            assert!(false);
+            panic!("Dummy events should not be empty");
         }
     }
 
