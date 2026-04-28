@@ -7,12 +7,14 @@
 #![warn(missing_docs)]
 
 pub mod error;
+pub mod event;
 pub mod logging;
 pub mod module;
 
 pub use error::{ModuleError, ModuleResult};
 pub use logging::init;
 pub use module::{KernelContext, TheosModule};
+pub use event::{Event, EventBus, GameEvent};
 
 use theos_shared::VERSION;
 

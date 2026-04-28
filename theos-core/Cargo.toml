@@ -7,5 +7,17 @@ edition = "2021"
 theos-shared = { workspace = true }
 tracing = "0.1.44"
 tracing-subscriber = { version = "0.3", features = ["env-filter", "json", "fmt", "time"] }
-chrono = "0.4.44"
 time = "0.3.47"
+crossbeam = "0.8.4"
+
+[dev-dependencies]
+criterion = "0.8.2"
+alloc_count = "0.3.1"
+
+[[bench]]
+name = "event_bus"
+harness = false
+
+[[bench]]
+name = "event_bus_alloc"
+harness = true

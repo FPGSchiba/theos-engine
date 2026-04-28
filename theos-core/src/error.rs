@@ -194,3 +194,67 @@ mod tests {
             .contains("circular dependency cycle: Module A -> Module B"));
     }
 }
+
+#[derive(Debug)]
+#[non_exhaustive]
+/// An error enum used for handling EventBus specific errors in the Theos engine.
+pub enum EventBusError {
+    /// Type registration on the EventBus failed
+    RegistrationFailed {
+        /// The type that failed to register
+        event_type: String,
+        /// The wrapped underlying error that caused the registration failure, if any underlying error occurred
+        wrapped: Option<Box<dyn Error + Send + Sync + 'static>>,
+    },
+    /// Sending an event on the EventBus failed
+    SendFailed {
+        /// The wrapped underlying error that caused the registration failure, if any underlying error occurred
+        wrapped: Option<Box<dyn Error + Send + Sync + 'static>>,
+    },
+    /// Draining the events on the EventBus failed
+    DrainFailed {
+        /// The wrapped underlying error that caused the registration failure, if any underlying error occurred
+        wrapped: Option<Box<dyn Error + Send + Sync + 'static>>,
+    },
+}
+
+impl Display for EventBusError {
+    fn fmt(&self, f: &mut Formatter) -> FmtResult {
+        match self {
+            EventBusError::RegistrationFailed { event_type, .. } => {
+                write!(f, "failed to register event type '{}'", event_type)
+            }
+            EventBusError::SendFailed { .. } => {
+                write!(f, "failed to send event")
+            }
+            EventBusError::DrainFailed { .. } => {
+                write!(f, "failed to drain events")
+            }
+        }
+    }
+}
+
+impl Error for EventBusError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            EventBusError::RegistrationFailed { wrapped, .. } => {
+                wrapped.as_ref().map(|b| &**b as &(dyn Error + 'static))
+            }
+            EventBusError::SendFailed { wrapped } => {
+                wrapped.as_ref().map(|b| &**b as &(dyn Error + 'static))
+            }
+            EventBusError::DrainFailed { wrapped } => {
+                wrapped.as_ref().map(|b| &**b as &(dyn Error + 'static))
+            }
+        }
+    }
+}
+
+impl From<EventBusError> for TheosError {
+    fn from(module: EventBusError) -> TheosError {
+        TheosError::Wrapped(Box::new(module))
+    }
+}
+
+/// A convenient alias for results returned by EventBus lifecycle methods.
+pub type EventBusResult<T> = Result<T, EventBusError>;
