@@ -96,7 +96,10 @@ impl EventBus {
                         Err(TryRecvError::Empty) => break,
                         Err(TryRecvError::Disconnected) => {
                             // Future: If disconnects become frequent, we can recreate this event type’s channel entry here to self-heal future frames
-                            tracing::error!("Failed to drain events for type: '{}': channel disconnected", std::any::type_name::<E>());
+                            tracing::error!(
+                                "Failed to drain events for type: '{}': channel disconnected",
+                                std::any::type_name::<E>()
+                            );
                             break;
                         }
                     }
@@ -135,7 +138,7 @@ impl EventBus {
 }
 
 /// Temporary test event type for the core event bus.
-#[derive(Debug,PartialEq)]
+#[derive(Debug, PartialEq)]
 pub enum GameEvent {
     /// Temporary Dummy variant for testing
     Dummy,
@@ -147,16 +150,16 @@ impl Event for GameEvent {}
 
 #[cfg(test)]
 mod tests {
-    use std::sync::Arc;
     use super::*;
+    use std::sync::Arc;
 
-    #[derive(Debug,PartialEq)]
+    #[derive(Debug, PartialEq)]
     enum TestEvent {
         Dummy,
         Dummy2,
     }
 
-    #[derive(Debug,PartialEq)]
+    #[derive(Debug, PartialEq)]
     enum Test2Event {}
 
     impl Event for TestEvent {}
@@ -165,14 +168,14 @@ mod tests {
     #[test]
     fn register_succeeds_first_time() {
         let mut bus = EventBus::new();
-        let result =bus.register::<TestEvent>();
+        let result = bus.register::<TestEvent>();
         assert!(result.is_ok());
     }
 
     #[test]
     fn register_fails_second_time() {
         let mut bus = EventBus::new();
-        let result =bus.register::<TestEvent>();
+        let result = bus.register::<TestEvent>();
         assert!(result.is_ok());
         let result = bus.register::<TestEvent>();
         assert!(result.is_err());
@@ -188,7 +191,7 @@ mod tests {
     #[test]
     fn send_succeeds_when_registered() {
         let mut bus = EventBus::new();
-        let result =bus.register::<TestEvent>();
+        let result = bus.register::<TestEvent>();
         assert!(result.is_ok());
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
@@ -204,7 +207,7 @@ mod tests {
     #[test]
     fn drain_returns_sent_events_and_empties_queue() {
         let mut bus = EventBus::new();
-        let result =bus.register::<TestEvent>();
+        let result = bus.register::<TestEvent>();
         assert!(result.is_ok());
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
@@ -220,7 +223,7 @@ mod tests {
     #[test]
     fn drain_preserves_fifo_ordering_per_event_type() {
         let mut bus = EventBus::new();
-        let result =bus.register::<TestEvent>();
+        let result = bus.register::<TestEvent>();
         assert!(result.is_ok());
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
@@ -265,8 +268,13 @@ mod tests {
                 }
             }));
         }
-        for h in handles { h.join().unwrap(); }
-        let drained = Arc::try_unwrap(bus).expect("only owner").drain::<TestEvent>().unwrap();
+        for h in handles {
+            h.join().unwrap();
+        }
+        let drained = Arc::try_unwrap(bus)
+            .expect("only owner")
+            .drain::<TestEvent>()
+            .unwrap();
         assert_eq!(drained.len(), threads * per);
     }
 
@@ -286,7 +294,9 @@ mod tests {
                 }
             }))
         }
-        for h in handles { h.join().unwrap(); }
+        for h in handles {
+            h.join().unwrap();
+        }
         let mut bus = Arc::try_unwrap(bus).expect("only owner");
         let drained = bus.drain::<TestEvent>().unwrap();
         assert_eq!(drained.len(), threads * per);
