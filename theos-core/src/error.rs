@@ -2,7 +2,7 @@
 
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
-use theos_shared::TheosError;
+use theos_shared::prelude::*;
 
 /// An error enum used for handling Module specific errors in the Theos engine.
 #[derive(Debug)]

@@ -1,11 +1,10 @@
+//! Shared types for the Theos Engine.
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
-//! Shared types for the Theos Engine.
-
 pub mod error;
-
-pub use error::{TheosError, TheosResult};
+pub mod prelude;
+pub mod types;
 
 /// The current version of the Theos Engine.
 pub const VERSION: &str = "0.1.0";
