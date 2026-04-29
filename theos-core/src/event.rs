@@ -1,35 +1,33 @@
 //! Event bus implementation for sending and receiving events of various types.
 
-use crate::error::{EventBusError, EventBusResult};
 use crossbeam::channel::{Receiver, Sender, TryRecvError};
 use std::any::{Any, TypeId};
 use std::collections::HashMap;
 use std::fmt::Debug;
+use theos_shared::{Event, EventBus, EventBusError, EventBusResult};
 
-/// A trait representing an event that can be sent through the EventBus.
-pub trait Event: Send + Sync + 'static + Debug {}
-
-/// A simple event bus for sending and receiving events of various types.
+/// A simple implementation of the `EventBus` trait using `crossbeam::channel` for thread-safe event queues.
 #[derive(Debug, Default)]
-pub struct EventBus {
+pub struct CrossbeamEventBus {
     channel_map: HashMap<TypeId, Box<dyn Any + Send + Sync>>,
 }
 
-impl EventBus {
+impl EventBus for CrossbeamEventBus {
     /// Registers a new event type `E` with the EventBus, creating a new channel for it.
     /// If the event type is already registered, a warning is logged and an error is returned.
-    pub fn register<E: Event>(&mut self) {
+    fn register<E: Event>(&mut self) -> EventBusResult<()> {
         let type_id = TypeId::of::<E>();
         let (sender, receiver) = crossbeam::channel::unbounded::<E>();
         self.channel_map
             .entry(type_id)
             .or_insert(Box::new((sender, receiver)));
+        Ok(())
     }
 
     /// Sends an event of type `E` through the EventBus.
     /// If the event type is not registered, a warning is logged and an error is returned.
     /// If sending the event fails for any reason, an error is returned with the underlying error wrapped.
-    pub fn send<E: Event>(&self, event: E) -> EventBusResult<()> {
+    fn send<E: Event>(&self, event: E) -> EventBusResult<()> {
         let type_id = TypeId::of::<E>();
         if let Some(boxed) = self.channel_map.get(&type_id) {
             if let Some((sender, _)) = boxed.downcast_ref::<(Sender<E>, Receiver<E>)>() {
@@ -67,7 +65,7 @@ impl EventBus {
     /// Drains all events of type `E` from the corresponding Event channel queue and returns them as a vector.
     /// If an event type does not exist an error is returned.
     /// If draining the events fails for any reason, an error is returned with the underlying error wrapped.
-    pub fn drain<E: Event>(&mut self) -> EventBusResult<Vec<E>> {
+    fn drain<E: Event>(&mut self) -> EventBusResult<Vec<E>> {
         let type_id = TypeId::of::<E>();
         if let Some(boxed) = self.channel_map.get(&type_id) {
             if let Some((_, receiver)) = boxed.downcast_ref::<(Sender<E>, Receiver<E>)>() {
@@ -105,7 +103,7 @@ impl EventBus {
 
     /// Gets the sender for a specific event type `E` if it exists,
     /// returning `None` if the event type is not registered or if the sender cannot be downcast to the expected type.
-    pub fn sender_for<E: Event>(&self) -> Option<Sender<E>> {
+    fn sender_for<E: Event>(&self) -> Option<Sender<E>> {
         let type_id = TypeId::of::<E>();
         if let Some(boxed) = self.channel_map.get(&type_id) {
             if let Some((sender, _)) = boxed.downcast_ref::<(Sender<E>, Receiver<E>)>() {
@@ -149,39 +147,39 @@ mod tests {
 
     #[test]
     fn register_does_not_fail() {
-        let mut bus = EventBus::default();
+        let mut bus = CrossbeamEventBus::default();
         let num_registrations = 5;
         for _ in 0..num_registrations {
-            bus.register::<TestEvent>();
+            bus.register::<TestEvent>().unwrap();
         }
     }
 
     #[test]
     fn send_fails_when_unregistered() {
-        let bus = EventBus::default();
+        let bus = CrossbeamEventBus::default();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_err());
     }
 
     #[test]
     fn send_succeeds_when_registered() {
-        let mut bus = EventBus::default();
-        bus.register::<TestEvent>();
+        let mut bus = CrossbeamEventBus::default();
+        bus.register::<TestEvent>().unwrap();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
     }
 
     #[test]
     fn drain_fails_when_unregistered() {
-        let mut bus = EventBus::default();
+        let mut bus = CrossbeamEventBus::default();
         let result = bus.drain::<TestEvent>();
         assert!(result.is_err());
     }
 
     #[test]
     fn drain_returns_sent_events_and_empties_queue() {
-        let mut bus = EventBus::default();
-        bus.register::<TestEvent>();
+        let mut bus = CrossbeamEventBus::default();
+        bus.register::<TestEvent>().unwrap();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
         let result = bus.drain::<TestEvent>();
@@ -195,8 +193,8 @@ mod tests {
 
     #[test]
     fn drain_preserves_fifo_ordering_per_event_type() {
-        let mut bus = EventBus::default();
-        bus.register::<TestEvent>();
+        let mut bus = CrossbeamEventBus::default();
+        bus.register::<TestEvent>().unwrap();
         let result = bus.send::<TestEvent>(TestEvent::Dummy);
         assert!(result.is_ok());
         let result = bus.send::<TestEvent>(TestEvent::Dummy2);
@@ -212,9 +210,9 @@ mod tests {
 
     #[test]
     fn type_isolation_between_channels() {
-        let mut bus = EventBus::default();
-        bus.register::<TestEvent>();
-        bus.register::<Test2Event>();
+        let mut bus = CrossbeamEventBus::default();
+        bus.register::<TestEvent>().unwrap();
+        bus.register::<Test2Event>().unwrap();
         bus.send(TestEvent::Dummy).unwrap();
         let result = bus.drain::<TestEvent>().unwrap();
         assert_eq!(result.len(), 1);
@@ -224,8 +222,8 @@ mod tests {
 
     #[test]
     fn concurrent_sends_are_safe() {
-        let mut bus = EventBus::default();
-        bus.register::<TestEvent>();
+        let mut bus = CrossbeamEventBus::default();
+        bus.register::<TestEvent>().unwrap();
         let bus = Arc::new(bus);
 
         let threads = 4usize;
@@ -252,8 +250,8 @@ mod tests {
 
     #[test]
     fn idempotent_drain_when_no_new_events() {
-        let mut bus = EventBus::default();
-        bus.register::<TestEvent>();
+        let mut bus = CrossbeamEventBus::default();
+        bus.register::<TestEvent>().unwrap();
         let bus = Arc::new(bus);
         let threads = 4usize;
         let per = 1_000usize;

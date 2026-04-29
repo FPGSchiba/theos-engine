@@ -2,6 +2,7 @@
 
 use core::fmt;
 use std::error::Error;
+use std::fmt::{Display, Formatter};
 
 /// An error that can occur within the Theos Engine.
 #[derive(Debug)]
@@ -56,6 +57,134 @@ impl TheosError {
 
 /// The result type used throughout the Theos Engine
 pub type TheosResult<T> = Result<T, TheosError>;
+
+/// Represents the type of operation being performed on the ServiceLocator, used for error reporting.
+#[derive(Debug, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum ServiceLocatorOperation {
+    /// Represents a read Lock operation in the Service Locator, used for error reporting
+    Read,
+
+     /// Represents a write Lock operation in the Service Locator, used for error reporting.
+    Write,
+}
+
+/// Represents all errors that can happen while using the ServiceLocator
+#[derive(Debug, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum ServiceLocatorError {
+    /// Represents a poisoned lock error when trying to acquire a lock on the ServiceLocator, includes the type of operation (read/write) that was attempted.
+    LockPoisoned {
+        /// The type of operation which caused the poisoned lock error (read/write).
+        operation: ServiceLocatorOperation,
+    },
+    /// Represents a missing service in the ServiceLocator, includes the type name of the missing service.
+    RequiredServiceMissing {
+        /// The type name of the service which could not be found in the ServiceLocator.
+        type_name: &'static str,
+    },
+    /// Represents a Downcast error which means the service which was found was not in the expected type, includes the TypeId of the expected type.
+    DowncastFailed {
+        /// The type which was expected to be found in the ServiceLocator but could not be downcast to the expected type.
+        type_name: &'static str,
+    }
+}
+
+impl Display for ServiceLocatorError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            ServiceLocatorError::LockPoisoned { operation } => {
+                write!(f, "Lock poisoned while accessing service with operation {operation:?}")
+            },
+            ServiceLocatorError::RequiredServiceMissing { type_name } => {
+                write!(f, "Required service of type {type_name} is missing from the ServiceLocator")
+            },
+            ServiceLocatorError::DowncastFailed { type_name } => {
+                write!(f, "Failed to downcast service to expected type {type_name:?}")
+            }
+        }
+    }
+}
+
+impl Error for ServiceLocatorError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+impl From<ServiceLocatorError> for TheosError {
+    fn from(err: ServiceLocatorError) -> TheosError {
+        TheosError::wrap(err)
+    }
+}
+
+/// The result type used throughout the Service Locator
+pub type ServiceLocatorResult<T> = Result<T, ServiceLocatorError>;
+
+#[derive(Debug)]
+#[non_exhaustive]
+/// An error enum used for handling EventBus specific errors in the Theos engine.
+pub enum EventBusError {
+    /// Type registration on the EventBus failed
+    RegistrationFailed {
+        /// The type that failed to register
+        event_type: String,
+        /// The wrapped underlying error that caused the registration failure, if any underlying error occurred
+        wrapped: Option<Box<dyn Error + Send + Sync + 'static>>,
+    },
+    /// Sending an event on the EventBus failed
+    SendFailed {
+        /// The wrapped underlying error that caused the registration failure, if any underlying error occurred
+        wrapped: Option<Box<dyn Error + Send + Sync + 'static>>,
+    },
+    /// Draining the events on the EventBus failed
+    DrainFailed {
+        /// The wrapped underlying error that caused the registration failure, if any underlying error occurred
+        wrapped: Option<Box<dyn Error + Send + Sync + 'static>>,
+    },
+}
+
+impl Display for EventBusError {
+    fn fmt(&self, f: &mut Formatter) -> fmt::Result {
+        match self {
+            EventBusError::RegistrationFailed { event_type, .. } => {
+                write!(f, "failed to register event type '{}'", event_type)
+            }
+            EventBusError::SendFailed { .. } => {
+                write!(f, "failed to send event")
+            }
+            EventBusError::DrainFailed { .. } => {
+                write!(f, "failed to drain events")
+            }
+        }
+    }
+}
+
+impl Error for EventBusError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            EventBusError::RegistrationFailed { wrapped, .. } => {
+                wrapped.as_ref().map(|b| &**b as &(dyn Error + 'static))
+            }
+            EventBusError::SendFailed { wrapped } => {
+                wrapped.as_ref().map(|b| &**b as &(dyn Error + 'static))
+            }
+            EventBusError::DrainFailed { wrapped } => {
+                wrapped.as_ref().map(|b| &**b as &(dyn Error + 'static))
+            }
+        }
+    }
+}
+
+impl From<EventBusError> for TheosError {
+    fn from(module: EventBusError) -> TheosError {
+        TheosError::Wrapped(Box::new(module))
+    }
+}
+
+/// A convenient alias for results returned by EventBus lifecycle methods.
+pub type EventBusResult<T> = Result<T, EventBusError>;
+
 
 #[cfg(test)]
 mod tests {

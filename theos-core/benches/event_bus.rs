@@ -1,15 +1,16 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::hint::black_box;
 
-use theos_core::event::{EventBus, GameEvent};
+use theos_core::event::{CrossbeamEventBus, GameEvent};
+use theos_shared::EventBus;
 
 const BATCH: usize = 1024;
 
 fn bench_send_then_drain_typed(c: &mut Criterion) {
     c.bench_function("send_then_drain_typed_batch_1024", |b| {
         b.iter(|| {
-            let mut bus = EventBus::default();
-            bus.register::<GameEvent>();
+            let mut bus = CrossbeamEventBus::default();
+            bus.register::<GameEvent>().unwrap();
 
             let sender = bus.sender_for::<GameEvent>().expect("registered");
 

@@ -12,7 +12,7 @@ pub mod logging;
 pub mod module;
 
 pub use error::{ModuleError, ModuleResult};
-pub use event::{Event, EventBus, GameEvent};
+pub use event::{GameEvent};
 pub use logging::init;
 pub use module::{KernelContext, TheosModule};
 

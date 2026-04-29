@@ -1,14 +1,15 @@
 #![allow(clippy::disallowed_macros)]
 
 use alloc_count::alloc_count;
-use theos_core::event::{EventBus, GameEvent};
+use theos_core::event::{CrossbeamEventBus, GameEvent};
+use theos_shared::EventBus;
 
 const BATCH: usize = 1024;
 
 #[test]
 fn allocation_check_typed_event_bus() {
-    let mut bus = EventBus::default();
-    bus.register::<GameEvent>();
+    let mut bus = CrossbeamEventBus::default();
+    bus.register::<GameEvent>().unwrap();
 
     let (stats, ()) = alloc_count!({
         let sender = bus.sender_for::<GameEvent>().expect("registered");

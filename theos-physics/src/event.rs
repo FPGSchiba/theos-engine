@@ -1,4 +1,4 @@
-use theos_core::event::Event;
+use theos_shared::Event;
 
 /// Temporary test event type for the core event bus.
 #[derive(Debug)]

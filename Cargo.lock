@@ -698,7 +698,7 @@ version = "0.1.0"
 name = "theos-physics"
 version = "0.1.0"
 dependencies = [
- "theos-core",
+ "theos-shared",
 ]
 
 [[package]]
@@ -720,6 +720,9 @@ version = "0.1.0"
 [[package]]
 name = "theos-shared"
 version = "0.1.0"
+dependencies = [
+ "crossbeam",
+]
 
 [[package]]
 name = "thread_local"
