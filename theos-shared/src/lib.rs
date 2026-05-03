@@ -9,8 +9,12 @@ pub mod prelude;
 pub mod service_locator;
 pub mod types;
 
-pub use error::{EventBusError, EventBusResult, ServiceLocatorError, ServiceLocatorOperation, ServiceLocatorResult};
+pub use error::{
+    EventBusError, EventBusResult, ServiceLocatorError, ServiceLocatorOperation,
+    ServiceLocatorResult,
+};
 pub use event_bus::{Event, EventBus};
+pub use module::EngineModule;
 pub use service_locator::ServiceLocator;
 
 /// The current version of the Theos Engine.

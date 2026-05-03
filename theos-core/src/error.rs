@@ -1,5 +1,6 @@
 //! Error handling for the Theos core crate
 
+use std::any::TypeId;
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use theos_shared::prelude::*;
@@ -194,3 +195,154 @@ mod tests {
             .contains("circular dependency cycle: Module A -> Module B"));
     }
 }
+
+/// Errors that can occur during kernel initialisation or the game loop.
+///
+/// Variants are `#[non_exhaustive]` so downstream code cannot exhaustively
+/// match against them — new variants can be added without a breaking change.
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum KernelError {
+    /// The Rayon thread pool could not be constructed during kernel init.
+    ///
+    /// This typically means the host OS rejected the requested thread count,
+    /// or the global Rayon pool was already initialised with incompatible settings.
+    ThreadPoolInit {
+        /// The underlying build error from Rayon.
+        source: rayon::ThreadPoolBuildError,
+    },
+
+    /// A mounted module's `init()` returned an error.
+    ///
+    /// The kernel aborts the entire init sequence when any module fails —
+    /// modules that have already initialised will still receive `shutdown()`.
+    ModuleInit {
+        /// The name returned by `EngineModule::name()` for the failing module.
+        module_name: &'static str,
+        /// The underlying error returned by the module's `init()`.
+        source: Box<dyn Error + Send + Sync + 'static>,
+    },
+
+    /// An [`EventBusError`] surfaced during kernel startup or the game loop.
+    ///
+    /// [`EventBusError`]: EventBusError
+    EventBus {
+        /// The underlying event bus error.
+        source: EventBusError,
+    },
+
+    /// A [`ServiceLocatorError`] surfaced during kernel startup or module init.
+    ///
+    /// [`ServiceLocatorError`]: ServiceLocatorError
+    ServiceLocator {
+        /// The underlying service locator error.
+        source: ServiceLocatorError,
+    },
+    /// A cycle was detected among the declared module dependencies.
+    ///
+    /// This means at least two modules transitively depend on each other,
+    /// making it impossible to determine a valid initialisation order.
+    ///
+    /// The `cycle` field contains the names of the modules involved,
+    /// in the order they were traversed when the cycle was detected.
+    CyclicDependency {
+        /// Names of the modules that form the cycle, in traversal order.
+        ///
+        /// Example: `["PhysicsModule", "CollisionModule", "PhysicsModule"]`
+        /// indicates that `PhysicsModule` was reached twice.
+        cycle: Vec<&'static str>,
+    },
+
+    /// A module declared a dependency on a `TypeId` that does not match
+    /// any mounted module.
+    ///
+    /// This typically means the required module was never passed to
+    /// [`TheosKernel::mount`] before [`TheosKernel::run`] was called.
+    UnknownDependency {
+        /// The name of the module that declared the unresolvable dependency.
+        dependent: &'static str,
+
+        /// The `TypeId` that could not be matched to any mounted module.
+        ///
+        /// Note: `TypeId` has no human-readable representation — if you need
+        /// to surface this to a user, consider adding a `type_name: &'static str`
+        /// field populated via [`std::any::type_name`] at the call site.
+        dependency: TypeId,
+    },
+}
+
+impl Display for KernelError {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        match self {
+            KernelError::ThreadPoolInit { source } => {
+                write!(f, "thread pool init error: {}", source)
+            }
+            KernelError::ModuleInit { source, .. } => {
+                write!(f, "module init error: {}", source)
+            }
+            KernelError::EventBus { source, .. } => {
+                write!(f, "event bus error: {}", source)
+            }
+            KernelError::ServiceLocator { source, .. } => {
+                write!(f, "service locator error: {}", source)
+            }
+            KernelError::CyclicDependency { cycle } => {
+                write!(
+                    f,
+                    "cyclic dependency detected among modules: {:?}",
+                    cycle.join(" -> ")
+                )
+            }
+            KernelError::UnknownDependency {
+                dependent,
+                dependency,
+            } => {
+                write!(
+                    f,
+                    "unmounted dependency for module '{}': {:?}",
+                    dependent, dependency
+                )
+            }
+        }
+    }
+}
+
+impl Error for KernelError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            KernelError::ThreadPoolInit { source, .. } => Some(source),
+            KernelError::ModuleInit { source, .. } => Some(source.as_ref()),
+            KernelError::EventBus { source, .. } => Some(source),
+            KernelError::ServiceLocator { source, .. } => Some(source),
+            KernelError::CyclicDependency { .. } => None,
+            KernelError::UnknownDependency { .. } => None,
+        }
+    }
+}
+
+impl From<rayon::ThreadPoolBuildError> for KernelError {
+    fn from(source: rayon::ThreadPoolBuildError) -> Self {
+        KernelError::ThreadPoolInit { source }
+    }
+}
+
+impl From<EventBusError> for KernelError {
+    fn from(source: EventBusError) -> Self {
+        KernelError::EventBus { source }
+    }
+}
+
+impl From<ServiceLocatorError> for KernelError {
+    fn from(source: ServiceLocatorError) -> Self {
+        KernelError::ServiceLocator { source }
+    }
+}
+
+impl From<KernelError> for TheosError {
+    fn from(source: KernelError) -> Self {
+        TheosError::Wrapped(Box::new(source))
+    }
+}
+
+/// Convenience alias for results returned by kernel operations.
+pub type KernelResult<T> = Result<T, KernelError>;

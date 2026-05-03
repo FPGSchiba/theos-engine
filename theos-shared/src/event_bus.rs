@@ -2,8 +2,8 @@
 //!
 //! The EventBus provides a type-erased, thread-safe pub/sub mechanism for engine subsystems.
 
-use crossbeam::channel::Sender;
 use crate::error::EventBusResult;
+use crossbeam::channel::Sender;
 
 /// A marker trait for events that can flow through the EventBus.
 ///
@@ -51,4 +51,3 @@ pub trait EventBus: Send + Sync {
     /// to the main thread without holding the entire EventBus.
     fn sender_for<E: Event>(&self) -> Option<Sender<E>>;
 }
-

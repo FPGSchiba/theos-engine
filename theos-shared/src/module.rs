@@ -16,7 +16,7 @@ use std::sync::Arc;
 /// without creating circular dependencies between crates.
 pub trait KernelContext: Send + Sync {
     /// Returns the ServiceLocator as a trait object, allowing modules to register/retrieve services.
-    fn service_locator(&mut self) -> &mut dyn Any;
+    fn service_locator(&mut self) -> &mut (dyn Any + '_);
 
     /// Returns the EventBus as a trait object, allowing modules to subscribe/publish events.
     fn event_bus(&self) -> Arc<dyn Any + Send + Sync>;
@@ -34,7 +34,10 @@ use std::any::TypeId;
 /// 1. **init()** — called once at engine startup, in topological dependency order
 /// 2. **tick()** — called once per frame during the game loop, in registration order
 /// 3. **shutdown()** — called at engine exit, in reverse dependency order
-pub trait EngineModule: Send + Sync {
+pub trait EngineModule: Send + Sync
+where
+    Self: 'static,
+{
     /// Returns this module's stable, human-readable name.
     ///
     /// Used for logging and diagnostics. Should be unique across all mounted modules.
@@ -65,7 +68,10 @@ pub trait EngineModule: Send + Sync {
     /// # Note
     /// Use **mutable** access here to grab and store Arc clones of services/event bus.
     /// These references should be stored in the module's internal state for use during `tick()`.
-    fn init(&mut self, ctx: &mut dyn KernelContext) -> Result<(), Box<dyn std::error::Error>>;
+    fn init(
+        &mut self,
+        ctx: &mut dyn KernelContext,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
     /// Called once per frame during the game loop.
     ///
@@ -82,5 +88,20 @@ pub trait EngineModule: Send + Sync {
     ///
     /// The default implementation is a no-op.
     fn shutdown(&mut self) {}
-}
 
+    /// Returns the [`TypeId`] of this module's concrete type.
+    ///
+    /// Used by the kernel's dependency sorter to identify modules and resolve
+    /// the `TypeId` values returned by [`EngineModule::dependencies`].
+    ///
+    /// This method has a default implementation and should not be overridden.
+    /// It relies on [`Any::type_id`] to retrieve the concrete type behind the
+    /// trait object, which is not possible with `TypeId::of::<Self>()` in a
+    /// trait-object context (`Self: Sized` is required there).
+    ///
+    /// [`TypeId`]: TypeId
+    /// [`Any::type_id`]: Any::type_id
+    fn module_type_id(&self) -> TypeId {
+        TypeId::of::<Self>()
+    }
+}

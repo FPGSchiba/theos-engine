@@ -143,40 +143,44 @@ impl<'a, 'w> tracing::field::Visit for FieldVisitor<'a, 'w> {
 
 /// Initializes a global tracing Subscriber with correct formatting configured
 pub fn init() {
-    // Build a combined spec that guarantees "info" is present as a default,
-    // then attempt to parse it. If parsing fails for any reason, fall back to "info".
-    let env_filter = match std::env::var("RUST_LOG") {
-        Ok(spec) if !spec.trim().is_empty() => {
-            // Prepend the safe default directive so parsing cannot produce a filter
-            // that silently drops INFO messages.
-            let combined = format!("{},{}", "info", spec);
-            match EnvFilter::try_new(&combined) {
-                Ok(f) => f,
-                Err(err) => {
-                    // Parsing failed — deterministic fallback to INFO
-                    let _ = io::stderr().write_all(
-                        format!(
-                            "theos: warning: could not parse RUST_LOG {:?} ({}), falling back to \"info\"\n",
-                            spec, err
-                        )
-                            .as_bytes(),
-                    );
-                    EnvFilter::new("info")
+    static INIT: std::sync::OnceLock<()> = std::sync::OnceLock::new();
+    INIT.get_or_init(|| {
+        // Build a combined spec that guarantees "info" is present as a default,
+        // then attempt to parse it. If parsing fails for any reason, fall back to "info".
+        let env_filter = match std::env::var("RUST_LOG") {
+            Ok(spec) if !spec.trim().is_empty() => {
+                // Prepend the safe default directive so parsing cannot produce a filter
+                // that silently drops INFO messages.
+                let combined = format!("{},{}", "info", spec);
+                match EnvFilter::try_new(&combined) {
+                    Ok(f) => f,
+                    Err(err) => {
+                        // Parsing failed — deterministic fallback to INFO
+                        let _ = io::stderr().write_all(
+                            format!(
+                                "theos: warning: could not parse RUST_LOG {:?} ({}), falling back to \"info\"\n",
+                                spec, err
+                            )
+                                .as_bytes(),
+                        );
+                        EnvFilter::new("info")
+                    }
                 }
             }
-        }
-        _ => {
-            // no env var set — use safe default
-            EnvFilter::new("info")
-        }
-    };
+            _ => {
+                // no env var set — use safe default
+                EnvFilter::new("info")
+            }
+        };
 
-    let fmt_layer = tracing_fmt::Layer::default()
-        .event_format(TheosFormatter::new())
-        .with_ansi(true)
-        .with_writer(io::stdout);
+        let fmt_layer = tracing_fmt::Layer::default()
+            .event_format(TheosFormatter::new())
+            .with_ansi(true)
+            .with_writer(io::stdout);
 
-    let subscriber = Registry::default().with(env_filter).with(fmt_layer);
+        let subscriber = Registry::default().with(env_filter).with(fmt_layer);
 
-    tracing::subscriber::set_global_default(subscriber).expect("setting default subscriber failed");
+        tracing::subscriber::set_global_default(subscriber)
+            .expect("setting default subscriber failed");
+    });
 }

@@ -8,13 +8,13 @@
 
 pub mod error;
 pub mod event;
+pub mod kernel;
 pub mod logging;
-pub mod module;
 
 pub use error::{ModuleError, ModuleResult};
-pub use event::{GameEvent};
+pub use event::GameEvent;
 pub use logging::init;
-pub use module::{KernelContext, TheosModule};
+pub use kernel::TheosKernel;
 
 use theos_shared::VERSION;
 

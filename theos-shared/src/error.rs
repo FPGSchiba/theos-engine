@@ -65,7 +65,7 @@ pub enum ServiceLocatorOperation {
     /// Represents a read Lock operation in the Service Locator, used for error reporting
     Read,
 
-     /// Represents a write Lock operation in the Service Locator, used for error reporting.
+    /// Represents a write Lock operation in the Service Locator, used for error reporting.
     Write,
 }
 
@@ -87,20 +87,29 @@ pub enum ServiceLocatorError {
     DowncastFailed {
         /// The type which was expected to be found in the ServiceLocator but could not be downcast to the expected type.
         type_name: &'static str,
-    }
+    },
 }
 
 impl Display for ServiceLocatorError {
     fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
         match self {
             ServiceLocatorError::LockPoisoned { operation } => {
-                write!(f, "Lock poisoned while accessing service with operation {operation:?}")
-            },
+                write!(
+                    f,
+                    "Lock poisoned while accessing service with operation {operation:?}"
+                )
+            }
             ServiceLocatorError::RequiredServiceMissing { type_name } => {
-                write!(f, "Required service of type {type_name} is missing from the ServiceLocator")
-            },
+                write!(
+                    f,
+                    "Required service of type {type_name} is missing from the ServiceLocator"
+                )
+            }
             ServiceLocatorError::DowncastFailed { type_name } => {
-                write!(f, "Failed to downcast service to expected type {type_name:?}")
+                write!(
+                    f,
+                    "Failed to downcast service to expected type {type_name:?}"
+                )
             }
         }
     }
@@ -184,7 +193,6 @@ impl From<EventBusError> for TheosError {
 
 /// A convenient alias for results returned by EventBus lifecycle methods.
 pub type EventBusResult<T> = Result<T, EventBusError>;
-
 
 #[cfg(test)]
 mod tests {
