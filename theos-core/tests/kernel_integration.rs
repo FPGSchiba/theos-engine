@@ -3,6 +3,8 @@
 //! These tests exercise the full kernel: module init, fixed-step tick loop,
 //! shutdown signalling, and module shutdown — all running end-to-end.
 
+#![allow(clippy::disallowed_macros)]
+
 use crossbeam::channel::Sender;
 use std::any::TypeId;
 use std::marker::PhantomData;
