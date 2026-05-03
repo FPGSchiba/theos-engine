@@ -13,8 +13,8 @@ pub mod logging;
 
 pub use error::{ModuleError, ModuleResult};
 pub use event::GameEvent;
-pub use logging::init;
 pub use kernel::TheosKernel;
+pub use logging::init;
 
 use theos_shared::VERSION;
 
