@@ -1,14 +1,12 @@
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+#![forbid(unsafe_code)]
+#![no_std]
 
-#[cfg(test)]
-mod tests {
-    use super::*;
+pub mod aabb;
+pub mod mat;
+pub mod plane;
+pub mod quat;
+pub mod ray;
+pub mod vec;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use mat::{Mat4, Mat3};
+pub use vec::{Vec4, Vec3, Vec2};
