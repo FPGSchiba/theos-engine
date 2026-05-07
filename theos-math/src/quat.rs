@@ -113,9 +113,8 @@ mod tests {
     }
 
     // 90° rotation around the Z axis: w = cos(π/4), z = sin(π/4)
-    const SQRT2_OVER_2: f32 = 0.70710678;
     fn rot90_z() -> Quat {
-        Quat::new(0.0, 0.0, SQRT2_OVER_2, SQRT2_OVER_2)
+        Quat::new(0.0, 0.0, 2.0_f32.sqrt() * 0.5, 2.0_f32.sqrt() * 0.5)
     }
 
     // ==========================================
