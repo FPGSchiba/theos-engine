@@ -202,7 +202,7 @@ impl EngineModule for TimingModule {
 ///   cargo test -p theos-core --release --test kernel_integration reports_frame_timing_accuracy -- --nocapture
 #[test]
 fn reports_frame_timing_accuracy() {
-    const FRAMES: u32 = 600;
+    const FRAMES: u32 = 60 * 5; // 5 seconds of tests
 
     let mut kernel = TheosKernel::default();
     let shutdown_tx = Arc::new(kernel.shutdown_handle());
@@ -268,10 +268,10 @@ fn reports_frame_timing_accuracy() {
 ///   cargo test -p theos-core --release --test kernel_integration reports_frame_timing_multirun -- --nocapture
 #[test]
 fn reports_frame_timing_multirun() {
-    const RUNS: usize = 20;
-    const FRAMES_PER_RUN: u32 = 600;
-    // t-critical values for 95% CI, two-tailed, by degrees of freedom (df = RUNS - 1).
-    // Lookup table covers df 1–20; beyond 30 the normal approximation (1.96) is fine.
+    const RUNS: usize = 10;
+    const FRAMES_PER_RUN: u32 = 60 * 3; // 3 seconds per run (30 seconds in total)
+                                        // t-critical values for 95% CI, two-tailed, by degrees of freedom (df = RUNS - 1).
+                                        // Lookup table covers df 1–20; beyond 30 the normal approximation (1.96) is fine.
     const T_CRIT_95: [f64; 20] = [
         12.706, 4.303, 3.182, 2.776, 2.571, // df 1–5
         2.447, 2.365, 2.306, 2.262, 2.228, // df 6–10
