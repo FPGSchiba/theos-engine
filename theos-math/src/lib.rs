@@ -8,5 +8,9 @@ pub mod quat;
 pub mod ray;
 pub mod vec;
 
-pub use mat::{Mat4, Mat3};
-pub use vec::{Vec4, Vec3, Vec2};
+pub use aabb::Aabb;
+pub use mat::{Mat3, Mat4};
+pub use plane::Plane;
+pub use quat::Quat;
+pub use ray::Ray;
+pub use vec::{Vec2, Vec3, Vec4};

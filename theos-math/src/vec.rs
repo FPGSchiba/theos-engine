@@ -5,6 +5,11 @@ use core::ops::{Add, AddAssign, Div, DivAssign, Mul, MulAssign, Sub, SubAssign};
 // 1. DATA STRUCTURES (Already completed)
 // ==========================================
 
+/// A 2-component floating-point vector with 16-byte alignment.
+///
+/// Padded to 16 bytes (`repr(C, align(16))`) so it can be loaded into a
+/// SIMD register without unaligned penalty and uploaded directly to GPU
+/// buffers via `bytemuck`.
 #[repr(C, align(16))]
 #[derive(Clone, Copy, Debug, Default, PartialEq, Pod, Zeroable)]
 pub struct Vec2 {
@@ -13,6 +18,11 @@ pub struct Vec2 {
     _padding: [f32; 2],
 }
 
+/// A 3-component floating-point vector with 16-byte alignment.
+///
+/// Padded to 16 bytes so it shares the same SIMD lane width as [`Vec4`],
+/// enabling the same `f32x4` intrinsics for dot and arithmetic operations
+/// without a separate code path.
 #[repr(C, align(16))]
 #[derive(Clone, Copy, Debug, Default, PartialEq, Pod, Zeroable)]
 pub struct Vec3 {
@@ -22,6 +32,11 @@ pub struct Vec3 {
     _padding: f32,
 }
 
+/// A 4-component floating-point vector with 16-byte alignment.
+///
+/// Naturally fills one `f32x4` SIMD register with no padding. Used as the
+/// column type for [`Mat4`](crate::mat::Mat4) and for homogeneous coordinates
+/// where `w = 1` denotes a point and `w = 0` denotes a direction.
 #[repr(C, align(16))]
 #[derive(Clone, Copy, Debug, Default, PartialEq, Pod, Zeroable)]
 pub struct Vec4 {
@@ -36,6 +51,7 @@ pub struct Vec4 {
 // ==========================================
 
 impl Vec2 {
+    /// Creates a new `Vec2` from x and y components.
     #[inline]
     pub const fn new(x: f32, y: f32) -> Self {
         Self {
@@ -45,6 +61,9 @@ impl Vec2 {
         }
     }
 
+    /// Returns the dot (scalar) product of `self` and `rhs`.
+    ///
+    /// Uses a SIMD `f32x4` multiply-reduce when the `simd` feature is enabled.
     #[inline]
     pub fn dot(self, rhs: Vec2) -> f32 {
         #[cfg(feature = "simd")]
@@ -58,9 +77,24 @@ impl Vec2 {
             (self.x * rhs.x) + (self.y * rhs.y)
         }
     }
+
+    /// Returns the Euclidean length (magnitude) of the vector.
+    #[inline]
+    pub fn length(self) -> f32 {
+        self.x.hypot(self.y)
+    }
+
+    /// Returns a copy of this vector scaled to unit length.
+    ///
+    /// Returns a vector with `NaN` components if `self` has zero length.
+    #[inline]
+    pub fn normalize(self) -> Self {
+        self / self.length()
+    }
 }
 
 impl Vec3 {
+    /// Creates a new `Vec3` from x, y, and z components.
     #[inline]
     pub const fn new(x: f32, y: f32, z: f32) -> Self {
         Self {
@@ -71,6 +105,9 @@ impl Vec3 {
         }
     }
 
+    /// Returns the dot (scalar) product of `self` and `rhs`.
+    ///
+    /// Uses a SIMD `f32x4` multiply-reduce when the `simd` feature is enabled.
     #[inline]
     pub fn dot(self, rhs: Self) -> f32 {
         #[cfg(feature = "simd")]
@@ -85,6 +122,11 @@ impl Vec3 {
         }
     }
 
+    /// Returns the cross product of `self` and `rhs`.
+    ///
+    /// The result is perpendicular to both input vectors. Anti-commutative:
+    /// `a.cross(b) == -b.cross(a)`. Returns the zero vector when the inputs
+    /// are parallel or either is the zero vector.
     #[inline]
     pub fn cross(self, rhs: Self) -> Self {
         Vec3::new(
@@ -93,14 +135,34 @@ impl Vec3 {
             self.x * rhs.y - self.y * rhs.x,
         )
     }
+
+    /// Returns the Euclidean length (magnitude) of the vector.
+    ///
+    /// Uses `dot(self, self).sqrt()` — equivalent to `sqrt(x² + y² + z²)`.
+    #[inline]
+    pub fn length(self) -> f32 {
+        self.dot(self).sqrt()
+    }
+
+    /// Returns a copy of this vector scaled to unit length.
+    ///
+    /// Returns a vector with `NaN` components if `self` has zero length.
+    #[inline]
+    pub fn normalize(self) -> Self {
+        self / self.length()
+    }
 }
 
 impl Vec4 {
+    /// Creates a new `Vec4` from x, y, z, and w components.
     #[inline]
     pub const fn new(x: f32, y: f32, z: f32, w: f32) -> Self {
         Self { x, y, z, w }
     }
 
+    /// Returns the dot (scalar) product of `self` and `rhs`, including the `w` component.
+    ///
+    /// Uses a SIMD `f32x4` multiply-reduce when the `simd` feature is enabled.
     #[inline]
     pub fn dot(self, rhs: Self) -> f32 {
         #[cfg(feature = "simd")]
@@ -114,15 +176,35 @@ impl Vec4 {
             (self.x * rhs.x) + (self.y * rhs.y) + (self.z * rhs.z) + (self.w * rhs.w)
         }
     }
+
+    /// Returns the Euclidean length (magnitude) of the vector.
+    ///
+    /// Uses `dot(self, self).sqrt()` — equivalent to `sqrt(x² + y² + z² + w²)`.
+    #[inline]
+    pub fn length(self) -> f32 {
+        self.dot(self).sqrt()
+    }
+
+    /// Returns a copy of this vector scaled to unit length.
+    ///
+    /// Returns a vector with `NaN` components if `self` has zero length.
+    #[inline]
+    pub fn normalize(self) -> Self {
+        self / self.length()
+    }
 }
 
 // ==========================================
 // 3. TRAIT-BASED SWIZZLING
 // ==========================================
 
+/// Swizzle operations that extract sub-vectors from a [`Vec4`].
 pub trait Vec4Swizzle {
+    /// Extracts the x, y, and z components as a [`Vec3`].
     fn xyz(self) -> Vec3;
+    /// Extracts the x and y components as a [`Vec2`].
     fn xy(self) -> Vec2;
+    /// Extracts the z and w components as a [`Vec2`].
     fn zw(self) -> Vec2;
 }
 
@@ -143,9 +225,13 @@ impl Vec4Swizzle for Vec4 {
     }
 }
 
+/// Swizzle operations that extract sub-vectors from a [`Vec3`].
 pub trait Vec3Swizzle {
+    /// Extracts the x and y components as a [`Vec2`].
     fn xy(self) -> Vec2;
+    /// Extracts the x and z components as a [`Vec2`].
     fn xz(self) -> Vec2;
+    /// Extracts the y and z components as a [`Vec2`].
     fn yz(self) -> Vec2;
 }
 
@@ -487,6 +573,27 @@ impl Mul<f32> for Vec2 {
     }
 }
 
+impl Mul<f32> for Vec3 {
+    type Output = Self;
+
+    #[inline]
+    fn mul(self, rhs: f32) -> Self::Output {
+        // Architectural Note: Just like the cross product, doing scalar math
+        // on a 3-component struct in an AoS layout is often faster in standard
+        // scalar instructions than paying the SIMD load/extract overhead.
+        // You can safely just use the standard fallback here!
+        Self::new(self.x * rhs, self.y * rhs, self.z * rhs)
+    }
+}
+
+impl Mul<Vec3> for f32 {
+    type Output = Vec3;
+
+    fn mul(self, rhs: Vec3) -> Vec3 {
+        rhs * self
+    }
+}
+
 impl Mul<f32> for Vec4 {
     type Output = Self;
 
@@ -500,19 +607,6 @@ impl Mul<f32> for Vec4 {
         {
             Self::new(self.x * rhs, self.y * rhs, self.z * rhs, self.w * rhs)
         }
-    }
-}
-
-impl Mul<f32> for Vec3 {
-    type Output = Self;
-
-    #[inline]
-    fn mul(self, rhs: f32) -> Self::Output {
-        // Architectural Note: Just like the cross product, doing scalar math
-        // on a 3-component struct in an AoS layout is often faster in standard
-        // scalar instructions than paying the SIMD load/extract overhead.
-        // You can safely just use the standard fallback here!
-        Self::new(self.x * rhs, self.y * rhs, self.z * rhs)
     }
 }
 
@@ -592,7 +686,81 @@ impl DivAssign<f32> for Vec4 {
 }
 
 // ==========================================
-// 5. MINT INTEROPERABILITY (Bridge Pattern)
+// 5. GLAM INTEROPERABILITY
+// ==========================================
+
+impl From<glam::Vec2> for Vec2 {
+    /// Converts a `glam::Vec2` to a `Vec2`, copying x and y directly.
+    #[inline]
+    fn from(v: glam::Vec2) -> Self {
+        Self::new(v.x, v.y)
+    }
+}
+
+impl From<Vec2> for glam::Vec2 {
+    /// Converts a `Vec2` to a `glam::Vec2`, dropping the internal padding bytes.
+    #[inline]
+    fn from(v: Vec2) -> Self {
+        glam::Vec2::new(v.x, v.y)
+    }
+}
+
+impl From<glam::Vec3> for Vec3 {
+    /// Converts a `glam::Vec3` (12 bytes, no padding) to a `Vec3` (16 bytes).
+    ///
+    /// The extra padding byte in `Vec3` is zeroed by [`Vec3::new`].
+    #[inline]
+    fn from(v: glam::Vec3) -> Self {
+        Self::new(v.x, v.y, v.z)
+    }
+}
+
+impl From<Vec3> for glam::Vec3 {
+    /// Converts a `Vec3` to a `glam::Vec3`, dropping the internal padding byte.
+    #[inline]
+    fn from(v: Vec3) -> Self {
+        glam::Vec3::new(v.x, v.y, v.z)
+    }
+}
+
+impl From<glam::Vec3A> for Vec3 {
+    /// Converts a `glam::Vec3A` (16-byte SIMD-aligned) to a `Vec3`.
+    ///
+    /// Both types share the same 16-byte alignment, so this is a direct component copy.
+    #[inline]
+    fn from(v: glam::Vec3A) -> Self {
+        Self::new(v.x, v.y, v.z)
+    }
+}
+
+impl From<Vec3> for glam::Vec3A {
+    /// Converts a `Vec3` to a `glam::Vec3A` (16-byte SIMD-aligned).
+    ///
+    /// Both types share the same 16-byte alignment, so this is a direct component copy.
+    #[inline]
+    fn from(v: Vec3) -> Self {
+        glam::Vec3A::new(v.x, v.y, v.z)
+    }
+}
+
+impl From<glam::Vec4> for Vec4 {
+    /// Converts a `glam::Vec4` to a `Vec4`, copying all four components.
+    #[inline]
+    fn from(v: glam::Vec4) -> Self {
+        Self::new(v.x, v.y, v.z, v.w)
+    }
+}
+
+impl From<Vec4> for glam::Vec4 {
+    /// Converts a `Vec4` to a `glam::Vec4`, copying all four components.
+    #[inline]
+    fn from(v: Vec4) -> Self {
+        glam::Vec4::new(v.x, v.y, v.z, v.w)
+    }
+}
+
+// ==========================================
+// 6. MINT INTEROPERABILITY (Bridge Pattern)
 // ==========================================
 #[cfg(feature = "simd")]
 impl From<wide::f32x4> for Vec2 {
@@ -898,5 +1066,136 @@ mod tests {
 
         let v4: Vec4 = f.into();
         assert_vec_eq!(v4, Vec4::new(1.0, 2.0, 3.0, 4.0), 4);
+    }
+
+    // ==========================================
+    // GLAM INTEROP TESTS
+    // ==========================================
+
+    #[test]
+    fn test_glam_vec2_roundtrip() {
+        let original = Vec2::new(1.0, 2.0);
+        let g: glam::Vec2 = original.into();
+        let back: Vec2 = g.into();
+        assert_vec_eq!(original, back);
+        assert_eq!(g.x, 1.0);
+        assert_eq!(g.y, 2.0);
+    }
+
+    #[test]
+    fn test_glam_vec3_roundtrip() {
+        let original = Vec3::new(1.0, 2.0, 3.0);
+        let g: glam::Vec3 = original.into();
+        let back: Vec3 = g.into();
+        assert_vec_eq!(original, back, 3);
+        // Padding byte is not exposed by glam — only x, y, z survive the roundtrip.
+        assert_eq!(g.x, 1.0);
+        assert_eq!(g.y, 2.0);
+        assert_eq!(g.z, 3.0);
+    }
+
+    #[test]
+    fn test_glam_vec3a_roundtrip() {
+        let original = Vec3::new(4.0, 5.0, 6.0);
+        let g: glam::Vec3A = original.into();
+        let back: Vec3 = g.into();
+        assert_vec_eq!(original, back, 3);
+    }
+
+    #[test]
+    fn test_glam_vec3_and_vec3a_produce_same_components() {
+        let v = Vec3::new(7.0, 8.0, 9.0);
+        let g3: glam::Vec3 = v.into();
+        let g3a: glam::Vec3A = v.into();
+        assert_eq!(g3.x, g3a.x);
+        assert_eq!(g3.y, g3a.y);
+        assert_eq!(g3.z, g3a.z);
+    }
+
+    #[test]
+    fn test_glam_vec4_roundtrip() {
+        let original = Vec4::new(1.0, 2.0, 3.0, 4.0);
+        let g: glam::Vec4 = original.into();
+        let back: Vec4 = g.into();
+        assert_vec_eq!(original, back, 4);
+        assert_eq!(g.w, 4.0);
+    }
+
+    // ==========================================
+    // EDGE CASES
+    // ==========================================
+
+    #[test]
+    fn test_vec2_dot_orthogonal_is_zero() {
+        let x = Vec2::new(1.0, 0.0);
+        let y = Vec2::new(0.0, 1.0);
+        assert!(x.dot(y).abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_vec2_dot_antiparallel_is_negative() {
+        let v = Vec2::new(3.0, 0.0);
+        let neg = Vec2::new(-3.0, 0.0);
+        assert!(v.dot(neg) < 0.0);
+    }
+
+    #[test]
+    fn test_vec3_dot_orthogonal_axes_are_zero() {
+        let x = Vec3::new(1.0, 0.0, 0.0);
+        let y = Vec3::new(0.0, 1.0, 0.0);
+        let z = Vec3::new(0.0, 0.0, 1.0);
+        assert!(x.dot(y).abs() < 1e-5);
+        assert!(x.dot(z).abs() < 1e-5);
+        assert!(y.dot(z).abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_vec3_cross_parallel_is_zero() {
+        let v = Vec3::new(1.0, 2.0, 3.0);
+        let parallel = Vec3::new(2.0, 4.0, 6.0);
+        let result = v.cross(parallel);
+        assert!(result.x.abs() < 1e-5);
+        assert!(result.y.abs() < 1e-5);
+        assert!(result.z.abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_vec3_cross_self_is_zero() {
+        let v = Vec3::new(3.0, 7.0, -2.0);
+        let result = v.cross(v);
+        assert!(result.x.abs() < 1e-5);
+        assert!(result.y.abs() < 1e-5);
+        assert!(result.z.abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_vec3_cross_is_anti_commutative() {
+        let a = Vec3::new(1.0, 2.0, 3.0);
+        let b = Vec3::new(4.0, 5.0, 6.0);
+        let ab = a.cross(b);
+        let ba = b.cross(a);
+        // a×b == -(b×a)
+        assert!((ab.x + ba.x).abs() < 1e-5);
+        assert!((ab.y + ba.y).abs() < 1e-5);
+        assert!((ab.z + ba.z).abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_vec4_dot_orthogonal_is_zero() {
+        let a = Vec4::new(1.0, 0.0, 0.0, 0.0);
+        let b = Vec4::new(0.0, 1.0, 0.0, 0.0);
+        assert!(a.dot(b).abs() < 1e-5);
+    }
+
+    #[test]
+    fn test_vec4_dot_with_w_component() {
+        // Dot includes the w component — a homogeneous point (w=1) dotted with a
+        // direction (w=0) should ignore w, while two points accumulate it.
+        let point = Vec4::new(1.0, 0.0, 0.0, 1.0);
+        let dir = Vec4::new(1.0, 0.0, 0.0, 0.0);
+        assert!((point.dot(dir) - 1.0).abs() < 1e-5);
+
+        let point2 = Vec4::new(0.0, 0.0, 0.0, 1.0);
+        assert!((point.dot(point2) - 1.0).abs() < 1e-5);
     }
 }

@@ -1,4 +1,4 @@
-use criterion::{black_box, criterion_group, criterion_main, Criterion};
+use criterion::{Criterion, black_box, criterion_group, criterion_main};
 // Replace `theos_math` if your crate name in Cargo.toml is different (e.g., uses a dash).
 use theos_math::{Mat3, Mat4, Vec3, Vec4};
 
@@ -45,13 +45,37 @@ fn bench_mat3_mul(c: &mut Criterion) {
     );
 
     group.bench_function("Multiply", |b| {
-        b.iter(|| {
-            black_box(black_box(m1) * black_box(m2))
-        });
+        b.iter(|| black_box(black_box(m1) * black_box(m2)));
+    });
+    group.finish();
+}
+
+fn bench_vec3_dot(c: &mut Criterion) {
+    let mut group = c.benchmark_group("Vec3");
+    let a = Vec3::new(1.0, 2.0, 3.0);
+    let b = Vec3::new(4.0, 5.0, 6.0);
+    group.bench_function("Dot", |bench| {
+        bench.iter(|| black_box(black_box(a).dot(black_box(b))))
+    });
+    group.finish();
+}
+
+fn bench_vec3_cross(c: &mut Criterion) {
+    let mut group = c.benchmark_group("Vec3");
+    let a = Vec3::new(1.0, 2.0, 3.0);
+    let b = Vec3::new(4.0, 5.0, 6.0);
+    group.bench_function("Cross", |bench| {
+        bench.iter(|| black_box(black_box(a).cross(black_box(b))))
     });
     group.finish();
 }
 
 // Register and run the benchmarks
-criterion_group!(benches, bench_mat4_mul, bench_mat3_mul);
+criterion_group!(
+    benches,
+    bench_mat4_mul,
+    bench_mat3_mul,
+    bench_vec3_dot,
+    bench_vec3_cross
+);
 criterion_main!(benches);
