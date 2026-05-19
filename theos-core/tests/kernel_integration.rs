@@ -116,8 +116,8 @@ fn kernel_runs_init_tick_shutdown_lifecycle() {
     let (mod_two, tick_two, init_two, shutdown_two) =
         make_counting_module::<TagTwo>("CountingModuleTwo", 1000, shutdown_tx.clone());
 
-    kernel.mount(Box::new(mod_one)).unwrap();
-    kernel.mount(Box::new(mod_two)).unwrap();
+    kernel.register_module(Box::new(mod_one)).unwrap();
+    kernel.register_module(Box::new(mod_two)).unwrap();
     kernel.run().unwrap();
 
     assert_eq!(
@@ -210,7 +210,7 @@ fn reports_frame_timing_accuracy() {
     let count = Arc::new(AtomicU32::new(0));
 
     kernel
-        .mount(Box::new(TimingModule {
+        .register_module(Box::new(TimingModule {
             timestamps: timestamps.clone(),
             shutdown_tx,
             stop_after: FRAMES,
@@ -297,7 +297,7 @@ fn reports_frame_timing_multirun() {
         let count = Arc::new(AtomicU32::new(0));
 
         kernel
-            .mount(Box::new(TimingModule {
+            .register_module(Box::new(TimingModule {
                 timestamps: timestamps.clone(),
                 shutdown_tx,
                 stop_after: FRAMES_PER_RUN,

@@ -1,5 +1,6 @@
 //! Error handling for the Theos core crate
 
+use semver::{Version, VersionReq};
 use std::any::TypeId;
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
@@ -254,20 +255,44 @@ pub enum KernelError {
     },
 
     /// A module declared a dependency on a `TypeId` that does not match
-    /// any mounted module.
+    /// any registered module.
     ///
     /// This typically means the required module was never passed to
-    /// [`TheosKernel::mount`] before [`TheosKernel::run`] was called.
+    /// `TheosKernel::register_module` before `TheosKernel::run` was called.
     UnknownDependency {
         /// The name of the module that declared the unresolvable dependency.
         dependent: &'static str,
 
-        /// The `TypeId` that could not be matched to any mounted module.
+        /// The `TypeId` that could not be matched to any registered module.
         ///
         /// Note: `TypeId` has no human-readable representation — if you need
         /// to surface this to a user, consider adding a `type_name: &'static str`
         /// field populated via [`std::any::type_name`] at the call site.
         dependency: TypeId,
+    },
+
+    /// A module was registered twice under the same name.
+    ///
+    /// Registration fails immediately on the duplicate call; the staging buffer
+    /// is left unchanged.
+    ModuleAlreadyRegistered {
+        /// The name returned by [`EngineModule::name`] for the duplicate module.
+        name: &'static str,
+    },
+
+    /// A registered module's version does not satisfy a dependent's constraint.
+    ///
+    /// Detected during `TheosKernel::run`'s dependency resolution phase,
+    /// before any module `init()` is called.
+    VersionMismatch {
+        /// The module that declared the unsatisfied requirement.
+        dependent: &'static str,
+        /// The module whose version did not match.
+        dependency: &'static str,
+        /// The version constraint that was declared.
+        required: VersionReq,
+        /// The actual version that was registered.
+        found: Version,
     },
 }
 
@@ -299,8 +324,23 @@ impl Display for KernelError {
             } => {
                 write!(
                     f,
-                    "unmounted dependency for module '{}': {:?}",
+                    "unregistered dependency for module '{}': {:?}",
                     dependent, dependency
+                )
+            }
+            KernelError::ModuleAlreadyRegistered { name } => {
+                write!(f, "module '{}' is already registered", name)
+            }
+            KernelError::VersionMismatch {
+                dependent,
+                dependency,
+                required,
+                found,
+            } => {
+                write!(
+                    f,
+                    "module '{}' requires '{}' at {}, but found {}",
+                    dependent, dependency, required, found
                 )
             }
         }
@@ -316,6 +356,8 @@ impl Error for KernelError {
             KernelError::ServiceLocator { source, .. } => Some(source),
             KernelError::CyclicDependency { .. } => None,
             KernelError::UnknownDependency { .. } => None,
+            KernelError::ModuleAlreadyRegistered { .. } => None,
+            KernelError::VersionMismatch { .. } => None,
         }
     }
 }

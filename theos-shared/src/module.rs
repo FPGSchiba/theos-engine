@@ -3,10 +3,13 @@
 //! Every subsystem (rendering, physics, audio, AI, etc.) implements
 //! `EngineModule` and is orchestrated by the kernel.
 //!
-//! Dependencies are declared as `TypeId` values (not strings or generics) to preserve
-//! trait object safety for `Box<dyn EngineModule>`.
+//! Dependencies are declared as [`ModuleDependency`] values — a `TypeId` paired
+//! with a semver [`VersionReq`] — to preserve trait-object safety while also
+//! enabling version-aware dependency resolution.
 
+use semver::{Version, VersionReq};
 use std::any::Any;
+use std::any::TypeId;
 use std::sync::Arc;
 
 /// Initialization context provided by the kernel to modules.
@@ -22,7 +25,43 @@ pub trait KernelContext: Send + Sync {
     fn event_bus(&self) -> Arc<dyn Any + Send + Sync>;
 }
 
-use std::any::TypeId;
+/// Declares a versioned dependency on another engine module.
+///
+/// A module's [`EngineModule::dependencies`] method returns a slice of these,
+/// one per required module. The kernel validates both presence and version
+/// compatibility before allowing `run()` to proceed.
+pub struct ModuleDependency {
+    /// The [`TypeId`] of the required module.
+    pub module: TypeId,
+    /// The version requirement the dependency must satisfy.
+    ///
+    /// Use [`VersionReq::STAR`] (or [`ModuleDependency::any`]) to express
+    /// "any version is acceptable".
+    pub constraint: VersionReq,
+}
+
+impl ModuleDependency {
+    /// Creates a dependency with an explicit version constraint.
+    ///
+    /// # Example
+    /// ```ignore
+    /// ModuleDependency::new(
+    ///     TypeId::of::<PhysicsModule>(),
+    ///     ">=1.0.0, <2.0.0".parse().unwrap(),
+    /// )
+    /// ```
+    pub fn new(module: TypeId, constraint: VersionReq) -> Self {
+        Self { module, constraint }
+    }
+
+    /// Creates a dependency that accepts any version of the target module.
+    pub fn any(module: TypeId) -> Self {
+        Self {
+            module,
+            constraint: VersionReq::STAR,
+        }
+    }
+}
 
 /// Represents the lifetime and behavior of an engine subsystem.
 ///
@@ -43,17 +82,36 @@ where
     /// Used for logging and diagnostics. Should be unique across all mounted modules.
     fn name(&self) -> &'static str;
 
-    /// Returns a slice of `TypeId` values identifying modules that must be initialized before this one.
+    /// Returns this module's semantic version.
+    ///
+    /// Used by the kernel's dependency resolver to verify that registered modules
+    /// satisfy the [`VersionReq`] constraints declared by their dependents.
+    ///
+    /// The default implementation returns `1.0.0`.
+    fn version(&self) -> Version {
+        Version::new(1, 0, 0)
+    }
+
+    /// Returns the modules that must be present and version-compatible before this one
+    /// can be initialised.
     ///
     /// # Example
     /// ```ignore
-    /// fn dependencies(&self) -> &[TypeId] {
-    ///     &[TypeId::of::<PhysicsModule>(), TypeId::of::<EcsModule>()]
+    /// fn dependencies(&self) -> &[ModuleDependency] {
+    ///     static DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
+    ///         vec![
+    ///             ModuleDependency::new(
+    ///                 TypeId::of::<PhysicsModule>(),
+    ///                 ">=1.0.0, <2.0.0".parse().unwrap(),
+    ///             ),
+    ///         ]
+    ///     });
+    ///     DEPS.as_slice()
     /// }
     /// ```
     ///
     /// The default implementation declares no dependencies.
-    fn dependencies(&self) -> &[TypeId] {
+    fn dependencies(&self) -> &[ModuleDependency] {
         &[]
     }
 
@@ -92,7 +150,7 @@ where
     /// Returns the [`TypeId`] of this module's concrete type.
     ///
     /// Used by the kernel's dependency sorter to identify modules and resolve
-    /// the `TypeId` values returned by [`EngineModule::dependencies`].
+    /// the [`ModuleDependency::module`] values returned by [`EngineModule::dependencies`].
     ///
     /// This method has a default implementation and should not be overridden.
     /// It relies on [`Any::type_id`] to retrieve the concrete type behind the

@@ -14,7 +14,7 @@ pub use error::{
     ServiceLocatorResult,
 };
 pub use event_bus::{Event, EventBus};
-pub use module::EngineModule;
+pub use module::{EngineModule, ModuleDependency};
 pub use service_locator::ServiceLocator;
 
 /// The current version of the Theos Engine.
