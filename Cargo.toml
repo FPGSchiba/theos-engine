@@ -30,6 +30,7 @@ rayon               = "1"
 tokio               = { version = "1", features = ["rt-multi-thread", "rt", "sync", "time", "macros", "fs", "io-util"] }
 crossbeam           = "0.8"
 parking_lot         = "0.12"
+semver              = "1"
 # --- Math & POD casting ---
 glam                = "0.27"
 bytemuck            = { version = "1", features = ["derive"] }

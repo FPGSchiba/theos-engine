@@ -58,7 +58,7 @@ fn bench_tick_dispatch(c: &mut Criterion) {
                 // This is outside the timed region.
                 let mut kernel = TheosKernel::default();
                 for id in 0..n {
-                    kernel.mount(Box::new(NoOpModule { id })).unwrap();
+                    kernel.register_module(Box::new(NoOpModule { id })).unwrap();
                 }
 
                 // Timed region: one tick dispatch per iteration.
