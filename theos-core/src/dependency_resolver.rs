@@ -104,10 +104,14 @@ impl DependencyResolver {
                     .join(" -> "),
             });
         }
-        
+
         tracing::debug!(
             "Module init order: {}",
-            sorted.iter().map(|&i| modules[i].name()).collect::<Vec<_>>().join(", ")
+            sorted
+                .iter()
+                .map(|&i| modules[i].name())
+                .collect::<Vec<_>>()
+                .join(", ")
         );
 
         Ok(sorted)
@@ -166,7 +170,11 @@ mod tests {
 
     // Convenience: construct a boxed TestModule with no deps.
     fn module<Tag: Send + Sync + 'static>(name: &'static str) -> Box<dyn EngineModule> {
-        Box::new(TestModule::<Tag> { name, deps: &[], _tag: PhantomData })
+        Box::new(TestModule::<Tag> {
+            name,
+            deps: &[],
+            _tag: PhantomData,
+        })
     }
 
     // Convenience: construct a boxed TestModule with a static dep slice.
@@ -174,7 +182,11 @@ mod tests {
         name: &'static str,
         deps: &'static [ModuleDependency],
     ) -> Box<dyn EngineModule> {
-        Box::new(TestModule::<Tag> { name, deps, _tag: PhantomData })
+        Box::new(TestModule::<Tag> {
+            name,
+            deps,
+            _tag: PhantomData,
+        })
     }
 
     // -----------------------------------------------------------------------
@@ -197,7 +209,12 @@ mod tests {
         let result = DependencyResolver::sort(&modules).unwrap();
         assert_eq!(result.len(), 3);
 
-        let pos = |name: &str| result.iter().position(|&i| modules[i].name() == name).unwrap();
+        let pos = |name: &str| {
+            result
+                .iter()
+                .position(|&i| modules[i].name() == name)
+                .unwrap()
+        };
         assert!(pos("A") < pos("B"), "A must appear before B");
         assert!(pos("B") < pos("C"), "B must appear before C");
     }
@@ -274,11 +291,17 @@ mod tests {
         // For every module at position i, all its declared deps must be at position < i.
         for (pos, &idx) in result.iter().enumerate() {
             for dep in modules[idx].dependencies() {
-                let dep_pos = result.iter().position(|&i| modules[i].name() == dep.name).unwrap();
+                let dep_pos = result
+                    .iter()
+                    .position(|&i| modules[i].name() == dep.name)
+                    .unwrap();
                 assert!(
                     dep_pos < pos,
                     "'{}' (pos {}) must appear before '{}' (pos {})",
-                    dep.name, dep_pos, modules[idx].name(), pos
+                    dep.name,
+                    dep_pos,
+                    modules[idx].name(),
+                    pos
                 );
             }
         }
@@ -291,7 +314,10 @@ mod tests {
     #[test]
     fn empty_module_list_returns_empty_order() {
         let modules: Vec<Box<dyn EngineModule>> = vec![];
-        assert_eq!(DependencyResolver::sort(&modules).unwrap(), Vec::<usize>::new());
+        assert_eq!(
+            DependencyResolver::sort(&modules).unwrap(),
+            Vec::<usize>::new()
+        );
     }
 
     // -----------------------------------------------------------------------
@@ -323,7 +349,11 @@ mod tests {
 
         assert!(matches!(
             DependencyResolver::sort(&modules),
-            Err(ModuleError::VersionMismatch { dependent: "B", dependency: "A", .. })
+            Err(ModuleError::VersionMismatch {
+                dependent: "B",
+                dependency: "A",
+                ..
+            })
         ));
     }
 
