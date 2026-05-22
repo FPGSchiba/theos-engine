@@ -3,13 +3,13 @@
 //! Initialises logging, the Rayon thread pool, ServiceLocator, and EventBus,
 //! then drives the EngineModule lifecycle and the fixed-step game loop.
 
+use crate::dependency_resolver::DependencyResolver;
 use crate::error::{KernelError, KernelResult};
 use crate::event::CrossbeamEventBus;
 use crate::logging;
 use crossbeam::channel::{Receiver, Sender};
 use rayon::ThreadPool;
-use std::any::{Any, TypeId};
-use std::collections::HashMap;
+use std::any::Any;
 use std::ops::DerefMut;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
@@ -113,101 +113,12 @@ impl TheosKernel {
         }
     }
 
-    /// Sorts modules into initialization order using a topological sort (Kahn's algorithm).
-    ///
-    /// Returns a vec of indices into `modules` in the order they should be initialized —
-    /// guaranteed that for every module, all its dependencies appear at a lower index.
-    ///
-    /// # Errors
-    /// Returns [`KernelError::CyclicDependency`] if a cycle is detected among the
-    /// declared dependencies (e.g. module A depends on B, B depends on A).
-    /// Returns [`KernelError::UnknownDependency`] if a module declares a dependency
-    /// on a `TypeId` that does not match any mounted module.
-    ///
-    /// # Panics
-    /// Does not panic.
-    fn resolve_init_order(modules: &[Box<dyn EngineModule>]) -> KernelResult<Vec<usize>> {
-        struct ModuleInfo {
-            index: usize,
-            dependents: Vec<TypeId>,
-            unresolved_deps: usize,
-        }
-        let mut module_map: HashMap<TypeId, ModuleInfo> = HashMap::new();
-        for (index, module) in modules.iter().enumerate() {
-            module_map.insert(
-                module.module_type_id(),
-                ModuleInfo {
-                    index,
-                    dependents: Vec::new(),
-                    unresolved_deps: module.dependencies().len(),
-                },
-            );
-        }
-        for module in modules {
-            let dependencies = module.dependencies();
-            for dep in dependencies {
-                match module_map.get_mut(&dep.module) {
-                    Some(module_info) => {
-                        let version = modules[module_info.index].version();
-                        if !dep.constraint.matches(&version) {
-                            return Err(KernelError::VersionMismatch {
-                                dependent: module.name(),
-                                dependency: modules[module_info.index].name(),
-                                required: dep.constraint.clone(),
-                                found: version,
-                            });
-                        }
-                        module_info.dependents.push(module.module_type_id());
-                    }
-                    None => {
-                        tracing::error!(
-                            "Module {} declares unknown dependency: {:?}",
-                            module.name(),
-                            dep.module
-                        );
-                        return Err(KernelError::UnknownDependency {
-                            dependent: module.name(),
-                            dependency: dep.module,
-                        });
-                    }
-                }
-            }
-        }
-        let mut sorted: Vec<usize> = Vec::new();
-        let mut ready_queue: Vec<TypeId> = module_map
-            .keys()
-            .filter(|id| module_map.get(id).unwrap().unresolved_deps == 0)
-            .cloned()
-            .collect();
-        while let Some(module) = ready_queue.pop() {
-            let module_info = module_map.get(&module).unwrap();
-            sorted.push(module_info.index);
-            for dependent in &module_info.dependents.clone() {
-                let dependent_info = module_map.get_mut(dependent).unwrap();
-                dependent_info.unresolved_deps -= 1;
-                if dependent_info.unresolved_deps == 0 {
-                    ready_queue.push(*dependent);
-                }
-            }
-        }
-        if sorted.len() != modules.len() {
-            return Err(KernelError::CyclicDependency {
-                cycle: module_map
-                    .iter()
-                    .filter(|(_, info)| info.unresolved_deps > 0)
-                    .map(|(_, info)| modules[info.index].name())
-                    .collect(),
-            });
-        }
-        Ok(sorted)
-    }
-
     /// Runs the engine: calls `init` on all modules, then enters the game loop,
     /// then calls `shutdown` on all modules in reverse order.
     ///
     /// Blocks the calling thread until the loop exits.
     pub fn run(&mut self) -> KernelResult<()> {
-        let sorted_modules = Self::resolve_init_order(self.modules.as_slice())?;
+        let sorted_modules = DependencyResolver::sort(&self.modules)?;
         let mut ctx = KernelContextImpl {
             service_locator: &mut self.service_locator,
             event_bus: self.event_bus.clone(),
@@ -345,6 +256,7 @@ mod tests {
     use semver::{Version, VersionReq};
     use std::marker::PhantomData;
     use std::sync::LazyLock;
+    use std::any::TypeId;
     use theos_shared::ModuleDependency;
 
     // ---------------------------------------------------------------------------
@@ -402,8 +314,9 @@ mod tests {
     }
 
     /// Builds a `ModuleDependency` targeting `VersionedModule<Tag>` with the given constraint string.
-    fn dep<Tag: Send + Sync + 'static>(constraint: &str) -> ModuleDependency {
+    fn dep<Tag: Send + Sync + 'static>(name: &'static str, constraint: &str) -> ModuleDependency {
         ModuleDependency::new(
+            name,
             TypeId::of::<VersionedModule<Tag>>(),
             constraint.parse::<VersionReq>().unwrap(),
         )
@@ -473,7 +386,7 @@ mod tests {
         }
         fn dependencies(&self) -> &[ModuleDependency] {
             static DEPS: LazyLock<Vec<ModuleDependency>> =
-                LazyLock::new(|| vec![ModuleDependency::any(TypeId::of::<ModuleA>())]);
+                LazyLock::new(|| vec![ModuleDependency::any("ModuleA", TypeId::of::<ModuleA>())]);
             DEPS.as_slice()
         }
         fn init(
@@ -493,7 +406,7 @@ mod tests {
         }
         fn dependencies(&self) -> &[ModuleDependency] {
             static DEPS: LazyLock<Vec<ModuleDependency>> =
-                LazyLock::new(|| vec![ModuleDependency::any(TypeId::of::<ModuleD>())]);
+                LazyLock::new(|| vec![ModuleDependency::any("ModuleD", TypeId::of::<ModuleD>())]);
             DEPS.as_slice()
         }
         fn init(
@@ -513,7 +426,7 @@ mod tests {
         }
         fn dependencies(&self) -> &[ModuleDependency] {
             static DEPS: LazyLock<Vec<ModuleDependency>> =
-                LazyLock::new(|| vec![ModuleDependency::any(TypeId::of::<ModuleG>())]);
+                LazyLock::new(|| vec![ModuleDependency::any("ModuleG", TypeId::of::<ModuleG>())]);
             DEPS.as_slice()
         }
         fn init(
@@ -533,7 +446,7 @@ mod tests {
         }
         fn dependencies(&self) -> &[ModuleDependency] {
             static DEPS: LazyLock<Vec<ModuleDependency>> =
-                LazyLock::new(|| vec![ModuleDependency::any(TypeId::of::<ModuleF>())]);
+                LazyLock::new(|| vec![ModuleDependency::any("ModuleF", TypeId::of::<ModuleF>())]);
             DEPS.as_slice()
         }
         fn init(
@@ -554,8 +467,8 @@ mod tests {
         fn dependencies(&self) -> &[ModuleDependency] {
             static DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
                 vec![
-                    ModuleDependency::any(TypeId::of::<ModuleD>()),
-                    ModuleDependency::any(TypeId::of::<ModuleE>()),
+                    ModuleDependency::any("ModuleD", TypeId::of::<ModuleD>()),
+                    ModuleDependency::any("ModuleE", TypeId::of::<ModuleE>()),
                 ]
             });
             DEPS.as_slice()
@@ -578,8 +491,8 @@ mod tests {
         fn dependencies(&self) -> &[ModuleDependency] {
             static DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
                 vec![
-                    ModuleDependency::any(TypeId::of::<ModuleD>()),
-                    ModuleDependency::any(TypeId::of::<ModuleE>()),
+                    ModuleDependency::any("ModuleD", TypeId::of::<ModuleD>()),
+                    ModuleDependency::any("ModuleE", TypeId::of::<ModuleE>()),
                 ]
             });
             DEPS.as_slice()
@@ -602,8 +515,8 @@ mod tests {
         fn dependencies(&self) -> &[ModuleDependency] {
             static DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
                 vec![
-                    ModuleDependency::any(TypeId::of::<ModuleH>()),
-                    ModuleDependency::any(TypeId::of::<ModuleI>()),
+                    ModuleDependency::any("ModuleH", TypeId::of::<ModuleH>()),
+                    ModuleDependency::any("ModuleI", TypeId::of::<ModuleI>()),
                 ]
             });
             DEPS.as_slice()
@@ -616,70 +529,6 @@ mod tests {
         }
         fn module_type_id(&self) -> TypeId {
             TypeId::of::<ModuleJ>()
-        }
-    }
-
-    // --- Happy path ---
-
-    #[test]
-    fn flat_modules_resolve_in_mount_order() {
-        let modules: Vec<Box<dyn EngineModule>> =
-            vec![Box::new(ModuleA), Box::new(ModuleB), Box::new(ModuleC)];
-
-        let init_order = TheosKernel::resolve_init_order(&modules).unwrap();
-        assert_eq!(init_order.len(), 3); // HasMap is non-deterministic, so length comparison is enough
-    }
-
-    #[test]
-    fn dependency_tree_resolves_dependency_before_dependent() {
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            Box::new(ModuleA),
-            Box::new(ModuleD), // Depends on A
-            Box::new(ModuleE), // Depends on D
-        ];
-
-        let init_order = TheosKernel::resolve_init_order(&modules).unwrap();
-        assert_eq!(init_order.len(), 3);
-        assert_eq!(init_order, [0, 1, 2]); // This must be the case, as per dependencies
-    }
-
-    // --- Error cases ---
-
-    #[test]
-    fn cyclic_dependency_returns_error() {
-        let modules: Vec<Box<dyn EngineModule>> = vec![Box::new(ModuleF), Box::new(ModuleG)];
-
-        let resolve_result = TheosKernel::resolve_init_order(&modules);
-        assert!(resolve_result.is_err());
-        if let Err(error) = resolve_result {
-            match error {
-                KernelError::CyclicDependency { cycle } => {
-                    assert_eq!(cycle.len(), 2);
-                    assert!(cycle.contains(&"ModuleF"));
-                    assert!(cycle.contains(&"ModuleG"));
-                }
-                _ => panic!("Expected CyclicDependency error"),
-            }
-        }
-    }
-
-    #[test]
-    fn unknown_dependency_returns_error() {
-        let modules: Vec<Box<dyn EngineModule>> = vec![Box::new(ModuleA), Box::new(ModuleE)];
-
-        let resolve_result = TheosKernel::resolve_init_order(&modules);
-        assert!(resolve_result.is_err());
-        if let Err(error) = resolve_result {
-            match error {
-                KernelError::UnknownDependency {
-                    dependent,
-                    dependency,
-                } => {
-                    assert_eq!(dependent, "ModuleE");
-                    assert_eq!(dependency, TypeId::of::<ModuleD>());
-                }
-                _ => panic!("Expected UnknownDependency error"),
-            }
         }
     }
 
@@ -708,163 +557,5 @@ mod tests {
             result
         );
         assert_eq!(kernel.staging_len(), 1);
-    }
-
-    // --- Robustness ---
-
-    #[test]
-    fn complex_diamond_dependency_graph_resolves_correctly() {
-        // Diamond: ModuleD depends on ModuleB and ModuleC, both depend on ModuleA
-        //          ModuleA
-        //         /       \
-        //      ModuleB   ModuleC
-        //         \       /
-        //          ModuleD
-        // assert ModuleA comes first, ModuleD comes last
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            Box::new(ModuleA),
-            Box::new(ModuleB),
-            Box::new(ModuleC),
-            Box::new(ModuleD),
-            Box::new(ModuleE),
-            Box::new(ModuleH),
-            Box::new(ModuleI),
-            Box::new(ModuleJ),
-        ];
-        let result = TheosKernel::resolve_init_order(&modules).unwrap();
-        assert_eq!(result.len(), 8);
-        let index_a = result
-            .iter()
-            .position(|&i| modules[i].name() == "ModuleA")
-            .unwrap();
-        let index_d = result
-            .iter()
-            .position(|&i| modules[i].name() == "ModuleD")
-            .unwrap();
-        assert!(index_a < index_d);
-        assert!(index_d < result.len());
-        let index_h = result
-            .iter()
-            .position(|&i| modules[i].name() == "ModuleH")
-            .unwrap();
-        let index_e = result
-            .iter()
-            .position(|&i| modules[i].name() == "ModuleE")
-            .unwrap();
-        assert!(index_h > index_d);
-        assert!(index_h > index_e);
-    }
-
-    // --- Version constraint: happy path ---
-
-    #[test]
-    fn version_within_range_resolves_successfully() {
-        // Provider at 1.5.0 satisfies Consumer's >=1.0.0, <2.0.0
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            versioned::<TagA>("Provider", 1, 5, 0, vec![]),
-            versioned::<TagB>("Consumer", 1, 0, 0, vec![dep::<TagA>(">=1.0.0, <2.0.0")]),
-        ];
-        assert!(TheosKernel::resolve_init_order(&modules).is_ok());
-    }
-
-    // --- Version constraint: error cases (increasing complexity) ---
-
-    // Error 1 — single exclusive upper bound, version lands exactly on it
-    #[test]
-    fn version_at_exclusive_upper_bound_returns_mismatch() {
-        // <2.0.0 excludes 2.0.0 — simplest possible boundary violation
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            versioned::<TagA>("Provider", 2, 0, 0, vec![]),
-            versioned::<TagB>("Consumer", 1, 0, 0, vec![dep::<TagA>("<2.0.0")]),
-        ];
-        assert!(matches!(
-            TheosKernel::resolve_init_order(&modules),
-            Err(KernelError::VersionMismatch {
-                dependent: "Consumer",
-                dependency: "Provider",
-                ..
-            })
-        ));
-    }
-
-    // Error 2 — single lower bound, version falls short
-    #[test]
-    fn version_below_lower_bound_returns_mismatch() {
-        // >=1.0.0 requires at least 1.0.0 — 0.9.0 does not qualify
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            versioned::<TagA>("Provider", 0, 9, 0, vec![]),
-            versioned::<TagB>("Consumer", 1, 0, 0, vec![dep::<TagA>(">=1.0.0")]),
-        ];
-        assert!(matches!(
-            TheosKernel::resolve_init_order(&modules),
-            Err(KernelError::VersionMismatch {
-                dependent: "Consumer",
-                dependency: "Provider",
-                ..
-            })
-        ));
-    }
-
-    // Error 3 — exact pinned constraint, off by a single patch
-    #[test]
-    fn exact_constraint_fails_on_patch_difference() {
-        // =1.0.0 accepts only 1.0.0 — 1.0.1 is rejected even though it is newer
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            versioned::<TagA>("Provider", 1, 0, 1, vec![]),
-            versioned::<TagB>("Consumer", 1, 0, 0, vec![dep::<TagA>("=1.0.0")]),
-        ];
-        assert!(matches!(
-            TheosKernel::resolve_init_order(&modules),
-            Err(KernelError::VersionMismatch { .. })
-        ));
-    }
-
-    // Error 4 — caret operator, next major version breaks compatibility
-    #[test]
-    fn caret_constraint_rejects_next_major_version() {
-        // ^1.0 expands to >=1.0.0, <2.0.0 — 2.0.0 is a breaking change
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            versioned::<TagA>("Provider", 2, 0, 0, vec![]),
-            versioned::<TagB>("Consumer", 1, 0, 0, vec![dep::<TagA>("^1.0")]),
-        ];
-        assert!(matches!(
-            TheosKernel::resolve_init_order(&modules),
-            Err(KernelError::VersionMismatch { .. })
-        ));
-    }
-
-    // Error 5 — three-module chain: A→B passes, C→B fails; error names the right pair
-    #[test]
-    fn version_mismatch_in_dependency_chain_names_correct_pair() {
-        // A at 1.0.0; B at 2.0.0 requires A >=1.0.0 (satisfied);
-        // C requires B <2.0.0 — B is at exactly 2.0.0, which is excluded
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            versioned::<TagA>("A", 1, 0, 0, vec![]),
-            versioned::<TagB>("B", 2, 0, 0, vec![dep::<TagA>(">=1.0.0")]),
-            versioned::<TagC>("C", 1, 0, 0, vec![dep::<TagB>("<2.0.0")]),
-        ];
-        assert!(matches!(
-            TheosKernel::resolve_init_order(&modules),
-            Err(KernelError::VersionMismatch {
-                dependent: "C",
-                dependency: "B",
-                ..
-            })
-        ));
-    }
-
-    // Error 6 — narrow compound window: both bounds present, version is one minor too high
-    #[test]
-    fn narrow_compound_window_rejects_version_at_upper_boundary() {
-        // >=1.2.0, <1.3.0 is a single-minor-slot window — 1.3.0 falls outside
-        // This exercises both comparators being evaluated together
-        let modules: Vec<Box<dyn EngineModule>> = vec![
-            versioned::<TagA>("Provider", 1, 3, 0, vec![]),
-            versioned::<TagB>("Consumer", 1, 0, 0, vec![dep::<TagA>(">=1.2.0, <1.3.0")]),
-        ];
-        assert!(matches!(
-            TheosKernel::resolve_init_order(&modules),
-            Err(KernelError::VersionMismatch { .. })
-        ));
     }
 }

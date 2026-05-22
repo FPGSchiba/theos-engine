@@ -6,6 +6,7 @@
 #![forbid(unsafe_code)]
 #![warn(missing_docs)]
 
+pub mod dependency_resolver;
 pub mod error;
 pub mod event;
 pub mod kernel;

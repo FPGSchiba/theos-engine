@@ -1,43 +1,86 @@
 //! Error handling for the Theos core crate
 
 use semver::{Version, VersionReq};
-use std::any::TypeId;
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use theos_shared::prelude::*;
 
-/// An error enum used for handling Module specific errors in the Theos engine.
+/// Errors produced by the dependency resolver and module lifecycle.
+///
+/// Returned by [`DependencyResolver::sort`] and propagated through
+/// [`KernelError::Dependency`] when the kernel cannot determine a valid
+/// initialization order.
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum ModuleError {
-    /// A module was not found during initialization or dependency resolution.
+    /// A module name was referenced but no matching module is registered.
+    ///
+    /// Occurs when a module calls a service or performs a lookup by name
+    /// for a module that was never passed to `register_module`.
     ModuleNotFound {
-        /// The name of the module which was not found
+        /// The human-readable name that could not be resolved.
         name: String,
     },
-    /// A module is already registered.
+
+    /// A module was registered a second time under the same name.
+    ///
+    /// The second `register_module` call is rejected and returns this error;
+    /// the staging buffer is left unchanged.
     ModuleAlreadyRegistered {
-        /// The name of the module which was already registered
+        /// The duplicate name that triggered the error.
         name: String,
     },
-    /// A required dependency is missing.
+
+    /// A module declared a dependency on a name that is not registered.
+    ///
+    /// Detected eagerly during [`DependencyResolver::sort`], before any
+    /// `init()` call is made. Fix: register the missing module or remove
+    /// the declaration.
     DependencyMissing {
-        /// The module that is missing the dependency
+        /// The module that declared the unresolvable dependency.
         module: String,
-        /// The missing dependency
+        /// The dependency name that could not be matched to any registered module.
         dependency: String,
     },
-    /// A circular dependency was detected.
+
+    /// The dependency graph contains a cycle; no valid init order exists.
+    ///
+    /// Detected eagerly during [`DependencyResolver::sort`]. A cycle means
+    /// two or more modules transitively depend on each other (A → B → A),
+    /// which makes it impossible for any of them to be initialized first.
     CircularDependency {
-        /// A string representing the cycle in the dependency graph
+        /// A human-readable description of the cycle, e.g. `"A -> B -> A"`.
+        ///
+        /// The exact format is an implementation detail of the resolver, but
+        /// all modules involved in the cycle will be named.
         cycle: String,
     },
-    /// Module initialization failed.
+
+    /// A module's `init()` returned an error.
+    ///
+    /// The kernel aborts the init sequence on the first failure; modules
+    /// that already initialised will still receive `shutdown()`.
     InitializationFailed {
-        /// The module that failed to initialize
+        /// The name of the module whose `init()` failed.
         module: String,
-        /// The reason for the failure
+        /// The human-readable reason supplied by the module.
         reason: String,
+    },
+
+    /// A registered module's version does not satisfy a dependent's constraint.
+    ///
+    /// Detected during [`DependencyResolver::sort`], before any `init()` call
+    /// is made. Both the dependent and the dependency are named so the
+    /// mismatch can be resolved without reading logs.
+    VersionMismatch {
+        /// The module that declared the unsatisfied version requirement.
+        dependent: &'static str,
+        /// The module whose registered version did not satisfy the requirement.
+        dependency: &'static str,
+        /// The `VersionReq` constraint that was declared.
+        required: VersionReq,
+        /// The actual `Version` that was registered.
+        found: Version,
     },
 }
 
@@ -62,6 +105,18 @@ impl Display for ModuleError {
             }
             ModuleError::InitializationFailed { module, reason } => {
                 write!(f, "module '{}' failed to initialize: {}", module, reason)
+            }
+            ModuleError::VersionMismatch {
+                dependent,
+                dependency,
+                required,
+                found,
+            } => {
+                write!(
+                    f,
+                    "module '{}' requires '{}' at {}, but found {}",
+                    dependent, dependency, required, found
+                )
             }
         }
     }
@@ -199,14 +254,14 @@ mod tests {
 
 /// Errors that can occur during kernel initialisation or the game loop.
 ///
-/// Variants are `#[non_exhaustive]` so downstream code cannot exhaustively
-/// match against them — new variants can be added without a breaking change.
+/// `#[non_exhaustive]` — new variants may be added in future releases without
+/// a breaking change; always include a wildcard arm when matching.
 #[derive(Debug)]
 #[non_exhaustive]
 pub enum KernelError {
     /// The Rayon thread pool could not be constructed during kernel init.
     ///
-    /// This typically means the host OS rejected the requested thread count,
+    /// Typically indicates the host OS rejected the requested thread count,
     /// or the global Rayon pool was already initialised with incompatible settings.
     ThreadPoolInit {
         /// The underlying build error from Rayon.
@@ -215,84 +270,44 @@ pub enum KernelError {
 
     /// A mounted module's `init()` returned an error.
     ///
-    /// The kernel aborts the entire init sequence when any module fails —
-    /// modules that have already initialised will still receive `shutdown()`.
+    /// The kernel aborts the entire init sequence on the first failure.
+    /// Modules that already finished `init()` will still receive `shutdown()`.
     ModuleInit {
-        /// The name returned by `EngineModule::name()` for the failing module.
+        /// Name returned by `EngineModule::name()` for the failing module.
         module_name: &'static str,
-        /// The underlying error returned by the module's `init()`.
+        /// The error returned by the module's `init()`.
         source: Box<dyn Error + Send + Sync + 'static>,
     },
 
     /// An [`EventBusError`] surfaced during kernel startup or the game loop.
-    ///
-    /// [`EventBusError`]: EventBusError
     EventBus {
         /// The underlying event bus error.
         source: EventBusError,
     },
 
     /// A [`ServiceLocatorError`] surfaced during kernel startup or module init.
-    ///
-    /// [`ServiceLocatorError`]: ServiceLocatorError
     ServiceLocator {
         /// The underlying service locator error.
         source: ServiceLocatorError,
     },
-    /// A cycle was detected among the declared module dependencies.
-    ///
-    /// This means at least two modules transitively depend on each other,
-    /// making it impossible to determine a valid initialisation order.
-    ///
-    /// The `cycle` field contains the names of the modules involved,
-    /// in the order they were traversed when the cycle was detected.
-    CyclicDependency {
-        /// Names of the modules that form the cycle, in traversal order.
-        ///
-        /// Example: `["PhysicsModule", "CollisionModule", "PhysicsModule"]`
-        /// indicates that `PhysicsModule` was reached twice.
-        cycle: Vec<&'static str>,
-    },
-
-    /// A module declared a dependency on a `TypeId` that does not match
-    /// any registered module.
-    ///
-    /// This typically means the required module was never passed to
-    /// `TheosKernel::register_module` before `TheosKernel::run` was called.
-    UnknownDependency {
-        /// The name of the module that declared the unresolvable dependency.
-        dependent: &'static str,
-
-        /// The `TypeId` that could not be matched to any registered module.
-        ///
-        /// Note: `TypeId` has no human-readable representation — if you need
-        /// to surface this to a user, consider adding a `type_name: &'static str`
-        /// field populated via [`std::any::type_name`] at the call site.
-        dependency: TypeId,
-    },
 
     /// A module was registered twice under the same name.
     ///
-    /// Registration fails immediately on the duplicate call; the staging buffer
-    /// is left unchanged.
+    /// The second `register_module` call is rejected; the staging buffer is
+    /// left unchanged.
     ModuleAlreadyRegistered {
-        /// The name returned by [`EngineModule::name`] for the duplicate module.
+        /// The duplicate name returned by [`EngineModule::name`].
         name: &'static str,
     },
 
-    /// A registered module's version does not satisfy a dependent's constraint.
+    /// The dependency resolver failed before any `init()` was called.
     ///
-    /// Detected during `TheosKernel::run`'s dependency resolution phase,
-    /// before any module `init()` is called.
-    VersionMismatch {
-        /// The module that declared the unsatisfied requirement.
-        dependent: &'static str,
-        /// The module whose version did not match.
-        dependency: &'static str,
-        /// The version constraint that was declared.
-        required: VersionReq,
-        /// The actual version that was registered.
-        found: Version,
+    /// Wraps a [`ModuleError`] from [`DependencyResolver::sort`]. Inspect
+    /// `source` to determine whether the cause was a missing dependency,
+    /// a circular dependency, or a version mismatch.
+    Dependency {
+        /// The resolver error that prevented a valid init order from being computed.
+        source: ModuleError,
     },
 }
 
@@ -311,37 +326,11 @@ impl Display for KernelError {
             KernelError::ServiceLocator { source, .. } => {
                 write!(f, "service locator error: {}", source)
             }
-            KernelError::CyclicDependency { cycle } => {
-                write!(
-                    f,
-                    "cyclic dependency detected among modules: {:?}",
-                    cycle.join(" -> ")
-                )
-            }
-            KernelError::UnknownDependency {
-                dependent,
-                dependency,
-            } => {
-                write!(
-                    f,
-                    "unregistered dependency for module '{}': {:?}",
-                    dependent, dependency
-                )
+            KernelError::Dependency { source } => {
+                write!(f, "dependency error: {}", source)
             }
             KernelError::ModuleAlreadyRegistered { name } => {
                 write!(f, "module '{}' is already registered", name)
-            }
-            KernelError::VersionMismatch {
-                dependent,
-                dependency,
-                required,
-                found,
-            } => {
-                write!(
-                    f,
-                    "module '{}' requires '{}' at {}, but found {}",
-                    dependent, dependency, required, found
-                )
             }
         }
     }
@@ -354,10 +343,8 @@ impl Error for KernelError {
             KernelError::ModuleInit { source, .. } => Some(source.as_ref()),
             KernelError::EventBus { source, .. } => Some(source),
             KernelError::ServiceLocator { source, .. } => Some(source),
-            KernelError::CyclicDependency { .. } => None,
-            KernelError::UnknownDependency { .. } => None,
+            KernelError::Dependency { source, .. } => Some(source),
             KernelError::ModuleAlreadyRegistered { .. } => None,
-            KernelError::VersionMismatch { .. } => None,
         }
     }
 }
@@ -377,6 +364,12 @@ impl From<EventBusError> for KernelError {
 impl From<ServiceLocatorError> for KernelError {
     fn from(source: ServiceLocatorError) -> Self {
         KernelError::ServiceLocator { source }
+    }
+}
+
+impl From<ModuleError> for KernelError {
+    fn from(source: ModuleError) -> Self {
+        KernelError::Dependency { source }
     }
 }
 

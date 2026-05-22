@@ -31,6 +31,12 @@ pub trait KernelContext: Send + Sync {
 /// one per required module. The kernel validates both presence and version
 /// compatibility before allowing `run()` to proceed.
 pub struct ModuleDependency {
+    /// Human-readable name of the required module.
+    ///
+    /// Used by the dependency resolver to produce diagnostic error messages
+    /// (e.g. `DependencyMissing { dependency: "PhysicsModule" }`). Must match
+    /// the `name()` returned by the target module.
+    pub name: &'static str,
     /// The [`TypeId`] of the required module.
     pub module: TypeId,
     /// The version requirement the dependency must satisfy.
@@ -46,17 +52,23 @@ impl ModuleDependency {
     /// # Example
     /// ```ignore
     /// ModuleDependency::new(
+    ///     "PhysicsModule",
     ///     TypeId::of::<PhysicsModule>(),
     ///     ">=1.0.0, <2.0.0".parse().unwrap(),
     /// )
     /// ```
-    pub fn new(module: TypeId, constraint: VersionReq) -> Self {
-        Self { module, constraint }
+    pub fn new(name: &'static str, module: TypeId, constraint: VersionReq) -> Self {
+        Self {
+            name,
+            module,
+            constraint,
+        }
     }
 
     /// Creates a dependency that accepts any version of the target module.
-    pub fn any(module: TypeId) -> Self {
+    pub fn any(name: &'static str, module: TypeId) -> Self {
         Self {
+            name,
             module,
             constraint: VersionReq::STAR,
         }
@@ -70,9 +82,9 @@ impl ModuleDependency {
 /// (e.g., `Box<dyn EngineModule>`).
 ///
 /// Modules follow a three-phase lifecycle:
-/// 1. **init()** — called once at engine startup, in topological dependency order
-/// 2. **tick()** — called once per frame during the game loop, in registration order
-/// 3. **shutdown()** — called at engine exit, in reverse dependency order
+/// 1. **`init()`** — called once at engine startup, in topological dependency order
+/// 2. **`tick()`** — called once per frame during the game loop, in registration order
+/// 3. **`shutdown()`** — called at engine exit, in reverse dependency order
 pub trait EngineModule: Send + Sync
 where
     Self: 'static,
@@ -101,6 +113,7 @@ where
     ///     static DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
     ///         vec![
     ///             ModuleDependency::new(
+    ///                 "PhysicsModule",
     ///                 TypeId::of::<PhysicsModule>(),
     ///                 ">=1.0.0, <2.0.0".parse().unwrap(),
     ///             ),
