@@ -132,7 +132,16 @@ where
 
     /// Called once per frame during the game loop.
     ///
-    /// Modules should use Arc clones of services/event bus that were grabbed and stored during `init()`.
+    /// Modules should use the `Arc` clones of services / event-bus senders that
+    /// they grabbed and stored during `init`.
+    ///
+    /// # No `KernelContext` by design
+    ///
+    /// Unlike `init`, `tick` deliberately receives **no** [`KernelContext`]. Service
+    /// discovery and event-bus access happen once during `init`, where modules cache
+    /// the `Arc` handles they need; the per-frame path must stay lock-free and never
+    /// touches the service locator. This contract is enforced structurally by the
+    /// absence of a context parameter here.
     ///
     /// The default implementation is a no-op.
     #[allow(unused_variables)]

@@ -21,7 +21,7 @@ use std::sync::{Arc, RwLock};
 /// let service = locator.get::<MyServiceImpl>()?;
 /// ```
 #[derive(Clone, Default)]
-pub struct ServiceLocator {
+pub(crate) struct ServiceLocator {
     inner: Arc<RwLock<HashMap<TypeId, Arc<dyn Any + Send + Sync>>>>,
 }
 
@@ -77,16 +77,6 @@ impl ServiceLocator {
             None => Ok(None),
         }
     }
-
-    /// Convenience method to retrieve a service, returning an error if not found.
-    ///
-    /// Equivalent to calling `get::<T>()` and then `.ok_or(...)`.
-    pub fn require<T: Any + Send + Sync + 'static>(&self) -> ServiceLocatorResult<Arc<T>> {
-        self.get::<T>()?
-            .ok_or_else(|| ServiceLocatorError::RequiredServiceMissing {
-                type_name: std::any::type_name::<T>(),
-            })
-    }
 }
 
 #[cfg(test)]
@@ -113,18 +103,6 @@ mod tests {
         let locator = ServiceLocator::default();
         let retrieved = locator.get::<TestService>().unwrap();
         assert!(retrieved.is_none());
-    }
-
-    #[test]
-    fn require_nonexistent_service_returns_error() {
-        let locator = ServiceLocator::default();
-        let result = locator.require::<TestService>();
-        assert_eq!(
-            result.err(),
-            Some(ServiceLocatorError::RequiredServiceMissing {
-                type_name: std::any::type_name::<TestService>(),
-            })
-        );
     }
 
     #[test]

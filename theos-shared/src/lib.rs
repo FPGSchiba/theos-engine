@@ -17,7 +17,6 @@ pub use error::{
 pub use event_bus::{Event, EventBus, EventBusExt, EventBusSetup};
 pub use kernel_context::{KernelContext, TheosService};
 pub use module::{EngineModule, ModuleDependency};
-pub use service_locator::ServiceLocator;
 
 /// The current version of the Theos Engine.
 pub const VERSION: &str = "0.1.0";

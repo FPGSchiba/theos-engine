@@ -1,6 +1,6 @@
 //! TheosKernel — the engine entry point.
 //!
-//! Initialises logging, the Rayon thread pool, ServiceLocator, and EventBus,
+//! Initialises logging, the Rayon thread pool, and EventBus,
 //! then drives the EngineModule lifecycle and the fixed-step game loop.
 
 use crate::dependency_resolver::DependencyResolver;
@@ -12,8 +12,7 @@ use rayon::ThreadPool;
 use std::ops::DerefMut;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use theos_shared::KernelContext;
-use theos_shared::{EngineModule, ServiceLocator};
+use theos_shared::{EngineModule, KernelContext};
 
 /// Target frame rate for the fixed-step game loop.
 const TARGET_HZ: u32 = 60;
@@ -24,10 +23,10 @@ const MAX_CATCHUP_TICKS: u32 = 8;
 
 /// The central engine kernel.
 ///
-/// Owns the ServiceLocator, EventBus, thread pool, and all mounted modules.
+/// Owns the EventBus, thread pool, and all mounted modules. The service
+/// registry lives inside the [`KernelContext`] created for module init.
 /// Drives the fixed-step game loop and module lifecycle.
 pub struct TheosKernel {
-    service_locator: ServiceLocator,
     event_bus: Arc<CrossbeamEventBus>,
     modules: Vec<Box<dyn EngineModule>>,
     /// Held to keep the pool alive; Rayon spins worker threads on construction.
@@ -43,7 +42,7 @@ impl Default for TheosKernel {
     /// In order:
     /// 1. Initializes `tracing` logging
     /// 2. Builds the Rayon thread pool
-    /// 3. Constructs an empty ServiceLocator and CrossbeamEventBus
+    /// 3. Constructs the CrossbeamEventBus
     fn default() -> Self {
         logging::init();
         let thread_pool = rayon::ThreadPoolBuilder::new()
@@ -51,7 +50,6 @@ impl Default for TheosKernel {
             .expect("Cannot build thread pool");
         let (shutdown_tx, shutdown_rx) = crossbeam::channel::bounded(1);
         Self {
-            service_locator: ServiceLocator::default(),
             event_bus: Arc::from(CrossbeamEventBus::default()),
             modules: Vec::new(),
             thread_pool,
@@ -92,7 +90,7 @@ impl TheosKernel {
     /// Blocks the calling thread until the loop exits.
     pub fn run(&mut self) -> KernelResult<()> {
         let sorted_modules = DependencyResolver::sort(&self.modules)?;
-        let mut ctx = KernelContext::new(self.service_locator.clone(), self.event_bus.clone());
+        let mut ctx = KernelContext::new(self.event_bus.clone());
         for module_index in sorted_modules.clone() {
             let module = self.modules[module_index].deref_mut();
             let span = tracing::info_span!("module_init", module = module.name());

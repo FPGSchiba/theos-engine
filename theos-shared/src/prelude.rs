@@ -6,6 +6,5 @@ pub use crate::error::{
 };
 pub use crate::event_bus::{Event, EventBus};
 pub use crate::module::EngineModule;
-pub use crate::service_locator::ServiceLocator;
 pub use crate::types::EntityId;
 pub use crate::VERSION;

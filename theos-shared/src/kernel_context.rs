@@ -63,12 +63,14 @@ pub struct KernelContext {
 }
 
 impl KernelContext {
-    /// Constructs a new context from kernel-owned shared handles.
+    /// Constructs a new context with an empty service registry.
     ///
-    /// Called by `TheosKernel::run`, not by module code.
-    pub fn new(service_locator: ServiceLocator, event_bus: Arc<dyn EventBus>) -> Self {
+    /// Called by `TheosKernel::run`, not by module code. The context owns its
+    /// [`ServiceLocator`]; modules populate it via [`KernelContext::register`]
+    /// during `init`.
+    pub fn new(event_bus: Arc<dyn EventBus>) -> Self {
         Self {
-            service_locator,
+            service_locator: ServiceLocator::default(),
             event_bus,
         }
     }
@@ -169,7 +171,7 @@ mod tests {
     impl TheosService for UnregisteredService {}
 
     fn make_context() -> KernelContext {
-        KernelContext::new(ServiceLocator::default(), Arc::new(StubBus))
+        KernelContext::new(Arc::new(StubBus))
     }
 
     #[test]
