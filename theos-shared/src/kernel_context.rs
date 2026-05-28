@@ -133,3 +133,89 @@ impl KernelContext {
         Arc::clone(&self.event_bus)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use crate::error::EventBusResult;
+    use std::any::{Any, TypeId};
+
+    /// A no-op `EventBus` stand-in. `KernelContext` tests don't exercise the
+    /// bus — they only need *an* `Arc<dyn EventBus>` to construct a context.
+    struct StubBus;
+
+    impl EventBus for StubBus {
+        fn send_erased(&self, _type_id: TypeId, _event: Box<dyn Any + Send>) -> EventBusResult<()> {
+            Ok(())
+        }
+
+        fn drain_erased(&mut self, _type_id: TypeId) -> EventBusResult<Vec<Box<dyn Any + Send>>> {
+            Ok(Vec::new())
+        }
+
+        fn sender_for_erased(&self, _type_id: TypeId) -> Option<Box<dyn Any + Send + Sync>> {
+            None
+        }
+    }
+
+    #[derive(Debug)]
+    struct TestService {
+        value: i32,
+    }
+    impl TheosService for TestService {}
+
+    #[derive(Debug)]
+    struct UnregisteredService;
+    impl TheosService for UnregisteredService {}
+
+    fn make_context() -> KernelContext {
+        KernelContext::new(ServiceLocator::default(), Arc::new(StubBus))
+    }
+
+    #[test]
+    fn register_then_get_returns_the_service() {
+        let ctx = make_context();
+        ctx.register::<TestService>(Arc::new(TestService { value: 7 }))
+            .expect("registration should succeed");
+
+        let service = ctx
+            .get::<TestService>()
+            .expect("a registered service should be retrievable");
+        assert_eq!(service.value, 7);
+    }
+
+    #[test]
+    fn get_unregistered_service_returns_service_not_found() {
+        let ctx = make_context();
+        let err = ctx
+            .get::<UnregisteredService>()
+            .expect_err("an unregistered service must not be returned");
+        assert_eq!(
+            err,
+            KernelContextError::ServiceNotFound {
+                type_name: std::any::type_name::<UnregisteredService>(),
+            }
+        );
+    }
+
+    #[test]
+    fn register_overwrites_previous_service_of_same_type() {
+        let ctx = make_context();
+        ctx.register::<TestService>(Arc::new(TestService { value: 1 }))
+            .unwrap();
+        ctx.register::<TestService>(Arc::new(TestService { value: 2 }))
+            .unwrap();
+        assert_eq!(ctx.get::<TestService>().unwrap().value, 2);
+    }
+
+    #[test]
+    fn event_bus_hands_back_the_same_shared_handle() {
+        let ctx = make_context();
+        let first = ctx.event_bus();
+        let second = ctx.event_bus();
+        assert!(
+            Arc::ptr_eq(&first, &second),
+            "event_bus() should clone the same underlying bus handle"
+        );
+    }
+}

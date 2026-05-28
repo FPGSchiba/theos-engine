@@ -284,4 +284,33 @@ mod tests {
         let message: TheosError = "The error message".to_string().into();
         assert_eq!(format!("{}", message), "The error message");
     }
+
+    #[test]
+    fn kernel_context_service_not_found_displays_type_name_and_has_no_source() {
+        let error = KernelContextError::ServiceNotFound {
+            type_name: "my::Service",
+        };
+        assert_eq!(
+            format!("{error}"),
+            "no service of type my::Service is registered"
+        );
+        assert!(error.source().is_none());
+    }
+
+    #[test]
+    fn kernel_context_wraps_service_locator_error_and_exposes_source() {
+        let inner = ServiceLocatorError::LockPoisoned {
+            operation: ServiceLocatorOperation::Read,
+        };
+        let error = KernelContextError::from(inner);
+        assert!(matches!(error, KernelContextError::ServiceLocator(_)));
+        assert!(error.source().is_some());
+    }
+
+    #[test]
+    fn kernel_context_error_converts_into_theos_error() {
+        let error = KernelContextError::ServiceNotFound { type_name: "X" };
+        let theos: TheosError = error.into();
+        assert!(matches!(theos, TheosError::Wrapped(_)));
+    }
 }

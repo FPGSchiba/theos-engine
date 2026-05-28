@@ -14,7 +14,7 @@ use std::sync::{
 };
 use std::time::Instant;
 use theos_core::TheosKernel;
-use theos_shared::{EngineModule, KernelContext};
+use theos_shared::{EngineModule, KernelContext, ModuleDependency, TheosService};
 
 // ---------------------------------------------------------------------------
 // Tag types — give two CountingModule instances distinct TypeIds.
@@ -360,4 +360,101 @@ fn reports_frame_timing_multirun() {
         grand_mean + ci
     );
     println!("  Worst spike : {worst_jitter:.4} ms  (mean {mean_jitter:.4} ms across runs)");
+}
+
+// ---------------------------------------------------------------------------
+// AC2: cross-module service discovery
+//
+// ProviderModule registers GreetingService during its init. ConsumerModule
+// declares a dependency on ProviderModule (so the resolver initialises the
+// provider first) and retrieves the service during its own init, recording
+// what it observed for the test to assert on.
+// ---------------------------------------------------------------------------
+
+#[derive(Debug)]
+struct GreetingService {
+    message: String,
+}
+impl TheosService for GreetingService {}
+
+struct ProviderModule;
+
+impl EngineModule for ProviderModule {
+    fn name(&self) -> &'static str {
+        "ProviderModule"
+    }
+
+    fn init(
+        &mut self,
+        ctx: &mut KernelContext,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        ctx.register::<GreetingService>(Arc::new(GreetingService {
+            message: "hello from provider".to_string(),
+        }))?;
+        Ok(())
+    }
+
+    fn module_type_id(&self) -> TypeId {
+        TypeId::of::<Self>()
+    }
+}
+
+struct ConsumerModule {
+    deps: Vec<ModuleDependency>,
+    observed: Arc<Mutex<Option<String>>>,
+}
+
+impl EngineModule for ConsumerModule {
+    fn name(&self) -> &'static str {
+        "ConsumerModule"
+    }
+
+    fn dependencies(&self) -> &[ModuleDependency] {
+        &self.deps
+    }
+
+    fn init(
+        &mut self,
+        ctx: &mut KernelContext,
+    ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+        // The provider initialised first (dependency order), so its service
+        // must be retrievable here. Record the message for the test.
+        let greeting = ctx.get::<GreetingService>()?;
+        *self.observed.lock().unwrap() = Some(greeting.message.clone());
+        Ok(())
+    }
+
+    fn module_type_id(&self) -> TypeId {
+        TypeId::of::<Self>()
+    }
+}
+
+#[test]
+fn module_retrieves_service_registered_by_its_dependency() {
+    let mut kernel = TheosKernel::default();
+    // Pre-signal shutdown so run() performs the init phase, then exits the
+    // game loop immediately (cf. shutdown_before_run_exits_immediately).
+    kernel.shutdown_handle().send(()).unwrap();
+
+    let observed = Arc::new(Mutex::new(None::<String>));
+
+    let consumer = ConsumerModule {
+        deps: vec![ModuleDependency::any(
+            "ProviderModule",
+            TypeId::of::<ProviderModule>(),
+        )],
+        observed: observed.clone(),
+    };
+
+    // Register consumer *before* provider to prove init order follows the
+    // declared dependency, not registration order.
+    kernel.register_module(Box::new(consumer)).unwrap();
+    kernel.register_module(Box::new(ProviderModule)).unwrap();
+    kernel.run().unwrap();
+
+    assert_eq!(
+        observed.lock().unwrap().as_deref(),
+        Some("hello from provider"),
+        "consumer should retrieve the provider's service during init"
+    );
 }

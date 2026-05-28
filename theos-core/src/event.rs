@@ -249,6 +249,29 @@ mod tests {
     }
 
     #[test]
+    fn sender_for_returns_a_working_sender() {
+        let mut bus = CrossbeamEventBus::default();
+        bus.register::<TestEvent>().unwrap();
+
+        // Exercises sender_for -> sender_for_erased -> ChannelHandle::cloned_sender_any
+        // and the downcast back to a typed Sender<TestEvent>.
+        let sender = bus
+            .sender_for::<TestEvent>()
+            .expect("a registered type should yield a sender");
+        sender.send(TestEvent::Dummy).unwrap();
+
+        let drained = bus.drain::<TestEvent>().unwrap();
+        assert_eq!(drained.len(), 1);
+        assert_eq!(drained.first(), Some(&TestEvent::Dummy));
+    }
+
+    #[test]
+    fn sender_for_unregistered_type_returns_none() {
+        let bus = CrossbeamEventBus::default();
+        assert!(bus.sender_for::<TestEvent>().is_none());
+    }
+
+    #[test]
     fn drain_fails_when_unregistered() {
         let mut bus = CrossbeamEventBus::default();
         let result = bus.drain::<TestEvent>();
