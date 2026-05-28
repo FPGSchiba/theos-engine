@@ -2,7 +2,7 @@
 
 use alloc_count::alloc_count;
 use theos_core::event::{CrossbeamEventBus, GameEvent};
-use theos_shared::EventBus;
+use theos_shared::{EventBusExt, EventBusSetup};
 
 const BATCH: usize = 1024;
 

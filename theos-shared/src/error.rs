@@ -130,6 +130,64 @@ impl From<ServiceLocatorError> for TheosError {
 /// The result type used throughout the Service Locator
 pub type ServiceLocatorResult<T> = Result<T, ServiceLocatorError>;
 
+/// Errors that can occur when a module interacts with the `KernelContext`
+/// during initialization (service registration and retrieval).
+#[derive(Debug, PartialEq, Eq)]
+#[non_exhaustive]
+pub enum KernelContextError {
+    /// A service-locator operation failed — e.g. a poisoned lock or a
+    /// downcast mismatch while registering or retrieving a service.
+    ServiceLocator(ServiceLocatorError),
+
+    /// A requested service of the named type was not registered.
+    ///
+    /// Returned by `KernelContext::get` when a module asks for a service that
+    /// no other module has registered — typically a missing or mis-declared
+    /// dependency.
+    ServiceNotFound {
+        /// The type name of the service that was requested but not found.
+        type_name: &'static str,
+    },
+}
+
+impl Display for KernelContextError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            KernelContextError::ServiceLocator(err) => {
+                write!(f, "service locator error: {err}")
+            }
+            KernelContextError::ServiceNotFound { type_name } => {
+                write!(f, "no service of type {type_name} is registered")
+            }
+        }
+    }
+}
+
+impl Error for KernelContextError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        match self {
+            KernelContextError::ServiceLocator(err) => Some(err),
+            // No underlying source — this is a KernelContext-level condition.
+            KernelContextError::ServiceNotFound { .. } => None,
+        }
+    }
+}
+
+impl From<ServiceLocatorError> for KernelContextError {
+    fn from(err: ServiceLocatorError) -> KernelContextError {
+        KernelContextError::ServiceLocator(err)
+    }
+}
+
+impl From<KernelContextError> for TheosError {
+    fn from(err: KernelContextError) -> TheosError {
+        TheosError::wrap(err)
+    }
+}
+
+/// The result type used by `KernelContext` operations.
+pub type KernelContextResult<T> = Result<T, KernelContextError>;
+
 #[derive(Debug)]
 #[non_exhaustive]
 /// An error enum used for handling EventBus specific errors in the Theos engine.

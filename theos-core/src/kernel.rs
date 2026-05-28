@@ -9,11 +9,10 @@ use crate::event::CrossbeamEventBus;
 use crate::logging;
 use crossbeam::channel::{Receiver, Sender};
 use rayon::ThreadPool;
-use std::any::Any;
 use std::ops::DerefMut;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use theos_shared::module::KernelContext;
+use theos_shared::KernelContext;
 use theos_shared::{EngineModule, ServiceLocator};
 
 /// Target frame rate for the fixed-step game loop.
@@ -22,32 +21,6 @@ const TARGET_HZ: u32 = 60;
 /// Maximum number of catch-up ticks per outer loop iteration.
 /// If the loop falls further behind than this, it accepts the lag and resets.
 const MAX_CATCHUP_TICKS: u32 = 8;
-
-/// A short-lived context passed to [`EngineModule::init`] during kernel startup.
-///
-/// Borrows only the kernel fields that modules need during initialization —
-/// the [`ServiceLocator`] for registering and retrieving services, and the
-/// [`EventBus`] for subscribing to event types.
-///
-/// Using a separate struct (rather than passing `&mut TheosKernel` directly)
-/// allows the kernel to simultaneously hold a mutable borrow on its module
-/// list while providing context to each module being initialized.
-struct KernelContextImpl<'a> {
-    /// Borrowed from the kernel for the duration of a single module's `init()`.
-    service_locator: &'a mut ServiceLocator,
-    /// Cloned Arc from the kernel — modules may retain this clone after init.
-    event_bus: Arc<CrossbeamEventBus>,
-}
-
-impl KernelContext for KernelContextImpl<'_> {
-    fn service_locator(&mut self) -> &mut (dyn Any + '_) {
-        &mut self.service_locator
-    }
-
-    fn event_bus(&self) -> Arc<dyn Any + Send + Sync> {
-        self.event_bus.clone()
-    }
-}
 
 /// The central engine kernel.
 ///
@@ -119,10 +92,7 @@ impl TheosKernel {
     /// Blocks the calling thread until the loop exits.
     pub fn run(&mut self) -> KernelResult<()> {
         let sorted_modules = DependencyResolver::sort(&self.modules)?;
-        let mut ctx = KernelContextImpl {
-            service_locator: &mut self.service_locator,
-            event_bus: self.event_bus.clone(),
-        };
+        let mut ctx = KernelContext::new(self.service_locator.clone(), self.event_bus.clone());
         for module_index in sorted_modules.clone() {
             let module = self.modules[module_index].deref_mut();
             let span = tracing::info_span!("module_init", module = module.name());
@@ -265,7 +235,7 @@ mod tests {
         }
         fn init(
             &mut self,
-            _ctx: &mut dyn KernelContext,
+            _ctx: &mut KernelContext,
         ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             Ok(())
         }
@@ -280,7 +250,7 @@ mod tests {
         }
         fn init(
             &mut self,
-            _ctx: &mut dyn KernelContext,
+            _ctx: &mut KernelContext,
         ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             Ok(())
         }
@@ -295,7 +265,7 @@ mod tests {
         }
         fn init(
             &mut self,
-            _ctx: &mut dyn KernelContext,
+            _ctx: &mut KernelContext,
         ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             Ok(())
         }
@@ -303,7 +273,6 @@ mod tests {
             TypeId::of::<ModuleC>()
         }
     }
-
 
     #[test]
     fn registering_three_distinct_modules_fills_staging_buffer() {

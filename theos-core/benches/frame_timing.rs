@@ -10,7 +10,7 @@ use criterion::{criterion_group, criterion_main, BenchmarkId, Criterion};
 use std::any::TypeId;
 use std::hint::black_box;
 use theos_core::TheosKernel;
-use theos_shared::{module::KernelContext, EngineModule};
+use theos_shared::{EngineModule, KernelContext};
 
 // ---------------------------------------------------------------------------
 // No-op module — tick does nothing, giving pure dispatch overhead.
@@ -28,7 +28,7 @@ impl EngineModule for NoOpModule {
 
     fn init(
         &mut self,
-        _ctx: &mut dyn KernelContext,
+        _ctx: &mut KernelContext,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         Ok(())
     }

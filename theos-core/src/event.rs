@@ -1,121 +1,199 @@
 //! Event bus implementation for sending and receiving events of various types.
+//!
+//! # Architecture overview
+//!
+//! This file rewritten under THEOS-11 to split [`theos_shared::EventBus`] into
+//! a dyn-compatible core trait plus a generic extension trait plus a
+//! concrete-only setup trait. See `theos-shared/src/event_bus.rs` for the
+//! trait split rationale.
+//!
+//! Internally, the bus stores its typed channels behind a private
+//! `ChannelHandle` adapter trait that exposes type-erased
+//! `send_any` / `drain_any` / `cloned_sender_any` operations. Each
+//! `impl ChannelHandle for TypedChannel<E>` captures the concrete `E`
+//! at the impl site, so the type-erased trait methods can still call
+//! the typed `crossbeam` channel internally.
 
 use crossbeam::channel::{Receiver, Sender, TryRecvError};
 use std::any::{Any, TypeId};
 use std::collections::HashMap;
 use std::fmt::Debug;
-use theos_shared::{Event, EventBus, EventBusError, EventBusResult};
+use theos_shared::{Event, EventBus, EventBusError, EventBusResult, EventBusSetup};
+// =============================================================================
+// Private internals — type-erasure adapter
+// =============================================================================
 
-/// A simple implementation of the `EventBus` trait using `crossbeam::channel` for thread-safe event queues.
-#[derive(Debug, Default)]
-pub struct CrossbeamEventBus {
-    channel_map: HashMap<TypeId, Box<dyn Any + Send + Sync>>,
+/// Private adapter trait: a type-erased view over a typed `(Sender<E>, Receiver<E>)` pair.
+///
+/// `CrossbeamEventBus` stores `Box<dyn ChannelHandle>` values keyed by `TypeId`,
+/// which lets it dispatch typed channel operations from inside the type-erased
+/// `EventBus::send_erased` / `drain_erased` / `sender_for_erased` methods.
+///
+/// Each method takes / returns `Box<dyn Any>` payloads; the implementation
+/// downcasts internally because the concrete `E` is captured at the
+/// `impl<E: Event> ChannelHandle for TypedChannel<E>` site below.
+trait ChannelHandle: Send + Sync {
+    /// Sends a type-erased event payload into the channel.
+    ///
+    /// The `event` MUST be a `Box<E>` where `E` matches the channel's element
+    /// type. By construction (TypeId routing in
+    /// `CrossbeamEventBus::send_erased`), this invariant is upheld; mismatch
+    /// indicates a programmer error elsewhere in the bus.
+    fn send_any(&self, event: Box<dyn Any + Send>) -> EventBusResult<()>;
+
+    /// Drains all pending events as boxed `dyn Any` values, in FIFO order.
+    fn drain_any(&mut self) -> EventBusResult<Vec<Box<dyn Any + Send>>>;
+
+    /// Returns a boxed clone of the channel's `Sender`.
+    ///
+    /// The box contains `Sender<E>` where `E` is the channel's element type.
+    /// The extension trait (`EventBusExt::sender_for<E>`) downcasts this to
+    /// recover the typed sender.
+    fn cloned_sender_any(&self) -> Box<dyn Any + Send + Sync>;
 }
 
-impl EventBus for CrossbeamEventBus {
-    /// Registers a new event type `E` with the EventBus, creating a new channel for it.
-    /// If the event type is already registered, a warning is logged and an error is returned.
-    fn register<E: Event>(&mut self) -> EventBusResult<()> {
-        let type_id = TypeId::of::<E>();
-        let (sender, receiver) = crossbeam::channel::unbounded::<E>();
-        self.channel_map
-            .entry(type_id)
-            .or_insert(Box::new((sender, receiver)));
-        Ok(())
+/// Concrete channel wrapper. One `TypedChannel<E>` per registered event type.
+struct TypedChannel<E: Event> {
+    sender: Sender<E>,
+    receiver: Receiver<E>,
+}
+
+impl<E: Event> ChannelHandle for TypedChannel<E> {
+    fn send_any(&self, event: Box<dyn Any + Send>) -> EventBusResult<()> {
+        match event.downcast::<E>() {
+            Ok(event) => {
+                let type_id = (*event).type_id();
+                self.sender.send(*event).map_err(|err| {
+                    tracing::error!(
+                        type_id = ?type_id,
+                        "Failed to send event into channel"
+                    );
+                    EventBusError::SendFailed {
+                        wrapped: Some(Box::new(err)),
+                    }
+                })
+            }
+            Err(event) => {
+                panic!(
+                    "Unexpected event type: {:?}, expected: {}",
+                    (*event).type_id(),
+                    std::any::type_name::<E>()
+                );
+            }
+        }
     }
 
-    /// Sends an event of type `E` through the EventBus.
-    /// If the event type is not registered, a warning is logged and an error is returned.
-    /// If sending the event fails for any reason, an error is returned with the underlying error wrapped.
-    fn send<E: Event>(&self, event: E) -> EventBusResult<()> {
-        let type_id = TypeId::of::<E>();
-        if let Some(boxed) = self.channel_map.get(&type_id) {
-            if let Some((sender, _)) = boxed.downcast_ref::<(Sender<E>, Receiver<E>)>() {
-                match sender.send(event) {
-                    Ok(_) => Ok(()),
-                    Err(error) => {
-                        tracing::error!(
-                            error = error.to_string(),
-                            "Failed to send event: {}",
-                            error
-                        );
-                        Err(EventBusError::SendFailed {
-                            wrapped: Some(Box::new(error)),
-                        })
-                    }
+    fn drain_any(&mut self) -> EventBusResult<Vec<Box<dyn Any + Send>>> {
+        let mut result: Vec<Box<dyn Any + Send>> = Vec::new();
+        loop {
+            match self.receiver.try_recv() {
+                Ok(event) => {
+                    result.push(Box::new(event));
                 }
-            } else {
+                Err(TryRecvError::Empty) => {
+                    break;
+                }
+                Err(TryRecvError::Disconnected) => {
+                    tracing::error!(
+                        "Failed to drain events for type: '{}': channel disconnected",
+                        std::any::type_name::<E>()
+                    );
+                    break;
+                }
+            }
+        }
+        Ok(result)
+    }
+
+    fn cloned_sender_any(&self) -> Box<dyn Any + Send + Sync> {
+        Box::new(self.sender.clone())
+    }
+}
+
+// =============================================================================
+// Public — CrossbeamEventBus
+// =============================================================================
+
+/// A `crossbeam`-backed implementation of [`EventBus`] + [`EventBusSetup`].
+///
+/// Registered event types live in `channel_map`, keyed by their `TypeId`.
+/// Each entry is a `Box<dyn ChannelHandle>` whose concrete type is
+/// `TypedChannel<E>` for the registered `E`.
+#[derive(Default)]
+pub struct CrossbeamEventBus {
+    channel_map: HashMap<TypeId, Box<dyn ChannelHandle>>,
+}
+
+impl Debug for CrossbeamEventBus {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        f.debug_struct("CrossbeamEventBus")
+            .field("registered_types", &self.channel_map.len())
+            .finish()
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Setup-time registration (concrete-only — generic, not dyn-compatible)
+// ---------------------------------------------------------------------------
+
+impl EventBusSetup for CrossbeamEventBus {
+    fn register<E: Event>(&mut self) -> EventBusResult<()> {
+        let type_id = TypeId::of::<E>();
+        self.channel_map.entry(type_id).or_insert_with(|| {
+            let (sender, receiver) = crossbeam::channel::unbounded::<E>();
+            Box::new(TypedChannel { sender, receiver })
+        });
+        Ok(())
+    }
+}
+
+// ---------------------------------------------------------------------------
+// Runtime dyn-compatible surface
+// ---------------------------------------------------------------------------
+
+impl EventBus for CrossbeamEventBus {
+    fn send_erased(&self, type_id: TypeId, event: Box<dyn Any + Send>) -> EventBusResult<()> {
+        match self.channel_map.get(&type_id) {
+            Some(handle) => handle.send_any(event),
+            None => {
                 tracing::warn!(
-                    "Event type {} is not registered, but event was sent: {:?}",
-                    std::any::type_name::<E>(),
-                    event
+                    type_id = ?type_id,
+                    "Event type is not registered, but send was attempted"
                 );
                 Err(EventBusError::SendFailed { wrapped: None })
             }
-        } else {
-            tracing::warn!(
-                "Event type {} is not registered, but event was sent: {:?}",
-                std::any::type_name::<E>(),
-                event
-            );
-            Err(EventBusError::SendFailed { wrapped: None })
         }
     }
 
-    /// Drains all events of type `E` from the corresponding Event channel queue and returns them as a vector.
-    /// If an event type does not exist an error is returned.
-    /// If draining the events fails for any reason, an error is returned with the underlying error wrapped.
-    fn drain<E: Event>(&mut self) -> EventBusResult<Vec<E>> {
-        let type_id = TypeId::of::<E>();
-        if let Some(boxed) = self.channel_map.get(&type_id) {
-            if let Some((_, receiver)) = boxed.downcast_ref::<(Sender<E>, Receiver<E>)>() {
-                let mut events = Vec::new();
-                loop {
-                    match receiver.try_recv() {
-                        Ok(event) => events.push(event),
-                        Err(TryRecvError::Empty) => break,
-                        Err(TryRecvError::Disconnected) => {
-                            // Future: If disconnects become frequent, we can recreate this event type’s channel entry here to self-heal future frames
-                            tracing::error!(
-                                "Failed to drain events for type: '{}': channel disconnected",
-                                std::any::type_name::<E>()
-                            );
-                            break;
-                        }
-                    }
-                }
-                Ok(events)
-            } else {
+    fn drain_erased(&mut self, type_id: TypeId) -> EventBusResult<Vec<Box<dyn Any + Send>>> {
+        match self.channel_map.get_mut(&type_id) {
+            Some(handle) => handle.drain_any(),
+            None => {
                 tracing::warn!(
-                    "Event type {} is not registered, but event queue was drained",
-                    std::any::type_name::<E>()
+                    type_id = ?type_id,
+                    "Event type is not registered, but drain was attempted"
                 );
                 Err(EventBusError::DrainFailed { wrapped: None })
             }
-        } else {
-            tracing::warn!(
-                "Event type {} is not registered, but event queue was drained",
-                std::any::type_name::<E>()
-            );
-            Err(EventBusError::DrainFailed { wrapped: None })
         }
     }
 
-    /// Gets the sender for a specific event type `E` if it exists,
-    /// returning `None` if the event type is not registered or if the sender cannot be downcast to the expected type.
-    fn sender_for<E: Event>(&self) -> Option<Sender<E>> {
-        let type_id = TypeId::of::<E>();
-        if let Some(boxed) = self.channel_map.get(&type_id) {
-            if let Some((sender, _)) = boxed.downcast_ref::<(Sender<E>, Receiver<E>)>() {
-                Some(sender.clone())
-            } else {
-                None
-            }
-        } else {
-            None
-        }
+    fn sender_for_erased(&self, type_id: TypeId) -> Option<Box<dyn Any + Send + Sync>> {
+        self.channel_map
+            .get(&type_id)
+            .map(|h| h.cloned_sender_any())
     }
+
+    // drain_for_sync uses the trait default implementation (Ok(())) for now.
+    //
+    // TODO (post-THEOS-11): implement by iterating self.channel_map and calling
+    // drain_any on each handle. Required by spec §5 step 4 (per-frame sync point)
+    // but not required by THEOS-11 acceptance criteria — leave as default.
 }
+
+// =============================================================================
+// Temporary test event type for the core event bus.
+// =============================================================================
 
 /// Temporary test event type for the core event bus.
 #[derive(Debug, PartialEq)]
@@ -132,6 +210,7 @@ impl Event for GameEvent {}
 mod tests {
     use super::*;
     use std::sync::Arc;
+    use theos_shared::EventBusExt;
 
     #[derive(Debug, PartialEq)]
     enum TestEvent {

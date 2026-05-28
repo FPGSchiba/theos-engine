@@ -2,7 +2,7 @@ use criterion::{criterion_group, criterion_main, Criterion};
 use std::hint::black_box;
 
 use theos_core::event::{CrossbeamEventBus, GameEvent};
-use theos_shared::EventBus;
+use theos_shared::{EventBusExt, EventBusSetup};
 
 const BATCH: usize = 1024;
 

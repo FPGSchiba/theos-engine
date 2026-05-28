@@ -14,7 +14,7 @@ use std::sync::{
 };
 use std::time::Instant;
 use theos_core::TheosKernel;
-use theos_shared::{module::KernelContext, EngineModule};
+use theos_shared::{EngineModule, KernelContext};
 
 // ---------------------------------------------------------------------------
 // Tag types — give two CountingModule instances distinct TypeIds.
@@ -47,7 +47,7 @@ impl<Tag: Send + Sync + 'static> EngineModule for CountingModule<Tag> {
 
     fn init(
         &mut self,
-        _ctx: &mut dyn KernelContext,
+        _ctx: &mut KernelContext,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         self.init_count.fetch_add(1, Ordering::SeqCst);
         Ok(())
@@ -178,7 +178,7 @@ impl EngineModule for TimingModule {
 
     fn init(
         &mut self,
-        _ctx: &mut dyn KernelContext,
+        _ctx: &mut KernelContext,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         Ok(())
     }

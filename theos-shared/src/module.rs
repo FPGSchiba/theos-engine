@@ -7,23 +7,9 @@
 //! with a semver [`VersionReq`] — to preserve trait-object safety while also
 //! enabling version-aware dependency resolution.
 
+use crate::kernel_context::KernelContext;
 use semver::{Version, VersionReq};
-use std::any::Any;
 use std::any::TypeId;
-use std::sync::Arc;
-
-/// Initialization context provided by the kernel to modules.
-///
-/// This is a minimal trait that abstracts away the concrete kernel type,
-/// allowing modules to request services and event bus access during initialization
-/// without creating circular dependencies between crates.
-pub trait KernelContext: Send + Sync {
-    /// Returns the ServiceLocator as a trait object, allowing modules to register/retrieve services.
-    fn service_locator(&mut self) -> &mut (dyn Any + '_);
-
-    /// Returns the EventBus as a trait object, allowing modules to subscribe/publish events.
-    fn event_bus(&self) -> Arc<dyn Any + Send + Sync>;
-}
 
 /// Declares a versioned dependency on another engine module.
 ///
@@ -141,7 +127,7 @@ where
     /// These references should be stored in the module's internal state for use during `tick()`.
     fn init(
         &mut self,
-        ctx: &mut dyn KernelContext,
+        ctx: &mut KernelContext,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>>;
 
     /// Called once per frame during the game loop.

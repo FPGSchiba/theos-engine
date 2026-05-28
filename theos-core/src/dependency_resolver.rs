@@ -28,7 +28,7 @@ impl DependencyResolver {
     /// - [`ModuleError::CircularDependency`] — the dependency graph contains a
     ///   cycle (e.g. A → B → A).
     ///
-    /// [`TypeId`]: std::any::TypeId
+    /// [`TypeId`]: TypeId
     /// [`VersionReq`]: semver::VersionReq
     pub fn sort(modules: &[Box<dyn EngineModule>]) -> ModuleResult<Vec<usize>> {
         struct ModuleInfo {
@@ -125,7 +125,7 @@ mod tests {
     use std::any::TypeId;
     use std::marker::PhantomData;
     use std::sync::LazyLock;
-    use theos_shared::module::KernelContext;
+    use theos_shared::KernelContext;
     use theos_shared::ModuleDependency;
 
     // -----------------------------------------------------------------------
@@ -148,7 +148,7 @@ mod tests {
         }
         fn init(
             &mut self,
-            _ctx: &mut dyn KernelContext,
+            _ctx: &mut KernelContext,
         ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
             Ok(())
         }
