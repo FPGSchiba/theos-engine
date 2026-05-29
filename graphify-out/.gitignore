@@ -1,3 +1,6 @@
+# Regenerable outputs (run: graphify export html)
+graph.html
+
 # Machine-specific graphify state
 .graphify_python
 .graphify_root
