@@ -1,0 +1,7 @@
+# Machine-specific graphify state
+.graphify_python
+.graphify_root
+cache/
+
+# Temporary extraction artifacts (cleaned up after each run)
+.graphify_*.json
