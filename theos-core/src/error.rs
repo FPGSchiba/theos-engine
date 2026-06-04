@@ -270,8 +270,12 @@ pub enum KernelError {
 
     /// A mounted module's `init()` returned an error.
     ///
-    /// The kernel aborts the entire init sequence on the first failure.
-    /// Modules that already finished `init()` will still receive `shutdown()`.
+    /// The kernel aborts the init sequence on the first failure and returns
+    /// immediately. Modules sequenced before the failing one stay live (their
+    /// `init()` already ran and may have published services or spawned
+    /// resources), but they do **not** receive `shutdown()` — no partial-init
+    /// cleanup is performed at this stage. Modules sequenced after the failing
+    /// one never have their `init()` called.
     ModuleInit {
         /// Name returned by `EngineModule::name()` for the failing module.
         module_name: &'static str,
@@ -309,6 +313,26 @@ pub enum KernelError {
         /// The resolver error that prevented a valid init order from being computed.
         source: ModuleError,
     },
+    /// [`TheosKernel::run`] was called before [`TheosKernel::init`].
+    ///
+    /// `run` requires the modules to have been initialised so the game loop
+    /// has something to tick and so shutdown order is known. Calling `run`
+    /// on an uninitialised kernel is a programmer error — the kernel does
+    /// not auto-init for you.
+    ///
+    /// [`TheosKernel::run`]: crate::kernel::TheosKernel::run
+    /// [`TheosKernel::init`]: crate::kernel::TheosKernel::init
+    UninitializedKernelStart,
+
+    /// [`TheosKernel::init`] was called more than once on the same kernel.
+    ///
+    /// Init is one-shot. After a successful `init`, the kernel transitions
+    /// permanently into the "initialised" state. A second `init` call is
+    /// rejected with this error rather than silently re-initialising modules,
+    /// which would risk double-registration of services and other surprises.
+    ///
+    /// [`TheosKernel::init`]: crate::kernel::TheosKernel::init
+    AlreadyInitialized,
 }
 
 impl Display for KernelError {
@@ -332,6 +356,12 @@ impl Display for KernelError {
             KernelError::ModuleAlreadyRegistered { name } => {
                 write!(f, "module '{}' is already registered", name)
             }
+            KernelError::UninitializedKernelStart => {
+                write!(f, "uninitialized kernel start attempted")
+            }
+            KernelError::AlreadyInitialized => {
+                write!(f, "kernel was already initialized")
+            }
         }
     }
 }
@@ -345,6 +375,8 @@ impl Error for KernelError {
             KernelError::ServiceLocator { source, .. } => Some(source),
             KernelError::Dependency { source, .. } => Some(source),
             KernelError::ModuleAlreadyRegistered { .. } => None,
+            KernelError::UninitializedKernelStart => None,
+            KernelError::AlreadyInitialized => None,
         }
     }
 }

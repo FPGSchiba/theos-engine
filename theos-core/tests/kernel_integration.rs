@@ -118,6 +118,7 @@ fn kernel_runs_init_tick_shutdown_lifecycle() {
 
     kernel.register_module(Box::new(mod_one)).unwrap();
     kernel.register_module(Box::new(mod_two)).unwrap();
+    kernel.init().unwrap();
     kernel.run().unwrap();
 
     assert_eq!(
@@ -157,6 +158,7 @@ fn shutdown_before_run_exits_immediately() {
     let mut kernel = TheosKernel::default();
     let shutdown_tx = Arc::new(kernel.shutdown_handle());
     shutdown_tx.send(()).unwrap();
+    kernel.init().unwrap();
     assert!(kernel.run().is_ok());
 }
 
@@ -218,6 +220,7 @@ fn reports_frame_timing_accuracy() {
         }))
         .unwrap();
 
+    kernel.init().unwrap();
     kernel.run().unwrap();
 
     let ts = timestamps.lock().unwrap();
@@ -304,6 +307,7 @@ fn reports_frame_timing_multirun() {
                 count,
             }))
             .unwrap();
+        kernel.init().unwrap();
         kernel.run().unwrap();
 
         let ts = timestamps.lock().unwrap();
@@ -432,8 +436,8 @@ impl EngineModule for ConsumerModule {
 #[test]
 fn module_retrieves_service_registered_by_its_dependency() {
     let mut kernel = TheosKernel::default();
-    // Pre-signal shutdown so run() performs the init phase, then exits the
-    // game loop immediately (cf. shutdown_before_run_exits_immediately).
+    // Pre-signal shutdown so the game loop exits immediately after init+run
+    // (cf. shutdown_before_run_exits_immediately).
     kernel.shutdown_handle().send(()).unwrap();
 
     let observed = Arc::new(Mutex::new(None::<String>));
@@ -450,6 +454,7 @@ fn module_retrieves_service_registered_by_its_dependency() {
     // declared dependency, not registration order.
     kernel.register_module(Box::new(consumer)).unwrap();
     kernel.register_module(Box::new(ProviderModule)).unwrap();
+    kernel.init().unwrap();
     kernel.run().unwrap();
 
     assert_eq!(
