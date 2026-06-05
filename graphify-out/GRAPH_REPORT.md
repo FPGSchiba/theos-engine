@@ -1,16 +1,16 @@
 # Graph Report - theos-engine  (2026-06-05)
 
 ## Corpus Check
-- 48 files · ~30,269 words
+- 48 files · ~30,720 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 888 nodes · 1666 edges · 56 communities (39 shown, 17 thin omitted)
+- 898 nodes · 1697 edges · 56 communities (39 shown, 17 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `afb88a52`
+- Built from commit: `2c13bd98`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -71,11 +71,11 @@
 3. `Self` - 42 edges
 4. `Vec2` - 38 edges
 5. `Aabb` - 31 edges
-6. `TheosKernel` - 25 edges
-7. `Quat` - 16 edges
-8. `TimingModule` - 15 edges
-9. `Mat4` - 14 edges
-10. `KernelContext` - 14 edges
+6. `TheosKernel` - 28 edges
+7. `KernelContext` - 18 edges
+8. `Quat` - 16 edges
+9. `TimingModule` - 16 edges
+10. `Mat4` - 14 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Type-Erased EventBus via ChannelHandle adapter` --semantically_similar_to--> `Service Locator encapsulated in KernelContext`  [INFERRED] [semantically similar]
@@ -104,11 +104,11 @@
 
 ### Community 0 - "Module Lifecycle & Kernel Fixtures"
 Cohesion: 0.07
-Nodes (37): AtomicU32, Instant, Mutex, ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle() (+29 more)
+Nodes (38): AtomicU32, Instant, Mutex, ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle() (+30 more)
 
 ### Community 1 - "Core Shared Abstractions"
-Cohesion: 0.08
-Nodes (40): KernelContext is a concrete struct (not a trait) for type-safe service access, Service Locator pattern for engine subsystem registry, KernelContextResult, RwLock, ServiceLocator, ServiceLocatorResult, event_bus_hands_back_the_same_shared_handle(), get_unregistered_service_returns_service_not_found() (+32 more)
+Cohesion: 0.12
+Nodes (27): KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, ServiceLocator, event_bus_hands_back_the_same_shared_handle(), get_unregistered_service_returns_service_not_found(), KernelContext, make_context(), register_overwrites_previous_service_of_same_type() (+19 more)
 
 ### Community 2 - "Crossbeam EventBus Implementation"
 Cohesion: 0.09
@@ -120,7 +120,7 @@ Nodes (31): ModuleResult, DependencyResolver, five_module_mixed_graph_satisfies_
 
 ### Community 4 - "Kernel Init & Module Wiring"
 Cohesion: 0.06
-Nodes (53): CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), FailingInitModule, frame_timer_clamps_huge_delta_times_to_max_limit() (+45 more)
+Nodes (55): CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), FailingInitModule, frame_timer_clamps_huge_delta_times_to_max_limit() (+47 more)
 
 ### Community 5 - "Matrix Math & Benchmarks"
 Cohesion: 0.10
@@ -159,16 +159,16 @@ Cohesion: 0.22
 Nodes (17): Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none(), test_new_normalizes_normal() (+9 more)
 
 ### Community 14 - "SIMD & Interop Bridge Patterns"
-Cohesion: 0.12
-Nodes (9): Add, glam interoperability bridge pattern, mint interoperability bridge pattern, 16-byte SIMD alignment for GPU/SIMD compatibility, f32x4, glam::Vec2, mint::Vector2<f32>, Vec2 (+1 more)
+Cohesion: 0.08
+Nodes (22): Add, AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, 16-byte SIMD alignment for GPU/SIMD compatibility, Div, f32x4, theos-math lib (public API re-exports) (+14 more)
 
 ### Community 15 - "Service Registry & Lookup"
 Cohesion: 0.04
 Nodes (44): 1.1 Define `EngineModule` Trait (in `theos-shared`), 1.2 Define `EventBus` Trait (in `theos-shared`), 1.3 Create `ServiceLocator` Struct (in `theos-shared`), 1.4 Stub Out `TheosKernel` Struct (in `theos-core`), 1.5 Define `AiWorkerHandle` Struct (in `theos-core`), 1.6 Define `AiCommandQueue` Struct (in `theos-core`), 1.7 Design `ModuleRegistry` (Logical Component), 2.1 Logging Initialization (+36 more)
 
 ### Community 16 - "Community 16"
-Cohesion: 0.14
-Nodes (13): AddAssign, Div, theos-math lib (public API re-exports), Mat4 * Vec4, glam::Vec4, mint::Vector4<f32>, Vec4, Vec4Swizzle (+5 more)
+Cohesion: 0.16
+Nodes (15): Service Locator pattern for engine subsystem registry, RwLock, ServiceLocatorResult, register_and_get_service(), service_locator_is_cloneable_and_shares_registry(), ServiceLocator, TestService, Any (+7 more)
 
 ### Community 17 - "Vec3 & Quaternion Ops"
 Cohesion: 0.15
@@ -231,24 +231,24 @@ Cohesion: 0.17
 Nodes (11): AC traceability, Changes, Confirmed decisions (vs. spec wording), Goal, Other deltas vs. spec wording, Out of scope (deferred), Risks, Tests (`theos-core/src/kernel.rs` `mod tests`) (+3 more)
 
 ## Knowledge Gaps
-- **177 isolated node(s):** `Vec`, `Self`, `Self`, `Self`, `Option` (+172 more)
+- **176 isolated node(s):** `Vec`, `Self`, `Self`, `Self`, `Option` (+171 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Vec3` connect `Vec3 & Quaternion Ops` to `Matrix Math & Benchmarks`, `Quaternion Arithmetic`, `AABB Spatial Queries`, `Vector Math & Interop Tests`, `Ray-Plane Intersection`, `SIMD & Interop Bridge Patterns`, `Community 16`, `Vector Arithmetic Ops`, `Ray Traversal & BVH`, `Community 53`?**
-  _High betweenness centrality (0.039) - this node is a cross-community bridge._
+- **Why does `Vec3` connect `Vec3 & Quaternion Ops` to `Matrix Math & Benchmarks`, `Quaternion Arithmetic`, `AABB Spatial Queries`, `Vector Math & Interop Tests`, `Ray-Plane Intersection`, `SIMD & Interop Bridge Patterns`, `Vector Arithmetic Ops`, `Ray Traversal & BVH`, `Community 53`?**
+  _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Why does `EventBus` connect `Module Lifecycle Protocol` to `Core Shared Abstractions`?**
   _High betweenness centrality (0.020) - this node is a cross-community bridge._
-- **Why does `EngineModule` connect `Module Lifecycle Protocol` to `Core Shared Abstractions`?**
-  _High betweenness centrality (0.019) - this node is a cross-community bridge._
+- **Why does `KernelContext` connect `Core Shared Abstractions` to `Community 16`, `Module Lifecycle Protocol`?**
+  _High betweenness centrality (0.020) - this node is a cross-community bridge._
 - **Are the 20 inferred relationships involving `Aabb` (e.g. with `test_contains_point_interior()` and `test_contains_point_on_surface_is_inside()`) actually correct?**
   _`Aabb` has 20 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `Vec`, `Self`, `Self` to the rest of the system?**
-  _179 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _178 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Module Lifecycle & Kernel Fixtures` be split into smaller, more focused modules?**
-  _Cohesion score 0.07197763801537387 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.07138047138047138 - nodes in this community are weakly interconnected._
 - **Should `Core Shared Abstractions` be split into smaller, more focused modules?**
-  _Cohesion score 0.07541478129713423 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.11806543385490754 - nodes in this community are weakly interconnected._
