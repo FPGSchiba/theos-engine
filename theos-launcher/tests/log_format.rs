@@ -27,6 +27,7 @@ fn startup_line_matches_layout() {
 
     let assert = cmd
         .env("RUST_LOG", "not-a-valid-filter!!!")
+        .env("THEOS_DRY_RUN", "1")
         .assert()
         .success();
 
@@ -62,6 +63,7 @@ fn module_path_is_present() {
 
     let assert = cmd
         .env("RUST_LOG", "not-a-valid-filter!!!")
+        .env("THEOS_DRY_RUN", "1")
         .assert()
         .success();
 

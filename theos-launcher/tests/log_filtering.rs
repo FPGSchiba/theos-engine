@@ -32,7 +32,11 @@ fn defaults_to_info_when_rust_log_missing() {
     let mut cmd = Command::cargo_bin("theos-launcher").expect("binary exists");
 
     // run without RUST_LOG set (ensure it's not set in the child env)
-    let assert = cmd.env_remove("RUST_LOG").assert().success();
+    let assert = cmd
+        .env_remove("RUST_LOG")
+        .env("THEOS_DRY_RUN", "1")
+        .assert()
+        .success();
     let output = assert.get_output();
 
     let (raw_text, (stdout_bytes, stderr_bytes)) = choose_output(output);
@@ -59,6 +63,7 @@ fn invalid_rust_log_does_not_crash_and_falls_back() {
     // set an intentionally malformed RUST_LOG
     let assert = cmd
         .env("RUST_LOG", "not-a-valid-filter!!!")
+        .env("THEOS_DRY_RUN", "1")
         .assert()
         .success();
 
