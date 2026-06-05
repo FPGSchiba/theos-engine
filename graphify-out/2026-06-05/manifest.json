@@ -25,9 +25,9 @@
     "semantic_hash": "2d6bfc0532b1ae74cbb8b61ab1815dc5"
   },
   "/Users/schiba/Projects/theos/theos-engine/theos-launcher/src/main.rs": {
-    "mtime": 1777528311.3819656,
-    "ast_hash": "0414be00ae12acc310187c68c23a4c57",
-    "semantic_hash": "0414be00ae12acc310187c68c23a4c57"
+    "mtime": 1780664647.0173118,
+    "ast_hash": "70c6164e86e8ad39ef417c9b13f11ec5",
+    "semantic_hash": ""
   },
   "/Users/schiba/Projects/theos/theos-engine/theos-math/benches/math_benches.rs": {
     "mtime": 1778151304.1106153,
@@ -80,9 +80,9 @@
     "semantic_hash": "3ad056c4cfa263e202e9ed842ca33e4e"
   },
   "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/kernel_context.rs": {
-    "mtime": 1780036459.6173522,
-    "ast_hash": "282687ff7554e1fd99303f05d469b823",
-    "semantic_hash": "282687ff7554e1fd99303f05d469b823"
+    "mtime": 1780665514.9260364,
+    "ast_hash": "545aa3b63becc24cd08eedeedae228a9",
+    "semantic_hash": ""
   },
   "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/lib.rs": {
     "mtime": 1780036459.6186516,
@@ -150,8 +150,8 @@
     "semantic_hash": ""
   },
   "/Users/schiba/Projects/theos/theos-engine/theos-core/src/kernel.rs": {
-    "mtime": 1780663732.4099865,
-    "ast_hash": "a27816d8c4316e74ff6488045e31ba20",
+    "mtime": 1780665518.05965,
+    "ast_hash": "d30d474c69da41a422bd40219118f6a1",
     "semantic_hash": ""
   },
   "/Users/schiba/Projects/theos/theos-engine/theos-core/src/lib.rs": {

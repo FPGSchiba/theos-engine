@@ -1,16 +1,16 @@
 # Graph Report - theos-engine  (2026-06-05)
 
 ## Corpus Check
-- 48 files · ~30,720 words
+- 48 files · ~30,757 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 898 nodes · 1697 edges · 56 communities (39 shown, 17 thin omitted)
+- 898 nodes · 1697 edges · 57 communities (40 shown, 17 thin omitted)
 - Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2c13bd98`
+- Built from commit: `0f5bcf35`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -64,6 +64,7 @@
 - [[_COMMUNITY_Community 52|Community 52]]
 - [[_COMMUNITY_Community 53|Community 53]]
 - [[_COMMUNITY_Community 54|Community 54]]
+- [[_COMMUNITY_Community 56|Community 56]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 59 edges
@@ -100,7 +101,7 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (56 total, 17 thin omitted)
+## Communities (57 total, 17 thin omitted)
 
 ### Community 0 - "Module Lifecycle & Kernel Fixtures"
 Cohesion: 0.07
@@ -159,8 +160,8 @@ Cohesion: 0.22
 Nodes (17): Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none(), test_new_normalizes_normal() (+9 more)
 
 ### Community 14 - "SIMD & Interop Bridge Patterns"
-Cohesion: 0.08
-Nodes (22): Add, AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, 16-byte SIMD alignment for GPU/SIMD compatibility, Div, f32x4, theos-math lib (public API re-exports) (+14 more)
+Cohesion: 0.12
+Nodes (9): Add, glam interoperability bridge pattern, mint interoperability bridge pattern, 16-byte SIMD alignment for GPU/SIMD compatibility, f32x4, glam::Vec2, mint::Vector2<f32>, Vec2 (+1 more)
 
 ### Community 15 - "Service Registry & Lookup"
 Cohesion: 0.04
@@ -230,6 +231,10 @@ Nodes (13): code:powershell (cd "D:\Projects\Tower of Theos\theos-engine"), code
 Cohesion: 0.17
 Nodes (11): AC traceability, Changes, Confirmed decisions (vs. spec wording), Goal, Other deltas vs. spec wording, Out of scope (deferred), Risks, Tests (`theos-core/src/kernel.rs` `mod tests`) (+3 more)
 
+### Community 56 - "Community 56"
+Cohesion: 0.14
+Nodes (13): AddAssign, Div, theos-math lib (public API re-exports), Mat4 * Vec4, glam::Vec4, mint::Vector4<f32>, Vec4, Vec4Swizzle (+5 more)
+
 ## Knowledge Gaps
 - **176 isolated node(s):** `Vec`, `Self`, `Self`, `Self`, `Option` (+171 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -238,7 +243,7 @@ Nodes (11): AC traceability, Changes, Confirmed decisions (vs. spec wording), Go
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Vec3` connect `Vec3 & Quaternion Ops` to `Matrix Math & Benchmarks`, `Quaternion Arithmetic`, `AABB Spatial Queries`, `Vector Math & Interop Tests`, `Ray-Plane Intersection`, `SIMD & Interop Bridge Patterns`, `Vector Arithmetic Ops`, `Ray Traversal & BVH`, `Community 53`?**
+- **Why does `Vec3` connect `Vec3 & Quaternion Ops` to `Matrix Math & Benchmarks`, `Quaternion Arithmetic`, `AABB Spatial Queries`, `Vector Math & Interop Tests`, `Ray-Plane Intersection`, `SIMD & Interop Bridge Patterns`, `Vector Arithmetic Ops`, `Ray Traversal & BVH`, `Community 53`, `Community 56`?**
   _High betweenness centrality (0.038) - this node is a cross-community bridge._
 - **Why does `EventBus` connect `Module Lifecycle Protocol` to `Core Shared Abstractions`?**
   _High betweenness centrality (0.020) - this node is a cross-community bridge._
