@@ -4827,7 +4827,7 @@
       "label": ".tick_once()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L322",
+      "source_location": "L338",
       "id": "src_kernel_theoskernel_tick_once",
       "community": 4,
       "norm_label": ".tick_once()"
@@ -4836,7 +4836,7 @@
       "label": ".tick_all()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L329",
+      "source_location": "L345",
       "id": "src_kernel_theoskernel_tick_all",
       "community": 4,
       "norm_label": ".tick_all()"
@@ -4845,7 +4845,7 @@
       "label": ".set_target_hz()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L343",
+      "source_location": "L359",
       "id": "src_kernel_theoskernel_set_target_hz",
       "community": 4,
       "norm_label": ".set_target_hz()"
@@ -4854,7 +4854,7 @@
       "label": ".shutdown_handle()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L351",
+      "source_location": "L367",
       "id": "src_kernel_theoskernel_shutdown_handle",
       "community": 4,
       "norm_label": ".shutdown_handle()"
@@ -4863,7 +4863,7 @@
       "label": ".shutdown_requested()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L356",
+      "source_location": "L372",
       "id": "src_kernel_theoskernel_shutdown_requested",
       "community": 4,
       "norm_label": ".shutdown_requested()"
@@ -4872,7 +4872,7 @@
       "label": ".staging_len()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L365",
+      "source_location": "L381",
       "id": "src_kernel_theoskernel_staging_len",
       "community": 4,
       "norm_label": ".staging_len()"
@@ -4881,7 +4881,7 @@
       "label": "CallLog",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L387",
+      "source_location": "L403",
       "id": "src_kernel_calllog",
       "community": 4,
       "norm_label": "calllog"
@@ -4890,7 +4890,7 @@
       "label": "Mutex",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L388",
+      "source_location": "L404",
       "id": "theos_core_src_kernel_rs_mutex",
       "community": 4,
       "norm_label": "mutex"
@@ -4899,7 +4899,7 @@
       "label": ".init_order()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L394",
+      "source_location": "L410",
       "id": "src_kernel_calllog_init_order",
       "community": 4,
       "norm_label": ".init_order()"
@@ -4908,7 +4908,7 @@
       "label": ".tick_order()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L397",
+      "source_location": "L413",
       "id": "src_kernel_calllog_tick_order",
       "community": 4,
       "norm_label": ".tick_order()"
@@ -4917,7 +4917,7 @@
       "label": ".shutdown_order()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L400",
+      "source_location": "L416",
       "id": "src_kernel_calllog_shutdown_order",
       "community": 4,
       "norm_label": ".shutdown_order()"
@@ -4926,7 +4926,7 @@
       "label": "RecordingModule",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L408",
+      "source_location": "L424",
       "id": "src_kernel_recordingmodule",
       "community": 4,
       "norm_label": "recordingmodule"
@@ -4935,7 +4935,7 @@
       "label": "ModuleDependency",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L410",
+      "source_location": "L426",
       "id": "theos_core_src_kernel_rs_moduledependency",
       "community": 4,
       "norm_label": "moduledependency"
@@ -4944,7 +4944,7 @@
       "label": "PhantomData",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L412",
+      "source_location": "L428",
       "id": "theos_core_src_kernel_rs_phantomdata",
       "community": 4,
       "norm_label": "phantomdata"
@@ -4953,7 +4953,7 @@
       "label": "Tag",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L412",
+      "source_location": "L428",
       "id": "theos_core_src_kernel_rs_tag",
       "community": 4,
       "norm_label": "tag"
@@ -4962,7 +4962,7 @@
       "label": "RecordingModule<Tag>",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L415",
+      "source_location": "L431",
       "id": "src_kernel_recordingmodule_tag",
       "community": 4,
       "norm_label": "recordingmodule<tag>"
@@ -4971,7 +4971,7 @@
       "label": ".boxed()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L416",
+      "source_location": "L432",
       "id": "src_kernel_recordingmodule_tag_boxed",
       "community": 4,
       "norm_label": ".boxed()"
@@ -4980,7 +4980,7 @@
       "label": ".name()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L431",
+      "source_location": "L447",
       "id": "src_kernel_recordingmodule_tag_name",
       "community": 4,
       "norm_label": ".name()"
@@ -4989,7 +4989,7 @@
       "label": ".dependencies()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L434",
+      "source_location": "L450",
       "id": "src_kernel_recordingmodule_tag_dependencies",
       "community": 4,
       "norm_label": ".dependencies()"
@@ -4998,7 +4998,7 @@
       "label": ".init()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L437",
+      "source_location": "L453",
       "id": "src_kernel_recordingmodule_tag_init",
       "community": 4,
       "norm_label": ".init()"
@@ -5007,7 +5007,7 @@
       "label": "KernelContext",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L437",
+      "source_location": "L453",
       "id": "theos_core_src_kernel_rs_kernelcontext",
       "community": 4,
       "norm_label": "kernelcontext"
@@ -5016,7 +5016,7 @@
       "label": "Result",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L437",
+      "source_location": "L453",
       "id": "theos_core_src_kernel_rs_result",
       "community": 4,
       "norm_label": "result"
@@ -5025,7 +5025,7 @@
       "label": "Error",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L437",
+      "source_location": "L453",
       "id": "theos_core_src_kernel_rs_error",
       "community": 4,
       "norm_label": "error"
@@ -5034,7 +5034,7 @@
       "label": "Send",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L437",
+      "source_location": "L453",
       "id": "theos_core_src_kernel_rs_send",
       "community": 4,
       "norm_label": "send"
@@ -5043,7 +5043,7 @@
       "label": "Sync",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L437",
+      "source_location": "L453",
       "id": "theos_core_src_kernel_rs_sync",
       "community": 4,
       "norm_label": "sync"
@@ -5052,7 +5052,7 @@
       "label": ".tick()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L444",
+      "source_location": "L460",
       "id": "src_kernel_recordingmodule_tag_tick",
       "community": 4,
       "norm_label": ".tick()"
@@ -5061,7 +5061,7 @@
       "label": ".shutdown()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L447",
+      "source_location": "L463",
       "id": "src_kernel_recordingmodule_tag_shutdown",
       "community": 4,
       "norm_label": ".shutdown()"
@@ -5070,7 +5070,7 @@
       "label": ".module_type_id()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L450",
+      "source_location": "L466",
       "id": "src_kernel_recordingmodule_tag_module_type_id",
       "community": 4,
       "norm_label": ".module_type_id()"
@@ -5079,7 +5079,7 @@
       "label": "TypeId",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L450",
+      "source_location": "L466",
       "id": "theos_core_src_kernel_rs_typeid",
       "community": 4,
       "norm_label": "typeid"
@@ -5088,7 +5088,7 @@
       "label": "FailingInitModule",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L458",
+      "source_location": "L474",
       "id": "src_kernel_failinginitmodule",
       "community": 4,
       "norm_label": "failinginitmodule"
@@ -5097,7 +5097,7 @@
       "label": ".name()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L465",
+      "source_location": "L481",
       "id": "src_kernel_failinginitmodule_name",
       "community": 4,
       "norm_label": ".name()"
@@ -5106,7 +5106,7 @@
       "label": ".dependencies()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L468",
+      "source_location": "L484",
       "id": "src_kernel_failinginitmodule_dependencies",
       "community": 4,
       "norm_label": ".dependencies()"
@@ -5115,7 +5115,7 @@
       "label": ".init()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L471",
+      "source_location": "L487",
       "id": "src_kernel_failinginitmodule_init",
       "community": 4,
       "norm_label": ".init()"
@@ -5124,7 +5124,7 @@
       "label": ".module_type_id()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L478",
+      "source_location": "L494",
       "id": "src_kernel_failinginitmodule_module_type_id",
       "community": 4,
       "norm_label": ".module_type_id()"
@@ -5133,7 +5133,7 @@
       "label": "TagA",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L484",
+      "source_location": "L500",
       "id": "src_kernel_taga",
       "community": 4,
       "norm_label": "taga"
@@ -5142,7 +5142,7 @@
       "label": "TagB",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L485",
+      "source_location": "L501",
       "id": "src_kernel_tagb",
       "community": 4,
       "norm_label": "tagb"
@@ -5151,7 +5151,7 @@
       "label": "TagC",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L486",
+      "source_location": "L502",
       "id": "src_kernel_tagc",
       "community": 4,
       "norm_label": "tagc"
@@ -5160,7 +5160,7 @@
       "label": "TagMissing",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L487",
+      "source_location": "L503",
       "id": "src_kernel_tagmissing",
       "community": 4,
       "norm_label": "tagmissing"
@@ -5169,7 +5169,7 @@
       "label": "default_constructs_kernel_with_no_modules_and_uninitialised_flag()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L494",
+      "source_location": "L510",
       "id": "src_kernel_default_constructs_kernel_with_no_modules_and_uninitialised_flag",
       "community": 4,
       "norm_label": "default_constructs_kernel_with_no_modules_and_uninitialised_flag()"
@@ -5178,7 +5178,7 @@
       "label": "registering_three_distinct_modules_fills_staging_buffer()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L506",
+      "source_location": "L522",
       "id": "src_kernel_registering_three_distinct_modules_fills_staging_buffer",
       "community": 4,
       "norm_label": "registering_three_distinct_modules_fills_staging_buffer()"
@@ -5187,7 +5187,7 @@
       "label": "registering_duplicate_name_errors_and_leaves_buffer_unchanged()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L522",
+      "source_location": "L538",
       "id": "src_kernel_registering_duplicate_name_errors_and_leaves_buffer_unchanged",
       "community": 4,
       "norm_label": "registering_duplicate_name_errors_and_leaves_buffer_unchanged()"
@@ -5196,7 +5196,7 @@
       "label": "init_with_no_modules_succeeds_and_marks_kernel_initialised()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L546",
+      "source_location": "L562",
       "id": "src_kernel_init_with_no_modules_succeeds_and_marks_kernel_initialised",
       "community": 4,
       "norm_label": "init_with_no_modules_succeeds_and_marks_kernel_initialised()"
@@ -5205,7 +5205,7 @@
       "label": "init_calls_module_init_in_dependency_sorted_order()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L554",
+      "source_location": "L570",
       "id": "src_kernel_init_calls_module_init_in_dependency_sorted_order",
       "community": 4,
       "norm_label": "init_calls_module_init_in_dependency_sorted_order()"
@@ -5214,7 +5214,7 @@
       "label": "init_propagates_dependency_resolver_error_without_running_any_module()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L589",
+      "source_location": "L605",
       "id": "src_kernel_init_propagates_dependency_resolver_error_without_running_any_module",
       "community": 4,
       "norm_label": "init_propagates_dependency_resolver_error_without_running_any_module()"
@@ -5223,7 +5223,7 @@
       "label": "init_stops_at_first_failing_module_and_skips_later_modules()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L617",
+      "source_location": "L633",
       "id": "src_kernel_init_stops_at_first_failing_module_and_skips_later_modules",
       "community": 4,
       "norm_label": "init_stops_at_first_failing_module_and_skips_later_modules()"
@@ -5232,7 +5232,7 @@
       "label": "calling_init_twice_returns_already_initialized()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L669",
+      "source_location": "L685",
       "id": "src_kernel_calling_init_twice_returns_already_initialized",
       "community": 4,
       "norm_label": "calling_init_twice_returns_already_initialized()"
@@ -5241,7 +5241,7 @@
       "label": "run_returns_uninitialized_error_when_init_was_not_called()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L685",
+      "source_location": "L701",
       "id": "src_kernel_run_returns_uninitialized_error_when_init_was_not_called",
       "community": 4,
       "norm_label": "run_returns_uninitialized_error_when_init_was_not_called()"
@@ -5250,7 +5250,7 @@
       "label": "run_exits_on_shutdown_signal_and_calls_shutdown_in_reverse_dependency_order()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L696",
+      "source_location": "L712",
       "id": "src_kernel_run_exits_on_shutdown_signal_and_calls_shutdown_in_reverse_dependency_order",
       "community": 4,
       "norm_label": "run_exits_on_shutdown_signal_and_calls_shutdown_in_reverse_dependency_order()"
@@ -5259,7 +5259,7 @@
       "label": "tick_once_calls_tick_on_each_module_in_registration_order()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L735",
+      "source_location": "L751",
       "id": "src_kernel_tick_once_calls_tick_on_each_module_in_registration_order",
       "community": 4,
       "norm_label": "tick_once_calls_tick_on_each_module_in_registration_order()"
@@ -5268,7 +5268,7 @@
       "label": "shutdown_handle_clones_independently_and_any_clone_stops_the_loop()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L758",
+      "source_location": "L774",
       "id": "src_kernel_shutdown_handle_clones_independently_and_any_clone_stops_the_loop",
       "community": 4,
       "norm_label": "shutdown_handle_clones_independently_and_any_clone_stops_the_loop()"
@@ -5277,7 +5277,7 @@
       "label": "request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L781",
+      "source_location": "L797",
       "id": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
       "community": 4,
       "norm_label": "request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop()"
@@ -5286,7 +5286,7 @@
       "label": "variable_delta_loop_runs_uncapped_when_target_hz_is_none()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L802",
+      "source_location": "L818",
       "id": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
       "community": 4,
       "norm_label": "variable_delta_loop_runs_uncapped_when_target_hz_is_none()"
@@ -5295,7 +5295,7 @@
       "label": "frame_timer_clamps_huge_delta_times_to_max_limit()",
       "file_type": "code",
       "source_file": "theos-core/src/kernel.rs",
-      "source_location": "L855",
+      "source_location": "L871",
       "id": "src_kernel_frame_timer_clamps_huge_delta_times_to_max_limit",
       "community": 4,
       "norm_label": "frame_timer_clamps_huge_delta_times_to_max_limit()"
@@ -19912,9 +19912,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L855",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "theos_core_src_kernel_rs",
-      "target": "src_kernel_frame_timer_clamps_huge_delta_times_to_max_limit",
-      "confidence_score": 1.0
+      "target": "src_kernel_frame_timer_clamps_huge_delta_times_to_max_limit"
     },
     {
       "relation": "contains",
@@ -20032,9 +20032,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L781",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "theos_core_src_kernel_rs",
-      "target": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
-      "confidence_score": 1.0
+      "target": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop"
     },
     {
       "relation": "contains",
@@ -20142,9 +20142,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L802",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "theos_core_src_kernel_rs",
-      "target": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "confidence_score": 1.0
+      "target": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none"
     },
     {
       "relation": "imports_from",
@@ -20272,9 +20272,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L856",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_frame_timer_clamps_huge_delta_times_to_max_limit",
-      "target": "src_kernel_frametimer_new",
-      "confidence_score": 1.0
+      "target": "src_kernel_frametimer_new"
     },
     {
       "relation": "references",
@@ -20360,9 +20360,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L782",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
-      "target": "src_kernel_frametimer_new",
-      "confidence_score": 1.0
+      "target": "src_kernel_frametimer_new"
     },
     {
       "relation": "calls",
@@ -20437,9 +20437,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L834",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "target": "src_kernel_frametimer_new",
-      "confidence_score": 1.0
+      "target": "src_kernel_frametimer_new"
     },
     {
       "relation": "references",
@@ -21067,9 +21067,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L782",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
-      "target": "src_kernel_theoskernel_default",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_default"
     },
     {
       "relation": "calls",
@@ -21155,9 +21155,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L803",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "target": "src_kernel_theoskernel_default",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_default"
     },
     {
       "relation": "calls",
@@ -21221,9 +21221,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L784",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
-      "target": "src_kernel_theoskernel_register_module",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_register_module"
     },
     {
       "relation": "calls",
@@ -21298,9 +21298,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L833",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "target": "src_kernel_theoskernel_register_module",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_register_module"
     },
     {
       "relation": "references",
@@ -21485,9 +21485,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L843",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "target": "src_kernel_theoskernel_run",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_run"
     },
     {
       "relation": "calls",
@@ -21496,9 +21496,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L788",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
-      "target": "src_kernel_theoskernel_request_shutdown",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_request_shutdown"
     },
     {
       "relation": "calls",
@@ -21584,9 +21584,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L804",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "target": "src_kernel_theoskernel_set_target_hz",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_set_target_hz"
     },
     {
       "relation": "calls",
@@ -21628,9 +21628,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L807",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "target": "src_kernel_theoskernel_shutdown_handle",
-      "confidence_score": 1.0
+      "target": "src_kernel_theoskernel_shutdown_handle"
     },
     {
       "relation": "method",
@@ -21915,9 +21915,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L785",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
-      "target": "src_kernel_recordingmodule_tag_boxed",
-      "confidence_score": 1.0
+      "target": "src_kernel_recordingmodule_tag_boxed"
     },
     {
       "relation": "calls",
@@ -22234,9 +22234,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L858",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_frame_timer_clamps_huge_delta_times_to_max_limit",
-      "target": "src_kernel_recordingmodule_tag_tick",
-      "confidence_score": 1.0
+      "target": "src_kernel_recordingmodule_tag_tick"
     },
     {
       "relation": "references",
@@ -22395,9 +22395,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L787",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop",
-      "target": "src_kernel_failinginitmodule_init",
-      "confidence_score": 1.0
+      "target": "src_kernel_failinginitmodule_init"
     },
     {
       "relation": "calls",
@@ -22439,9 +22439,9 @@
       "source_file": "theos-core/src/kernel.rs",
       "source_location": "L840",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_kernel_variable_delta_loop_runs_uncapped_when_target_hz_is_none",
-      "target": "src_kernel_failinginitmodule_init",
-      "confidence_score": 1.0
+      "target": "src_kernel_failinginitmodule_init"
     },
     {
       "relation": "contains",
@@ -26099,5 +26099,5 @@
       "source_file": ".github/workflows/release-packaging.yml"
     }
   ],
-  "built_at_commit": "f47032625851b7e65431be3a2f25f638898bd1a1"
+  "built_at_commit": "afb88a521f6cdf82747b600e9efbba380a3dd51f"
 }

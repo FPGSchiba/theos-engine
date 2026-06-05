@@ -1,0 +1,267 @@
+{
+  "/Users/schiba/Projects/theos/theos-engine/theos-scripting/src/lib.rs": {
+    "mtime": 1777528311.3836386,
+    "ast_hash": "49ffaa8319f55ef5d0cf48bc564f1475",
+    "semantic_hash": "49ffaa8319f55ef5d0cf48bc564f1475"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/.githooks/pre-commit": {
+    "mtime": 1777528311.3770032,
+    "ast_hash": "4982ca5c158637e4d7dfb92fc4ebf89e",
+    "semantic_hash": "4982ca5c158637e4d7dfb92fc4ebf89e"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-game/src/main.rs": {
+    "mtime": 1777528311.3816845,
+    "ast_hash": "13904d98a7d9af05a3aa29286dd4667e",
+    "semantic_hash": "13904d98a7d9af05a3aa29286dd4667e"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-launcher/tests/log_format.rs": {
+    "mtime": 1777528311.3821914,
+    "ast_hash": "777b1b3b1523828d39eea5d86a423484",
+    "semantic_hash": "777b1b3b1523828d39eea5d86a423484"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-launcher/tests/log_filtering.rs": {
+    "mtime": 1777528311.3820982,
+    "ast_hash": "2d6bfc0532b1ae74cbb8b61ab1815dc5",
+    "semantic_hash": "2d6bfc0532b1ae74cbb8b61ab1815dc5"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-launcher/src/main.rs": {
+    "mtime": 1777528311.3819656,
+    "ast_hash": "0414be00ae12acc310187c68c23a4c57",
+    "semantic_hash": "0414be00ae12acc310187c68c23a4c57"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/benches/math_benches.rs": {
+    "mtime": 1778151304.1106153,
+    "ast_hash": "16ecac0c35e0017b7a41f3229f31874d",
+    "semantic_hash": "16ecac0c35e0017b7a41f3229f31874d"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/src/ray.rs": {
+    "mtime": 1778154551.2427897,
+    "ast_hash": "4a00edf6140c3425ee47b834f4e95c01",
+    "semantic_hash": "4a00edf6140c3425ee47b834f4e95c01"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/src/aabb.rs": {
+    "mtime": 1778155497.9324672,
+    "ast_hash": "277fa784acc5795a9ed0072042129af4",
+    "semantic_hash": "277fa784acc5795a9ed0072042129af4"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/src/lib.rs": {
+    "mtime": 1778155329.9230857,
+    "ast_hash": "2c64d6c745bba6b065b18c452d29338c",
+    "semantic_hash": "2c64d6c745bba6b065b18c452d29338c"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/src/vec.rs": {
+    "mtime": 1778155497.941029,
+    "ast_hash": "92d73466ac39fc5a0aa27f45dc3dd97e",
+    "semantic_hash": "92d73466ac39fc5a0aa27f45dc3dd97e"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/src/plane.rs": {
+    "mtime": 1778155497.9358776,
+    "ast_hash": "326170a294d5fcee24cafaaad4bba956",
+    "semantic_hash": "326170a294d5fcee24cafaaad4bba956"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/src/quat.rs": {
+    "mtime": 1778525860.959253,
+    "ast_hash": "f47b98a44436ef0bbc0ba5e1e56ddbc7",
+    "semantic_hash": "f47b98a44436ef0bbc0ba5e1e56ddbc7"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-math/src/mat.rs": {
+    "mtime": 1778151304.116094,
+    "ast_hash": "f10c6a66bd4c8e190ea04a57aa362dc3",
+    "semantic_hash": "f10c6a66bd4c8e190ea04a57aa362dc3"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/types.rs": {
+    "mtime": 1777528311.3845527,
+    "ast_hash": "8723ad546a9d8b85f0d155d54d90f63d",
+    "semantic_hash": "8723ad546a9d8b85f0d155d54d90f63d"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/error.rs": {
+    "mtime": 1780036459.6164124,
+    "ast_hash": "3ad056c4cfa263e202e9ed842ca33e4e",
+    "semantic_hash": "3ad056c4cfa263e202e9ed842ca33e4e"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/kernel_context.rs": {
+    "mtime": 1780036459.6173522,
+    "ast_hash": "282687ff7554e1fd99303f05d469b823",
+    "semantic_hash": "282687ff7554e1fd99303f05d469b823"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/lib.rs": {
+    "mtime": 1780036459.6186516,
+    "ast_hash": "ac29d17a075dd589b4dc1c2c00c62741",
+    "semantic_hash": "ac29d17a075dd589b4dc1c2c00c62741"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/service_locator.rs": {
+    "mtime": 1780036459.6198082,
+    "ast_hash": "b234123f4c8f33b2ba8c2b9d95e673ef",
+    "semantic_hash": "b234123f4c8f33b2ba8c2b9d95e673ef"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/module.rs": {
+    "mtime": 1780036459.6193593,
+    "ast_hash": "9884139c3fb0cdc668085ecc5d4cd049",
+    "semantic_hash": "9884139c3fb0cdc668085ecc5d4cd049"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/prelude.rs": {
+    "mtime": 1780036459.6196003,
+    "ast_hash": "28ee84411ac050cec6ce00bf02e2db20",
+    "semantic_hash": "28ee84411ac050cec6ce00bf02e2db20"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/src/event_bus.rs": {
+    "mtime": 1780036459.6170247,
+    "ast_hash": "9c8b0e953cc2e6975a861e52d46a98ba",
+    "semantic_hash": "9c8b0e953cc2e6975a861e52d46a98ba"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/plugins/theos-audio/src/lib.rs": {
+    "mtime": 1777528311.3793077,
+    "ast_hash": "3121fbb0f903d343fd1df80d7749340c",
+    "semantic_hash": "3121fbb0f903d343fd1df80d7749340c"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-plugin-loader/src/lib.rs": {
+    "mtime": 1777528311.383219,
+    "ast_hash": "3121fbb0f903d343fd1df80d7749340c",
+    "semantic_hash": "3121fbb0f903d343fd1df80d7749340c"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-render/src/lib.rs": {
+    "mtime": 1777528311.3834379,
+    "ast_hash": "49ffaa8319f55ef5d0cf48bc564f1475",
+    "semantic_hash": "49ffaa8319f55ef5d0cf48bc564f1475"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/tests/kernel_integration.rs": {
+    "mtime": 1780662568.5162551,
+    "ast_hash": "5900d9b0909c30259da3d8144a9356d8",
+    "semantic_hash": ""
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/benches/frame_timing.rs": {
+    "mtime": 1780036459.61413,
+    "ast_hash": "63249194491dadc53ed5bcfe30e036f1",
+    "semantic_hash": "63249194491dadc53ed5bcfe30e036f1"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/benches/event_bus_alloc.rs": {
+    "mtime": 1780036459.6135705,
+    "ast_hash": "8ef8133e3acb717996589d18bc66c26d",
+    "semantic_hash": "8ef8133e3acb717996589d18bc66c26d"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/benches/event_bus.rs": {
+    "mtime": 1780036459.613088,
+    "ast_hash": "93617c663124a17b642ca36ce82f78b6",
+    "semantic_hash": "93617c663124a17b642ca36ce82f78b6"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/src/error.rs": {
+    "mtime": 1780659996.1856108,
+    "ast_hash": "304c5ac5f0904513d4d8e2abe335cda4",
+    "semantic_hash": ""
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/src/kernel.rs": {
+    "mtime": 1780663235.523493,
+    "ast_hash": "2a938607a4c59950f085b39775a083fd",
+    "semantic_hash": ""
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/src/lib.rs": {
+    "mtime": 1779960022.8429556,
+    "ast_hash": "7f615e140b4bf579f1d3505a856b1bf3",
+    "semantic_hash": "7f615e140b4bf579f1d3505a856b1bf3"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/src/logging.rs": {
+    "mtime": 1778132679.7540324,
+    "ast_hash": "b139ffa96b46224a19f7f8ed2236e751",
+    "semantic_hash": "b139ffa96b46224a19f7f8ed2236e751"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/src/event.rs": {
+    "mtime": 1780036459.614951,
+    "ast_hash": "758166b3646a355f63a2deb18baabaeb",
+    "semantic_hash": "758166b3646a355f63a2deb18baabaeb"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-core/src/dependency_resolver.rs": {
+    "mtime": 1780036459.6144729,
+    "ast_hash": "95966b3f52f78c5fe5fe572b2f8b97e5",
+    "semantic_hash": "95966b3f52f78c5fe5fe572b2f8b97e5"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-ecs/src/lib.rs": {
+    "mtime": 1777528311.3809137,
+    "ast_hash": "49ffaa8319f55ef5d0cf48bc564f1475",
+    "semantic_hash": "49ffaa8319f55ef5d0cf48bc564f1475"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-ai/src/lib.rs": {
+    "mtime": 1777528311.3795955,
+    "ast_hash": "49ffaa8319f55ef5d0cf48bc564f1475",
+    "semantic_hash": "49ffaa8319f55ef5d0cf48bc564f1475"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-plugin-api/src/lib.rs": {
+    "mtime": 1777528311.3829887,
+    "ast_hash": "3121fbb0f903d343fd1df80d7749340c",
+    "semantic_hash": "3121fbb0f903d343fd1df80d7749340c"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-editor/src/main.rs": {
+    "mtime": 1777528311.3813167,
+    "ast_hash": "13904d98a7d9af05a3aa29286dd4667e",
+    "semantic_hash": "13904d98a7d9af05a3aa29286dd4667e"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-assets/src/lib.rs": {
+    "mtime": 1777528311.3798373,
+    "ast_hash": "49ffaa8319f55ef5d0cf48bc564f1475",
+    "semantic_hash": "49ffaa8319f55ef5d0cf48bc564f1475"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-physics/src/lib.rs": {
+    "mtime": 1777528311.3827574,
+    "ast_hash": "ed7310eee4ffa67bfe18c5e4dbd95e00",
+    "semantic_hash": "ed7310eee4ffa67bfe18c5e4dbd95e00"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-physics/src/event.rs": {
+    "mtime": 1777528311.3826787,
+    "ast_hash": "8a5c71729a7de7ab20193036d8be16c2",
+    "semantic_hash": "8a5c71729a7de7ab20193036d8be16c2"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/README.md": {
+    "mtime": 1777528311.3784382,
+    "ast_hash": "fc9569a408c67aac2af02a5a45c0fcd8",
+    "semantic_hash": "fc9569a408c67aac2af02a5a45c0fcd8"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/qodana.yaml": {
+    "mtime": 1779960022.8403385,
+    "ast_hash": "db3e7310d22efd9eb2d0d11f67fc245e",
+    "semantic_hash": "db3e7310d22efd9eb2d0d11f67fc245e"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/plans/THEOS-86.md": {
+    "mtime": 1777528311.3788,
+    "ast_hash": "402fbc8d118ae7822168479e32d77b87",
+    "semantic_hash": "402fbc8d118ae7822168479e32d77b87"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/theos-shared/README.md": {
+    "mtime": 1777528311.3838165,
+    "ast_hash": "0f0fb6873a0e4a55087a76c3ec64aed0",
+    "semantic_hash": "0f0fb6873a0e4a55087a76c3ec64aed0"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/agents/mentor.md": {
+    "mtime": 1777528311.378577,
+    "ast_hash": "24f72723d2359f16f7d75f84d0e856e0",
+    "semantic_hash": "24f72723d2359f16f7d75f84d0e856e0"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/.github/dependabot.yml": {
+    "mtime": 1777528311.37716,
+    "ast_hash": "1186e1e2b61b8424a80ffd0d070c3906",
+    "semantic_hash": "1186e1e2b61b8424a80ffd0d070c3906"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/.github/workflows/release-packaging.yml": {
+    "mtime": 1777528311.3774657,
+    "ast_hash": "fd8d91738e48baead0ec4d6dddaab47a",
+    "semantic_hash": "fd8d91738e48baead0ec4d6dddaab47a"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/.github/workflows/test.yml": {
+    "mtime": 1777528311.3776202,
+    "ast_hash": "afbf6a3c289d23d52a67f39ea9cd95b2",
+    "semantic_hash": "afbf6a3c289d23d52a67f39ea9cd95b2"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/.github/workflows/check-lint.yml": {
+    "mtime": 1777528311.37734,
+    "ast_hash": "5ab146dd998f7054ea04c0bf7c03089c",
+    "semantic_hash": "5ab146dd998f7054ea04c0bf7c03089c"
+  },
+  "/Users/schiba/Projects/theos/theos-engine/CLAUDE.md": {
+    "mtime": 1780037550.297695,
+    "ast_hash": "82efb97a359f5c7290bf2513d14686be",
+    "semantic_hash": ""
+  },
+  "/Users/schiba/Projects/theos/theos-engine/plans/THEOS-12.md": {
+    "mtime": 1780659996.175439,
+    "ast_hash": "ea8c8ade51e8b3fc768509166fd8404e",
+    "semantic_hash": ""
+  }
+}
