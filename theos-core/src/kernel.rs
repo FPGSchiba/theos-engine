@@ -7,25 +7,81 @@ use crate::dependency_resolver::DependencyResolver;
 use crate::error::{KernelError, KernelResult};
 use crate::event::CrossbeamEventBus;
 use crate::logging;
-use crossbeam::channel::{Receiver, Sender};
 use rayon::ThreadPool;
 use std::ops::DerefMut;
+use std::sync::atomic::AtomicBool;
+use std::sync::atomic::Ordering::SeqCst;
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 use theos_shared::{EngineModule, KernelContext};
 
-/// Target frame rate for the fixed-step game loop.
-const TARGET_HZ: u32 = 60;
+const DEFAULT_TARGET_HZ: u32 = 60;
 
-/// Maximum number of catch-up ticks per outer loop iteration.
-/// If the loop falls further behind than this, it accepts the lag and resets.
-const MAX_CATCHUP_TICKS: u32 = 8;
+const MAX_DELTA_TIME: f32 = 0.1; // Cap delta time to avoid spiral of death after long pauses.
+
+/// A utility for tracking frame times, calculating delta times, and measuring FPS.
+struct FrameTimer {
+    /// The timestamp when the previous frame started.
+    last_frame: Instant,
+    /// Whether this is the first frame being ticked.
+    first_frame: bool,
+    /// Time accumulated in seconds to calculate average FPS once per second.
+    fps_accumulator: f32,
+    /// The number of frames completed within the current second.
+    fps_counter: u32,
+}
+
+impl FrameTimer {
+    /// Creates a new `FrameTimer` with `last_frame` initialized to the current time.
+    fn new() -> Self {
+        Self {
+            last_frame: Instant::now(),
+            first_frame: true,
+            fps_accumulator: 0.0,
+            fps_counter: 0,
+        }
+    }
+
+    /// Ticks the timer to calculate the delta time since the last frame.
+    ///
+    /// The returned delta time is clamped to a maximum of `0.1` seconds to prevent
+    /// the game engine from experiencing a "spiral of death" during lag spikes.
+    /// On the very first frame, a default startup value of `1.0 / 60.0` is returned.
+    ///
+    /// # Returns
+    /// A tuple of `(dt, Option<fps>)`, where `dt` is the clamped delta time in seconds,
+    /// and `Some(fps)` contains the average FPS if a second has elapsed since the last FPS report.
+    pub fn tick(&mut self) -> (f32, Option<f32>) {
+        let now = Instant::now();
+        if self.first_frame {
+            self.first_frame = false;
+            self.last_frame = now;
+            (1.0 / 60.0, None) // Standard 60FPS elapsed as first frame
+        } else {
+            let dt = now
+                .duration_since(self.last_frame)
+                .as_secs_f32()
+                .min(MAX_DELTA_TIME);
+            self.last_frame = now;
+            self.fps_accumulator += dt;
+            self.fps_counter += 1;
+            if self.fps_accumulator >= 1.0 {
+                let fps = self.fps_counter as f32 / self.fps_accumulator;
+                self.fps_accumulator = 0.0;
+                self.fps_counter = 0;
+                (dt, Some(fps))
+            } else {
+                (dt, None)
+            }
+        }
+    }
+}
 
 /// The central engine kernel.
 ///
 /// Owns the EventBus, thread pool, and all mounted modules. The service
 /// registry lives inside the [`KernelContext`] created during [`init`].
-/// Drives the fixed-step game loop and module lifecycle.
+/// Drives the variable delta-time game loop and module lifecycle.
 ///
 /// # Lifecycle
 ///
@@ -33,7 +89,7 @@ const MAX_CATCHUP_TICKS: u32 = 8;
 /// 1. [`register_module`] — push module instances into the staging buffer.
 /// 2. [`init`] — sort by dependencies and call `init` on each module once.
 ///    Transitions the kernel into the "initialised" state.
-/// 3. [`run`] — enter the fixed-step game loop until a shutdown signal arrives,
+/// 3. [`run`] — enter the variable delta-time game loop until a shutdown signal is set,
 ///    then call `shutdown` on each module in reverse dependency order.
 ///
 /// Each phase is one-shot. Re-running `init` returns
@@ -58,11 +114,14 @@ pub struct TheosKernel {
     /// [`TheosKernel::run`] (rejects if `false`) and [`TheosKernel::init`]
     /// itself (rejects re-entry if already `true`).
     all_modules_initialized: bool,
+    /// Optional frame rate target for the variable delta-time loop.
+    /// If `Some(hz)`, the loop is throttled; if `None`, the loop runs uncapped.
+    target_hz: Option<u32>,
+    /// Thread-safe flag to request the game loop to terminate gracefully.
+    shutdown_requested: Arc<AtomicBool>,
     /// Held to keep the pool alive; Rayon spins worker threads on construction.
     #[allow(dead_code)]
     thread_pool: ThreadPool,
-    shutdown_rx: Receiver<()>,
-    shutdown_tx: Sender<()>,
 }
 
 impl Default for TheosKernel {
@@ -77,15 +136,14 @@ impl Default for TheosKernel {
         let thread_pool = rayon::ThreadPoolBuilder::new()
             .build()
             .expect("Cannot build thread pool");
-        let (shutdown_tx, shutdown_rx) = crossbeam::channel::bounded(1);
         Self {
             event_bus: Arc::from(CrossbeamEventBus::default()),
             modules: Vec::new(),
             sorted_modules: Vec::new(),
             all_modules_initialized: false,
+            target_hz: Some(DEFAULT_TARGET_HZ),
             thread_pool,
-            shutdown_rx,
-            shutdown_tx,
+            shutdown_requested: Arc::new(AtomicBool::new(false)),
         }
     }
 }
@@ -166,103 +224,99 @@ impl TheosKernel {
         Ok(())
     }
 
-    /// Enters the fixed-step game loop, then shuts the modules down.
+    /// Enters the variable delta-time game loop, then shuts the modules down.
     ///
     /// Requires [`init`] to have completed successfully first. Drives
-    /// [`fixed_step_loop`] until a shutdown signal arrives on the internal
-    /// channel (use [`shutdown_handle`] to obtain a sender), then walks
-    /// [`sorted_modules`] in **reverse** and calls `shutdown` on each.
+    /// [`variable_delta_loop`] until a shutdown signal is set on the atomic flag
+    /// (obtainable via [`shutdown_handle`] or requested via [`request_shutdown`]),
+    /// then walks [`sorted_modules`] in **reverse** topological dependency order and
+    /// calls `shutdown` on each initialized module.
+    ///
+    /// The cleanup/shutdown sweep is guaranteed to execute even if the update loop itself
+    /// aborts due to an error, ensuring no modules are orphaned.
     ///
     /// Blocks the calling thread until the loop exits.
     ///
     /// # Errors
     /// - [`KernelError::UninitializedKernelStart`] if [`init`] has not been
     ///   called yet. The loop is not entered and no module is touched.
-    /// - Any error propagated from [`fixed_step_loop`] aborts the run *before*
-    ///   the reverse-order shutdown sweep; modules will not receive `shutdown`
-    ///   in that case.
+    /// - Any error propagated from [`variable_delta_loop`] is returned after the
+    ///   shutdown sweep completes.
     ///
     /// [`init`]: TheosKernel::init
-    /// [`fixed_step_loop`]: TheosKernel::fixed_step_loop
+    /// [`variable_delta_loop`]: TheosKernel::variable_delta_loop
     /// [`shutdown_handle`]: TheosKernel::shutdown_handle
+    /// [`request_shutdown`]: TheosKernel::request_shutdown
     /// [`sorted_modules`]: TheosKernel::sorted_modules
     pub fn run(&mut self) -> KernelResult<()> {
         if !self.all_modules_initialized {
             return Err(KernelError::UninitializedKernelStart);
         }
-        self.fixed_step_loop()?;
+
+        // Set up Ctrl+C signal handler
+        let shutdown_requested = self.shutdown_requested.clone();
+        if let Err(e) = ctrlc::set_handler(move || {
+            shutdown_requested.store(true, SeqCst);
+        }) {
+            tracing::debug!("Failed to set ctrlc handler: {}", e);
+        }
+
+        let loop_result = self.variable_delta_loop();
+
+        // Perform clean shutdown in reverse topological dependency order
+        tracing::info!("Shutdown requested. Stopping loop...");
         for module_index in self.sorted_modules.clone().into_iter().rev() {
-            self.modules[module_index].shutdown();
+            let module = &mut self.modules[module_index];
+            tracing::info!("Shutting down module: {}", module.name());
+            module.shutdown();
+        }
+        tracing::info!("Engine shutdown complete.");
+
+        loop_result
+    }
+
+    /// Requests a graceful shutdown of the engine by setting the shutdown flag to `true`.
+    ///
+    /// This method is thread-safe and can be called from shared references (`&self`),
+    /// allowing modules or IPC handlers to trigger shutdown programmatically.
+    pub fn request_shutdown(&self) -> KernelResult<()> {
+        self.shutdown_requested.store(true, SeqCst);
+        Ok(())
+    }
+
+    /// The variable-step game loop body.
+    ///
+    /// Computes frame delta times using `FrameTimer`, ticks all modules in their
+    /// topological dependency order, and throttles the frame rate to `target_hz`
+    /// (if configured) using a sleep + spin hybrid wait.
+    fn variable_delta_loop(&mut self) -> KernelResult<()> {
+        let mut timer = FrameTimer::new();
+        while !self.shutdown_requested.load(SeqCst) {
+            let frame_start = Instant::now();
+
+            let (dt, fps) = timer.tick();
+            if let Some(fps) = fps {
+                tracing::debug!("FPS: {:.0}", fps);
+            }
+
+            self.tick_all(dt)?;
+
+            if let Some(target_hz) = self.target_hz {
+                let target_duration = Duration::from_secs_f64(1.0 / target_hz as f64);
+                let elapsed = Instant::now().duration_since(frame_start);
+                if elapsed < target_duration {
+                    let sleep_time = target_duration - elapsed;
+                    if sleep_time > Duration::from_millis(1) {
+                        std::thread::sleep(sleep_time - Duration::from_millis(1));
+                    }
+                    while Instant::now().duration_since(frame_start) < target_duration {}
+                }
+            }
         }
         Ok(())
     }
 
-    /// Stub for the public "request shutdown" API.
-    ///
-    /// Reserved for the user-facing way to signal the running game loop to
-    /// exit gracefully. Currently a no-op that returns `Ok(())` — see the
-    /// inline TODO. Until this is implemented, the working primitive is
-    /// [`shutdown_handle`], which hands back a cloneable `Sender<()>` whose
-    /// `send` stops the loop at the end of the current frame.
-    ///
-    /// [`shutdown_handle`]: TheosKernel::shutdown_handle
-    pub fn request_shutdown(&mut self) -> KernelResult<()> {
-        Ok(()) // TODO: Shutdown the fixed_step_loop
-    }
-
-    /// The fixed-step game loop body.
-    ///
-    /// Uses a sleep + spin hybrid:
-    /// - Sleep until ~1 ms before the next frame deadline
-    /// - Spin the remaining time precisely
-    /// - Cap catch-up ticks at MAX_CATCHUP_TICKS to avoid spiral-of-death
-    ///
-    /// Returns when the loop should exit (hint: you'll need a stop condition —
-    /// how do you plan to signal shutdown from outside the loop?).
-    fn fixed_step_loop(&mut self) -> KernelResult<()> {
-        let frame_duration = Duration::from_secs_f64(1.0 / TARGET_HZ as f64);
-        let mut next_frame_time = Instant::now();
-        loop {
-            match self.shutdown_rx.try_recv() {
-                Ok(_) => return Ok(()),
-                Err(error) => match error {
-                    crossbeam::channel::TryRecvError::Empty => {
-                        let ticks_due =
-                            Instant::now().duration_since(next_frame_time).as_secs_f32()
-                                / frame_duration.as_secs_f32();
-                        let ticks_to_run = ticks_due.min(MAX_CATCHUP_TICKS as f32).floor() as u32;
-
-                        for _ in 0..ticks_to_run {
-                            next_frame_time += frame_duration;
-                            self.tick_all(frame_duration.as_secs_f32())?;
-                        }
-
-                        if ticks_to_run < ticks_due as u32 {
-                            tracing::warn!(
-                                "Falling behind: due for {:.2} ticks but only ran {}",
-                                ticks_due,
-                                ticks_to_run
-                            );
-                            next_frame_time = Instant::now() + frame_duration;
-                        }
-
-                        let time_to_sleep = next_frame_time
-                            .checked_duration_since(Instant::now())
-                            .unwrap_or_default()
-                            .saturating_sub(Duration::from_millis(1));
-                        std::thread::sleep(time_to_sleep);
-                        while next_frame_time > Instant::now() {}
-                    }
-                    crossbeam::channel::TryRecvError::Disconnected => {
-                        tracing::error!("Shutdown channel disconnected; exiting game loop");
-                        return Ok(());
-                    }
-                },
-            }
-        }
-    }
-
-    /// Ticks all mounted modules once without entering the game loop.
+    /// Ticks all mounted modules once in registration order without entering the game loop.
     ///
     /// Intended for benchmarks and tests that need to drive tick dispatch directly.
     pub fn tick_once(&mut self, dt: f32) {
@@ -271,9 +325,10 @@ impl TheosKernel {
         }
     }
 
-    /// Calls `tick(dt)` on all mounted modules in order.
+    /// Calls `tick(dt)` on all mounted modules in topological dependency order.
     fn tick_all(&mut self, dt: f32) -> KernelResult<()> {
-        for module in self.modules.iter_mut() {
+        for &module_index in &self.sorted_modules {
+            let module = &mut self.modules[module_index];
             let span = tracing::debug_span!("module_tick", module = module.name());
             let _guard = span.enter();
             module.tick(dt);
@@ -281,27 +336,25 @@ impl TheosKernel {
         Ok(())
     }
 
+    /// Sets the target frame rate for the update loop.
+    ///
+    /// Pass `Some(hz)` to throttle the loop to a specific frame rate target,
+    /// or `None` to run the loop uncapped (unthrottled).
+    pub fn set_target_hz(&mut self, target_hz: Option<u32>) {
+        self.target_hz = target_hz;
+    }
+
     /// Returns a handle that can be used to request a graceful engine shutdown.
     ///
-    /// Clones the internal shutdown sender — multiple handles can be created
-    /// and distributed to different subsystems (OS signal handlers, editor IPC,
-    /// game logic). Any one of them calling [`Sender::send`] will stop the
-    /// game loop at the end of the current frame.
-    ///
-    /// # Example
-    /// ```ignore
-    /// let mut kernel = TheosKernel::default();
-    /// let shutdown = kernel.shutdown_handle();
-    ///
-    /// std::thread::spawn(move || {
-    ///     std::thread::sleep(Duration::from_secs(5));
-    ///     shutdown.send(()).ok();
-    /// });
-    ///
-    /// kernel.run()?;
-    /// ```
-    pub fn shutdown_handle(&self) -> Sender<()> {
-        self.shutdown_tx.clone()
+    /// Clones the internal shutdown atomic flag. Any client holding this handle
+    /// can call `.store(true, SeqCst)` to stop the game loop.
+    pub fn shutdown_handle(&self) -> Arc<AtomicBool> {
+        self.shutdown_requested.clone()
+    }
+
+    /// Returns whether a shutdown has been requested.
+    pub fn shutdown_requested(&self) -> bool {
+        self.shutdown_requested.load(SeqCst)
     }
 
     /// Returns the number of modules currently in the staging buffer.
@@ -661,7 +714,7 @@ mod tests {
         let signal = kernel.shutdown_handle();
         let signaller = thread::spawn(move || {
             thread::sleep(Duration::from_millis(25));
-            signal.send(()).expect("shutdown channel still open");
+            signal.store(true, SeqCst);
         });
 
         kernel.run().expect("run should exit cleanly on shutdown");
@@ -713,7 +766,7 @@ mod tests {
 
         let signaller = thread::spawn(move || {
             thread::sleep(Duration::from_millis(15));
-            h2.send(()).expect("the surviving handle still signals");
+            h2.store(true, SeqCst);
         });
 
         kernel.run().expect("run exits via the surviving handle");
@@ -721,11 +774,11 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // request_shutdown (currently a stub)
+    // request_shutdown
     // -----------------------------------------------------------------------
 
     #[test]
-    fn request_shutdown_stub_returns_ok_and_does_not_touch_modules() {
+    fn request_shutdown_sets_flag_but_does_not_run_shutdown_without_run_loop() {
         let log = Arc::new(CallLog::default());
         let mut kernel = TheosKernel::default();
         kernel
@@ -734,10 +787,82 @@ mod tests {
         kernel.init().expect("init succeeds");
         kernel
             .request_shutdown()
-            .expect("stub returns Ok unconditionally");
+            .expect("request_shutdown returns Ok");
         assert!(
             log.shutdown_order().is_empty(),
-            "request_shutdown is a stub — module shutdown must not run"
+            "request_shutdown sets flag — module shutdown must not run before loop execution"
         );
+    }
+
+    // -----------------------------------------------------------------------
+    // New coverage tests (THEOS-13 / THEOS-14)
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn variable_delta_loop_runs_uncapped_when_target_hz_is_none() {
+        let mut kernel = TheosKernel::default();
+        kernel.set_target_hz(None);
+
+        // Register a module that stops the loop after 10 ticks
+        let shutdown_flag = kernel.shutdown_handle();
+        struct UncappedModule {
+            shutdown_flag: Arc<AtomicBool>,
+            ticks: u32,
+        }
+        impl EngineModule for UncappedModule {
+            fn name(&self) -> &'static str {
+                "UncappedModule"
+            }
+            fn init(
+                &mut self,
+                _ctx: &mut KernelContext,
+            ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+                Ok(())
+            }
+            fn tick(&mut self, _dt: f32) {
+                self.ticks += 1;
+                if self.ticks >= 10 {
+                    self.shutdown_flag.store(true, SeqCst);
+                }
+            }
+            fn module_type_id(&self) -> TypeId {
+                TypeId::of::<Self>()
+            }
+        }
+
+        kernel
+            .register_module(Box::new(UncappedModule {
+                shutdown_flag,
+                ticks: 0,
+            }))
+            .unwrap();
+
+        kernel.init().unwrap();
+
+        let start = Instant::now();
+        kernel.run().unwrap();
+        let elapsed = start.elapsed();
+
+        // Uncapped run of 10 frames should complete extremely fast (less than 15ms)
+        assert!(
+            elapsed < Duration::from_millis(15),
+            "uncapped loop took too long: {:?}",
+            elapsed
+        );
+    }
+
+    #[test]
+    fn frame_timer_clamps_huge_delta_times_to_max_limit() {
+        let mut timer = FrameTimer::new();
+        // First tick returns default 1/60
+        let (dt1, _) = timer.tick();
+        assert_eq!(dt1, 1.0 / 60.0);
+
+        // Sleep for a duration longer than MAX_DELTA_TIME (150ms > 100ms)
+        thread::sleep(Duration::from_millis(150));
+
+        let (dt2, _) = timer.tick();
+        // Assert that the returned delta time is clamped to MAX_DELTA_TIME (0.1)
+        assert_eq!(dt2, MAX_DELTA_TIME);
     }
 }

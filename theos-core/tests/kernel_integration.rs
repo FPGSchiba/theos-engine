@@ -5,11 +5,10 @@
 
 #![allow(clippy::disallowed_macros)]
 
-use crossbeam::channel::Sender;
 use std::any::TypeId;
 use std::marker::PhantomData;
 use std::sync::{
-    atomic::{AtomicU32, Ordering},
+    atomic::{AtomicBool, AtomicU32, Ordering},
     Arc, Mutex,
 };
 use std::time::Instant;
@@ -33,7 +32,7 @@ struct TagTwo;
 struct CountingModule<Tag> {
     name: &'static str,
     stop_after: u32,
-    shutdown_tx: Arc<Sender<()>>,
+    shutdown_flag: Arc<AtomicBool>,
     tick_count: Arc<AtomicU32>,
     init_count: Arc<AtomicU32>,
     shutdown_count: Arc<AtomicU32>,
@@ -56,7 +55,7 @@ impl<Tag: Send + Sync + 'static> EngineModule for CountingModule<Tag> {
     fn tick(&mut self, _dt: f32) {
         self.tick_count.fetch_add(1, Ordering::SeqCst);
         if self.tick_count.load(Ordering::SeqCst) >= self.stop_after {
-            self.shutdown_tx.send(()).ok();
+            self.shutdown_flag.store(true, Ordering::SeqCst);
         }
     }
 
@@ -78,7 +77,7 @@ impl<Tag: Send + Sync + 'static> EngineModule for CountingModule<Tag> {
 fn make_counting_module<Tag: Send + Sync + 'static>(
     name: &'static str,
     stop_after: u32,
-    shutdown_tx: Arc<Sender<()>>,
+    shutdown_flag: Arc<AtomicBool>,
 ) -> (
     CountingModule<Tag>,
     Arc<AtomicU32>,
@@ -92,7 +91,7 @@ fn make_counting_module<Tag: Send + Sync + 'static>(
     let module = CountingModule {
         name,
         stop_after,
-        shutdown_tx,
+        shutdown_flag,
         tick_count: tick_count.clone(),
         init_count: init_count.clone(),
         shutdown_count: shutdown_count.clone(),
@@ -109,12 +108,12 @@ fn make_counting_module<Tag: Send + Sync + 'static>(
 #[test]
 fn kernel_runs_init_tick_shutdown_lifecycle() {
     let mut kernel = TheosKernel::default();
-    let shutdown_tx = Arc::new(kernel.shutdown_handle());
+    let shutdown_flag = kernel.shutdown_handle();
 
     let (mod_one, tick_one, init_one, shutdown_one) =
-        make_counting_module::<TagOne>("CountingModuleOne", 10, shutdown_tx.clone());
+        make_counting_module::<TagOne>("CountingModuleOne", 10, shutdown_flag.clone());
     let (mod_two, tick_two, init_two, shutdown_two) =
-        make_counting_module::<TagTwo>("CountingModuleTwo", 1000, shutdown_tx.clone());
+        make_counting_module::<TagTwo>("CountingModuleTwo", 1000, shutdown_flag.clone());
 
     kernel.register_module(Box::new(mod_one)).unwrap();
     kernel.register_module(Box::new(mod_two)).unwrap();
@@ -156,8 +155,8 @@ fn kernel_runs_init_tick_shutdown_lifecycle() {
 #[test]
 fn shutdown_before_run_exits_immediately() {
     let mut kernel = TheosKernel::default();
-    let shutdown_tx = Arc::new(kernel.shutdown_handle());
-    shutdown_tx.send(()).unwrap();
+    let shutdown_flag = kernel.shutdown_handle();
+    shutdown_flag.store(true, Ordering::SeqCst);
     kernel.init().unwrap();
     assert!(kernel.run().is_ok());
 }
@@ -168,7 +167,7 @@ fn shutdown_before_run_exits_immediately() {
 
 struct TimingModule {
     timestamps: Arc<Mutex<Vec<Instant>>>,
-    shutdown_tx: Arc<Sender<()>>,
+    shutdown_flag: Arc<AtomicBool>,
     stop_after: u32,
     count: Arc<AtomicU32>,
 }
@@ -188,7 +187,7 @@ impl EngineModule for TimingModule {
     fn tick(&mut self, _dt: f32) {
         self.timestamps.lock().unwrap().push(Instant::now());
         if self.count.fetch_add(1, Ordering::SeqCst) + 1 >= self.stop_after {
-            self.shutdown_tx.send(()).ok();
+            self.shutdown_flag.store(true, Ordering::SeqCst);
         }
     }
 
@@ -207,14 +206,14 @@ fn reports_frame_timing_accuracy() {
     const FRAMES: u32 = 60 * 5; // 5 seconds of tests
 
     let mut kernel = TheosKernel::default();
-    let shutdown_tx = Arc::new(kernel.shutdown_handle());
+    let shutdown_flag = kernel.shutdown_handle();
     let timestamps = Arc::new(Mutex::new(Vec::with_capacity(FRAMES as usize)));
     let count = Arc::new(AtomicU32::new(0));
 
     kernel
         .register_module(Box::new(TimingModule {
             timestamps: timestamps.clone(),
-            shutdown_tx,
+            shutdown_flag,
             stop_after: FRAMES,
             count,
         }))
@@ -295,14 +294,14 @@ fn reports_frame_timing_multirun() {
 
     for run in 0..RUNS {
         let mut kernel = TheosKernel::default();
-        let shutdown_tx = Arc::new(kernel.shutdown_handle());
+        let shutdown_flag = kernel.shutdown_handle();
         let timestamps = Arc::new(Mutex::new(Vec::with_capacity(FRAMES_PER_RUN as usize)));
         let count = Arc::new(AtomicU32::new(0));
 
         kernel
             .register_module(Box::new(TimingModule {
                 timestamps: timestamps.clone(),
-                shutdown_tx,
+                shutdown_flag,
                 stop_after: FRAMES_PER_RUN,
                 count,
             }))
@@ -438,7 +437,7 @@ fn module_retrieves_service_registered_by_its_dependency() {
     let mut kernel = TheosKernel::default();
     // Pre-signal shutdown so the game loop exits immediately after init+run
     // (cf. shutdown_before_run_exits_immediately).
-    kernel.shutdown_handle().send(()).unwrap();
+    kernel.shutdown_handle().store(true, Ordering::SeqCst);
 
     let observed = Arc::new(Mutex::new(None::<String>));
 
