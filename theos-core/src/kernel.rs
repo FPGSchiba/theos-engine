@@ -291,9 +291,10 @@ impl TheosKernel {
     /// (if configured) using a sleep + spin hybrid wait.
     fn variable_delta_loop(&mut self) -> KernelResult<()> {
         let mut timer = FrameTimer::new();
-        while !self.shutdown_requested.load(SeqCst) {
-            let frame_start = Instant::now();
+        let mut next_frame_deadline = Instant::now();
+        let mut last_hz = self.target_hz;
 
+        while !self.shutdown_requested.load(SeqCst) {
             let (dt, fps) = timer.tick();
             if let Some(fps) = fps {
                 tracing::debug!("FPS: {:.0}", fps);
@@ -302,15 +303,30 @@ impl TheosKernel {
             self.tick_all(dt)?;
 
             if let Some(target_hz) = self.target_hz {
+                // If target HZ was changed mid-run, reset the timeline alignment
+                if last_hz != Some(target_hz) {
+                    next_frame_deadline = Instant::now();
+                    last_hz = Some(target_hz);
+                }
+
                 let target_duration = Duration::from_secs_f64(1.0 / target_hz as f64);
-                let elapsed = Instant::now().duration_since(frame_start);
-                if elapsed < target_duration {
-                    let sleep_time = target_duration - elapsed;
+                next_frame_deadline += target_duration;
+
+                let now = Instant::now();
+                if now < next_frame_deadline {
+                    let sleep_time = next_frame_deadline - now;
                     if sleep_time > Duration::from_millis(1) {
                         std::thread::sleep(sleep_time - Duration::from_millis(1));
                     }
-                    while Instant::now().duration_since(frame_start) < target_duration {}
+                    while Instant::now() < next_frame_deadline {}
+                } else {
+                    // Prevent catch-up storms (spiral of death) after major delays
+                    if now > next_frame_deadline + Duration::from_millis(100) {
+                        next_frame_deadline = now;
+                    }
                 }
+            } else {
+                last_hz = None;
             }
         }
         Ok(())
