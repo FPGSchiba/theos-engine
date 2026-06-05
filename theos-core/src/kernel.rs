@@ -9,8 +9,8 @@ use crate::event::CrossbeamEventBus;
 use crate::logging;
 use rayon::ThreadPool;
 use std::ops::DerefMut;
-use std::sync::atomic::AtomicBool;
 use std::sync::atomic::Ordering::SeqCst;
+use std::sync::atomic::{AtomicBool, AtomicU32};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
 use theos_shared::{EngineModule, KernelContext};
@@ -114,9 +114,9 @@ pub struct TheosKernel {
     /// [`TheosKernel::run`] (rejects if `false`) and [`TheosKernel::init`]
     /// itself (rejects re-entry if already `true`).
     all_modules_initialized: bool,
-    /// Optional frame rate target for the variable delta-time loop.
-    /// If `Some(hz)`, the loop is throttled; if `None`, the loop runs uncapped.
-    target_hz: Option<u32>,
+    /// Thread-safe frame rate target for the variable delta-time loop.
+    /// If non-zero, the loop is throttled; if `0` (represented as `None`), the loop runs uncapped.
+    target_hz: Arc<AtomicU32>,
     /// Thread-safe flag to request the game loop to terminate gracefully.
     shutdown_requested: Arc<AtomicBool>,
     /// Held to keep the pool alive; Rayon spins worker threads on construction.
@@ -141,7 +141,7 @@ impl Default for TheosKernel {
             modules: Vec::new(),
             sorted_modules: Vec::new(),
             all_modules_initialized: false,
-            target_hz: Some(DEFAULT_TARGET_HZ),
+            target_hz: Arc::new(AtomicU32::new(DEFAULT_TARGET_HZ)),
             thread_pool,
             shutdown_requested: Arc::new(AtomicBool::new(false)),
         }
@@ -200,7 +200,7 @@ impl TheosKernel {
             return Err(KernelError::AlreadyInitialized);
         }
         self.sorted_modules = DependencyResolver::sort(&self.modules)?;
-        let mut ctx = KernelContext::new(self.event_bus.clone());
+        let mut ctx = KernelContext::new(self.event_bus.clone(), self.target_hz.clone());
         tracing::info!("Initializing {} modules...", self.modules.len());
         for module_index in self.sorted_modules.clone() {
             let module = self.modules[module_index].deref_mut();
@@ -292,7 +292,7 @@ impl TheosKernel {
     fn variable_delta_loop(&mut self) -> KernelResult<()> {
         let mut timer = FrameTimer::new();
         let mut next_frame_deadline = Instant::now();
-        let mut last_hz = self.target_hz;
+        let mut last_hz = self.target_hz();
 
         while !self.shutdown_requested.load(SeqCst) {
             let (dt, fps) = timer.tick();
@@ -302,7 +302,7 @@ impl TheosKernel {
 
             self.tick_all(dt)?;
 
-            if let Some(target_hz) = self.target_hz {
+            if let Some(target_hz) = self.target_hz() {
                 // If target HZ was changed mid-run, reset the timeline alignment
                 if last_hz != Some(target_hz) {
                     next_frame_deadline = Instant::now();
@@ -356,8 +356,29 @@ impl TheosKernel {
     ///
     /// Pass `Some(hz)` to throttle the loop to a specific frame rate target,
     /// or `None` to run the loop uncapped (unthrottled).
-    pub fn set_target_hz(&mut self, target_hz: Option<u32>) {
-        self.target_hz = target_hz;
+    ///
+    /// This method is thread-safe and can be called using a shared reference (`&self`).
+    pub fn set_target_hz(&self, target_hz: Option<u32>) {
+        self.target_hz.store(target_hz.unwrap_or(0), SeqCst);
+    }
+
+    /// Returns the target frame rate for the update loop, or `None` if uncapped.
+    ///
+    /// This method is thread-safe and can be called using a shared reference (`&self`).
+    pub fn target_hz(&self) -> Option<u32> {
+        let val = self.target_hz.load(SeqCst);
+        if val == 0 {
+            None
+        } else {
+            Some(val)
+        }
+    }
+
+    /// Returns a cloned handle to the target HZ atomic.
+    ///
+    /// This method is thread-safe and can be called using a shared reference (`&self`).
+    pub fn target_hz_handle(&self) -> Arc<AtomicU32> {
+        self.target_hz.clone()
     }
 
     /// Returns a handle that can be used to request a graceful engine shutdown.
@@ -880,5 +901,62 @@ mod tests {
         let (dt2, _) = timer.tick();
         // Assert that the returned delta time is clamped to MAX_DELTA_TIME (0.1)
         assert_eq!(dt2, MAX_DELTA_TIME);
+    }
+
+    #[test]
+    fn test_thread_safe_target_hz_changes() {
+        let mut kernel = TheosKernel::default();
+        kernel.set_target_hz(None); // Start uncapped
+
+        let shutdown_flag = kernel.shutdown_handle();
+        struct DynamicHzModule {
+            shutdown_flag: Arc<AtomicBool>,
+            hz_handle: Option<Arc<AtomicU32>>,
+            ticks: u32,
+        }
+        impl EngineModule for DynamicHzModule {
+            fn name(&self) -> &'static str {
+                "DynamicHzModule"
+            }
+            fn init(
+                &mut self,
+                ctx: &mut KernelContext,
+            ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
+                self.hz_handle = Some(ctx.target_hz_handle());
+                Ok(())
+            }
+            fn tick(&mut self, _dt: f32) {
+                self.ticks += 1;
+                if self.ticks == 5 {
+                    // Change target HZ dynamically to 60 Hz from inside the loop
+                    if let Some(ref handle) = self.hz_handle {
+                        handle.store(60, SeqCst);
+                    }
+                } else if self.ticks >= 10 {
+                    self.shutdown_flag.store(true, SeqCst);
+                }
+            }
+            fn module_type_id(&self) -> TypeId {
+                TypeId::of::<Self>()
+            }
+        }
+
+        kernel
+            .register_module(Box::new(DynamicHzModule {
+                shutdown_flag,
+                hz_handle: None,
+                ticks: 0,
+            }))
+            .unwrap();
+
+        kernel.init().unwrap();
+
+        // Assert that the initial target_hz is None
+        assert_eq!(kernel.target_hz(), None);
+
+        kernel.run().unwrap();
+
+        // After the loop finishes (tick 10), target HZ should be 60
+        assert_eq!(kernel.target_hz(), Some(60));
     }
 }

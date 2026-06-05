@@ -21,6 +21,7 @@
 use crate::error::{KernelContextError, KernelContextResult};
 use crate::event_bus::EventBus;
 use crate::service_locator::ServiceLocator;
+use std::sync::atomic::{AtomicU32, Ordering::SeqCst};
 use std::sync::Arc;
 
 /// Marker trait that any type registered via [`KernelContext::register`] must implement.
@@ -60,6 +61,9 @@ pub struct KernelContext {
     /// Held as `Arc<dyn EventBus>` (not the concrete `CrossbeamEventBus`) so that
     /// `theos-shared` does not need to depend on `theos-core` where the impl lives.
     event_bus: Arc<dyn EventBus>,
+
+    /// Shared handle to the kernel's target frame rate target.
+    target_hz: Arc<AtomicU32>,
 }
 
 impl KernelContext {
@@ -68,10 +72,11 @@ impl KernelContext {
     /// Called by `TheosKernel::run`, not by module code. The context owns its
     /// [`ServiceLocator`]; modules populate it via [`KernelContext::register`]
     /// during `init`.
-    pub fn new(event_bus: Arc<dyn EventBus>) -> Self {
+    pub fn new(event_bus: Arc<dyn EventBus>, target_hz: Arc<AtomicU32>) -> Self {
         Self {
             service_locator: ServiceLocator::default(),
             event_bus,
+            target_hz,
         }
     }
 
@@ -134,6 +139,34 @@ impl KernelContext {
     pub fn event_bus(&self) -> Arc<dyn EventBus> {
         Arc::clone(&self.event_bus)
     }
+
+    /// Returns the target framerate HZ if set, or `None` if uncapped.
+    ///
+    /// A value of `0` in the underlying atomic is treated as uncapped (`None`).
+    pub fn target_hz(&self) -> Option<u32> {
+        let val = self.target_hz.load(SeqCst);
+        if val == 0 {
+            None
+        } else {
+            Some(val)
+        }
+    }
+
+    /// Sets the target framerate HZ.
+    ///
+    /// Pass `Some(hz)` to limit the framerate, or `None` to run the loop uncapped (represented as `0`).
+    pub fn set_target_hz(&self, target_hz: Option<u32>) {
+        let val = target_hz.unwrap_or(0);
+        self.target_hz.store(val, SeqCst);
+    }
+
+    /// Returns a cloned handle to the target HZ atomic.
+    ///
+    /// Modules can retrieve this handle during `init` and store it to query or adjust
+    /// the target framerate dynamically at runtime (e.g. from within `tick` or another thread).
+    pub fn target_hz_handle(&self) -> Arc<AtomicU32> {
+        Arc::clone(&self.target_hz)
+    }
 }
 
 #[cfg(test)]
@@ -171,7 +204,7 @@ mod tests {
     impl TheosService for UnregisteredService {}
 
     fn make_context() -> KernelContext {
-        KernelContext::new(Arc::new(StubBus))
+        KernelContext::new(Arc::new(StubBus), Arc::new(AtomicU32::new(60)))
     }
 
     #[test]
@@ -219,5 +252,26 @@ mod tests {
             Arc::ptr_eq(&first, &second),
             "event_bus() should clone the same underlying bus handle"
         );
+    }
+
+    #[test]
+    fn test_target_hz_and_handle_modifications() {
+        let ctx = make_context();
+
+        // Default from make_context is 60
+        assert_eq!(ctx.target_hz(), Some(60));
+
+        // Set to a new value
+        ctx.set_target_hz(Some(120));
+        assert_eq!(ctx.target_hz(), Some(120));
+
+        // Set to None (represented as 0)
+        ctx.set_target_hz(None);
+        assert_eq!(ctx.target_hz(), None);
+
+        // Get a handle and modify it via the handle
+        let handle = ctx.target_hz_handle();
+        handle.store(144, SeqCst);
+        assert_eq!(ctx.target_hz(), Some(144));
     }
 }
