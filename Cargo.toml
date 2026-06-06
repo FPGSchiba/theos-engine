@@ -3,6 +3,7 @@ resolver = "2"
 members = [
     "theos-shared", "theos-math",
     "theos-core", "theos-ecs", "theos-assets", "theos-render", "theos-physics", "theos-ai", "theos-scripting",
+    "theos-window",
     "theos-plugin-api", "theos-plugin-loader",
     "theos-launcher", "theos-editor", "theos-game"
 ]
@@ -22,6 +23,7 @@ theos-render        = { path = "theos-render" }
 theos-physics       = { path = "theos-physics" }
 theos-ai            = { path = "theos-ai" }
 theos-scripting     = { path = "theos-scripting" }
+theos-window        = { path = "theos-window" }
 theos-plugin-api    = { path = "theos-plugin-api" }
 theos-plugin-loader = { path = "theos-plugin-loader" }
 

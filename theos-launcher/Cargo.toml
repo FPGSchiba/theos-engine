@@ -6,6 +6,8 @@ edition = "2021"
 [dependencies]
 theos-shared = { workspace = true }
 theos-core = { workspace = true }
+theos-window = { workspace = true }
+winit = { workspace = true }
 tracing = "0.1.44"
 
 [dev-dependencies]

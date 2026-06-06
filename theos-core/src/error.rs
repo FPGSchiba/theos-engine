@@ -333,6 +333,24 @@ pub enum KernelError {
     ///
     /// [`TheosKernel::init`]: crate::kernel::TheosKernel::init
     AlreadyInitialized,
+
+    /// [`TheosKernel::step`] was called after [`TheosKernel::shutdown_all`]
+    /// had already completed.
+    ///
+    /// Once `shutdown_all` returns successfully, every initialised module has
+    /// received its `shutdown()` call and may have released resources
+    /// (file handles, GPU surfaces, sockets, worker threads). Ticking a
+    /// shut-down module is almost certainly a programmer error and a likely
+    /// source of subtle use-after-shutdown bugs, so the kernel rejects the
+    /// call explicitly rather than silently ticking degraded modules.
+    ///
+    /// Note: `shutdown_all` itself is idempotent — calling it a second time
+    /// after a successful first call is *not* an error and returns `Ok(())`.
+    /// Only `step` is gated on the shut-down state.
+    ///
+    /// [`TheosKernel::step`]: crate::kernel::TheosKernel::step
+    /// [`TheosKernel::shutdown_all`]: crate::kernel::TheosKernel::shutdown_all
+    AlreadyShutdown,
 }
 
 impl Display for KernelError {
@@ -362,6 +380,9 @@ impl Display for KernelError {
             KernelError::AlreadyInitialized => {
                 write!(f, "kernel was already initialized")
             }
+            KernelError::AlreadyShutdown => {
+                write!(f, "kernel was already shutdown")
+            }
         }
     }
 }
@@ -377,6 +398,7 @@ impl Error for KernelError {
             KernelError::ModuleAlreadyRegistered { .. } => None,
             KernelError::UninitializedKernelStart => None,
             KernelError::AlreadyInitialized => None,
+            KernelError::AlreadyShutdown => None,
         }
     }
 }

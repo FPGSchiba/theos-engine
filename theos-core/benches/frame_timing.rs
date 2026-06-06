@@ -63,7 +63,7 @@ fn bench_tick_dispatch(c: &mut Criterion) {
 
                 // Timed region: one tick dispatch per iteration.
                 b.iter(|| {
-                    kernel.tick_once(black_box(0.016_667));
+                    kernel.step(black_box(0.016_667));
                 });
             },
         );

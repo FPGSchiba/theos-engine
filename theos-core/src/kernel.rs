@@ -6,6 +6,7 @@
 use crate::dependency_resolver::DependencyResolver;
 use crate::error::{KernelError, KernelResult};
 use crate::event::CrossbeamEventBus;
+use crate::frame_timer::FrameTimer;
 use crate::logging;
 use rayon::ThreadPool;
 use std::ops::DerefMut;
@@ -16,66 +17,6 @@ use std::time::{Duration, Instant};
 use theos_shared::{EngineModule, KernelContext};
 
 const DEFAULT_TARGET_HZ: u32 = 60;
-
-const MAX_DELTA_TIME: f32 = 0.1; // Cap delta time to avoid spiral of death after long pauses.
-
-/// A utility for tracking frame times, calculating delta times, and measuring FPS.
-struct FrameTimer {
-    /// The timestamp when the previous frame started.
-    last_frame: Instant,
-    /// Whether this is the first frame being ticked.
-    first_frame: bool,
-    /// Time accumulated in seconds to calculate average FPS once per second.
-    fps_accumulator: f32,
-    /// The number of frames completed within the current second.
-    fps_counter: u32,
-}
-
-impl FrameTimer {
-    /// Creates a new `FrameTimer` with `last_frame` initialized to the current time.
-    fn new() -> Self {
-        Self {
-            last_frame: Instant::now(),
-            first_frame: true,
-            fps_accumulator: 0.0,
-            fps_counter: 0,
-        }
-    }
-
-    /// Ticks the timer to calculate the delta time since the last frame.
-    ///
-    /// The returned delta time is clamped to a maximum of `0.1` seconds to prevent
-    /// the game engine from experiencing a "spiral of death" during lag spikes.
-    /// On the very first frame, a default startup value of `1.0 / 60.0` is returned.
-    ///
-    /// # Returns
-    /// A tuple of `(dt, Option<fps>)`, where `dt` is the clamped delta time in seconds,
-    /// and `Some(fps)` contains the average FPS if a second has elapsed since the last FPS report.
-    pub fn tick(&mut self) -> (f32, Option<f32>) {
-        let now = Instant::now();
-        if self.first_frame {
-            self.first_frame = false;
-            self.last_frame = now;
-            (1.0 / 60.0, None) // Standard 60FPS elapsed as first frame
-        } else {
-            let dt = now
-                .duration_since(self.last_frame)
-                .as_secs_f32()
-                .min(MAX_DELTA_TIME);
-            self.last_frame = now;
-            self.fps_accumulator += dt;
-            self.fps_counter += 1;
-            if self.fps_accumulator >= 1.0 {
-                let fps = self.fps_counter as f32 / self.fps_accumulator;
-                self.fps_accumulator = 0.0;
-                self.fps_counter = 0;
-                (dt, Some(fps))
-            } else {
-                (dt, None)
-            }
-        }
-    }
-}
 
 /// The central engine kernel.
 ///
@@ -119,6 +60,7 @@ pub struct TheosKernel {
     target_hz: Arc<AtomicU32>,
     /// Thread-safe flag to request the game loop to terminate gracefully.
     shutdown_requested: Arc<AtomicBool>,
+    shutdown_complete: bool,
     /// Held to keep the pool alive; Rayon spins worker threads on construction.
     #[allow(dead_code)]
     thread_pool: ThreadPool,
@@ -144,6 +86,7 @@ impl Default for TheosKernel {
             target_hz: Arc::new(AtomicU32::new(DEFAULT_TARGET_HZ)),
             thread_pool,
             shutdown_requested: Arc::new(AtomicBool::new(false)),
+            shutdown_complete: false,
         }
     }
 }
@@ -263,14 +206,7 @@ impl TheosKernel {
 
         let loop_result = self.variable_delta_loop();
 
-        // Perform clean shutdown in reverse topological dependency order
-        tracing::info!("Shutdown requested. Stopping loop...");
-        for module_index in self.sorted_modules.clone().into_iter().rev() {
-            let module = &mut self.modules[module_index];
-            tracing::info!("Shutting down module: {}", module.name());
-            module.shutdown();
-        }
-        tracing::info!("Engine shutdown complete.");
+        self.shutdown_all()?;
 
         loop_result
     }
@@ -300,7 +236,7 @@ impl TheosKernel {
                 tracing::debug!("FPS: {:.0}", fps);
             }
 
-            self.tick_all(dt)?;
+            self.step(dt)?;
 
             if let Some(target_hz) = self.target_hz() {
                 // If target HZ was changed mid-run, reset the timeline alignment
@@ -332,23 +268,76 @@ impl TheosKernel {
         Ok(())
     }
 
-    /// Ticks all mounted modules once in registration order without entering the game loop.
+    /// Drive the engine through a single frame.
     ///
-    /// Intended for benchmarks and tests that need to drive tick dispatch directly.
-    pub fn tick_once(&mut self, dt: f32) {
-        for module in self.modules.iter_mut() {
-            module.tick(dt);
+    /// Calls `tick` on every initialised module in topological dependency order.
+    /// This is the integration point for external event loops (notably
+    /// `TheosAppHandler` in `theos-launcher`, which dispatches `step` from
+    /// inside winit's `Event::AboutToWait`). The headless [`run`] driver also
+    /// calls `step` once per frame internally.
+    ///
+    /// # State requirements
+    /// [`init`] must have completed successfully. Otherwise `step` returns
+    /// [`KernelError::UninitializedKernelStart`] without touching any module.
+    ///
+    /// # Errors
+    /// - [`KernelError::UninitializedKernelStart`] if [`init`] has not been
+    ///   called. The kernel does not auto-init.
+    ///
+    /// [`init`]: TheosKernel::init
+    /// [`run`]: TheosKernel::run
+    pub fn step(&mut self, dt: f32) -> KernelResult<()> {
+        if !self.all_modules_initialized {
+            return Err(KernelError::UninitializedKernelStart);
         }
-    }
-
-    /// Calls `tick(dt)` on all mounted modules in topological dependency order.
-    fn tick_all(&mut self, dt: f32) -> KernelResult<()> {
+        if self.shutdown_complete {
+            return Err(KernelError::AlreadyShutdown);
+        }
         for &module_index in &self.sorted_modules {
             let module = &mut self.modules[module_index];
             let span = tracing::debug_span!("module_tick", module = module.name());
             let _guard = span.enter();
             module.tick(dt);
         }
+        Ok(())
+    }
+
+    /// Walk every initialised module in **reverse** topological dependency
+    /// order and call `shutdown`.
+    ///
+    /// This is the integration point for external event loops (notably
+    /// `TheosAppHandler` in `theos-launcher`, which dispatches
+    /// `shutdown_all` from `Event::LoopExiting`). The headless [`run`] driver
+    /// also calls `shutdown_all` after its loop exits.
+    ///
+    /// # Idempotency
+    /// After the first successful call, subsequent calls are no-ops returning
+    /// `Ok(())`. Modules are not double-shut-down.
+    ///
+    /// # Errors
+    /// - [`KernelError::UninitializedKernelStart`] if [`init`] has not been
+    ///   called — there is nothing to shut down.
+    ///
+    /// [`init`]: TheosKernel::init
+    /// [`run`]: TheosKernel::run
+    pub fn shutdown_all(&mut self) -> KernelResult<()> {
+        if !self.all_modules_initialized {
+            return Err(KernelError::UninitializedKernelStart);
+        }
+        if self.shutdown_complete {
+            // Idempotent: matches the docstring contract above. AlreadyShutdown
+            // is reserved for `step` calls after shutdown (use-after-shutdown),
+            // not for repeated `shutdown_all` calls (cleanup convergence).
+            return Ok(());
+        }
+        tracing::info!("Shutdown requested. Stopping loop...");
+        for module_index in self.sorted_modules.clone().into_iter().rev() {
+            let module = &mut self.modules[module_index];
+            tracing::info!("Shutting down module: {}", module.name());
+            module.shutdown();
+        }
+        tracing::info!("Engine shutdown complete.");
+        self.shutdown_complete = true;
         Ok(())
     }
 
@@ -765,29 +754,6 @@ mod tests {
     }
 
     // -----------------------------------------------------------------------
-    // tick_once
-    // -----------------------------------------------------------------------
-
-    #[test]
-    fn tick_once_calls_tick_on_each_module_in_registration_order() {
-        let log = Arc::new(CallLog::default());
-        let mut kernel = TheosKernel::default();
-        kernel
-            .register_module(RecordingModule::<TagA>::boxed("A", &[], log.clone()))
-            .unwrap();
-        kernel
-            .register_module(RecordingModule::<TagB>::boxed("B", &[], log.clone()))
-            .unwrap();
-        kernel
-            .register_module(RecordingModule::<TagC>::boxed("C", &[], log.clone()))
-            .unwrap();
-
-        kernel.tick_once(0.016);
-
-        assert_eq!(log.tick_order(), vec!["A", "B", "C"]);
-    }
-
-    // -----------------------------------------------------------------------
     // shutdown_handle
     // -----------------------------------------------------------------------
 
@@ -833,6 +799,123 @@ mod tests {
 
     // -----------------------------------------------------------------------
     // New coverage tests (THEOS-13 / THEOS-14)
+    // -----------------------------------------------------------------------
+
+    // -----------------------------------------------------------------------
+    // THEOS-15: step() + shutdown_all()
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn step_before_init_returns_uninitialized_error() {
+        let mut kernel = TheosKernel::default();
+        let err = kernel.step(0.016).expect_err("step before init must fail");
+        assert!(matches!(err, KernelError::UninitializedKernelStart));
+    }
+
+    #[test]
+    fn step_ticks_all_modules_in_topological_dependency_order() {
+        // Register C → B → A in reverse, with B depending on A and C
+        // depending on B. step() must tick them in order [A, B, C].
+        static B_DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
+            vec![ModuleDependency::any(
+                "A",
+                TypeId::of::<RecordingModule<TagA>>(),
+            )]
+        });
+        static C_DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
+            vec![ModuleDependency::any(
+                "B",
+                TypeId::of::<RecordingModule<TagB>>(),
+            )]
+        });
+
+        let log = Arc::new(CallLog::default());
+        let mut kernel = TheosKernel::default();
+        kernel
+            .register_module(RecordingModule::<TagC>::boxed("C", &C_DEPS, log.clone()))
+            .unwrap();
+        kernel
+            .register_module(RecordingModule::<TagB>::boxed("B", &B_DEPS, log.clone()))
+            .unwrap();
+        kernel
+            .register_module(RecordingModule::<TagA>::boxed("A", &[], log.clone()))
+            .unwrap();
+
+        kernel.init().expect("init should succeed");
+        kernel.step(0.016).expect("step should succeed after init");
+
+        assert_eq!(log.tick_order(), vec!["A", "B", "C"]);
+    }
+
+    #[test]
+    fn shutdown_all_before_init_returns_uninitialized_error() {
+        let mut kernel = TheosKernel::default();
+        let err = kernel
+            .shutdown_all()
+            .expect_err("shutdown_all before init must fail");
+        assert!(matches!(err, KernelError::UninitializedKernelStart));
+    }
+
+    #[test]
+    fn shutdown_all_runs_modules_in_reverse_topological_dependency_order() {
+        static B_DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
+            vec![ModuleDependency::any(
+                "A",
+                TypeId::of::<RecordingModule<TagA>>(),
+            )]
+        });
+
+        let log = Arc::new(CallLog::default());
+        let mut kernel = TheosKernel::default();
+        kernel
+            .register_module(RecordingModule::<TagA>::boxed("A", &[], log.clone()))
+            .unwrap();
+        kernel
+            .register_module(RecordingModule::<TagB>::boxed("B", &B_DEPS, log.clone()))
+            .unwrap();
+        kernel.init().expect("init should succeed");
+
+        kernel.shutdown_all().expect("shutdown_all should succeed");
+
+        assert_eq!(
+            log.shutdown_order(),
+            vec!["B", "A"],
+            "shutdown_all must run modules in reverse dependency order"
+        );
+    }
+
+    #[test]
+    fn shutdown_all_is_idempotent_on_repeated_calls() {
+        let log = Arc::new(CallLog::default());
+        let mut kernel = TheosKernel::default();
+        kernel
+            .register_module(RecordingModule::<TagA>::boxed("A", &[], log.clone()))
+            .unwrap();
+        kernel.init().expect("init should succeed");
+
+        kernel.shutdown_all().expect("first shutdown_all succeeds");
+        kernel
+            .shutdown_all()
+            .expect("second shutdown_all is a no-op Ok(())");
+
+        // The single registered module must have received exactly ONE shutdown
+        // call, not two — that's the idempotency contract.
+        assert_eq!(log.shutdown_order(), vec!["A"]);
+    }
+
+    #[test]
+    fn step_after_shutdown_all_returns_already_shutdown_error() {
+        let mut kernel = TheosKernel::default();
+        kernel.init().expect("init succeeds");
+        kernel.shutdown_all().expect("shutdown_all succeeds");
+        let err = kernel
+            .step(0.016)
+            .expect_err("step after shutdown_all must fail");
+        assert!(matches!(err, KernelError::AlreadyShutdown));
+    }
+
+    // -----------------------------------------------------------------------
+    // Existing THEOS-13 / THEOS-14 coverage tests below
     // -----------------------------------------------------------------------
 
     #[test]
@@ -888,20 +971,9 @@ mod tests {
         );
     }
 
-    #[test]
-    fn frame_timer_clamps_huge_delta_times_to_max_limit() {
-        let mut timer = FrameTimer::new();
-        // First tick returns default 1/60
-        let (dt1, _) = timer.tick();
-        assert_eq!(dt1, 1.0 / 60.0);
-
-        // Sleep for a duration longer than MAX_DELTA_TIME (150ms > 100ms)
-        thread::sleep(Duration::from_millis(150));
-
-        let (dt2, _) = timer.tick();
-        // Assert that the returned delta time is clamped to MAX_DELTA_TIME (0.1)
-        assert_eq!(dt2, MAX_DELTA_TIME);
-    }
+    // The `frame_timer_clamps_huge_delta_times_to_max_limit` test (and a few
+    // FrameTimer-specific friends) live in `theos-core/src/frame_timer.rs`
+    // now that FrameTimer is its own public module.
 
     #[test]
     fn test_thread_safe_target_hz_changes() {

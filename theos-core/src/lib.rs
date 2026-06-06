@@ -9,11 +9,13 @@
 pub mod dependency_resolver;
 pub mod error;
 pub mod event;
+pub mod frame_timer;
 pub mod kernel;
 pub mod logging;
 
 pub use error::{ModuleError, ModuleResult};
 pub use event::GameEvent;
+pub use frame_timer::{FrameTimer, FIRST_FRAME_DT, MAX_DELTA_TIME};
 pub use kernel::TheosKernel;
 pub use logging::init;
 
