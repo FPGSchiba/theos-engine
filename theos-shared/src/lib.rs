@@ -9,14 +9,16 @@ pub mod module;
 pub mod prelude;
 pub mod service_locator;
 pub mod types;
+pub mod window_event;
 
 pub use error::{
     EventBusError, EventBusResult, KernelContextError, KernelContextResult, ServiceLocatorError,
     ServiceLocatorOperation, ServiceLocatorResult,
 };
-pub use event_bus::{Event, EventBus, EventBusExt, EventBusSetup};
+pub use event_bus::{ChannelHandle, Event, EventBus, EventBusExt};
 pub use kernel_context::{KernelContext, TheosService};
 pub use module::{EngineModule, ModuleDependency};
+pub use window_event::{KeyCode, NativeKeyCode, WindowEvent};
 
 /// The current version of the Theos Engine.
 pub const VERSION: &str = "0.1.0";

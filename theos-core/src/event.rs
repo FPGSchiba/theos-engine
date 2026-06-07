@@ -1,206 +1,199 @@
-//! Event bus implementation for sending and receiving events of various types.
+//! Event bus implementation backed by `tokio::sync::broadcast`.
 //!
 //! # Architecture overview
 //!
-//! This file rewritten under THEOS-11 to split [`theos_shared::EventBus`] into
-//! a dyn-compatible core trait plus a generic extension trait plus a
-//! concrete-only setup trait. See `theos-shared/src/event_bus.rs` for the
-//! trait split rationale.
+//! Provides:
+//! - [`BroadcastEventBus`], a `tokio::sync::broadcast`-backed implementation
+//!   of [`EventBus`].
+//! - [`TypedChannel<E>`], the canonical [`ChannelHandle`] implementation
+//!   for broadcast channels.
+//! - [`BroadcastBusExt`], the typed extension trait that gives modules
+//!   ergonomic `register<E>`, `sender_for<E>`, and `receiver_for<E>` methods
+//!   over `Arc<dyn EventBus>`.
 //!
-//! Internally, the bus stores its typed channels behind a private
-//! `ChannelHandle` adapter trait that exposes type-erased
-//! `send_any` / `drain_any` / `cloned_sender_any` operations. Each
-//! `impl ChannelHandle for TypedChannel<E>` captures the concrete `E`
-//! at the impl site, so the type-erased trait methods can still call
-//! the typed `crossbeam` channel internally.
+//! All broadcast-specific types and traits live in this crate so that
+//! `theos-shared` stays implementation-agnostic.
 
-use crossbeam::channel::{Receiver, Sender, TryRecvError};
+use parking_lot::RwLock;
 use std::any::{Any, TypeId};
 use std::collections::HashMap;
 use std::fmt::Debug;
-use theos_shared::{Event, EventBus, EventBusError, EventBusResult, EventBusSetup};
-// =============================================================================
-// Private internals — type-erasure adapter
-// =============================================================================
+use theos_shared::{ChannelHandle, Event, EventBus, EventBusError, EventBusResult};
+use tokio::sync::broadcast;
+use tokio::sync::broadcast::{Receiver, Sender};
 
-/// Private adapter trait: a type-erased view over a typed `(Sender<E>, Receiver<E>)` pair.
+/// Default capacity used by [`BroadcastBusExt::register`] when no explicit
+/// capacity is supplied.
 ///
-/// `CrossbeamEventBus` stores `Box<dyn ChannelHandle>` values keyed by `TypeId`,
-/// which lets it dispatch typed channel operations from inside the type-erased
-/// `EventBus::send_erased` / `drain_erased` / `sender_for_erased` methods.
+/// Sized for typical engine-event volumes (window events, lifecycle, etc.).
+/// Per-type tuning is available via `register::<E>(Some(n))`.
+pub const DEFAULT_CHANNEL_CAPACITY: usize = 64;
+
+// =============================================================================
+// TypedChannel<E> — canonical ChannelHandle impl for broadcast channels
+// =============================================================================
+
+/// Canonical [`ChannelHandle`] implementation for the broadcast bus.
 ///
-/// Each method takes / returns `Box<dyn Any>` payloads; the implementation
-/// downcasts internally because the concrete `E` is captured at the
-/// `impl<E: Event> ChannelHandle for TypedChannel<E>` site below.
-trait ChannelHandle: Send + Sync {
-    /// Sends a type-erased event payload into the channel.
-    ///
-    /// The `event` MUST be a `Box<E>` where `E` matches the channel's element
-    /// type. By construction (TypeId routing in
-    /// `CrossbeamEventBus::send_erased`), this invariant is upheld; mismatch
-    /// indicates a programmer error elsewhere in the bus.
-    fn send_any(&self, event: Box<dyn Any + Send>) -> EventBusResult<()>;
-
-    /// Drains all pending events as boxed `dyn Any` values, in FIFO order.
-    fn drain_any(&mut self) -> EventBusResult<Vec<Box<dyn Any + Send>>>;
-
-    /// Returns a boxed clone of the channel's `Sender`.
-    ///
-    /// The box contains `Sender<E>` where `E` is the channel's element type.
-    /// The extension trait (`EventBusExt::sender_for<E>`) downcasts this to
-    /// recover the typed sender.
-    fn cloned_sender_any(&self) -> Box<dyn Any + Send + Sync>;
-}
-
-/// Concrete channel wrapper. One `TypedChannel<E>` per registered event type.
-struct TypedChannel<E: Event> {
-    sender: Sender<E>,
-    receiver: Receiver<E>,
+/// Wraps a `tokio::sync::broadcast::Sender<E>`. New subscribers come from
+/// `Sender::subscribe()`. No `Receiver` is stored on the struct itself; the
+/// initial `Receiver` returned from `broadcast::channel` is intentionally
+/// dropped at construction time.
+pub struct TypedChannel<E: Event> {
+    /// Sender half of the broadcast channel.
+    pub sender: Sender<E>,
 }
 
 impl<E: Event> ChannelHandle for TypedChannel<E> {
     fn send_any(&self, event: Box<dyn Any + Send>) -> EventBusResult<()> {
-        match event.downcast::<E>() {
-            Ok(event) => {
-                let type_id = (*event).type_id();
-                self.sender.send(*event).map_err(|err| {
-                    tracing::error!(
-                        type_id = ?type_id,
-                        "Failed to send event into channel"
-                    );
-                    EventBusError::SendFailed {
-                        wrapped: Some(Box::new(err)),
-                    }
-                })
-            }
-            Err(event) => {
-                panic!(
-                    "Unexpected event type: {:?}, expected: {}",
-                    (*event).type_id(),
-                    std::any::type_name::<E>()
-                );
-            }
+        let event = event
+            .downcast::<E>()
+            .map_err(|b| EventBusError::UnregisteredSend {
+                expected: std::any::type_name::<E>().to_string(),
+                got: (*b).type_id(),
+            })?;
+        match self.sender.send(*event) {
+            Ok(_) => Ok(()),
+            Err(e) => Err(EventBusError::SendFailed {
+                wrapped: Some(Box::new(e)),
+            }),
         }
-    }
-
-    fn drain_any(&mut self) -> EventBusResult<Vec<Box<dyn Any + Send>>> {
-        let mut result: Vec<Box<dyn Any + Send>> = Vec::new();
-        loop {
-            match self.receiver.try_recv() {
-                Ok(event) => {
-                    result.push(Box::new(event));
-                }
-                Err(TryRecvError::Empty) => {
-                    break;
-                }
-                Err(TryRecvError::Disconnected) => {
-                    tracing::error!(
-                        "Failed to drain events for type: '{}': channel disconnected",
-                        std::any::type_name::<E>()
-                    );
-                    break;
-                }
-            }
-        }
-        Ok(result)
     }
 
     fn cloned_sender_any(&self) -> Box<dyn Any + Send + Sync> {
         Box::new(self.sender.clone())
     }
+
+    fn subscribe_any(&self) -> Box<dyn Any + Send> {
+        Box::new(self.sender.subscribe())
+    }
 }
 
 // =============================================================================
-// Public — CrossbeamEventBus
+// BroadcastEventBus — concrete EventBus impl
 // =============================================================================
 
-/// A `crossbeam`-backed implementation of [`EventBus`] + [`EventBusSetup`].
+/// A `tokio::sync::broadcast`-backed implementation of [`EventBus`].
 ///
 /// Registered event types live in `channel_map`, keyed by their `TypeId`.
 /// Each entry is a `Box<dyn ChannelHandle>` whose concrete type is
 /// `TypedChannel<E>` for the registered `E`.
+///
+/// Broadcast semantics: every message sent via `send::<E>` is delivered to
+/// every active `Receiver<E>` obtained via
+/// [`BroadcastBusExt::receiver_for::<E>()`].
 #[derive(Default)]
-pub struct CrossbeamEventBus {
-    channel_map: HashMap<TypeId, Box<dyn ChannelHandle>>,
+pub struct BroadcastEventBus {
+    channel_map: RwLock<HashMap<TypeId, Box<dyn ChannelHandle>>>,
 }
 
-impl Debug for CrossbeamEventBus {
+impl Debug for BroadcastEventBus {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("CrossbeamEventBus")
-            .field("registered_types", &self.channel_map.len())
+        let map = self.channel_map.read();
+        f.debug_struct("BroadcastEventBus")
+            .field("registered_types", &map.len())
             .finish()
     }
 }
 
-// ---------------------------------------------------------------------------
-// Setup-time registration (concrete-only — generic, not dyn-compatible)
-// ---------------------------------------------------------------------------
-
-impl EventBusSetup for CrossbeamEventBus {
-    fn register<E: Event>(&mut self) -> EventBusResult<()> {
-        let type_id = TypeId::of::<E>();
-        self.channel_map.entry(type_id).or_insert_with(|| {
-            let (sender, receiver) = crossbeam::channel::unbounded::<E>();
-            Box::new(TypedChannel { sender, receiver })
-        });
-        Ok(())
-    }
-}
-
-// ---------------------------------------------------------------------------
-// Runtime dyn-compatible surface
-// ---------------------------------------------------------------------------
-
-impl EventBus for CrossbeamEventBus {
+impl EventBus for BroadcastEventBus {
     fn send_erased(&self, type_id: TypeId, event: Box<dyn Any + Send>) -> EventBusResult<()> {
-        match self.channel_map.get(&type_id) {
-            Some(handle) => handle.send_any(event),
-            None => {
-                tracing::warn!(
-                    type_id = ?type_id,
-                    "Event type is not registered, but send was attempted"
-                );
-                Err(EventBusError::SendFailed { wrapped: None })
-            }
-        }
-    }
-
-    fn drain_erased(&mut self, type_id: TypeId) -> EventBusResult<Vec<Box<dyn Any + Send>>> {
-        match self.channel_map.get_mut(&type_id) {
-            Some(handle) => handle.drain_any(),
-            None => {
-                tracing::warn!(
-                    type_id = ?type_id,
-                    "Event type is not registered, but drain was attempted"
-                );
-                Err(EventBusError::DrainFailed { wrapped: None })
-            }
+        let map = self.channel_map.read();
+        match map.get(&type_id) {
+            Some(channel) => channel.send_any(event),
+            None => Err(EventBusError::UnregisteredSend {
+                expected: "Unregistered event type".into(),
+                got: type_id,
+            }),
         }
     }
 
     fn sender_for_erased(&self, type_id: TypeId) -> Option<Box<dyn Any + Send + Sync>> {
-        self.channel_map
-            .get(&type_id)
-            .map(|h| h.cloned_sender_any())
+        let map = self.channel_map.read();
+        map.get(&type_id).map(|channel| channel.cloned_sender_any())
     }
 
-    // drain_for_sync uses the trait default implementation (Ok(())) for now.
-    //
-    // TODO (post-THEOS-11): implement by iterating self.channel_map and calling
-    // drain_any on each handle. Required by spec §5 step 4 (per-frame sync point)
-    // but not required by THEOS-11 acceptance criteria — leave as default.
+    fn receiver_for_erased(&self, type_id: TypeId) -> Option<Box<dyn Any + Send>> {
+        let map = self.channel_map.read();
+        map.get(&type_id).map(|channel| channel.subscribe_any())
+    }
+
+    fn register_erased(
+        &self,
+        type_id: TypeId,
+        channel: Box<dyn ChannelHandle>,
+    ) -> EventBusResult<()> {
+        let mut map = self.channel_map.write();
+        map.entry(type_id).or_insert(channel);
+        Ok(())
+    }
 }
+
+// =============================================================================
+// BroadcastBusExt — broadcast-specific typed extension trait
+// =============================================================================
+
+/// Broadcast-specific typed extension surface for [`EventBus`].
+///
+/// Provides typed `register<E>`, `sender_for<E>`, and `receiver_for<E>` that
+/// return concrete `tokio::sync::broadcast` types. Modules holding
+/// `Arc<dyn EventBus>` can `use theos_core::event::BroadcastBusExt;` to gain
+/// these methods.
+///
+/// Blanket-implemented for every `T: EventBus + ?Sized` so it works over
+/// `Arc<dyn EventBus>` directly.
+pub trait BroadcastBusExt: EventBus {
+    /// Registers event type `E` with the bus, creating its internal
+    /// broadcast channel.
+    ///
+    /// Pass `Some(n)` to choose a channel capacity, or `None` to use
+    /// [`DEFAULT_CHANNEL_CAPACITY`].
+    ///
+    /// # Errors
+    /// Returns an error if the underlying
+    /// [`register_erased`](EventBus::register_erased) call fails.
+    fn register<E: Event>(&self, channel_capacity: Option<usize>) -> EventBusResult<()> {
+        let capacity = channel_capacity.unwrap_or(DEFAULT_CHANNEL_CAPACITY);
+        let sender = broadcast::channel::<E>(capacity).0;
+        let channel = Box::new(TypedChannel { sender });
+        self.register_erased(TypeId::of::<E>(), channel)
+    }
+
+    /// Returns a cloned broadcast `Sender<E>` for the event type, if registered.
+    ///
+    /// Modules cache this during their `init` to avoid bus-lookup overhead
+    /// on the per-frame hot path.
+    fn sender_for<E: Event>(&self) -> Option<Sender<E>> {
+        self.sender_for_erased(TypeId::of::<E>())?
+            .downcast::<Sender<E>>()
+            .ok()
+            .map(|b| *b)
+    }
+
+    /// Subscribes a new `Receiver<E>` to the bus's broadcast channel.
+    ///
+    /// Each call returns an independent receiver — every active subscriber
+    /// sees every event published while subscribed.
+    fn receiver_for<E: Event>(&self) -> Option<Receiver<E>> {
+        self.receiver_for_erased(TypeId::of::<E>())?
+            .downcast::<Receiver<E>>()
+            .ok()
+            .map(|b| *b)
+    }
+}
+
+impl<T: EventBus + ?Sized> BroadcastBusExt for T {}
 
 // =============================================================================
 // Temporary test event type for the core event bus.
 // =============================================================================
 
 /// Temporary test event type for the core event bus.
-#[derive(Debug, PartialEq)]
+#[derive(Debug, PartialEq, Clone)]
 pub enum GameEvent {
     /// Temporary Dummy variant for testing
     Dummy,
-    /// Another temporary Dumm for FIFO check
+    /// Another temporary Dummy for FIFO check
     Dummy2,
 }
 
@@ -209,170 +202,152 @@ impl Event for GameEvent {}
 #[cfg(test)]
 mod tests {
     use super::*;
-    use std::sync::Arc;
     use theos_shared::EventBusExt;
+    use tokio::sync::broadcast::error::TryRecvError;
 
-    #[derive(Debug, PartialEq)]
+    #[derive(Debug, PartialEq, Clone)]
     enum TestEvent {
         Dummy,
         Dummy2,
     }
 
-    #[derive(Debug, PartialEq)]
-    enum Test2Event {}
+    #[derive(Debug, PartialEq, Clone)]
+    enum Test2Event {
+        Sample,
+    }
 
     impl Event for TestEvent {}
     impl Event for Test2Event {}
 
     #[test]
-    fn register_does_not_fail() {
-        let mut bus = CrossbeamEventBus::default();
-        let num_registrations = 5;
-        for _ in 0..num_registrations {
-            bus.register::<TestEvent>().unwrap();
+    fn register_is_idempotent() {
+        let bus = BroadcastEventBus::default();
+        for _ in 0..5 {
+            bus.register::<TestEvent>(None).unwrap();
         }
     }
 
     #[test]
     fn send_fails_when_unregistered() {
-        let bus = CrossbeamEventBus::default();
-        let result = bus.send::<TestEvent>(TestEvent::Dummy);
+        let bus = BroadcastEventBus::default();
+        let result = bus.send(TestEvent::Dummy);
         assert!(result.is_err());
     }
 
     #[test]
-    fn send_succeeds_when_registered() {
-        let mut bus = CrossbeamEventBus::default();
-        bus.register::<TestEvent>().unwrap();
-        let result = bus.send::<TestEvent>(TestEvent::Dummy);
+    fn send_fails_when_no_subscribers() {
+        let bus = BroadcastEventBus::default();
+        bus.register::<TestEvent>(None).unwrap();
+        // No active receivers → broadcast::Sender::send returns an error.
+        let result = bus.send(TestEvent::Dummy);
+        assert!(result.is_err());
+    }
+
+    #[test]
+    fn send_succeeds_when_subscribers_exist() {
+        let bus = BroadcastEventBus::default();
+        bus.register::<TestEvent>(None).unwrap();
+        let _receiver = bus.receiver_for::<TestEvent>().expect("registered");
+        let result = bus.send(TestEvent::Dummy);
         assert!(result.is_ok());
     }
 
     #[test]
     fn sender_for_returns_a_working_sender() {
-        let mut bus = CrossbeamEventBus::default();
-        bus.register::<TestEvent>().unwrap();
-
-        // Exercises sender_for -> sender_for_erased -> ChannelHandle::cloned_sender_any
-        // and the downcast back to a typed Sender<TestEvent>.
-        let sender = bus
-            .sender_for::<TestEvent>()
-            .expect("a registered type should yield a sender");
+        let bus = BroadcastEventBus::default();
+        bus.register::<TestEvent>(None).unwrap();
+        let mut receiver = bus.receiver_for::<TestEvent>().expect("registered");
+        let sender = bus.sender_for::<TestEvent>().expect("registered");
         sender.send(TestEvent::Dummy).unwrap();
-
-        let drained = bus.drain::<TestEvent>().unwrap();
-        assert_eq!(drained.len(), 1);
-        assert_eq!(drained.first(), Some(&TestEvent::Dummy));
+        assert_eq!(receiver.try_recv().unwrap(), TestEvent::Dummy);
     }
 
     #[test]
     fn sender_for_unregistered_type_returns_none() {
-        let bus = CrossbeamEventBus::default();
+        let bus = BroadcastEventBus::default();
         assert!(bus.sender_for::<TestEvent>().is_none());
     }
 
     #[test]
-    fn drain_fails_when_unregistered() {
-        let mut bus = CrossbeamEventBus::default();
-        let result = bus.drain::<TestEvent>();
-        assert!(result.is_err());
+    fn receiver_for_returns_a_working_receiver() {
+        let bus = BroadcastEventBus::default();
+        bus.register::<TestEvent>(None).unwrap();
+        let mut receiver = bus.receiver_for::<TestEvent>().expect("registered");
+        bus.send(TestEvent::Dummy).unwrap();
+        assert_eq!(receiver.try_recv().unwrap(), TestEvent::Dummy);
     }
 
     #[test]
-    fn drain_returns_sent_events_and_empties_queue() {
-        let mut bus = CrossbeamEventBus::default();
-        bus.register::<TestEvent>().unwrap();
-        let result = bus.send::<TestEvent>(TestEvent::Dummy);
-        assert!(result.is_ok());
-        let result = bus.drain::<TestEvent>();
-        assert!(result.is_ok());
-        if let Ok(events) = result {
-            assert_eq!(events.len(), 1);
-        } else {
-            panic!("Dummy events should not be empty");
+    fn receiver_for_unregistered_type_returns_none() {
+        let bus = BroadcastEventBus::default();
+        assert!(bus.receiver_for::<TestEvent>().is_none());
+    }
+
+    #[test]
+    fn every_subscriber_receives_every_event() {
+        let bus = BroadcastEventBus::default();
+        bus.register::<TestEvent>(None).unwrap();
+        let mut rx1 = bus.receiver_for::<TestEvent>().expect("registered");
+        let mut rx2 = bus.receiver_for::<TestEvent>().expect("registered");
+        let mut rx3 = bus.receiver_for::<TestEvent>().expect("registered");
+
+        bus.send(TestEvent::Dummy).unwrap();
+        bus.send(TestEvent::Dummy2).unwrap();
+
+        for rx in [&mut rx1, &mut rx2, &mut rx3] {
+            assert_eq!(rx.try_recv().unwrap(), TestEvent::Dummy);
+            assert_eq!(rx.try_recv().unwrap(), TestEvent::Dummy2);
         }
     }
 
     #[test]
-    fn drain_preserves_fifo_ordering_per_event_type() {
-        let mut bus = CrossbeamEventBus::default();
-        bus.register::<TestEvent>().unwrap();
-        let result = bus.send::<TestEvent>(TestEvent::Dummy);
-        assert!(result.is_ok());
-        let result = bus.send::<TestEvent>(TestEvent::Dummy2);
-        assert!(result.is_ok());
-        let result = bus.drain::<TestEvent>();
-        assert!(result.is_ok());
-        if let Ok(events) = result {
-            assert_eq!(events.len(), 2);
-            assert_eq!(events.first(), Some(&TestEvent::Dummy));
-            assert_eq!(events.last(), Some(&TestEvent::Dummy2));
-        }
+    fn late_subscriber_misses_earlier_events() {
+        let bus = BroadcastEventBus::default();
+        bus.register::<TestEvent>(None).unwrap();
+        let mut early = bus.receiver_for::<TestEvent>().expect("registered");
+        bus.send(TestEvent::Dummy).unwrap();
+        let mut late = bus.receiver_for::<TestEvent>().expect("registered");
+        bus.send(TestEvent::Dummy2).unwrap();
+
+        assert_eq!(early.try_recv().unwrap(), TestEvent::Dummy);
+        assert_eq!(early.try_recv().unwrap(), TestEvent::Dummy2);
+
+        assert_eq!(late.try_recv().unwrap(), TestEvent::Dummy2);
+        assert!(matches!(late.try_recv(), Err(TryRecvError::Empty)));
     }
 
     #[test]
     fn type_isolation_between_channels() {
-        let mut bus = CrossbeamEventBus::default();
-        bus.register::<TestEvent>().unwrap();
-        bus.register::<Test2Event>().unwrap();
+        let bus = BroadcastEventBus::default();
+        bus.register::<TestEvent>(None).unwrap();
+        bus.register::<Test2Event>(None).unwrap();
+        let mut rx1 = bus.receiver_for::<TestEvent>().expect("registered");
+        let mut rx2 = bus.receiver_for::<Test2Event>().expect("registered");
+
         bus.send(TestEvent::Dummy).unwrap();
-        let result = bus.drain::<TestEvent>().unwrap();
-        assert_eq!(result.len(), 1);
-        let result2 = bus.drain::<Test2Event>().unwrap();
-        assert_eq!(result2.len(), 0);
+
+        assert_eq!(rx1.try_recv().unwrap(), TestEvent::Dummy);
+        assert!(matches!(rx2.try_recv(), Err(TryRecvError::Empty)));
+        // Touch the unused variant so the unused-variant lint stays quiet.
+        let _ = Test2Event::Sample;
     }
 
     #[test]
-    fn concurrent_sends_are_safe() {
-        let mut bus = CrossbeamEventBus::default();
-        bus.register::<TestEvent>().unwrap();
-        let bus = Arc::new(bus);
+    fn slow_subscriber_lags_when_buffer_overflows() {
+        let bus = BroadcastEventBus::default();
+        // Small capacity so we can overflow it cheaply.
+        bus.register::<TestEvent>(Some(4)).unwrap();
+        let mut receiver = bus.receiver_for::<TestEvent>().expect("registered");
 
-        let threads = 4usize;
-        let per = 1_000usize;
-        let mut handles = vec![];
+        for _ in 0..10 {
+            bus.send(TestEvent::Dummy).unwrap();
+        }
 
-        for _ in 0..threads {
-            let bus = Arc::clone(&bus);
-            handles.push(std::thread::spawn(move || {
-                for _ in 0..per {
-                    bus.send(TestEvent::Dummy).unwrap();
-                }
-            }));
+        match receiver.try_recv() {
+            Err(TryRecvError::Lagged(n)) => {
+                assert!(n > 0, "expected lag count > 0, got {}", n);
+            }
+            other => panic!("expected Lagged error, got {:?}", other),
         }
-        for h in handles {
-            h.join().unwrap();
-        }
-        let drained = Arc::try_unwrap(bus)
-            .expect("only owner")
-            .drain::<TestEvent>()
-            .unwrap();
-        assert_eq!(drained.len(), threads * per);
-    }
-
-    #[test]
-    fn idempotent_drain_when_no_new_events() {
-        let mut bus = CrossbeamEventBus::default();
-        bus.register::<TestEvent>().unwrap();
-        let bus = Arc::new(bus);
-        let threads = 4usize;
-        let per = 1_000usize;
-        let mut handles = vec![];
-        for _ in 0..threads {
-            let bus = Arc::clone(&bus);
-            handles.push(std::thread::spawn(move || {
-                for _ in 0..per {
-                    bus.send(TestEvent::Dummy).unwrap();
-                }
-            }))
-        }
-        for h in handles {
-            h.join().unwrap();
-        }
-        let mut bus = Arc::try_unwrap(bus).expect("only owner");
-        let drained = bus.drain::<TestEvent>().unwrap();
-        assert_eq!(drained.len(), threads * per);
-        let drained2 = bus.drain::<TestEvent>().unwrap();
-        assert_eq!(drained2.len(), 0);
     }
 }

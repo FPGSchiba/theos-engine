@@ -1,35 +1,38 @@
 use criterion::{criterion_group, criterion_main, Criterion};
 use std::hint::black_box;
 
-use theos_core::event::{CrossbeamEventBus, GameEvent};
-use theos_shared::{EventBusExt, EventBusSetup};
+use theos_core::event::{BroadcastBusExt, BroadcastEventBus, GameEvent};
 
 const BATCH: usize = 1024;
 
-fn bench_send_then_drain_typed(c: &mut Criterion) {
-    c.bench_function("send_then_drain_typed_batch_1024", |b| {
+fn bench_send_then_recv_typed(c: &mut Criterion) {
+    c.bench_function("send_then_recv_typed_batch_1024", |b| {
         b.iter(|| {
-            let mut bus = CrossbeamEventBus::default();
-            bus.register::<GameEvent>().unwrap();
-
+            let bus = BroadcastEventBus::default();
+            // Capacity sized for the full batch so no Lagged in steady-state.
+            bus.register::<GameEvent>(Some(BATCH * 2)).unwrap();
+            let mut receiver = bus.receiver_for::<GameEvent>().expect("registered");
             let sender = bus.sender_for::<GameEvent>().expect("registered");
 
             for _ in 0..BATCH {
                 sender.send(black_box(GameEvent::Dummy)).unwrap();
             }
 
-            let drained = bus.drain::<GameEvent>().unwrap();
-            black_box(drained);
+            let mut got = Vec::with_capacity(BATCH);
+            while let Ok(ev) = receiver.try_recv() {
+                got.push(ev);
+            }
+            black_box(got);
         });
     });
 }
 
-fn bench_send_then_drain_boxed_baseline(c: &mut Criterion) {
-    use crossbeam::channel;
+fn bench_send_then_recv_boxed_baseline(c: &mut Criterion) {
+    use tokio::sync::broadcast;
 
-    c.bench_function("send_then_drain_boxed_batch_1024", |b| {
+    c.bench_function("send_then_recv_boxed_batch_1024", |b| {
         b.iter(|| {
-            let (s, r) = channel::unbounded::<Box<GameEvent>>();
+            let (s, mut r) = broadcast::channel::<Box<GameEvent>>(BATCH * 2);
 
             for _ in 0..BATCH {
                 let boxed = Box::new(black_box(GameEvent::Dummy));
@@ -37,14 +40,9 @@ fn bench_send_then_drain_boxed_baseline(c: &mut Criterion) {
             }
 
             let mut got = Vec::with_capacity(BATCH);
-            loop {
-                match r.try_recv() {
-                    Ok(bx) => got.push(bx),
-                    Err(crossbeam::channel::TryRecvError::Empty) => break,
-                    Err(crossbeam::channel::TryRecvError::Disconnected) => break,
-                }
+            while let Ok(bx) = r.try_recv() {
+                got.push(bx);
             }
-
             black_box(got);
         });
     });
@@ -52,7 +50,7 @@ fn bench_send_then_drain_boxed_baseline(c: &mut Criterion) {
 
 criterion_group!(
     benches,
-    bench_send_then_drain_typed,
-    bench_send_then_drain_boxed_baseline
+    bench_send_then_recv_typed,
+    bench_send_then_recv_boxed_baseline
 );
 criterion_main!(benches);

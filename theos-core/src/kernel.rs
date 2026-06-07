@@ -5,7 +5,7 @@
 
 use crate::dependency_resolver::DependencyResolver;
 use crate::error::{KernelError, KernelResult};
-use crate::event::CrossbeamEventBus;
+use crate::event::BroadcastEventBus;
 use crate::frame_timer::FrameTimer;
 use crate::logging;
 use rayon::ThreadPool;
@@ -41,7 +41,7 @@ const DEFAULT_TARGET_HZ: u32 = 60;
 /// [`init`]: TheosKernel::init
 /// [`run`]: TheosKernel::run
 pub struct TheosKernel {
-    event_bus: Arc<CrossbeamEventBus>,
+    event_bus: Arc<BroadcastEventBus>,
     modules: Vec<Box<dyn EngineModule>>,
     /// Indices into `modules` in topological dependency order.
     ///
@@ -72,14 +72,14 @@ impl Default for TheosKernel {
     /// In order:
     /// 1. Initializes `tracing` logging
     /// 2. Builds the Rayon thread pool
-    /// 3. Constructs the CrossbeamEventBus
+    /// 3. Constructs the BroadcastEventBus
     fn default() -> Self {
         logging::init();
         let thread_pool = rayon::ThreadPoolBuilder::new()
             .build()
             .expect("Cannot build thread pool");
         Self {
-            event_bus: Arc::from(CrossbeamEventBus::default()),
+            event_bus: Arc::from(BroadcastEventBus::default()),
             modules: Vec::new(),
             sorted_modules: Vec::new(),
             all_modules_initialized: false,

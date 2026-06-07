@@ -1,6 +1,7 @@
 //! Shared engine error and result primitives.
 
 use core::fmt;
+use std::any::TypeId;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
@@ -209,6 +210,13 @@ pub enum EventBusError {
         /// The wrapped underlying error that caused the registration failure, if any underlying error occurred
         wrapped: Option<Box<dyn Error + Send + Sync + 'static>>,
     },
+    /// An event was sent for a type that was never registered on the bus.
+    UnregisteredSend {
+        /// The expected event type name (typically the registered type's `type_name`).
+        expected: String,
+        /// The actual `TypeId` carried by the attempted send.
+        got: TypeId,
+    },
 }
 
 impl Display for EventBusError {
@@ -222,6 +230,9 @@ impl Display for EventBusError {
             }
             EventBusError::DrainFailed { .. } => {
                 write!(f, "failed to drain events")
+            }
+            EventBusError::UnregisteredSend { expected, got } => {
+                write!(f, "unregistered send {:?}, got {:?}", expected, got)
             }
         }
     }
@@ -239,6 +250,7 @@ impl Error for EventBusError {
             EventBusError::DrainFailed { wrapped } => {
                 wrapped.as_ref().map(|b| &**b as &(dyn Error + 'static))
             }
+            EventBusError::UnregisteredSend { .. } => None,
         }
     }
 }

@@ -173,6 +173,7 @@ impl KernelContext {
 mod tests {
     use super::*;
     use crate::error::EventBusResult;
+    use crate::ChannelHandle;
     use std::any::{Any, TypeId};
 
     /// A no-op `EventBus` stand-in. `KernelContext` tests don't exercise the
@@ -184,12 +185,20 @@ mod tests {
             Ok(())
         }
 
-        fn drain_erased(&mut self, _type_id: TypeId) -> EventBusResult<Vec<Box<dyn Any + Send>>> {
-            Ok(Vec::new())
-        }
-
         fn sender_for_erased(&self, _type_id: TypeId) -> Option<Box<dyn Any + Send + Sync>> {
             None
+        }
+
+        fn receiver_for_erased(&self, _type_id: TypeId) -> Option<Box<dyn Any + Send>> {
+            None
+        }
+
+        fn register_erased(
+            &self,
+            _type_id: TypeId,
+            _channel: Box<dyn ChannelHandle>,
+        ) -> EventBusResult<()> {
+            Ok(())
         }
     }
 
