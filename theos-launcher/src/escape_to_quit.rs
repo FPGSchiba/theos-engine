@@ -20,7 +20,12 @@
 //! `ShutdownRequested` event). The fields below are placeholders pending
 //! that decision.
 
-use theos_shared::{EngineModule, KernelContext, ModuleDependency};
+use std::any::TypeId;
+use std::sync::{Arc, LazyLock};
+use theos_core::event::BroadcastBusExt;
+use theos_shared::{EngineModule, KernelContext, ModuleDependency, ShutdownRequester, WindowEvent};
+use theos_window::WindowModule;
+use tokio::sync::broadcast::Receiver;
 
 /// Engine policy module: listens for `WindowEvent::KeyPressed { key: Escape }`
 /// and signals the kernel to shut down.
@@ -31,20 +36,28 @@ use theos_shared::{EngineModule, KernelContext, ModuleDependency};
 /// kernel.register_module(Box::new(EscapeToQuitModule::new()))?;
 /// ```
 pub struct EscapeToQuitModule {
-    // TODO: hold the subscribed receiver (impl-specific, likely a
-    // tokio::sync::broadcast::Receiver<WindowEvent>) and the
-    // ShutdownRequester handle fetched from KernelContext during init.
-    //
-    // Both fields are Option-wrapped: they are None pre-init and Some
-    // after init succeeds. tick() must short-circuit when either is None
-    // to keep the type honest about lifecycle.
+    /// Subscribed receiver for [`WindowEvent`]s. `None` until [`init`] runs;
+    /// [`tick`] must short-circuit when `None` to keep the lifecycle honest.
+    ///
+    /// [`init`]: EscapeToQuitModule::init
+    /// [`tick`]: EngineModule::tick
+    receiver: Option<Receiver<WindowEvent>>,
+    /// Shutdown signal fetched from [`KernelContext`] during [`init`].
+    /// `None` pre-init; [`tick`] short-circuits when absent.
+    ///
+    /// [`init`]: EscapeToQuitModule::init
+    /// [`tick`]: EngineModule::tick
+    requester: Option<Arc<ShutdownRequester>>,
 }
 
 impl EscapeToQuitModule {
     /// Constructs a fresh, un-mounted policy module. Subscription happens
     /// inside [`init`](EscapeToQuitModule::init).
     pub fn new() -> Self {
-        Self {}
+        Self {
+            receiver: None,
+            requester: None,
+        }
     }
 }
 
@@ -60,36 +73,47 @@ impl EngineModule for EscapeToQuitModule {
     }
 
     fn dependencies(&self) -> &[ModuleDependency] {
-        // Logically depends on WindowModule (the publisher of WindowEvent),
-        // but until we have a way to declare "subscribes to event E"
-        // without coupling on the publisher's module type, leave empty.
-        // Revisit when input routing matures.
-        &[]
+        static DEPS: LazyLock<Vec<ModuleDependency>> = LazyLock::new(|| {
+            vec![ModuleDependency::any(
+                "WindowModule",
+                TypeId::of::<WindowModule>(),
+            )]
+        });
+        &DEPS
     }
 
     fn init(
         &mut self,
-        _ctx: &mut KernelContext,
+        ctx: &mut KernelContext,
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
-        // TODO: THEOS-16 AC4
-        // - Pull `Arc<dyn EventBus>` (or BroadcastEventBus accessor) from `_ctx`
-        //   and call the impl-specific `receiver_for::<WindowEvent>()`.
-        // - Pull the chosen `ShutdownRequester` service from `_ctx`.
-        // - Store both into self.
-        todo!("THEOS-16 AC4: subscribe to WindowEvent + fetch ShutdownRequester")
+        let bus = ctx.event_bus();
+        let shutdown_requester = ctx.get::<ShutdownRequester>()?;
+        let receiver = bus.receiver_for::<WindowEvent>().unwrap(); // We can expect the window event to be there, because we define the window module as a dependency.
+        self.receiver = Some(receiver);
+        self.requester = Some(shutdown_requester);
+        Ok(())
     }
 
     fn tick(&mut self, _dt: f32) {
-        // TODO: THEOS-16 AC4
-        // - Drain the subscribed receiver of all pending events with
-        //   `try_recv` (do not block — bounded work per frame).
-        // - For each `WindowEvent::KeyPressed { key: KeyCode::Escape }`,
-        //   signal the shutdown requester.
-        // - Ignore receiver errors that mean "no event waiting"; treat
-        //   `Closed`/`Lagged` as a logged warning, not a panic.
-    }
-
-    fn shutdown(&mut self) {
-        // No resources to release — the receiver is owned and drops here.
+        if let Some(receiver) = &mut self.receiver {
+            match receiver.try_recv() {
+                Ok(WindowEvent::KeyPressed {
+                    key: theos_shared::window_event::KeyCode::Escape,
+                }) => {
+                    tracing::info!("Escape pressed — requesting shutdown...");
+                    if let Some(requester) = &self.requester {
+                        requester.request_shutdown();
+                    } else {
+                        tracing::error!("ShutdownRequester missing from context");
+                    }
+                }
+                Ok(_) => {
+                    // Ignore other events.
+                }
+                Err(_) => {
+                    // No event waiting.
+                }
+            }
+        }
     }
 }

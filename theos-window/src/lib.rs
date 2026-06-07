@@ -18,12 +18,14 @@
 #![warn(missing_docs)]
 
 mod error;
+mod event_translator;
 mod key_translate;
 mod window_factory;
 mod window_handle;
 mod window_module;
 
 pub use error::{WindowError, WindowResult};
+pub use event_translator::WindowEventTranslator;
 pub use key_translate::translate_physical_key;
 pub use window_factory::{
     create_default_window, DEFAULT_WINDOW_HEIGHT, DEFAULT_WINDOW_TITLE, DEFAULT_WINDOW_WIDTH,

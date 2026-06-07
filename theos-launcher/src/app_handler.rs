@@ -14,8 +14,13 @@
 //!
 //! [concept-page]: https://firephoenixgames.atlassian.net/wiki/spaces/TOT/pages/172195842
 
+use std::sync::atomic::AtomicBool;
+use std::sync::atomic::Ordering::SeqCst;
+use std::sync::Arc;
 use theos_core::{FrameTimer, TheosKernel};
+use theos_window::WindowEventTranslator;
 use winit::error::EventLoopError;
+use winit::event::Event;
 use winit::event_loop::EventLoop;
 
 /// Drives a [`TheosKernel`] from inside winit's closure-based event loop.
@@ -41,6 +46,16 @@ use winit::event_loop::EventLoop;
 pub struct TheosAppHandler {
     kernel: TheosKernel,
     frame_timer: FrameTimer,
+    /// Owned [`WindowEventTranslator`] — converts every winit event the
+    /// closure receives into the engine's typed [`theos_shared::WindowEvent`]
+    /// and publishes it on the kernel's [`EventBus`]. Keeping the launcher
+    /// free of winit event-shape knowledge.
+    translator: WindowEventTranslator,
+    /// Cooperative shutdown flag. Polled by the winit closure each
+    /// iteration so policy modules (`EscapeToQuitModule`,
+    /// `CloseToExitModule`, …) can request a clean exit by flipping it
+    /// from inside `tick`.
+    shutdown_flag: Arc<AtomicBool>,
 }
 
 impl TheosAppHandler {
@@ -53,9 +68,13 @@ impl TheosAppHandler {
     ///
     /// [`run`]: TheosAppHandler::run
     pub fn new(kernel: TheosKernel) -> Self {
+        let translator = WindowEventTranslator::new(kernel.event_bus_handle());
+        let shutdown_flag = kernel.shutdown_handle();
         Self {
             kernel,
             frame_timer: FrameTimer::new(),
+            translator,
+            shutdown_flag,
         }
     }
 
@@ -77,27 +96,40 @@ impl TheosAppHandler {
         let TheosAppHandler {
             mut kernel,
             mut frame_timer,
+            translator,
+            shutdown_flag,
         } = self;
-        use winit::event::{Event, WindowEvent};
-        event_loop.run(move |event, target| match event {
-            Event::AboutToWait => {
-                let (dt, fps) = frame_timer.tick();
-                if let Some(fps) = fps {
-                    tracing::debug!(fps, "frame timing");
-                }
-                if let Err(e) = kernel.step(dt) {
-                    tracing::error!(?e, "kernel step failed");
-                    target.exit();
-                }
+
+        event_loop.run(move |event, target| {
+            // 1. Honour shutdown requests from any policy module (Escape, Close, …).
+            if shutdown_flag.load(SeqCst) {
+                target.exit();
             }
-            Event::WindowEvent {
-                event: WindowEvent::CloseRequested,
-                ..
-            } => target.exit(),
-            Event::LoopExiting => {
-                let _ = kernel.shutdown_all();
+
+            // 2. Hand the event to theos-window for translation. The launcher
+            //    binary deliberately knows nothing about winit's event shapes;
+            //    the translator does the variant dispatch and publishes engine
+            //    `WindowEvent`s on the bus for any subscriber to consume.
+            translator.forward(&event);
+
+            // 3. Handle the kernel-lifecycle events that *only* the launcher
+            //    can act on (driving the loop, tearing down).
+            match event {
+                Event::AboutToWait => {
+                    let (dt, fps) = frame_timer.tick();
+                    if let Some(fps) = fps {
+                        tracing::debug!(fps, "frame timing");
+                    }
+                    if let Err(e) = kernel.step(dt) {
+                        tracing::error!(?e, "kernel step failed");
+                        target.exit();
+                    }
+                }
+                Event::LoopExiting => {
+                    let _ = kernel.shutdown_all();
+                }
+                _ => {}
             }
-            _ => {}
         })
     }
 }

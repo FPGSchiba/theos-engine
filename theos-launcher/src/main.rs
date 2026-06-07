@@ -22,11 +22,15 @@
 #![forbid(unsafe_code)]
 
 mod app_handler;
+mod close_to_exit;
+mod escape_to_quit;
 
 use theos_core::{get_engine_version, logging, TheosKernel};
 use theos_window::{create_default_window, WindowModule};
 
 use crate::app_handler::TheosAppHandler;
+use crate::close_to_exit::CloseToExitModule;
+use crate::escape_to_quit::EscapeToQuitModule;
 
 fn main() {
     logging::init();
@@ -44,6 +48,14 @@ fn main() {
     kernel
         .register_module(Box::new(WindowModule::new(window)))
         .expect("WindowModule registration failed");
+
+    kernel
+        .register_module(Box::new(EscapeToQuitModule::new()))
+        .expect("EscapeToQuitModule registration failed");
+
+    kernel
+        .register_module(Box::new(CloseToExitModule::new()))
+        .expect("CloseToExitModule registration failed");
 
     // TODO: mount additional modules here as they come online (THEOS-18+).
 

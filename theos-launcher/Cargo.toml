@@ -8,6 +8,7 @@ theos-shared = { workspace = true }
 theos-core = { workspace = true }
 theos-window = { workspace = true }
 winit = { workspace = true }
+tokio = { workspace = true }
 tracing = "0.1.44"
 
 [dev-dependencies]
