@@ -4,6 +4,7 @@ use semver::{Version, VersionReq};
 use std::error::Error;
 use std::fmt::{Display, Formatter, Result as FmtResult};
 use theos_shared::prelude::*;
+use theos_shared::KernelContextError;
 
 /// Errors produced by the dependency resolver and module lifecycle.
 ///
@@ -295,6 +296,17 @@ pub enum KernelError {
         source: ServiceLocatorError,
     },
 
+    /// A [`KernelContextError`] surfaced during kernel startup or module init.
+    ///
+    /// Typically arises from a service-registration collision while
+    /// [`crate::TheosKernel::init`] is publishing built-in services
+    /// (notably [`theos_shared::ShutdownRequester`]) into the freshly
+    /// constructed [`theos_shared::KernelContext`].
+    KernelContext {
+        /// The underlying kernel-context error.
+        source: KernelContextError,
+    },
+
     /// A module was registered twice under the same name.
     ///
     /// The second `register_module` call is rejected; the staging buffer is
@@ -368,6 +380,9 @@ impl Display for KernelError {
             KernelError::ServiceLocator { source, .. } => {
                 write!(f, "service locator error: {}", source)
             }
+            KernelError::KernelContext { source, .. } => {
+                write!(f, "kernel context error: {}", source)
+            }
             KernelError::Dependency { source } => {
                 write!(f, "dependency error: {}", source)
             }
@@ -394,6 +409,7 @@ impl Error for KernelError {
             KernelError::ModuleInit { source, .. } => Some(source.as_ref()),
             KernelError::EventBus { source, .. } => Some(source),
             KernelError::ServiceLocator { source, .. } => Some(source),
+            KernelError::KernelContext { source, .. } => Some(source),
             KernelError::Dependency { source, .. } => Some(source),
             KernelError::ModuleAlreadyRegistered { .. } => None,
             KernelError::UninitializedKernelStart => None,
@@ -418,6 +434,12 @@ impl From<EventBusError> for KernelError {
 impl From<ServiceLocatorError> for KernelError {
     fn from(source: ServiceLocatorError) -> Self {
         KernelError::ServiceLocator { source }
+    }
+}
+
+impl From<KernelContextError> for KernelError {
+    fn from(source: KernelContextError) -> Self {
+        KernelError::KernelContext { source }
     }
 }
 

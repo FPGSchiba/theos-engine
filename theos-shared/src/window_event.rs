@@ -305,26 +305,82 @@ pub enum NativeKeyCode {
 
 #[cfg(test)]
 mod tests {
-    #[allow(unused_imports)]
     use super::*;
 
     #[test]
     fn window_event_derives_compile() {
-        // TODO: implement
+        // Construct each variant; exercise Debug + Clone + PartialEq.
+        let close = WindowEvent::CloseRequested;
+        let resized = WindowEvent::Resized {
+            width: 1280,
+            height: 720,
+        };
+        let pressed = WindowEvent::KeyPressed {
+            key: KeyCode::Escape,
+        };
+        let released = WindowEvent::KeyReleased {
+            key: KeyCode::Escape,
+        };
+
+        // Debug
+        assert!(!format!("{close:?}").is_empty());
+        assert!(!format!("{resized:?}").is_empty());
+        assert!(!format!("{pressed:?}").is_empty());
+        assert!(!format!("{released:?}").is_empty());
+
+        // Clone + PartialEq
+        assert_eq!(close.clone(), WindowEvent::CloseRequested);
+        assert_eq!(
+            resized.clone(),
+            WindowEvent::Resized {
+                width: 1280,
+                height: 720,
+            }
+        );
+        assert_eq!(pressed.clone(), pressed);
+        assert_ne!(
+            pressed,
+            WindowEvent::KeyReleased {
+                key: KeyCode::Escape
+            }
+        );
     }
 
     #[test]
     fn key_code_is_copy() {
-        // TODO: implement
+        // Compile-time bound check — if Copy is ever dropped this fails to build.
+        fn assert_copy<T: Copy>() {}
+        assert_copy::<KeyCode>();
+        assert_copy::<NativeKeyCode>();
+
+        // Runtime sanity: a value can still be used after binding via copy.
+        let k = KeyCode::Escape;
+        let k_again = k;
+        assert_eq!(k, k_again);
     }
 
     #[test]
     fn key_code_unidentified_carries_native_code() {
-        // TODO: implement
+        let unidentified = KeyCode::Unidentified(NativeKeyCode::Windows(0x1B));
+
+        match unidentified {
+            KeyCode::Unidentified(NativeKeyCode::Windows(code)) => assert_eq!(code, 0x1B),
+            other => panic!("expected Unidentified(Windows(_)), got {other:?}"),
+        }
+
+        // Other NativeKeyCode variants survive the round trip too.
+        let macos = KeyCode::Unidentified(NativeKeyCode::MacOS(53));
+        assert!(matches!(
+            macos,
+            KeyCode::Unidentified(NativeKeyCode::MacOS(53))
+        ));
     }
 
     #[test]
     fn window_event_impls_event() {
-        // TODO: implement
+        // Compile-time bound check — proves WindowEvent satisfies the
+        // EventBus marker (Send + Sync + 'static + Debug + Clone).
+        fn assert_event<E: Event>() {}
+        assert_event::<WindowEvent>();
     }
 }

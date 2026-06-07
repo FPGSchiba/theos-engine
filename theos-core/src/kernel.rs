@@ -14,7 +14,7 @@ use std::sync::atomic::Ordering::SeqCst;
 use std::sync::atomic::{AtomicBool, AtomicU32};
 use std::sync::Arc;
 use std::time::{Duration, Instant};
-use theos_shared::{EngineModule, KernelContext};
+use theos_shared::{EngineModule, EventBus, KernelContext, ShutdownRequester};
 
 const DEFAULT_TARGET_HZ: u32 = 60;
 
@@ -59,7 +59,7 @@ pub struct TheosKernel {
     /// If non-zero, the loop is throttled; if `0` (represented as `None`), the loop runs uncapped.
     target_hz: Arc<AtomicU32>,
     /// Thread-safe flag to request the game loop to terminate gracefully.
-    shutdown_requested: Arc<AtomicBool>,
+    shutdown_requester: ShutdownRequester,
     shutdown_complete: bool,
     /// Held to keep the pool alive; Rayon spins worker threads on construction.
     #[allow(dead_code)]
@@ -85,7 +85,7 @@ impl Default for TheosKernel {
             all_modules_initialized: false,
             target_hz: Arc::new(AtomicU32::new(DEFAULT_TARGET_HZ)),
             thread_pool,
-            shutdown_requested: Arc::new(AtomicBool::new(false)),
+            shutdown_requester: ShutdownRequester::new(),
             shutdown_complete: false,
         }
     }
@@ -142,8 +142,20 @@ impl TheosKernel {
         if self.all_modules_initialized {
             return Err(KernelError::AlreadyInitialized);
         }
+        let global_span = tracing::info_span!("kernel_init");
+        let _global_guard = global_span.enter();
         self.sorted_modules = DependencyResolver::sort(&self.modules)?;
         let mut ctx = KernelContext::new(self.event_bus.clone(), self.target_hz.clone());
+
+        tracing::info!("Initializing global Services...");
+        // Register a *clone* of the kernel's own requester so the service in
+        // the context and the kernel's run-loop predicate read the SAME
+        // Arc<AtomicBool>. Without this, a module calling
+        // `requester.request_shutdown()` would flip a flag the kernel never
+        // reads.
+        ctx.register::<ShutdownRequester>(Arc::new(self.shutdown_requester.clone()))?;
+        tracing::info!("Initialized ShutdownRequester service");
+
         tracing::info!("Initializing {} modules...", self.modules.len());
         for module_index in self.sorted_modules.clone() {
             let module = self.modules[module_index].deref_mut();
@@ -197,9 +209,10 @@ impl TheosKernel {
         }
 
         // Set up Ctrl+C signal handler
-        let shutdown_requested = self.shutdown_requested.clone();
+        let shutdown_requester = self.shutdown_requester.clone();
         if let Err(e) = ctrlc::set_handler(move || {
-            shutdown_requested.store(true, SeqCst);
+            shutdown_requester.request_shutdown();
+            tracing::info!("Shutdown signal received (Ctrl+C). Requesting shutdown...");
         }) {
             tracing::debug!("Failed to set ctrlc handler: {}", e);
         }
@@ -216,7 +229,7 @@ impl TheosKernel {
     /// This method is thread-safe and can be called from shared references (`&self`),
     /// allowing modules or IPC handlers to trigger shutdown programmatically.
     pub fn request_shutdown(&self) -> KernelResult<()> {
-        self.shutdown_requested.store(true, SeqCst);
+        self.shutdown_requester.request_shutdown();
         Ok(())
     }
 
@@ -230,7 +243,7 @@ impl TheosKernel {
         let mut next_frame_deadline = Instant::now();
         let mut last_hz = self.target_hz();
 
-        while !self.shutdown_requested.load(SeqCst) {
+        while !self.shutdown_requester.is_shutdown_requested() {
             let (dt, fps) = timer.tick();
             if let Some(fps) = fps {
                 tracing::debug!("FPS: {:.0}", fps);
@@ -370,17 +383,34 @@ impl TheosKernel {
         self.target_hz.clone()
     }
 
-    /// Returns a handle that can be used to request a graceful engine shutdown.
-    ///
-    /// Clones the internal shutdown atomic flag. Any client holding this handle
-    /// can call `.store(true, SeqCst)` to stop the game loop.
-    pub fn shutdown_handle(&self) -> Arc<AtomicBool> {
-        self.shutdown_requested.clone()
-    }
-
     /// Returns whether a shutdown has been requested.
     pub fn shutdown_requested(&self) -> bool {
-        self.shutdown_requested.load(SeqCst)
+        self.shutdown_requester.is_shutdown_requested()
+    }
+
+    /// Returns a clone of the inner `Arc<AtomicBool>` shutdown flag.
+    ///
+    /// The returned handle shares state with the kernel's run-loop predicate
+    /// and with the [`ShutdownRequester`] service registered in
+    /// [`KernelContext`] — any clone that flips the flag will end the loop.
+    ///
+    /// Use this when you need raw atomic access from a non-module driver
+    /// (test thread, the launcher's `TheosAppHandler`, …). Modules that
+    /// already hold a `ShutdownRequester` from the context should call
+    /// [`ShutdownRequester::request_shutdown`] / `is_shutdown_requested`
+    /// instead.
+    pub fn shutdown_handle(&self) -> Arc<AtomicBool> {
+        self.shutdown_requester.handle()
+    }
+
+    /// Returns a clone of the kernel's [`EventBus`] handle.
+    ///
+    /// Used by non-module drivers (the launcher's `TheosAppHandler`, the
+    /// future Tauri editor driver) that need to publish events onto the
+    /// bus without going through [`KernelContext`] (which is only
+    /// available inside module `init`).
+    pub fn event_bus_handle(&self) -> Arc<dyn EventBus> {
+        self.event_bus.clone()
     }
 
     /// Returns the number of modules currently in the staging buffer.

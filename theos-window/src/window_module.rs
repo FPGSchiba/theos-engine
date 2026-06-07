@@ -1,10 +1,10 @@
 //! `WindowModule` — registers the OS window into the kernel's service locator.
 
-use std::sync::Arc;
-use theos_shared::{EngineModule, KernelContext, ModuleDependency};
-use winit::window::Window;
-
 use crate::window_handle::WindowHandle;
+use std::sync::Arc;
+use theos_core::event::BroadcastBusExt;
+use theos_shared::{EngineModule, KernelContext, ModuleDependency, WindowEvent};
+use winit::window::Window;
 
 /// Publishes an `Arc<Window>` into the kernel's `KernelContext` so downstream
 /// modules (notably the THEOS-18 RenderModule) can retrieve it as a
@@ -70,6 +70,8 @@ impl EngineModule for WindowModule {
     ) -> Result<(), Box<dyn std::error::Error + Send + Sync>> {
         let handle = WindowHandle::new(self.window.clone());
         ctx.register::<WindowHandle>(Arc::new(handle))?;
+        let bus = ctx.event_bus();
+        bus.register::<WindowEvent>(None)?;
         tracing::info!("WindowModule: registered WindowHandle into KernelContext");
         Ok(())
     }
