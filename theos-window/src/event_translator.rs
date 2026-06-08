@@ -56,6 +56,12 @@ impl WindowEventTranslator {
                 WinitWindowEvent::Resized(size) => {
                     let width = size.width;
                     let height = size.height;
+                    // (THEOS-17 AC4) Log at the publish point — AC requires
+                    // the event pipeline be observably live and no module
+                    // currently consumes resize events. RenderModule
+                    // (THEOS-37) will subscribe later; this log stays as
+                    // the always-on observability hook.
+                    tracing::debug!("Window resized to {width}x{height}");
                     let event = WindowEvent::Resized { width, height };
                     if let Err(e) = self.event_bus.send(event) {
                         tracing::warn!("Failed to publish WindowEvent::Resized: {e}");
@@ -85,7 +91,7 @@ impl WindowEventTranslator {
 
 #[cfg(test)]
 mod tests {
-    // Unit testing this end-to-end is awkward: synthesising
+    // Unit testing `forward` end-to-end is awkward: synthesising
     // `Event::WindowEvent { window_id, .. }` requires a `WindowId`, which is
     // only obtainable from a real `Window`, which in turn requires an
     // `EventLoop` (main-thread, platform-dependent, not available in CI).
@@ -95,11 +101,17 @@ mod tests {
     // points (e.g., a free-function `translate_window_event(WinitWindowEvent)
     // -> Option<WindowEvent>`), add unit tests for that helper here.
 
+    use super::*;
+    use theos_core::event::BroadcastEventBus;
+
     #[test]
     fn translator_constructs_with_event_bus_handle() {
-        // TODO: construct a BroadcastEventBus, wrap as Arc<dyn EventBus>,
-        // pass to WindowEventTranslator::new. Compile-time check only —
-        // proves the constructor signature accepts the same handle type
-        // the launcher will obtain from kernel.event_bus_handle().
+        // Compile-time assertion: the `Arc<dyn EventBus>` shape that the
+        // launcher obtains via `TheosKernel::event_bus_handle()` must be
+        // accepted by `WindowEventTranslator::new`. If a future refactor
+        // changes either signature, this test fails to compile — which is
+        // the failure mode we want for an integration contract.
+        let bus: Arc<dyn EventBus> = Arc::new(BroadcastEventBus::default());
+        let _translator = WindowEventTranslator::new(bus);
     }
 }

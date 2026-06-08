@@ -118,7 +118,10 @@ impl TheosAppHandler {
                 Event::AboutToWait => {
                     let (dt, fps) = frame_timer.tick();
                     if let Some(fps) = fps {
-                        tracing::debug!(fps, "frame timing");
+                        // (THEOS-17 AC2) Required output string. Matches the
+                        // headless kernel driver's FPS line so consumers see
+                        // the same shape regardless of which loop drives.
+                        tracing::debug!("FPS: {:.0}", fps);
                     }
                     if let Err(e) = kernel.step(dt) {
                         tracing::error!(?e, "kernel step failed");

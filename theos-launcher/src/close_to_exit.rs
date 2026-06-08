@@ -94,7 +94,8 @@ impl EngineModule for CloseToExitModule {
         if let Some(receiver) = &mut self.receiver {
             match receiver.try_recv() {
                 Ok(WindowEvent::CloseRequested) => {
-                    tracing::info!("Close requested — requesting shutdown...");
+                    // (THEOS-17 AC3) Required output string.
+                    tracing::info!("Window close requested. Triggering shutdown.");
                     if let Some(requester) = &self.requester {
                         requester.request_shutdown();
                     } else {
@@ -109,5 +110,110 @@ impl EngineModule for CloseToExitModule {
                 }
             }
         }
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+    use std::sync::atomic::AtomicU32;
+    use theos_core::event::{BroadcastBusExt, BroadcastEventBus};
+    use theos_shared::EventBusExt;
+
+    /// Builds a fully-wired test fixture: a real `BroadcastEventBus` with
+    /// `WindowEvent` registered, a fresh `ShutdownRequester` exposed via
+    /// `KernelContext`, and the module's `init` already executed. Returns
+    /// the module, bus handle, requester handle, and the context (kept
+    /// alive so the underlying `Arc`s don't drop).
+    fn make_initialised_close_module() -> (
+        CloseToExitModule,
+        Arc<dyn theos_shared::EventBus>,
+        Arc<ShutdownRequester>,
+        KernelContext,
+    ) {
+        let bus: Arc<dyn theos_shared::EventBus> = Arc::new(BroadcastEventBus::default());
+        bus.register::<WindowEvent>(None)
+            .expect("register WindowEvent");
+        let requester = Arc::new(ShutdownRequester::new());
+        let mut ctx = KernelContext::new(Arc::clone(&bus), Arc::new(AtomicU32::new(0)));
+        ctx.register::<ShutdownRequester>(Arc::clone(&requester))
+            .expect("register ShutdownRequester");
+
+        let mut module = CloseToExitModule::new();
+        module.init(&mut ctx).expect("init should succeed");
+
+        (module, bus, requester, ctx)
+    }
+
+    #[test]
+    fn tick_is_noop_before_init() {
+        // Fresh module without init — receiver is None, so tick must not panic.
+        let mut module = CloseToExitModule::new();
+        module.tick(0.016);
+        // No assertion target other than "did not panic" — coverage gain is
+        // exercising the `if let Some(receiver) = ...` early-return branch.
+    }
+
+    #[test]
+    fn tick_requests_shutdown_on_close_requested() {
+        let (mut module, bus, requester, _ctx) = make_initialised_close_module();
+
+        bus.send(WindowEvent::CloseRequested)
+            .expect("publish CloseRequested");
+        module.tick(0.016);
+
+        assert!(
+            requester.is_shutdown_requested(),
+            "CloseRequested should flip the shutdown flag",
+        );
+    }
+
+    #[test]
+    fn tick_ignores_keypress_events() {
+        let (mut module, bus, requester, _ctx) = make_initialised_close_module();
+
+        bus.send(WindowEvent::KeyPressed {
+            key: theos_shared::window_event::KeyCode::KeyA,
+        })
+        .expect("publish KeyPressed");
+        module.tick(0.016);
+
+        assert!(
+            !requester.is_shutdown_requested(),
+            "non-close events must not request shutdown",
+        );
+    }
+
+    #[test]
+    fn tick_with_empty_receiver_is_idempotent() {
+        let (mut module, _bus, requester, _ctx) = make_initialised_close_module();
+
+        // No events published — `try_recv` returns `Err(Empty)`. The tick must
+        // be a no-op and the flag must stay clear across repeated calls.
+        for _ in 0..3 {
+            module.tick(0.016);
+        }
+
+        assert!(
+            !requester.is_shutdown_requested(),
+            "empty bus must never request shutdown",
+        );
+    }
+
+    #[test]
+    fn tick_ignores_resized_events() {
+        let (mut module, bus, requester, _ctx) = make_initialised_close_module();
+
+        bus.send(WindowEvent::Resized {
+            width: 800,
+            height: 600,
+        })
+        .expect("publish Resized");
+        module.tick(0.016);
+
+        assert!(
+            !requester.is_shutdown_requested(),
+            "Resized events must not trigger close policy",
+        );
     }
 }

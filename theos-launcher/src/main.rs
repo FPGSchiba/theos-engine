@@ -68,6 +68,11 @@ fn main() {
         return;
     }
 
+    // (THEOS-17 AC2) Required output string — emitted from the launcher
+    // (and not from the kernel) because the kernel's own loop is bypassed
+    // here in favour of winit's closure-driven loop.
+    tracing::info!("Entering main loop...");
+
     // (THEOS-15 AC5) Surrender main thread to winit.
     let handler = TheosAppHandler::new(kernel);
     handler
