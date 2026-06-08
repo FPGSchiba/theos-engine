@@ -34,11 +34,18 @@ jobs:
 
       # The launcher's `tests/lifecycle.rs` end-to-end test drives the
       # actual `theos-launcher` binary through its full startup → run →
-      # shutdown sequence via winit. winit needs a display server; on the
-      # headless Linux runner we provide one via xvfb. All other tests
-      # (unit, kernel-integration, logging-layer) are unaffected by this.
-      - name: Install xvfb (for headed launcher lifecycle test)
-        run: sudo apt-get update && sudo apt-get install -y xvfb
+      # shutdown sequence via winit. winit needs:
+      #
+      # - a display server: provided by xvfb (xvfb-run wraps cargo below).
+      # - libxkbcommon-x11.so at runtime: winit's x11 backend dlopens it
+      #   via the xkbcommon-dl crate. Not preinstalled on ubuntu-latest;
+      #   without it winit panics on `EventLoop::new` even with a display.
+      #
+      # All other tests (unit, kernel-integration, logging-layer) are
+      # unaffected by these — they either avoid winit entirely or use the
+      # THEOS_DRY_RUN short-circuit added in theos-launcher/src/main.rs.
+      - name: Install runtime dependencies for headed lifecycle test
+        run: sudo apt-get update && sudo apt-get install -y xvfb libxkbcommon-x11-0
 
       - name: Generate test result and coverage report
         run: |
