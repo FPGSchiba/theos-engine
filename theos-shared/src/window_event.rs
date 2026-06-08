@@ -377,6 +377,29 @@ mod tests {
     }
 
     #[test]
+    fn native_key_code_all_variants_construct_and_match() {
+        // Each NativeKeyCode variant must be constructible and pattern-
+        // matchable as itself — protects the translation table in
+        // theos-window against silent enum drift.
+        let android = NativeKeyCode::Android(111);
+        let macos = NativeKeyCode::MacOS(53);
+        let windows = NativeKeyCode::Windows(0x1B);
+        let xkb = NativeKeyCode::Xkb(9);
+        let unidentified = NativeKeyCode::Unidentified;
+
+        assert!(matches!(android, NativeKeyCode::Android(111)));
+        assert!(matches!(macos, NativeKeyCode::MacOS(53)));
+        assert!(matches!(windows, NativeKeyCode::Windows(0x1B)));
+        assert!(matches!(xkb, NativeKeyCode::Xkb(9)));
+        assert!(matches!(unidentified, NativeKeyCode::Unidentified));
+
+        // PartialEq across variants — different variants are not equal.
+        assert_ne!(android, macos);
+        assert_ne!(windows, xkb);
+        assert_ne!(unidentified, NativeKeyCode::Windows(0));
+    }
+
+    #[test]
     fn window_event_impls_event() {
         // Compile-time bound check — proves WindowEvent satisfies the
         // EventBus marker (Send + Sync + 'static + Debug + Clone).

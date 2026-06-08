@@ -1061,4 +1061,48 @@ mod tests {
         // After the loop finishes (tick 10), target HZ should be 60
         assert_eq!(kernel.target_hz(), Some(60));
     }
+
+    // -----------------------------------------------------------------------
+    // Direct accessor coverage — wrappers around the kernel's inner state
+    // -----------------------------------------------------------------------
+
+    #[test]
+    fn request_shutdown_flips_the_flag() {
+        let kernel = TheosKernel::default();
+        assert!(!kernel.shutdown_requested(), "fresh kernel must be running");
+        kernel
+            .request_shutdown()
+            .expect("request_shutdown must succeed");
+        assert!(
+            kernel.shutdown_requested(),
+            "request_shutdown must flip the flag"
+        );
+    }
+
+    #[test]
+    fn target_hz_handle_shares_state_with_target_hz() {
+        let kernel = TheosKernel::default();
+        kernel.set_target_hz(Some(60));
+
+        let handle = kernel.target_hz_handle();
+        assert_eq!(handle.load(SeqCst), 60);
+
+        handle.store(120, SeqCst);
+        assert_eq!(
+            kernel.target_hz(),
+            Some(120),
+            "target_hz_handle and target_hz must observe the same atomic"
+        );
+    }
+
+    #[test]
+    fn event_bus_handle_returns_clone_of_kernel_bus() {
+        let kernel = TheosKernel::default();
+        let h1 = kernel.event_bus_handle();
+        let h2 = kernel.event_bus_handle();
+        assert!(
+            Arc::ptr_eq(&h1, &h2),
+            "event_bus_handle must hand back the same underlying bus"
+        );
+    }
 }

@@ -101,3 +101,30 @@ impl FrameTimer {
         }
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn default_returns_first_frame_timer() {
+        // The first call to tick() on a freshly-constructed timer must
+        // return the synthetic FIRST_FRAME_DT, regardless of whether the
+        // timer was built via new() or default().
+        let mut timer = FrameTimer::default();
+        let (dt, fps) = timer.tick();
+        assert_eq!(dt, FIRST_FRAME_DT);
+        assert!(fps.is_none(), "no FPS report on the first frame");
+    }
+
+    #[test]
+    fn second_tick_returns_real_delta() {
+        // After the first tick, subsequent ticks measure wall-clock dt
+        // (clamped to MAX_DELTA_TIME).
+        let mut timer = FrameTimer::new();
+        let _ = timer.tick(); // burn the first frame
+        let (dt, _fps) = timer.tick();
+        assert!(dt >= 0.0, "dt must be non-negative");
+        assert!(dt <= MAX_DELTA_TIME, "dt must be clamped to MAX_DELTA_TIME");
+    }
+}

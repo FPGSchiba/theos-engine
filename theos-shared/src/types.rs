@@ -22,3 +22,36 @@ impl Display for EntityId {
         write!(f, "{}", self.0)
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn entity_id_round_trips_through_u64() {
+        let original: u64 = 42;
+        let id: EntityId = original.into();
+        let back: u64 = id.into();
+        assert_eq!(back, original);
+    }
+
+    #[test]
+    fn entity_id_display_renders_inner_value() {
+        assert_eq!(format!("{}", EntityId(7)), "7");
+        assert_eq!(format!("{}", EntityId(0)), "0");
+        assert_eq!(format!("{}", EntityId(u64::MAX)), u64::MAX.to_string());
+    }
+
+    #[test]
+    fn entity_id_default_is_zero() {
+        assert_eq!(EntityId::default(), EntityId(0));
+    }
+
+    #[test]
+    fn entity_id_supports_ordering() {
+        // PartialOrd / Ord are derived — confirm sort behaviour holds.
+        let mut ids = vec![EntityId(3), EntityId(1), EntityId(2)];
+        ids.sort();
+        assert_eq!(ids, vec![EntityId(1), EntityId(2), EntityId(3)]);
+    }
+}
