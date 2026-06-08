@@ -21,7 +21,7 @@ use theos_core::{FrameTimer, TheosKernel};
 use theos_window::WindowEventTranslator;
 use winit::error::EventLoopError;
 use winit::event::Event;
-use winit::event_loop::EventLoop;
+use winit::event_loop::{ControlFlow, EventLoop};
 
 /// Drives a [`TheosKernel`] from inside winit's closure-based event loop.
 ///
@@ -101,6 +101,17 @@ impl TheosAppHandler {
         } = self;
 
         event_loop.run(move |event, target| {
+            // 0. Drive winit in Poll mode so the closure ticks continuously
+            //    rather than only on OS events. The kernel runs uncapped
+            //    (`set_target_hz(None)` in main) so the design intent is
+            //    "tick as fast as possible" — Poll matches that. Wait mode
+            //    would leave the shutdown-flag poll (step 1) unreachable
+            //    on idle windows: a policy module flips the flag, but
+            //    without any subsequent OS event winit never re-enters
+            //    the closure to notice. Manifests as a hang on headless
+            //    integration tests.
+            target.set_control_flow(ControlFlow::Poll);
+
             // 1. Honour shutdown requests from any policy module (Escape, Close, …).
             if shutdown_flag.load(SeqCst) {
                 target.exit();

@@ -32,13 +32,21 @@ jobs:
         with:
           tool: cargo-tarpaulin,cargo2junit
 
+      # The launcher's `tests/lifecycle.rs` end-to-end test drives the
+      # actual `theos-launcher` binary through its full startup → run →
+      # shutdown sequence via winit. winit needs a display server; on the
+      # headless Linux runner we provide one via xvfb. All other tests
+      # (unit, kernel-integration, logging-layer) are unaffected by this.
+      - name: Install xvfb (for headed launcher lifecycle test)
+        run: sudo apt-get update && sudo apt-get install -y xvfb
+
       - name: Generate test result and coverage report
         run: |
           echo "::info Running tests with coverage";
-          cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml
-          
+          xvfb-run -a cargo +nightly tarpaulin --all-features --workspace --timeout 120 --out xml
+
           echo "::info Generating JUnit results";
-          cargo +nightly test --workspace --all-features -- -Z unstable-options --format json | cargo2junit > results.xml
+          xvfb-run -a cargo +nightly test --workspace --all-features -- -Z unstable-options --format json | cargo2junit > results.xml
 
       - name: Upload test results
         uses: EnricoMi/publish-unit-test-result-action@v2

@@ -78,6 +78,29 @@ fn main() {
 
     kernel.init().expect("kernel.init() failed");
 
+    // Optional auto-shutdown for headed integration tests.
+    //
+    // When `THEOS_AUTO_EXIT_MS` is set to a positive integer, spawn a
+    // thread that flips the kernel's shutdown flag after that many
+    // milliseconds. The winit closure polls the flag every iteration and
+    // calls `target.exit()` when set, producing the same clean shutdown
+    // sequence as a user clicking the close button.
+    //
+    // This is the only way to drive the launcher binary through its full
+    // lifecycle from outside, because the kernel's `ctrlc` handler is
+    // installed by `kernel.run()` — which the launcher bypasses in favour
+    // of winit's closure-driven loop. Used by
+    // `theos-launcher/tests/lifecycle.rs` on CI runners under `xvfb-run`.
+    if let Ok(ms_str) = std::env::var("THEOS_AUTO_EXIT_MS") {
+        if let Ok(ms) = ms_str.parse::<u64>() {
+            let shutdown_handle = kernel.shutdown_handle();
+            std::thread::spawn(move || {
+                std::thread::sleep(std::time::Duration::from_millis(ms));
+                shutdown_handle.store(true, std::sync::atomic::Ordering::SeqCst);
+            });
+        }
+    }
+
     // (THEOS-17 AC2) Required output string — emitted from the launcher
     // (and not from the kernel) because the kernel's own loop is bypassed
     // here in favour of winit's closure-driven loop.
