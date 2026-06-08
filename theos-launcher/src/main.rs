@@ -38,6 +38,23 @@ fn main() {
     // AC2 (legacy): Required output string.
     tracing::info!("Theos Engine v{} - Kernel starting...", version);
 
+    // Headless smoke path: env var THEOS_DRY_RUN bypasses winit entirely.
+    //
+    // Used by the launcher's integration tests (theos-launcher/tests/) on
+    // CI runners where no display server is available — `create_default_window`
+    // would otherwise panic on Linux with "neither WAYLAND_DISPLAY nor
+    // WAYLAND_SOCKET nor DISPLAY is set". The check must run *before*
+    // `create_default_window` for that reason.
+    //
+    // Behaviour: emit the startup line (already logged above) and exit
+    // cleanly with code 0. Kernel construction is deliberately skipped
+    // because `WindowModule` requires a real `Arc<Window>` from winit
+    // — making a "dry-run with kernel init" impossible without a window.
+    // Kernel-only lifecycle is exercised by `theos-core/tests/kernel_integration.rs`.
+    if std::env::var("THEOS_DRY_RUN").is_ok() {
+        return;
+    }
+
     // (THEOS-15 AC5) Build window + event loop on the main thread.
     let (event_loop, window) = create_default_window().expect("create_default_window failed");
 
@@ -60,13 +77,6 @@ fn main() {
     // TODO: mount additional modules here as they come online (THEOS-18+).
 
     kernel.init().expect("kernel.init() failed");
-
-    // Headless smoke path used by tests via THEOS_DRY_RUN — never enter
-    // the OS event loop in that mode.
-    if std::env::var("THEOS_DRY_RUN").is_ok() {
-        let _ = kernel.shutdown_all();
-        return;
-    }
 
     // (THEOS-17 AC2) Required output string — emitted from the launcher
     // (and not from the kernel) because the kernel's own loop is bypassed
