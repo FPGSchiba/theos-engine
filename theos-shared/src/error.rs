@@ -5,6 +5,8 @@ use std::any::TypeId;
 use std::error::Error;
 use std::fmt::{Display, Formatter};
 
+use crate::types::EntityId;
+
 /// An error that can occur within the Theos Engine.
 #[derive(Debug)]
 #[non_exhaustive]
@@ -263,6 +265,68 @@ impl From<EventBusError> for TheosError {
 
 /// A convenient alias for results returned by EventBus lifecycle methods.
 pub type EventBusResult<T> = Result<T, EventBusError>;
+
+/// Errors that can occur while reading from or mutating a `WorldAccess` world.
+#[derive(Debug)]
+#[non_exhaustive]
+pub enum WorldAccessError {
+    /// The referenced entity does not exist in the world.
+    EntityNotFound {
+        /// The entity that was looked up but is not present in the world.
+        entity: EntityId,
+    },
+    /// The entity exists but carries no component of the requested type.
+    ComponentNotFound {
+        /// The `TypeId` of the component that was requested but not attached.
+        component: TypeId,
+        /// The entity that was missing the requested component.
+        entity: EntityId,
+    },
+    /// A stored component could not be downcast to the requested concrete type.
+    ///
+    /// This signals a `TypeId`/type mismatch *inside* a `WorldAccess`
+    /// implementation rather than an ordinary "not found": by construction the
+    /// value stored under a `TypeId` must be the matching concrete component
+    /// type, so this variant indicates a bug in an implementor.
+    ComponentDowncastFailed {
+        /// The `TypeId` of the component whose downcast failed.
+        component: TypeId,
+    },
+}
+
+impl Display for WorldAccessError {
+    fn fmt(&self, f: &mut Formatter<'_>) -> fmt::Result {
+        match self {
+            WorldAccessError::EntityNotFound { entity } => {
+                write!(f, "no entity with id {entity}")
+            }
+            WorldAccessError::ComponentNotFound { component, entity } => {
+                write!(
+                    f,
+                    "entity with id {entity} has no component with type {component:?}"
+                )
+            }
+            WorldAccessError::ComponentDowncastFailed { component } => {
+                write!(f, "failed to downcast component {component:?}")
+            }
+        }
+    }
+}
+
+impl Error for WorldAccessError {
+    fn source(&self) -> Option<&(dyn Error + 'static)> {
+        None
+    }
+}
+
+impl From<WorldAccessError> for TheosError {
+    fn from(err: WorldAccessError) -> TheosError {
+        TheosError::Wrapped(Box::new(err))
+    }
+}
+
+/// The result type used by `WorldAccess` operations.
+pub type WorldAccessResult<T> = Result<T, WorldAccessError>;
 
 #[cfg(test)]
 mod tests {

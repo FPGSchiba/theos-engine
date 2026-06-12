@@ -23,17 +23,18 @@ Run at the end of every implementation or scaffolding task. **Ordered fail-fast*
 
 **Scaffolding done = steps 1–3 pass:**
 1. `cargo fmt --all -- --check`
-2. `cargo clippy --workspace --all-targets -- -D warnings`
-3. `cargo check --workspace`
+2. `cargo clippy --workspace --all-targets --all-features -- -D warnings`
+3. `cargo check --workspace --all-features`
 
 **Implementation done = scaffolding gates + steps 4–5 pass:**
-4. `cargo test --workspace`
+4. `cargo test --workspace --all-features`
 5. Per-crate coverage ≥ 85% (see [Coverage targets](#coverage-targets))
 
 Then, on any task that changed code: `graphify update .` (see [graphify](#graphify)).
 
 Rules:
 - Use `cargo check` not `cargo build` in the gate — same compile-check, faster. Reserve `build` for when binaries are needed.
+- **`--all-features` in the gate** is intentional: some code is behind non-default features (e.g. `theos-ecs`'s `testkit` stub). Without it the gate would silently skip linting, compiling, and testing that code. CI (`.github/workflows/test.yml`) likewise runs `--workspace --all-features`.
 - **When a gate fails: investigate the root cause and fix the underlying issue.** Do not `--no-verify` to bypass hooks unless explicitly asked. Do not retry the same command in a loop hoping for a different result.
 - **Stale-cache recovery:** if `cargo check` reports "method not found" on code that should obviously compile (missing derives, missing re-exports — especially after editing widely-imported crates like `theos-shared`), try `cargo clean -p <suspected-crate>` and re-check before assuming the source is broken.
 
@@ -41,8 +42,8 @@ Rules:
 
 The `.githooks/` hook already runs `cargo fmt --all`. Beyond that, verify locally before issuing `git commit`:
 
-- `cargo clippy --workspace --all-targets -- -D warnings` clean
-- `cargo test --workspace` green
+- `cargo clippy --workspace --all-targets --all-features -- -D warnings` clean
+- `cargo test --workspace --all-features` green
 - No new `unwrap()` / `expect()` in non-test production code without a justifying invariant comment (e.g. `// SAFETY:` or `// invariant:`)
 - `graphify update .` has been run since the last code change
 

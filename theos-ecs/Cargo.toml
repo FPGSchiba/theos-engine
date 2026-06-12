@@ -3,7 +3,12 @@ name = "theos-ecs"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+testkit = ["dep:theos-shared", "dep:parking_lot"]
+
 [dependencies]
+theos-shared = { workspace = true, optional = true }
+parking_lot  = { workspace = true, optional = true }
 
 [lints]
 workspace = true

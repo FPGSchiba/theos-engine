@@ -1,5 +1,9 @@
 #![forbid(unsafe_code)]
 
+pub mod components;
+
+pub use components::{AiBrain, PendingAiResponse};
+
 pub fn add(left: u64, right: u64) -> u64 {
     left + right
 }

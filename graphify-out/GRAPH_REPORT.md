@@ -1,82 +1,104 @@
-# Graph Report - theos-engine  (2026-06-05)
+# Graph Report - theos-engine  (2026-06-12)
 
 ## Corpus Check
-- 48 files · ~30,757 words
+- 71 files · ~48,926 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 898 nodes · 1697 edges · 57 communities (40 shown, 17 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.79)
+- 1336 nodes · 2657 edges · 79 communities (60 shown, 19 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 35 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `0f5bcf35`
+- Built from commit: `e14bc1a5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- [[_COMMUNITY_Module Lifecycle & Kernel Fixtures|Module Lifecycle & Kernel Fixtures]]
-- [[_COMMUNITY_Core Shared Abstractions|Core Shared Abstractions]]
-- [[_COMMUNITY_Crossbeam EventBus Implementation|Crossbeam EventBus Implementation]]
-- [[_COMMUNITY_Dependency Resolution Engine|Dependency Resolution Engine]]
-- [[_COMMUNITY_Kernel Init & Module Wiring|Kernel Init & Module Wiring]]
-- [[_COMMUNITY_Matrix Math & Benchmarks|Matrix Math & Benchmarks]]
-- [[_COMMUNITY_Error Display & Formatting|Error Display & Formatting]]
-- [[_COMMUNITY_Quaternion Arithmetic|Quaternion Arithmetic]]
-- [[_COMMUNITY_AABB Spatial Queries|AABB Spatial Queries]]
-- [[_COMMUNITY_Error Hierarchy & Conversions|Error Hierarchy & Conversions]]
-- [[_COMMUNITY_Vector Math & Interop Tests|Vector Math & Interop Tests]]
-- [[_COMMUNITY_Architecture Concepts & Benchmarks|Architecture Concepts & Benchmarks]]
-- [[_COMMUNITY_CI Pipeline & Dependency Automation|CI Pipeline & Dependency Automation]]
-- [[_COMMUNITY_Ray-Plane Intersection|Ray-Plane Intersection]]
-- [[_COMMUNITY_SIMD & Interop Bridge Patterns|SIMD & Interop Bridge Patterns]]
-- [[_COMMUNITY_Service Registry & Lookup|Service Registry & Lookup]]
+- [[_COMMUNITY_Community 0|Community 0]]
+- [[_COMMUNITY_Community 1|Community 1]]
+- [[_COMMUNITY_Community 2|Community 2]]
+- [[_COMMUNITY_Community 3|Community 3]]
+- [[_COMMUNITY_Community 4|Community 4]]
+- [[_COMMUNITY_Community 5|Community 5]]
+- [[_COMMUNITY_Community 6|Community 6]]
+- [[_COMMUNITY_Community 7|Community 7]]
+- [[_COMMUNITY_Community 8|Community 8]]
+- [[_COMMUNITY_Community 9|Community 9]]
+- [[_COMMUNITY_Community 10|Community 10]]
+- [[_COMMUNITY_Community 11|Community 11]]
+- [[_COMMUNITY_Community 12|Community 12]]
+- [[_COMMUNITY_Community 13|Community 13]]
+- [[_COMMUNITY_Community 14|Community 14]]
+- [[_COMMUNITY_Community 15|Community 15]]
 - [[_COMMUNITY_Community 16|Community 16]]
-- [[_COMMUNITY_Vec3 & Quaternion Ops|Vec3 & Quaternion Ops]]
-- [[_COMMUNITY_Vector Arithmetic Ops|Vector Arithmetic Ops]]
-- [[_COMMUNITY_Structured Logging Formatter|Structured Logging Formatter]]
-- [[_COMMUNITY_Ray Traversal & BVH|Ray Traversal & BVH]]
-- [[_COMMUNITY_Frame Timing Benchmarks|Frame Timing Benchmarks]]
-- [[_COMMUNITY_SIMD Arithmetic Tests|SIMD Arithmetic Tests]]
-- [[_COMMUNITY_Module Lifecycle Protocol|Module Lifecycle Protocol]]
-- [[_COMMUNITY_Entity Identity|Entity Identity]]
-- [[_COMMUNITY_Launcher & Log Filtering|Launcher & Log Filtering]]
-- [[_COMMUNITY_Log Output Routing|Log Output Routing]]
-- [[_COMMUNITY_Tracing Field Visitor|Tracing Field Visitor]]
-- [[_COMMUNITY_Workspace Architecture Principles|Workspace Architecture Principles]]
-- [[_COMMUNITY_EventBus SendDrain Benchmarks|EventBus Send/Drain Benchmarks]]
-- [[_COMMUNITY_Engine Entry Points|Engine Entry Points]]
-- [[_COMMUNITY_Service Discovery Test Fixtures|Service Discovery Test Fixtures]]
-- [[_COMMUNITY_ECS Placeholder|ECS Placeholder]]
-- [[_COMMUNITY_Physics Event System|Physics Event System]]
-- [[_COMMUNITY_AI Subsystem Placeholder|AI Subsystem Placeholder]]
-- [[_COMMUNITY_Render Subsystem Placeholder|Render Subsystem Placeholder]]
-- [[_COMMUNITY_Assets Subsystem Placeholder|Assets Subsystem Placeholder]]
-- [[_COMMUNITY_Plugin Loader Placeholder|Plugin Loader Placeholder]]
-- [[_COMMUNITY_Physics Subsystem Placeholder|Physics Subsystem Placeholder]]
-- [[_COMMUNITY_Plugin API Placeholder|Plugin API Placeholder]]
-- [[_COMMUNITY_Scripting Subsystem Placeholder|Scripting Subsystem Placeholder]]
-- [[_COMMUNITY_Scripting Lib Placeholder|Scripting Lib Placeholder]]
-- [[_COMMUNITY_Game Main Stub|Game Main Stub]]
-- [[_COMMUNITY_Audio Subsystem Placeholder|Audio Subsystem Placeholder]]
-- [[_COMMUNITY_AI Mentor Agent Protocol|AI Mentor Agent Protocol]]
+- [[_COMMUNITY_Community 17|Community 17]]
+- [[_COMMUNITY_Community 18|Community 18]]
+- [[_COMMUNITY_Community 19|Community 19]]
+- [[_COMMUNITY_Community 20|Community 20]]
+- [[_COMMUNITY_Community 21|Community 21]]
+- [[_COMMUNITY_Community 22|Community 22]]
+- [[_COMMUNITY_Community 23|Community 23]]
+- [[_COMMUNITY_Community 24|Community 24]]
+- [[_COMMUNITY_Community 25|Community 25]]
+- [[_COMMUNITY_Community 26|Community 26]]
+- [[_COMMUNITY_Community 27|Community 27]]
+- [[_COMMUNITY_Community 28|Community 28]]
+- [[_COMMUNITY_Community 29|Community 29]]
+- [[_COMMUNITY_Community 30|Community 30]]
+- [[_COMMUNITY_Community 31|Community 31]]
+- [[_COMMUNITY_Community 32|Community 32]]
+- [[_COMMUNITY_Community 33|Community 33]]
+- [[_COMMUNITY_Community 34|Community 34]]
+- [[_COMMUNITY_Community 35|Community 35]]
+- [[_COMMUNITY_Community 36|Community 36]]
+- [[_COMMUNITY_Community 37|Community 37]]
+- [[_COMMUNITY_Community 38|Community 38]]
+- [[_COMMUNITY_Community 39|Community 39]]
+- [[_COMMUNITY_Community 40|Community 40]]
+- [[_COMMUNITY_Community 41|Community 41]]
+- [[_COMMUNITY_Community 42|Community 42]]
+- [[_COMMUNITY_Community 43|Community 43]]
+- [[_COMMUNITY_Community 47|Community 47]]
+- [[_COMMUNITY_Community 48|Community 48]]
+- [[_COMMUNITY_Community 49|Community 49]]
+- [[_COMMUNITY_Community 50|Community 50]]
 - [[_COMMUNITY_Community 51|Community 51]]
 - [[_COMMUNITY_Community 52|Community 52]]
 - [[_COMMUNITY_Community 53|Community 53]]
 - [[_COMMUNITY_Community 54|Community 54]]
 - [[_COMMUNITY_Community 56|Community 56]]
+- [[_COMMUNITY_Community 57|Community 57]]
+- [[_COMMUNITY_Community 58|Community 58]]
+- [[_COMMUNITY_Community 59|Community 59]]
+- [[_COMMUNITY_Community 60|Community 60]]
+- [[_COMMUNITY_Community 61|Community 61]]
+- [[_COMMUNITY_Community 62|Community 62]]
+- [[_COMMUNITY_Community 63|Community 63]]
+- [[_COMMUNITY_Community 64|Community 64]]
+- [[_COMMUNITY_Community 65|Community 65]]
+- [[_COMMUNITY_Community 66|Community 66]]
+- [[_COMMUNITY_Community 67|Community 67]]
+- [[_COMMUNITY_Community 68|Community 68]]
+- [[_COMMUNITY_Community 69|Community 69]]
+- [[_COMMUNITY_Community 70|Community 70]]
+- [[_COMMUNITY_Community 71|Community 71]]
+- [[_COMMUNITY_Community 72|Community 72]]
+- [[_COMMUNITY_Community 73|Community 73]]
+- [[_COMMUNITY_Community 74|Community 74]]
+- [[_COMMUNITY_Community 75|Community 75]]
 
 ## God Nodes (most connected - your core abstractions)
-1. `Vec3` - 59 edges
-2. `Vec4` - 45 edges
+1. `Vec3` - 60 edges
+2. `Vec4` - 46 edges
 3. `Self` - 42 edges
-4. `Vec2` - 38 edges
-5. `Aabb` - 31 edges
-6. `TheosKernel` - 28 edges
-7. `KernelContext` - 18 edges
-8. `Quat` - 16 edges
-9. `TimingModule` - 16 edges
-10. `Mat4` - 14 edges
+4. `Vec2` - 39 edges
+5. `TheosKernel` - 35 edges
+6. `Aabb` - 32 edges
+7. `KernelContext` - 19 edges
+8. `TimingModule` - 17 edges
+9. `Quat` - 17 edges
+10. `KernelError` - 15 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Type-Erased EventBus via ChannelHandle adapter` --semantically_similar_to--> `Service Locator encapsulated in KernelContext`  [INFERRED] [semantically similar]
@@ -90,6 +112,28 @@
 - `THEOS-86 Microkernel Bootstrap Plan` --rationale_for--> `Fixed-Step Game Loop (60 Hz sleep+spin hybrid)`  [EXTRACTED]
   plans/THEOS-86.md → theos-core/src/kernel.rs
 
+## Import Cycles
+- 1-file cycle: `theos-ai/src/components.rs -> theos-ai/src/components.rs`
+- 1-file cycle: `theos-core/benches/event_bus.rs -> theos-core/benches/event_bus.rs`
+- 1-file cycle: `theos-core/benches/frame_timing.rs -> theos-core/benches/frame_timing.rs`
+- 1-file cycle: `theos-core/src/dependency_resolver.rs -> theos-core/src/dependency_resolver.rs`
+- 1-file cycle: `theos-shared/src/module.rs -> theos-shared/src/module.rs`
+- 1-file cycle: `theos-core/src/error.rs -> theos-core/src/error.rs`
+- 1-file cycle: `theos-core/src/event.rs -> theos-core/src/event.rs`
+- 1-file cycle: `theos-shared/src/event_bus.rs -> theos-shared/src/event_bus.rs`
+- 1-file cycle: `theos-core/src/frame_timer.rs -> theos-core/src/frame_timer.rs`
+- 1-file cycle: `theos-core/src/kernel.rs -> theos-core/src/kernel.rs`
+- 1-file cycle: `theos-launcher/src/app_handler.rs -> theos-launcher/src/app_handler.rs`
+- 1-file cycle: `theos-window/src/event_translator.rs -> theos-window/src/event_translator.rs`
+- 1-file cycle: `theos-core/tests/kernel_integration.rs -> theos-core/tests/kernel_integration.rs`
+- 1-file cycle: `theos-ecs/src/testkit.rs -> theos-ecs/src/testkit.rs`
+- 1-file cycle: `theos-shared/src/world_access.rs -> theos-shared/src/world_access.rs`
+- 1-file cycle: `theos-shared/src/error.rs -> theos-shared/src/error.rs`
+- 1-file cycle: `theos-launcher/src/close_to_exit.rs -> theos-launcher/src/close_to_exit.rs`
+- 1-file cycle: `theos-launcher/src/escape_to_quit.rs -> theos-launcher/src/escape_to_quit.rs`
+- 1-file cycle: `theos-window/src/key_translate.rs -> theos-window/src/key_translate.rs`
+- 1-file cycle: `theos-launcher/tests/log_filtering.rs -> theos-launcher/tests/log_filtering.rs`
+
 ## Hyperedges (group relationships)
 - **SIMD-aligned math types (Vec2, Vec3, Vec4) forming the GPU-ready math foundation** — src_vec_vec2, src_vec_vec3, src_vec_vec4, concept_simd_alignment_16byte [EXTRACTED 0.95]
 - **Kernel init pattern: KernelContext + ServiceLocator + EventBus shared during module init** — src_kernel_context_kernelcontext, src_service_locator_servicelocator, src_event_bus_eventbus, src_module_enginemodule [EXTRACTED 0.95]
@@ -101,159 +145,239 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (57 total, 17 thin omitted)
+## Communities (79 total, 19 thin omitted)
 
-### Community 0 - "Module Lifecycle & Kernel Fixtures"
-Cohesion: 0.07
-Nodes (38): AtomicU32, Instant, Mutex, ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle() (+30 more)
-
-### Community 1 - "Core Shared Abstractions"
-Cohesion: 0.12
-Nodes (27): KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, ServiceLocator, event_bus_hands_back_the_same_shared_handle(), get_unregistered_service_returns_service_not_found(), KernelContext, make_context(), register_overwrites_previous_service_of_same_type() (+19 more)
-
-### Community 2 - "Crossbeam EventBus Implementation"
-Cohesion: 0.09
-Nodes (21): EventBusSetup, ChannelHandle, CrossbeamEventBus, GameEvent, Test2Event, TestEvent, TypedChannel<E>, Any (+13 more)
-
-### Community 3 - "Dependency Resolution Engine"
+### Community 0 - "Community 0"
 Cohesion: 0.08
-Nodes (31): ModuleResult, DependencyResolver, five_module_mixed_graph_satisfies_all_dependencies(), linear_chain_resolves_in_dependency_order(), module(), module_with_deps(), TagA, TagB (+23 more)
+Nodes (39): AtomicU32, Instant, Mutex, ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle() (+31 more)
 
-### Community 4 - "Kernel Init & Module Wiring"
+### Community 1 - "Community 1"
+Cohesion: 0.09
+Nodes (41): EventBus split into dyn-compatible core + generic ergonomic extension, KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, ServiceLocator, ChannelHandle, Event, EventBus, EventBusExt (+33 more)
+
+### Community 2 - "Community 2"
+Cohesion: 0.07
+Nodes (36): EventBusSetup, Receiver, Sender, BroadcastBusExt, BroadcastEventBus, ChannelHandle, CrossbeamEventBus, GameEvent (+28 more)
+
+### Community 3 - "Community 3"
+Cohesion: 0.08
+Nodes (43): Engine Module three-phase lifecycle (init, tick, shutdown), ModuleResult, DependencyResolver, empty_module_list_returns_empty_order(), five_module_mixed_graph_satisfies_all_dependencies(), linear_chain_resolves_in_dependency_order(), missing_dependency_returns_dependency_missing_error(), module() (+35 more)
+
+### Community 4 - "Community 4"
 Cohesion: 0.06
-Nodes (55): CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), FailingInitModule, frame_timer_clamps_huge_delta_times_to_max_limit() (+47 more)
+Nodes (68): BroadcastEventBus, CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus() (+60 more)
 
-### Community 5 - "Matrix Math & Benchmarks"
-Cohesion: 0.10
-Nodes (27): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam::Mat3, glam::Mat4, Mat3, Mat4 (+19 more)
-
-### Community 6 - "Error Display & Formatting"
+### Community 5 - "Community 5"
 Cohesion: 0.12
-Nodes (16): EventBusError, kernel_context_wraps_service_locator_error_and_exposes_source(), KernelContextError, ServiceLocatorError, ServiceLocatorOperation, TheosError enum, Display, E (+8 more)
+Nodes (31): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam::Mat3, glam::Mat4, Mat3, Mat4 (+23 more)
 
-### Community 7 - "Quaternion Arithmetic"
-Cohesion: 0.15
-Nodes (23): assert_quat_eq(), assert_vec3_eq(), Quat, rot90_z(), test_length_known_value(), test_mul_assign(), test_mul_identity_left(), test_mul_identity_right() (+15 more)
+### Community 6 - "Community 6"
+Cohesion: 0.13
+Nodes (23): display_external_variant_includes_prefix(), display_message_variant_is_human_readable(), EventBusError, from_string_and_str_create_message(), kernel_context_error_converts_into_theos_error(), kernel_context_service_not_found_displays_type_name_and_has_no_source(), kernel_context_wraps_service_locator_error_and_exposes_source(), KernelContextError (+15 more)
 
-### Community 8 - "AABB Spatial Queries"
-Cohesion: 0.16
+### Community 7 - "Community 7"
+Cohesion: 0.18
+Nodes (25): assert_quat_eq(), assert_vec3_eq(), Quat, rot90_z(), test_identity_components(), test_length_known_value(), test_length_of_identity_is_one(), test_mul_assign() (+17 more)
+
+### Community 8 - "Community 8"
+Cohesion: 0.19
 Nodes (25): Aabb, assert_vec_eq(), test_contains_point_interior(), test_contains_point_on_surface_is_inside(), test_contains_point_outside(), test_expand_to_contain_point_inside_is_noop(), test_expand_to_contain_point_outside(), test_merge_is_symmetric() (+17 more)
 
-### Community 9 - "Error Hierarchy & Conversions"
-Cohesion: 0.11
-Nodes (15): EventBusError, ServiceLocatorError, KernelError, module_error_converts_to_theos_error_wrapped(), ModuleError, Display, Error, FmtResult (+7 more)
+### Community 9 - "Community 9"
+Cohesion: 0.13
+Nodes (23): EventBusError, KernelContextError, ServiceLocatorError, display_circular_dependency_mentions_cycle(), display_dependency_missing_mentions_both_parts(), display_initialization_failed_mentions_module_and_reason(), display_module_already_registered_is_human_readable(), display_module_not_found_is_human_readable() (+15 more)
 
-### Community 10 - "Vector Math & Interop Tests"
-Cohesion: 0.16
-Nodes (21): test_glam_vec2_roundtrip(), test_glam_vec3_and_vec3a_produce_same_components(), test_glam_vec3_roundtrip(), test_glam_vec3a_roundtrip(), test_glam_vec4_roundtrip(), test_vec2_constructors_and_dot(), test_vec2_dot_antiparallel_is_negative(), test_vec2_dot_orthogonal_is_zero() (+13 more)
+### Community 10 - "Community 10"
+Cohesion: 0.18
+Nodes (25): test_glam_vec2_roundtrip(), test_glam_vec3_and_vec3a_produce_same_components(), test_glam_vec3_roundtrip(), test_glam_vec3a_roundtrip(), test_glam_vec4_roundtrip(), test_mint_interop(), test_simd_interop(), test_vec2_constructors_and_dot() (+17 more)
 
-### Community 11 - "Architecture Concepts & Benchmarks"
+### Community 11 - "Community 11"
 Cohesion: 0.11
 Nodes (22): Fixed-Step Game Loop (60 Hz sleep+spin hybrid), Kahn's Topological Sort for Module Init Order, Service Locator encapsulated in KernelContext, Type-Erased EventBus via ChannelHandle adapter, allocation_check_typed_event_bus (alloc test), bench_send_then_drain_typed (Criterion benchmark), bench_tick_dispatch (Criterion benchmark), NoOpModule (bench) (+14 more)
 
-### Community 12 - "CI Pipeline & Dependency Automation"
+### Community 12 - "Community 12"
 Cohesion: 0.09
 Nodes (23): Cargo Plugins Workspace Dependency Updates (theos-plugin-deps), Cargo Workspace Dependency Updates (theos-engine-deps), Dependabot Configuration, GitHub Actions Dependency Updates, cargo-geiger Unsafe Audit Tool, Cargo Check Job, Check and Lint Workflow, Clippy and Unsafe Policy Job (+15 more)
 
-### Community 13 - "Ray-Plane Intersection"
-Cohesion: 0.22
+### Community 13 - "Community 13"
+Cohesion: 0.24
 Nodes (17): Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none(), test_new_normalizes_normal() (+9 more)
 
-### Community 14 - "SIMD & Interop Bridge Patterns"
+### Community 14 - "Community 14"
 Cohesion: 0.12
-Nodes (9): Add, glam interoperability bridge pattern, mint interoperability bridge pattern, 16-byte SIMD alignment for GPU/SIMD compatibility, f32x4, glam::Vec2, mint::Vector2<f32>, Vec2 (+1 more)
+Nodes (27): AtomicU64, ComponentValue, EntityId, EntityMap, component_ids_lists_inserted_component_types(), contains_is_true_for_spawned_entity(), despawn_removes_entity_and_its_components(), get_errors_with_component_not_found_when_component_absent() (+19 more)
 
-### Community 15 - "Service Registry & Lookup"
+### Community 15 - "Community 15"
 Cohesion: 0.04
 Nodes (44): 1.1 Define `EngineModule` Trait (in `theos-shared`), 1.2 Define `EventBus` Trait (in `theos-shared`), 1.3 Create `ServiceLocator` Struct (in `theos-shared`), 1.4 Stub Out `TheosKernel` Struct (in `theos-core`), 1.5 Define `AiWorkerHandle` Struct (in `theos-core`), 1.6 Define `AiCommandQueue` Struct (in `theos-core`), 1.7 Design `ModuleRegistry` (Logical Component), 2.1 Logging Initialization (+36 more)
 
 ### Community 16 - "Community 16"
+Cohesion: 0.17
+Nodes (17): Service Locator pattern for engine subsystem registry, RwLock, ServiceLocatorResult, get_nonexistent_service_returns_none(), register_and_get_service(), service_locator_is_cloneable_and_shares_registry(), ServiceLocator, TestService (+9 more)
+
+### Community 17 - "Community 17"
 Cohesion: 0.16
-Nodes (15): Service Locator pattern for engine subsystem registry, RwLock, ServiceLocatorResult, register_and_get_service(), service_locator_is_cloneable_and_shares_registry(), ServiceLocator, TestService, Any (+7 more)
+Nodes (13): Add, 16-byte SIMD alignment for GPU/SIMD compatibility, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32> (+5 more)
 
-### Community 17 - "Vec3 & Quaternion Ops"
-Cohesion: 0.15
-Nodes (13): DivAssign, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32>, Vec3 (+5 more)
-
-### Community 19 - "Structured Logging Formatter"
+### Community 19 - "Community 19"
 Cohesion: 0.16
 Nodes (13): FmtContext, FormatEvent, N, Rfc3339, S, FieldVisitor, init(), TheosFormatter (+5 more)
 
-### Community 20 - "Ray Traversal & BVH"
-Cohesion: 0.30
+### Community 20 - "Community 20"
+Cohesion: 0.35
 Nodes (13): BVH / ray-traversal usage pattern for Aabb and Ray, assert_vec3_eq(), Ray, test_at_known_t_value(), test_at_negative_t_goes_behind_origin(), test_at_one_returns_origin_plus_direction(), test_at_zero_returns_origin(), test_new_accepts_axis_aligned_directions() (+5 more)
 
-### Community 21 - "Frame Timing Benchmarks"
-Cohesion: 0.15
-Nodes (11): bench_tick_dispatch(), NoOpModule, Box, Criterion, EngineModule, Error, KernelContext, Result (+3 more)
+### Community 21 - "Community 21"
+Cohesion: 0.16
+Nodes (14): bench_tick_dispatch(), NoOpModule, NoOpModule<TAG>, register_n_modules(), Box, Criterion, EngineModule, Error (+6 more)
 
-### Community 22 - "SIMD Arithmetic Tests"
+### Community 22 - "Community 22"
 Cohesion: 0.12
 Nodes (15): Build and checks, code:mermaid (flowchart TB), code:text (plugins/theos-audio --> theos-plugin-api --> theos-shared + ), code:powershell (cargo build --workspace), code:powershell (git config core.hooksPath .githooks), Crate dependency graph (overview), Design principles, Entry points and apps (+7 more)
 
-### Community 23 - "Module Lifecycle Protocol"
-Cohesion: 0.09
-Nodes (25): EventBus split into dyn-compatible core + generic ergonomic extension, Engine Module three-phase lifecycle (init, tick, shutdown), Receiver, Sender, Event, EventBus, EventBusExt, EventBusSetup (+17 more)
+### Community 23 - "Community 23"
+Cohesion: 0.12
+Nodes (24): EscapeToQuitModule, make_initialised_escape_module(), tick_ignores_close_requested(), tick_ignores_key_released_for_escape(), tick_ignores_non_escape_keypresses(), tick_is_noop_before_init(), tick_requests_shutdown_on_escape_press(), tick_with_empty_receiver_is_idempotent() (+16 more)
 
-### Community 24 - "Entity Identity"
-Cohesion: 0.22
+### Community 24 - "Community 24"
+Cohesion: 0.14
 Nodes (7): EntityId, u64, Display, FmtResult, Formatter, From, Self
 
-### Community 25 - "Launcher & Log Filtering"
-Cohesion: 0.38
+### Community 25 - "Community 25"
+Cohesion: 0.40
 Nodes (9): theos-launcher main, launcher log filtering test: defaults_to_info_when_rust_log_missing, launcher log filtering test: invalid_rust_log_does_not_crash_and_falls_back, choose_output(), module_path_is_present(), startup_line_matches_layout(), strip_ansi(), Output (+1 more)
 
-### Community 26 - "Log Output Routing"
-Cohesion: 0.46
+### Community 26 - "Community 26"
+Cohesion: 0.50
 Nodes (7): choose_output(), defaults_to_info_when_rust_log_missing(), invalid_rust_log_does_not_crash_and_falls_back(), strip_ansi(), Output, String, Vec
 
-### Community 27 - "Tracing Field Visitor"
+### Community 27 - "Community 27"
 Cohesion: 0.40
 Nodes (4): Field, FieldVisitor<'a, 'w>, Debug, Visit
 
-### Community 28 - "Workspace Architecture Principles"
+### Community 28 - "Community 28"
 Cohesion: 0.50
 Nodes (4): Strict DAG No-Circular-Dependency Crate Layout, theos-shared Zero-Internal-Dependency Policy, Workspace Design Principles (README), theos-shared EntityId Design
 
-### Community 29 - "EventBus Send/Drain Benchmarks"
-Cohesion: 0.83
-Nodes (3): bench_send_then_drain_boxed_baseline(), bench_send_then_drain_typed(), Criterion
+### Community 29 - "Community 29"
+Cohesion: 0.48
+Nodes (5): bench_send_then_drain_boxed_baseline(), bench_send_then_drain_typed(), bench_send_then_recv_boxed_baseline(), bench_send_then_recv_typed(), Criterion
 
-### Community 31 - "Service Discovery Test Fixtures"
+### Community 30 - "Community 30"
+Cohesion: 0.23
+Nodes (7): get_engine_version(), create_default_window(), main(), Arc, EventLoop, Window, WindowResult
+
+### Community 31 - "Community 31"
 Cohesion: 1.00
 Nodes (3): ConsumerModule (test), GreetingService (test), ProviderModule (test)
 
 ### Community 51 - "Community 51"
-Cohesion: 0.14
+Cohesion: 0.13
 Nodes (13): code:powershell (cd "D:\Projects\Tower of Theos\theos-engine"), code:rust (// explicit import), code:mermaid (flowchart TB), Contribution notes, Design principles, EntityId (canonical decision), Open decisions / TODO, Planned public surface (+5 more)
 
 ### Community 52 - "Community 52"
-Cohesion: 0.17
+Cohesion: 0.15
 Nodes (11): AC traceability, Changes, Confirmed decisions (vs. spec wording), Goal, Other deltas vs. spec wording, Out of scope (deferred), Risks, Tests (`theos-core/src/kernel.rs` `mod tests`) (+3 more)
 
+### Community 53 - "Community 53"
+Cohesion: 0.12
+Nodes (23): CloseToExitModule, make_initialised_close_module(), tick_ignores_keypress_events(), tick_ignores_resized_events(), tick_is_noop_before_init(), tick_requests_shutdown_on_close_requested(), tick_with_empty_receiver_is_idempotent(), Arc (+15 more)
+
 ### Community 56 - "Community 56"
-Cohesion: 0.14
-Nodes (13): AddAssign, Div, theos-math lib (public API re-exports), Mat4 * Vec4, glam::Vec4, mint::Vector4<f32>, Vec4, Vec4Swizzle (+5 more)
+Cohesion: 0.09
+Nodes (20): AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, Div, DivAssign, f32x4, theos-math lib (public API re-exports), Mat4 * Vec4 (+12 more)
+
+### Community 57 - "Community 57"
+Cohesion: 0.12
+Nodes (19): KeyCode, NativeKeyCode, PhysicalKey, translator_constructs_with_event_bus_handle(), WindowEventTranslator, assert_maps(), translate_keycode_maps_all_digits(), translate_keycode_maps_all_letters() (+11 more)
+
+### Community 58 - "Community 58"
+Cohesion: 0.08
+Nodes (23): Acceptance for plan completion, Baseline (2026-06-08, post-THEOS-17 log edits), C1 — EntityId (theos-shared/src/types.rs), C2 — FrameTimer default (theos-core/src/frame_timer.rs), C3 — WindowEvent remaining branches (theos-shared/src/window_event.rs), Coverage forecast, Defer list *(documented, will not be unit-tested)*, File-level highlights (+15 more)
+
+### Community 59 - "Community 59"
+Cohesion: 0.22
+Nodes (13): clone_shares_state_with_original(), default_equals_new(), handle_flip_is_visible_to_typed_api(), handle_shares_state_with_typed_api(), new_starts_unrequested(), request_shutdown_is_idempotent(), request_shutdown_sets_flag(), ShutdownRequester (+5 more)
+
+### Community 60 - "Community 60"
+Cohesion: 0.15
+Nodes (12): WindowModule, Arc, Box, EngineModule, Error, KernelContext, ModuleDependency, Result (+4 more)
+
+### Community 61 - "Community 61"
+Cohesion: 0.12
+Nodes (15): Acceptance-criteria traceability, Confirmed decisions (locked, see concept page), Frame timer (`theos-core::frame_timer`), FrameTimer — covered via existing kernel tests, Kernel — automated unit tests, Kernel (`theos-core`), Launcher (`theos-launcher`), Out of scope (deferred) (+7 more)
+
+### Community 62 - "Community 62"
+Cohesion: 0.25
+Nodes (12): Component, ComponentValue, T, WorldAccess, WorldAccessExt, Any, Box, Clone (+4 more)
+
+### Community 63 - "Community 63"
+Cohesion: 0.20
+Nodes (10): EventLoopError, FrameTimer, TheosAppHandler, Arc, AtomicBool, EventLoop, Result, Self (+2 more)
+
+### Community 64 - "Community 64"
+Cohesion: 0.15
+Nodes (12): Architecture sub-question (decide before AC2), Locked decisions, Option A — `ShutdownRequester` service in `KernelContext`, Option B — `ShutdownRequested` event on the bus, Out of scope (deferred — match the Jira), Remaining implementation work (logic, not scaffolding), Summary, THEOS-16: Input Event Propagation (+4 more)
+
+### Community 65 - "Community 65"
+Cohesion: 0.17
+Nodes (11): Build and checks, Crate dependency graph (overview), Design principles, Entry points and apps, Foundation, Kernel and subsystems, Notes, Plugin and scripting boundaries (+3 more)
+
+### Community 66 - "Community 66"
+Cohesion: 0.29
+Nodes (7): Deref, WindowHandle, Target, Arc, Self, TheosService, Window
+
+### Community 67 - "Community 67"
+Cohesion: 0.31
+Nodes (7): default_returns_first_frame_timer(), FrameTimer, second_tick_returns_real_delta(), Default, Instant, Option, Self
+
+### Community 68 - "Community 68"
+Cohesion: 0.22
+Nodes (4): KeyCode, NativeKeyCode, WindowEvent, Event
+
+### Community 69 - "Community 69"
+Cohesion: 0.22
+Nodes (8): Coverage targets, graphify, Manual smoke, Plans, Pre-commit checks, Quality gates, Test scaffolding pattern, Theos-Engine
+
+### Community 70 - "Community 70"
+Cohesion: 0.22
+Nodes (8): Acceptance-criteria gap table, Crate wiring (done), Deferred / out of scope, Locked decisions, Related, Resolved design decisions (were open during design), Test execution / CI, THEOS-147 — [seam] ECS World access trait + in-memory stub + AI components
+
+### Community 71 - "Community 71"
+Cohesion: 0.22
+Nodes (8): Acceptance criteria verification, Companion artifact, Files changed, Locked decisions, Operational notes for future readers, Shape of the work, Summary, THEOS-17: Integration Verification
+
+### Community 72 - "Community 72"
+Cohesion: 0.33
+Nodes (5): Build, Platform requirements, Public API, Testing, theos-window
+
+### Community 73 - "Community 73"
+Cohesion: 0.60
+Nodes (4): AiBrain, PendingAiResponse, Component, String
+
+### Community 74 - "Community 74"
+Cohesion: 0.67
+Nodes (3): full_lifecycle_emits_expected_log_sequence(), strip_ansi(), String
 
 ## Knowledge Gaps
-- **176 isolated node(s):** `Vec`, `Self`, `Self`, `Self`, `Option` (+171 more)
+- **279 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+274 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **17 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Vec3` connect `Vec3 & Quaternion Ops` to `Matrix Math & Benchmarks`, `Quaternion Arithmetic`, `AABB Spatial Queries`, `Vector Math & Interop Tests`, `Ray-Plane Intersection`, `SIMD & Interop Bridge Patterns`, `Vector Arithmetic Ops`, `Ray Traversal & BVH`, `Community 53`, `Community 56`?**
-  _High betweenness centrality (0.038) - this node is a cross-community bridge._
-- **Why does `EventBus` connect `Module Lifecycle Protocol` to `Core Shared Abstractions`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
-- **Why does `KernelContext` connect `Core Shared Abstractions` to `Community 16`, `Module Lifecycle Protocol`?**
-  _High betweenness centrality (0.020) - this node is a cross-community bridge._
-- **Are the 20 inferred relationships involving `Aabb` (e.g. with `test_contains_point_interior()` and `test_contains_point_on_surface_is_inside()`) actually correct?**
-  _`Aabb` has 20 INFERRED edges - model-reasoned connections that need verification._
-- **What connects `Vec`, `Self`, `Self` to the rest of the system?**
-  _178 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `Module Lifecycle & Kernel Fixtures` be split into smaller, more focused modules?**
-  _Cohesion score 0.07138047138047138 - nodes in this community are weakly interconnected._
-- **Should `Core Shared Abstractions` be split into smaller, more focused modules?**
-  _Cohesion score 0.11806543385490754 - nodes in this community are weakly interconnected._
+- **Why does `Vec3` connect `Community 17` to `Community 5`, `Community 7`, `Community 8`, `Community 10`, `Community 13`, `Community 18`, `Community 20`, `Community 56`?**
+  _High betweenness centrality (0.023) - this node is a cross-community bridge._
+- **Why does `BroadcastEventBus` connect `Community 4` to `Community 57`?**
+  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+- **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
+  _281 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `Community 0` be split into smaller, more focused modules?**
+  _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
+- **Should `Community 1` be split into smaller, more focused modules?**
+  _Cohesion score 0.08583959899749373 - nodes in this community are weakly interconnected._
+- **Should `Community 2` be split into smaller, more focused modules?**
+  _Cohesion score 0.06693803708729082 - nodes in this community are weakly interconnected._
+- **Should `Community 3` be split into smaller, more focused modules?**
+  _Cohesion score 0.07756813417190776 - nodes in this community are weakly interconnected._
