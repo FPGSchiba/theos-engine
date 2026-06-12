@@ -21,6 +21,7 @@ pub use event_bus::{ChannelHandle, Event, EventBus, EventBusExt};
 pub use kernel_context::{KernelContext, TheosService};
 pub use module::{EngineModule, ModuleDependency};
 pub use shutdown_requester::ShutdownRequester;
+pub use types::EntityId;
 pub use window_event::{KeyCode, NativeKeyCode, WindowEvent};
 pub use world_access::{Component, ComponentValue, WorldAccess, WorldAccessExt};
 

@@ -1,6 +1,8 @@
 # Theos-Engine
 
-A Rust microkernel-style game engine being built for **Tower of Theos**. The workspace follows a strict-DAG crate graph: foundation (`theos-shared`, `theos-math`), kernel (`theos-core` — service locator, event bus, module lifecycle), in-process subsystems (`theos-ecs`, `theos-render`, `theos-physics`, `theos-ai`, `theos-assets`, `theos-window`), a Tier-1 plugin boundary (`theos-plugin-api`, `theos-plugin-loader`, `theos-scripting`), and three apps (`theos-launcher`, `theos-editor`, `theos-game`). Design discipline: minimal kernel, composable modules via service locator + typed event bus, and isolation of expensive work (async I/O, AI inference) onto dedicated runtimes so the frame loop stays predictable.
+A Rust microkernel-style game engine being built for **Tower of Theos**. The workspace follows a strict-DAG crate graph: foundation (`theos-shared`), kernel (`theos-core` — service locator, event bus, module lifecycle), in-process subsystems (`theos-ecs`, `theos-render`, `theos-physics`, `theos-ai`, `theos-assets`, `theos-window`, `theos-magic`), a Tier-1 plugin boundary (`theos-plugin-api`, `theos-plugin-loader`, `theos-scripting`), and three apps (`theos-launcher`, `theos-editor`, `theos-game`). Design discipline: minimal kernel, composable modules via service locator + typed event bus, and isolation of expensive work (async I/O, AI inference) onto dedicated runtimes so the frame loop stays predictable.
+
+**Math:** `glam` (the library Bevy uses) is the engine's canonical, SIMD-accelerated math vocabulary — use `glam` types directly in public APIs. `theos-math` is a **retired** training artifact; do not depend on it in new code. (Decision 2026-06-12, THEOS-148.)
 
 **Architecture spec:** [Theos-Engine Microkernel Architecture v2](https://firephoenixgames.atlassian.net/wiki/spaces/TOT/pages/116785153)  
 **Jira project:** [THEOS](https://firephoenixgames.atlassian.net/browse/THEOS)

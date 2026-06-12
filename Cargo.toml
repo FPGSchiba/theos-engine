@@ -2,7 +2,7 @@
 resolver = "2"
 members = [
     "theos-shared", "theos-math",
-    "theos-core", "theos-ecs", "theos-assets", "theos-render", "theos-physics", "theos-ai", "theos-scripting",
+    "theos-core", "theos-ecs", "theos-assets", "theos-render", "theos-physics", "theos-ai", "theos-magic", "theos-scripting",
     "theos-window",
     "theos-plugin-api", "theos-plugin-loader",
     "theos-launcher", "theos-editor", "theos-game"
@@ -22,6 +22,7 @@ theos-assets        = { path = "theos-assets" }
 theos-render        = { path = "theos-render" }
 theos-physics       = { path = "theos-physics" }
 theos-ai            = { path = "theos-ai" }
+theos-magic         = { path = "theos-magic" }
 theos-scripting     = { path = "theos-scripting" }
 theos-window        = { path = "theos-window" }
 theos-plugin-api    = { path = "theos-plugin-api" }
@@ -35,7 +36,7 @@ parking_lot         = "0.12"
 semver              = "1"
 ctrlc               = "3"
 # --- Math & POD casting ---
-glam                = "0.27"
+glam                = "0.33"
 bytemuck            = { version = "1", features = ["derive"] }
 # --- ECS & Assets ---
 hecs                = "0.10"

@@ -1,16 +1,16 @@
 # Graph Report - theos-engine  (2026-06-12)
 
 ## Corpus Check
-- 71 files · ~48,926 words
+- 78 files · ~52,280 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1336 nodes · 2657 edges · 79 communities (60 shown, 19 thin omitted)
+- 1428 nodes · 2819 edges · 84 communities (64 shown, 20 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 35 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e14bc1a5`
+- Built from commit: `57f5b432`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -87,6 +87,12 @@
 - [[_COMMUNITY_Community 73|Community 73]]
 - [[_COMMUNITY_Community 74|Community 74]]
 - [[_COMMUNITY_Community 75|Community 75]]
+- [[_COMMUNITY_Community 78|Community 78]]
+- [[_COMMUNITY_Community 79|Community 79]]
+- [[_COMMUNITY_Community 80|Community 80]]
+- [[_COMMUNITY_Community 81|Community 81]]
+- [[_COMMUNITY_Community 82|Community 82]]
+- [[_COMMUNITY_Community 83|Community 83]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 60 edges
@@ -95,10 +101,10 @@
 4. `Vec2` - 39 edges
 5. `TheosKernel` - 35 edges
 6. `Aabb` - 32 edges
-7. `KernelContext` - 19 edges
-8. `TimingModule` - 17 edges
-9. `Quat` - 17 edges
-10. `KernelError` - 15 edges
+7. `ChakraState` - 23 edges
+8. `Chakras` - 23 edges
+9. `KernelContext` - 19 edges
+10. `TimingModule` - 17 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Type-Erased EventBus via ChannelHandle adapter` --semantically_similar_to--> `Service Locator encapsulated in KernelContext`  [INFERRED] [semantically similar]
@@ -127,12 +133,12 @@
 - 1-file cycle: `theos-window/src/event_translator.rs -> theos-window/src/event_translator.rs`
 - 1-file cycle: `theos-core/tests/kernel_integration.rs -> theos-core/tests/kernel_integration.rs`
 - 1-file cycle: `theos-ecs/src/testkit.rs -> theos-ecs/src/testkit.rs`
-- 1-file cycle: `theos-shared/src/world_access.rs -> theos-shared/src/world_access.rs`
-- 1-file cycle: `theos-shared/src/error.rs -> theos-shared/src/error.rs`
 - 1-file cycle: `theos-launcher/src/close_to_exit.rs -> theos-launcher/src/close_to_exit.rs`
 - 1-file cycle: `theos-launcher/src/escape_to_quit.rs -> theos-launcher/src/escape_to_quit.rs`
 - 1-file cycle: `theos-window/src/key_translate.rs -> theos-window/src/key_translate.rs`
 - 1-file cycle: `theos-launcher/tests/log_filtering.rs -> theos-launcher/tests/log_filtering.rs`
+- 1-file cycle: `theos-launcher/tests/log_format.rs -> theos-launcher/tests/log_format.rs`
+- 1-file cycle: `theos-magic/src/chakra.rs -> theos-magic/src/chakra.rs`
 
 ## Hyperedges (group relationships)
 - **SIMD-aligned math types (Vec2, Vec3, Vec4) forming the GPU-ready math foundation** — src_vec_vec2, src_vec_vec3, src_vec_vec4, concept_simd_alignment_16byte [EXTRACTED 0.95]
@@ -145,7 +151,7 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (79 total, 19 thin omitted)
+## Communities (84 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.08
@@ -205,7 +211,7 @@ Nodes (17): Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_or
 
 ### Community 14 - "Community 14"
 Cohesion: 0.12
-Nodes (27): AtomicU64, ComponentValue, EntityId, EntityMap, component_ids_lists_inserted_component_types(), contains_is_true_for_spawned_entity(), despawn_removes_entity_and_its_components(), get_errors_with_component_not_found_when_component_absent() (+19 more)
+Nodes (28): AtomicU64, ComponentValue, EntityId, EntityMap, component_ids_lists_inserted_component_types(), contains_is_true_for_spawned_entity(), despawn_removes_entity_and_its_components(), get_errors_with_component_not_found_when_component_absent() (+20 more)
 
 ### Community 15 - "Community 15"
 Cohesion: 0.04
@@ -217,7 +223,7 @@ Nodes (17): Service Locator pattern for engine subsystem registry, RwLock, Servi
 
 ### Community 17 - "Community 17"
 Cohesion: 0.16
-Nodes (13): Add, 16-byte SIMD alignment for GPU/SIMD compatibility, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32> (+5 more)
+Nodes (12): 16-byte SIMD alignment for GPU/SIMD compatibility, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32>, Vec3 (+4 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.16
@@ -285,7 +291,7 @@ Nodes (23): CloseToExitModule, make_initialised_close_module(), tick_ignores_key
 
 ### Community 56 - "Community 56"
 Cohesion: 0.09
-Nodes (20): AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, Div, DivAssign, f32x4, theos-math lib (public API re-exports), Mat4 * Vec4 (+12 more)
+Nodes (21): Add, AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, Div, DivAssign, f32x4, theos-math lib (public API re-exports) (+13 more)
 
 ### Community 57 - "Community 57"
 Cohesion: 0.12
@@ -359,20 +365,40 @@ Nodes (4): AiBrain, PendingAiResponse, Component, String
 Cohesion: 0.67
 Nodes (3): full_lifecycle_emits_expected_log_sequence(), strip_ansi(), String
 
+### Community 78 - "Community 78"
+Cohesion: 0.10
+Nodes (19): ElementKind, Attunement, Chakra, chakra_state_round_trips_through_json(), Chakras, chakras_default_is_unattuned_and_balanced(), ChakraState, from_array_preserves_canonical_order() (+11 more)
+
+### Community 79 - "Community 79"
+Cohesion: 0.14
+Nodes (9): element_field_round_trips_through_json(), ElementField, ElementKind, uniform_sets_every_element(), Index, IndexMut, Item, Iterator (+1 more)
+
+### Community 80 - "Community 80"
+Cohesion: 0.26
+Nodes (7): CompilerContext, CompilerError, HarmonicToken, DummyModality, MagicInterface, Result, Vec
+
+### Community 81 - "Community 81"
+Cohesion: 0.29
+Nodes (6): Acceptance-criteria gap table, Deferred, Locked decisions, Resolved decisions (chakra & element model), Test execution, THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam
+
+### Community 82 - "Community 82"
+Cohesion: 0.53
+Nodes (4): Chakras, ElementField, CompilerContext, EntityId
+
 ## Knowledge Gaps
-- **279 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+274 more)
+- **295 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+290 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **19 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `Vec3` connect `Community 17` to `Community 5`, `Community 7`, `Community 8`, `Community 10`, `Community 13`, `Community 18`, `Community 20`, `Community 56`?**
-  _High betweenness centrality (0.023) - this node is a cross-community bridge._
-- **Why does `BroadcastEventBus` connect `Community 4` to `Community 57`?**
-  _High betweenness centrality (0.022) - this node is a cross-community bridge._
+  _High betweenness centrality (0.018) - this node is a cross-community bridge._
+- **Why does `KeyCode` connect `Community 57` to `Community 23`?**
+  _High betweenness centrality (0.017) - this node is a cross-community bridge._
 - **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
-  _281 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _297 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**

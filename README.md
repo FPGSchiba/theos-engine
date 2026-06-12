@@ -37,7 +37,7 @@ flowchart TB
         physics[theos-physics]
         plugin_loader[theos-plugin-loader]
         plugin_api[theos-plugin-api]
-        math[theos-math]
+        magic[theos-magic]
     end
 
     subgraph Foundation
@@ -50,7 +50,7 @@ flowchart TB
     core --> assets
     core --> ai
     core --> plugin_loader
-    core --> math
+    core --> magic
 
     ai --> scripting
     ecs --> render
@@ -63,13 +63,13 @@ flowchart TB
     shared --> ai
     shared --> plugin_loader
     shared --> plugin_api
-    shared --> math
+    shared --> magic
 ```
 
 First-party Tier-1 plugin workspace:
 
 ```text
-plugins/theos-audio --> theos-plugin-api --> theos-shared + theos-math
+plugins/theos-audio --> theos-plugin-api --> theos-shared + glam
 ```
 
 ## Workspace crates
@@ -77,7 +77,8 @@ plugins/theos-audio --> theos-plugin-api --> theos-shared + theos-math
 ### Foundation
 
 - `theos-shared` (library): zero-internal-dependency shared contracts and types (`EventBus`, event taxonomy, IDs, error/result aliases, shared object-safe traits).
-- `theos-math` (library): engine math primitives and curated `glam` re-exports; isolates math/ABI concerns from other crates.
+- **Math vocabulary:** `glam` (the library Bevy uses) is the engine's canonical, SIMD-accelerated math crate, used directly across crates with the `serde`/`bytemuck` features.
+  - `theos-math` (library, **RETIRED**): an early training artifact (a thin wrapper over `glam`), kept for reference only — do not depend on it in new code. (Decision 2026-06-12, THEOS-148.)
 
 ### Kernel and subsystems
 
@@ -87,6 +88,7 @@ plugins/theos-audio --> theos-plugin-api --> theos-shared + theos-math
 - `theos-render` (library, in-process): `wgpu` rendering subsystem and render graph.
 - `theos-physics` (library, in-process): physics simulation integration and event publishing.
 - `theos-ai` (library): async AI coprocessor and two-tier RAG pipeline.
+- `theos-magic` (library, in-process): Harmonic Strings magic system — the `HarmonicToken` seam and `MagicInterface` compilation contract (M1+).
 
 ### Plugin and scripting boundaries
 
@@ -103,7 +105,7 @@ plugins/theos-audio --> theos-plugin-api --> theos-shared + theos-math
 ## Plugin workspace
 
 - `plugins/theos-audio` is a first-party Tier-1 plugin crate loaded through `theos-plugin-loader`.
-- It depends on `theos-plugin-api` and shared engine contracts (`theos-shared`, `theos-math`).
+- It depends on `theos-plugin-api` and shared engine contracts (`theos-shared`), using `glam` for math.
 
 ## Build and checks
 

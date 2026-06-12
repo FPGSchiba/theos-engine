@@ -1,0 +1,38 @@
+//! # theos-magic
+//!
+//! M1 foundation of the **Harmonic Strings** magic system (THEOS-148).
+//!
+//! This crate establishes the stable seam that all downstream magic compilation
+//! (M2 TensionGraph, M3 solving) and G2 AI prompt work build against, **before**
+//! any of that machinery exists:
+//!
+//! - [`HarmonicToken`] — the universal token vocabulary every casting interface
+//!   emits and the Core consumes.
+//! - [`MagicInterface`] — the object-safe trait each castable modality (Runes,
+//!   Martial Arts, Chanting, …) implements to parse its raw input into tokens.
+//! - [`CompilerContext`] — the per-cast context (caster, world entropy, energy,
+//!   and the caster's seven [`Chakra`] points) handed to a modality during parsing.
+//!
+//! Math uses [`glam`] directly — the engine's canonical, SIMD-accelerated math
+//! vocabulary (decision 2026-06-12; `theos-math` is retired). See the plan in
+//! `plans/THEOS-148.md`.
+//!
+//! **Scope:** types and the seam only. No graph assembly, no solving, no concrete
+//! modalities, and no gameplay behaviour (attunement growth, polarity dynamics,
+//! capacity progression) — those land in M2+.
+#![forbid(unsafe_code)]
+#![warn(missing_docs)]
+
+pub mod chakra;
+pub mod context;
+pub mod element;
+pub mod error;
+pub mod interface;
+pub mod token;
+
+pub use chakra::{Attunement, Chakra, ChakraState, Chakras, Polarity};
+pub use context::CompilerContext;
+pub use element::{ElementField, ElementKind};
+pub use error::CompilerError;
+pub use interface::MagicInterface;
+pub use token::HarmonicToken;

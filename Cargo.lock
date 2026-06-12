@@ -685,6 +685,15 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "f70749695b063ecbf6b62949ccccde2e733ec3ecbbd71d467dca4e5c6c97cca0"
 
 [[package]]
+name = "glam"
+version = "0.33.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "898f5a568a84989b6c0f8caa50a93074b97dbdc58fc6d9543157bb4562758933"
+dependencies = [
+ "serde_core",
+]
+
+[[package]]
 name = "half"
 version = "2.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -1624,12 +1633,23 @@ dependencies = [
 ]
 
 [[package]]
+name = "theos-magic"
+version = "0.1.0"
+dependencies = [
+ "glam 0.33.1",
+ "serde",
+ "serde_json",
+ "theos-shared",
+ "thiserror",
+]
+
+[[package]]
 name = "theos-math"
 version = "0.1.0"
 dependencies = [
  "bytemuck",
  "criterion 0.5.1",
- "glam",
+ "glam 0.32.1",
  "mint",
  "num-traits",
  "wide",
