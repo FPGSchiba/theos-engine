@@ -16,6 +16,7 @@
 
 use core::ops::{Index, IndexMut};
 
+use glam::Vec3;
 use serde::{Deserialize, Serialize};
 
 use crate::element::ElementKind;
@@ -61,6 +62,21 @@ impl Chakra {
     /// This chakra's index into a [`Chakras`] table (its position in [`Chakra::ALL`]).
     pub const fn index(self) -> usize {
         self as usize
+    }
+
+    /// Vertical spacing between adjacent chakra points along the body's z-axis, in
+    /// world units. A single tunable constant; swap to per-chakra values later
+    /// without touching call sites.
+    pub const SPACING: f32 = 0.2;
+
+    /// This chakra's offset from the body origin.
+    ///
+    /// Points stack along **z** in canonical order — Root lowest, Crown highest —
+    /// so the offset is `(0, 0, index * SPACING)`. A `BodyAnchor`'s node position
+    /// is `body_position + chakra.body_offset()`, making chakra positions implicit
+    /// and reproducible rather than authored per anchor.
+    pub fn body_offset(self) -> Vec3 {
+        Vec3::new(0.0, 0.0, self.index() as f32 * Self::SPACING)
     }
 }
 
@@ -228,6 +244,15 @@ mod tests {
         for (position, chakra) in Chakra::ALL.into_iter().enumerate() {
             assert_eq!(chakra.index(), position);
         }
+    }
+
+    #[test]
+    fn body_offset_stacks_along_z_by_canonical_index() {
+        assert_eq!(Chakra::Root.body_offset(), Vec3::new(0.0, 0.0, 0.0));
+        assert_eq!(
+            Chakra::Crown.body_offset(),
+            Vec3::new(0.0, 0.0, 6.0 * Chakra::SPACING)
+        );
     }
 
     #[test]

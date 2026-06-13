@@ -2,7 +2,7 @@
 
 use crate::context::CompilerContext;
 use crate::error::CompilerError;
-use crate::token::HarmonicToken;
+use crate::token::WovenToken;
 
 /// A castable magic interface (a *modality*: Runes, Martial Arts, Chanting, …).
 ///
@@ -17,15 +17,18 @@ pub trait MagicInterface {
     /// A short, stable, human-readable name for this modality (e.g. `"martial-arts"`).
     fn modality_name(&self) -> &'static str;
 
-    /// Parse `raw` modality input into harmonic tokens, appending them to `out`.
+    /// Parse `raw` modality input into woven tokens, appending them to `out`.
     ///
+    /// Each [`WovenToken`] carries both the payload and the connectivity the
+    /// modality declares (which tokens are tensioned together); the Core's
+    /// assembler later derives edge orientation from those undirected links.
     /// `ctx` supplies the caster/world state the modality may read while parsing.
     /// Returns [`CompilerError`] if the input cannot be parsed.
     fn parse_input(
         &self,
         raw: &[u8],
         ctx: &CompilerContext,
-        out: &mut Vec<HarmonicToken>,
+        out: &mut Vec<WovenToken>,
     ) -> Result<(), CompilerError>;
 }
 
@@ -44,7 +47,7 @@ mod tests {
             &self,
             _raw: &[u8],
             _ctx: &CompilerContext,
-            _out: &mut Vec<HarmonicToken>,
+            _out: &mut Vec<WovenToken>,
         ) -> Result<(), CompilerError> {
             Ok(())
         }
