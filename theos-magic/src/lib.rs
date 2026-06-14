@@ -36,8 +36,9 @@ pub use context::CompilerContext;
 pub use element::{ElementField, ElementKind};
 pub use error::CompilerError;
 pub use graph::{
-    Arena, CsrAdjacency, DEFAULT_WAVE_SPEED, Edge, GraphAssembler, Node, NodeId, TensionGraph,
-    edge_delay, edge_phase_shift,
+    Arena, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, DEFAULT_WAVE_SPEED, Edge, GraphAssembler,
+    Node, NodeId, TensionGraph, edge_delay, edge_phase_shift, injection_attenuation,
+    kinematic_source_amplitude,
 };
 pub use interface::MagicInterface;
 pub use token::{HarmonicToken, TokenId, WovenToken};

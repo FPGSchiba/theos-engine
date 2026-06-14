@@ -5,7 +5,8 @@ use super::phase::DEFAULT_WAVE_SPEED;
 use crate::error::CompilerError;
 use crate::token::WovenToken;
 use crate::{
-    Arena, CsrAdjacency, Edge, HarmonicToken, Node, NodeId, TokenId, edge_delay, edge_phase_shift,
+    Arena, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, Edge, HarmonicToken, Node, NodeId, TokenId,
+    edge_delay, edge_phase_shift, injection_attenuation, kinematic_source_amplitude,
 };
 use std::collections::{HashSet, VecDeque};
 
@@ -44,7 +45,11 @@ impl GraphAssembler {
     ///
     /// Returns a [`CompilerError`] if the stream has no injection root, a link
     /// references an unknown token, or two tokens share an id.
-    pub fn assemble(tokens: &[WovenToken], wave_speed: f32) -> Result<TensionGraph, CompilerError> {
+    pub fn assemble(
+        tokens: &[WovenToken],
+        wave_speed: f32,
+        injection_attenuation_alpha: f32,
+    ) -> Result<TensionGraph, CompilerError> {
         // Stage 0 — Index & validate. Establish each token's identity so links can
         // be resolved later; a repeated id is a `DuplicateTokenId`.
         if tokens.is_empty() {
@@ -88,7 +93,9 @@ impl GraphAssembler {
                         position,
                         frequency,
                         amplitude,
-                        phase: 0.0, // placeholder; derived in Stage 6
+                        phase: 0.0,            // placeholder; derived in Stage 6
+                        depth: 0.0, // placeholder; path length from root, derived in Stage 6
+                        output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
                     };
                     let node_id = arena.insert(node);
                     token_map[token.id.0 as usize] = Some(node_id);
@@ -102,7 +109,9 @@ impl GraphAssembler {
                         position,
                         frequency,
                         amplitude,
-                        phase: 0.0, // placeholder; derived in Stage 6
+                        phase: 0.0,            // placeholder; derived in Stage 6
+                        depth: 0.0, // placeholder; path length from root, derived in Stage 6
+                        output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
                     };
                     let node_id = arena.insert(node);
                     token_map[token.id.0 as usize] = Some(node_id);
@@ -222,12 +231,16 @@ impl GraphAssembler {
         // tree edges from the root (root phase = 0); carry a running delay and keep
         // the maximum for `critical_path_delay`.
         let mut max_delay: f32 = 0.0;
-        let mut queue: VecDeque<(NodeId, f32 /*phase so far*/, f32 /*delay so far*/)> =
-            VecDeque::new();
+        let mut queue: VecDeque<(
+            NodeId,
+            f32, /*phase so far*/
+            f32, /*delay so far*/
+            f32, /* depth */
+        )> = VecDeque::new();
 
-        queue.push_back((root, 0.0, 0.0));
+        queue.push_back((root, 0.0, 0.0, 0.0));
 
-        while let Some((id_u, phase_u, delay_u)) = queue.pop_front() {
+        while let Some((id_u, phase_u, delay_u, depth_u)) = queue.pop_front() {
             let (pos_u, freq_u) = {
                 // invariant: ids in the queue / CSR are always materialized nodes
                 let u = arena
@@ -249,6 +262,7 @@ impl GraphAssembler {
 
                 let phase_v = phase_u + edge_phase_shift(freq_u, d, wave_speed);
                 let delay_v = delay_u + edge_delay(d, wave_speed);
+                let depth_v = depth_u + d;
 
                 // invariant: ids in the queue / CSR are always materialized nodes
                 arena
@@ -256,12 +270,140 @@ impl GraphAssembler {
                     .expect("edge targets are valid")
                     .phase = phase_v;
 
+                // invariant: ids in the queue / CSR are always materialized nodes
+                arena
+                    .get_mut(edge.target)
+                    .expect("edge targets are valid")
+                    .depth = depth_v;
+
                 max_delay = max_delay.max(delay_v);
-                queue.push_back((edge.target, phase_v, delay_v));
+                queue.push_back((edge.target, phase_v, delay_v, depth_v));
             }
         }
 
-        // Stage 7 — Freeze: arena + CSR + root + critical_path_delay → TensionGraph.
+        // Stage 7 — Resolve injections (part a). Each KinematicVector splits its
+        // momentum `m·v` evenly across its resolved node targets — or the root, if
+        // none resolve (D6) — and each share is attenuated by the target's E11
+        // depth, then summed per node. Splitting (rather than full `m·v` per
+        // target) conserves total injected momentum: links redistribute the
+        // impulse, they never multiply it.
+        let mut injected_source: Vec<f32> = vec![0.0; arena.len()];
+
+        for token in tokens {
+            let HarmonicToken::KinematicVector { velocity, mass, .. } = token.token else {
+                continue;
+            };
+
+            let mut targets: Vec<NodeId> = Vec::new();
+            for &link_id in &token.links {
+                match token_map.get(link_id.0 as usize) {
+                    Some(&Some(node_id)) => targets.push(node_id),
+                    Some(&None) => {} // non-node token — deferred, contributes no target
+                    None => {
+                        return Err(CompilerError::DanglingLink {
+                            from: token.id,
+                            to: link_id,
+                        });
+                    }
+                }
+            }
+
+            // A link-less (or all-deferred) impulse falls back to the root.
+            if targets.is_empty() {
+                targets.push(root);
+            }
+
+            let share = kinematic_source_amplitude(velocity, mass) / targets.len() as f32;
+            for target in targets {
+                // invariant: a resolved target is always a materialized node
+                let depth = arena
+                    .get(target)
+                    .expect("resolved target is a live node")
+                    .depth;
+                injected_source[target.index() as usize] +=
+                    share * injection_attenuation(depth, Some(injection_attenuation_alpha));
+            }
+        }
+
+        // Stage 8 — E4 output amplitude: Aⱼ = |Σ over feeders Aₖ·e^{iφₖ}|. Each
+        // converging wave is a phasor `(Aₖ·cosφₖ, Aₖ·sinφₖ)`; a node's output
+        // amplitude is the magnitude of their sum. Every edge is oriented by depth —
+        // its lower-`(depth, slot)` endpoint feeds the higher — which is always a
+        // DAG, so this is a single forward pass with nothing to exclude. Directed
+        // feedback (runaway) is *not* modelled here; it is E6/E7's spectral radius
+        // (THEOS-150, which reads the same edges). A Source node (no feeders) seeds
+        // its own authored amplitude `Aᵢ` (E1; lore: "a Source injects a wave");
+        // every node also seeds any injection it received (Stage 7); a
+        // Router/Effector takes the superposition of its feeders.
+        let node_count = arena.len();
+        // invariant: every id below comes from `token_map` or the CSR, and assembly
+        // never removes a node, so every `arena.get(..)` here resolves (Stage 8
+        // `expect`s rely on this).
+        let node_ids: Vec<NodeId> = token_map.iter().flatten().copied().collect();
+
+        // Orient every edge by `(depth, slot)`: the lower endpoint feeds the higher.
+        // `downstream[f]` lists the nodes `f` feeds; `has_feeder` marks non-Sources.
+        let mut downstream: Vec<Vec<NodeId>> = vec![Vec::new(); node_count];
+        let mut has_feeder: Vec<bool> = vec![false; node_count];
+        for &u in &node_ids {
+            let depth_u = arena.get(u).expect("live node").depth;
+            for edge in csr.neighbors(u) {
+                let v = edge.target;
+                let depth_v = arena.get(v).expect("live node").depth;
+                let u_feeds_v = match depth_u.total_cmp(&depth_v) {
+                    std::cmp::Ordering::Less => true,
+                    std::cmp::Ordering::Greater => false,
+                    std::cmp::Ordering::Equal => u.index() < v.index(),
+                };
+                let (feeder, consumer) = if u_feeds_v { (u, v) } else { (v, u) };
+                downstream[feeder.index() as usize].push(consumer);
+                has_feeder[consumer.index() as usize] = true;
+            }
+        }
+
+        // Seed each node's phasor with its source — its injection, plus its authored
+        // `Aᵢ` iff it is a Source — entered at its own phase `φᵢ`.
+        let mut phasor: Vec<(f32, f32)> = vec![(0.0, 0.0); node_count];
+        for &id in &node_ids {
+            let slot = id.index() as usize;
+            let node = arena.get(id).expect("live node");
+            let authored = if has_feeder[slot] {
+                0.0
+            } else {
+                node.amplitude
+            };
+            let source = injected_source[slot] + authored;
+            phasor[slot] = (source * node.phase.cos(), source * node.phase.sin());
+        }
+
+        // Visit feeders before consumers (ascending depth, then slot) and push each
+        // finalised node's `Aᵤ·e^{iφᵤ}` into the nodes it feeds.
+        let mut order = node_ids;
+        order.sort_by(|a, b| {
+            let depth_a = arena.get(*a).expect("live node").depth;
+            let depth_b = arena.get(*b).expect("live node").depth;
+            depth_a
+                .total_cmp(&depth_b)
+                .then_with(|| a.index().cmp(&b.index()))
+        });
+        for id in order {
+            let slot = id.index() as usize;
+            let (re, im) = phasor[slot];
+            let amplitude = (re * re + im * im).sqrt();
+            let phase = {
+                let node = arena.get_mut(id).expect("live node");
+                node.output_amplitude = amplitude;
+                node.phase
+            };
+            let push = (amplitude * phase.cos(), amplitude * phase.sin());
+            for &consumer in &downstream[slot] {
+                let c = consumer.index() as usize;
+                phasor[c].0 += push.0;
+                phasor[c].1 += push.1;
+            }
+        }
+
+        // Stage 9 — Freeze: arena + CSR + root + critical_path_delay → TensionGraph.
         // The immutable graph is the proof assembly ran; only `&` accessors escape.
         Ok(TensionGraph {
             arena,
@@ -273,7 +415,7 @@ impl GraphAssembler {
 
     /// Assemble at [`DEFAULT_WAVE_SPEED`].
     pub fn assemble_default(tokens: &[WovenToken]) -> Result<TensionGraph, CompilerError> {
-        Self::assemble(tokens, DEFAULT_WAVE_SPEED)
+        Self::assemble(tokens, DEFAULT_WAVE_SPEED, DEFAULT_INJECTION_ATTENUATION)
     }
 }
 
@@ -309,6 +451,18 @@ mod tests {
         }
     }
 
+    fn kinematic(id: u32, velocity: f32, mass: f32, links: Vec<u32>) -> WovenToken {
+        WovenToken {
+            id: TokenId(id),
+            token: HarmonicToken::KinematicVector {
+                direction: Vec3::X,
+                velocity,
+                mass,
+            },
+            links: links.into_iter().map(TokenId).collect(),
+        }
+    }
+
     fn approx(got: f32, expected: f32) {
         assert!(
             (got - expected).abs() < 1e-5,
@@ -320,7 +474,7 @@ mod tests {
     fn errors_when_no_body_anchor_is_present() {
         let tokens = vec![spatial(0, Vec3::ZERO, vec![])];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0),
+            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
             Err(CompilerError::NoInjectionRoot)
         ));
     }
@@ -328,7 +482,7 @@ mod tests {
     #[test]
     fn errors_on_empty_token_stream() {
         assert!(matches!(
-            GraphAssembler::assemble(&[], 1.0),
+            GraphAssembler::assemble(&[], 1.0, DEFAULT_INJECTION_ATTENUATION),
             Err(CompilerError::NoTokens)
         ));
     }
@@ -340,7 +494,7 @@ mod tests {
             spatial(0, Vec3::new(1.0, 0.0, 0.0), vec![]),
         ];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0),
+            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
             Err(CompilerError::DuplicateTokenId(TokenId(0)))
         ));
     }
@@ -352,7 +506,7 @@ mod tests {
             spatial(2, Vec3::new(1.0, 0.0, 0.0), vec![]),
         ];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0),
+            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
             Err(CompilerError::NonDenseTokenIds)
         ));
     }
@@ -361,7 +515,7 @@ mod tests {
     fn errors_on_link_to_unknown_token_id() {
         let tokens = vec![body(0, Chakra::Root, Vec3::ZERO, vec![5])];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0),
+            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
             Err(CompilerError::DanglingLink {
                 from: TokenId(0),
                 to: TokenId(5),
@@ -376,7 +530,7 @@ mod tests {
             body(0, Chakra::Heart, Vec3::ZERO, vec![1]),
             body(1, Chakra::Root, Vec3::ZERO, vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0).unwrap();
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
         assert_eq!(g.root().index(), 1);
     }
 
@@ -387,7 +541,7 @@ mod tests {
             spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![2]),
             spatial(2, Vec3::new(2.0, 0.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0).unwrap();
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
         let root = g.root();
         let r = g.neighbors(root);
         assert_eq!(r.len(), 1);
@@ -408,7 +562,7 @@ mod tests {
             spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![2]),
             spatial(2, Vec3::new(0.0, 1.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0).unwrap();
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
         let back = g.adjacency.edges.iter().filter(|e| e.is_back_edge).count();
         assert_eq!(back, 1);
     }
@@ -423,7 +577,7 @@ mod tests {
             spatial(3, Vec3::new(0.0, 1.0, 0.0), vec![4]),
             spatial(4, Vec3::new(0.0, 2.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0).unwrap();
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
 
         assert_eq!(g.node_count(), 5);
         assert_eq!(g.adjacency.offsets, vec![0, 2, 3, 3, 4, 4]);
@@ -464,7 +618,7 @@ mod tests {
             spatial(4, Vec3::new(0.0, 2.0, 0.0), vec![]),
         ];
         // Returning at all proves the traversal terminates on the cycle.
-        let g = GraphAssembler::assemble(&tokens, 1.0).unwrap();
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
 
         assert_eq!(g.node_count(), 5);
         assert_eq!(g.adjacency.offsets, vec![0, 2, 3, 4, 5, 5]);
@@ -488,7 +642,7 @@ mod tests {
             spatial(2, Vec3::new(4.0, 3.0, 0.0), vec![]),
             spatial(3, Vec3::new(1.0, 0.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 2.0).unwrap();
+        let g = GraphAssembler::assemble(&tokens, 2.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
         // Longest path = (4 + 3) / 2 = 3.5, beating the short branch's 0.5.
         approx(g.critical_path_delay(), 3.5);
     }
@@ -499,6 +653,139 @@ mod tests {
         let g = GraphAssembler::assemble_default(&tokens).unwrap();
         assert_eq!(g.node_count(), 1);
         approx(g.critical_path_delay(), 0.0);
+    }
+
+    // --- THEOS-158: injection (part a) + E4 interference amplitude (part b) ---
+
+    #[test]
+    fn kinematic_vector_injects_source_amplitude_into_its_linked_node() {
+        // A KinematicVector linking to the root adds its momentum m·v = 6 to that
+        // node's source (depth 0 ⇒ no attenuation): output = authored 1 + 6 = 7.
+        let tokens = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![]),
+            kinematic(1, 3.0, 2.0, vec![0]),
+        ];
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        approx(g.node(g.root()).unwrap().output_amplitude, 7.0);
+    }
+
+    #[test]
+    fn link_less_kinematic_vector_falls_back_to_the_root() {
+        // No links ⇒ the impulse injects into the injection root (D6): same 7.0.
+        let tokens = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![]),
+            kinematic(1, 3.0, 2.0, vec![]),
+        ];
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        approx(g.node(g.root()).unwrap().output_amplitude, 7.0);
+    }
+
+    #[test]
+    fn multiple_kinematic_vectors_on_one_node_sum_their_injection() {
+        // Two impulses on the root sum: m·v = 6 and 4 ⇒ output = 1 + 10 = 11.
+        let tokens = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![]),
+            kinematic(1, 3.0, 2.0, vec![0]),
+            kinematic(2, 1.0, 4.0, vec![0]),
+        ];
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        approx(g.node(g.root()).unwrap().output_amplitude, 11.0);
+    }
+
+    #[test]
+    fn kinematic_vector_into_an_effector_is_allowed() {
+        // An Effector (only incoming edges) may receive an injection — it is not an
+        // error, and it raises that node's amplitude above the un-injected baseline.
+        let base = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+        ];
+        let mut with_injection = base.clone();
+        with_injection.push(kinematic(2, 3.0, 2.0, vec![1]));
+
+        let baseline = GraphAssembler::assemble(&base, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let injected =
+            GraphAssembler::assemble(&with_injection, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+
+        let effector = |g: &TensionGraph| g.neighbors(g.root())[0].target;
+        let before = baseline.node(effector(&baseline)).unwrap().output_amplitude;
+        let after = injected.node(effector(&injected)).unwrap().output_amplitude;
+        assert!(
+            after > before,
+            "injecting into the effector should raise its amplitude: {after} !> {before}"
+        );
+    }
+
+    #[test]
+    fn injection_attenuates_with_depth_from_the_root() {
+        // Equal impulses into a shallow node (depth 1) and a deep node (depth 3):
+        // the deeper one is attenuated more by E11, so it ends with less amplitude.
+        let tokens = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![1, 2]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            spatial(2, Vec3::new(3.0, 0.0, 0.0), vec![]),
+            kinematic(3, 3.0, 2.0, vec![1]),
+            kinematic(4, 3.0, 2.0, vec![2]),
+        ];
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let neighbors = g.neighbors(g.root());
+        let shallow = g.node(neighbors[0].target).unwrap().output_amplitude;
+        let deep = g.node(neighbors[1].target).unwrap().output_amplitude;
+        assert!(
+            shallow > deep,
+            "deeper injection should attenuate more: shallow {shallow} vs deep {deep}"
+        );
+    }
+
+    #[test]
+    fn convergent_node_amplitude_adds_when_in_phase() {
+        // Diamond: R feeds A and B (each d = 1 ⇒ φ ≡ 0 mod 2π), both feed C. The
+        // two unit waves reach C in phase, so they add to 2.
+        let tokens = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![1, 2]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![3]),
+            spatial(2, Vec3::new(0.0, 1.0, 0.0), vec![3]),
+            spatial(3, Vec3::new(1.0, 1.0, 0.0), vec![]),
+        ];
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let root = g.root();
+        let a = g.neighbors(root)[0].target;
+        let c = g.neighbors(a)[0].target;
+        approx(g.node(c).unwrap().output_amplitude, 2.0);
+    }
+
+    #[test]
+    fn convergent_node_amplitude_cancels_when_anti_phase() {
+        // B sits a half-wavelength closer than A (φ_B = π vs φ_A = 2π), so the two
+        // unit waves reach C in anti-phase and cancel to 0.
+        let tokens = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![1, 2]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![3]),
+            spatial(2, Vec3::new(0.5, 0.0, 0.0), vec![3]),
+            spatial(3, Vec3::new(1.0, 1.0, 0.0), vec![]),
+        ];
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let root = g.root();
+        let a = g.neighbors(root)[0].target;
+        let c = g.neighbors(a)[0].target;
+        approx(g.node(c).unwrap().output_amplitude, 0.0);
+    }
+
+    #[test]
+    fn two_wave_interference_matches_the_closed_form_within_tolerance() {
+        // φ_A = 2π (≡ 0), φ_B = π/2 ⇒ Δφ = π/2; closed form
+        // √(A₁² + A₂² + 2·A₁·A₂·cos Δφ) = √(1 + 1 + 0) = √2.
+        let tokens = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![1, 2]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![3]),
+            spatial(2, Vec3::new(0.25, 0.0, 0.0), vec![3]),
+            spatial(3, Vec3::new(1.0, 1.0, 0.0), vec![]),
+        ];
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let root = g.root();
+        let a = g.neighbors(root)[0].target;
+        let c = g.neighbors(a)[0].target;
+        approx(g.node(c).unwrap().output_amplitude, 2.0_f32.sqrt());
     }
 
     #[test]
@@ -517,7 +804,7 @@ mod tests {
                 links: vec![],
             },
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0).unwrap();
+        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
         assert_eq!(g.node_count(), 1); // only the anchor became a node
         assert!(g.neighbors(g.root()).is_empty()); // link to the kinematic was skipped
     }
