@@ -1,16 +1,16 @@
 # Graph Report - theos-engine  (2026-06-20)
 
 ## Corpus Check
-- 89 files · ~63,811 words
+- 90 files · ~65,057 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1608 nodes · 3180 edges · 91 communities (71 shown, 20 thin omitted)
+- 1622 nodes · 3223 edges · 93 communities (73 shown, 20 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 40 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9ec6b6de`
+- Built from commit: `3fc57487`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -100,6 +100,8 @@
 - [[_COMMUNITY_Community 88|Community 88]]
 - [[_COMMUNITY_Community 89|Community 89]]
 - [[_COMMUNITY_Community 90|Community 90]]
+- [[_COMMUNITY_Community 91|Community 91]]
+- [[_COMMUNITY_Community 92|Community 92]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 60 edges
@@ -107,11 +109,11 @@
 3. `Self` - 42 edges
 4. `Vec2` - 39 edges
 5. `TheosKernel` - 35 edges
-6. `Aabb` - 32 edges
-7. `assemble()` - 26 edges
+6. `assemble()` - 32 edges
+7. `Aabb` - 32 edges
 8. `ChakraState` - 23 edges
 9. `Chakras` - 23 edges
-10. `KernelContext` - 19 edges
+10. `approx()` - 19 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Type-Erased EventBus via ChannelHandle adapter` --semantically_similar_to--> `Service Locator encapsulated in KernelContext`  [INFERRED] [semantically similar]
@@ -158,7 +160,7 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (91 total, 20 thin omitted)
+## Communities (93 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.08
@@ -393,8 +395,8 @@ Cohesion: 0.21
 Nodes (21): approx(), band_pass_response(), band_pass_response_attenuates_off_center(), band_pass_response_is_one_at_center(), band_pass_response_never_exceeds_one(), clamp_tau_pins_huge_duration_to_max(), clamp_tau_pins_zero_duration_to_min(), clamp_tau_seconds() (+13 more)
 
 ### Community 84 - "Community 84"
-Cohesion: 0.07
-Nodes (50): Chakra, Chakras, ElementField, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), chooses_lowest_index_chakra_as_injection_root() (+42 more)
+Cohesion: 0.09
+Nodes (52): Chakra, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc(), cast_time_on_cyclic_graph_matches_manual_calc() (+44 more)
 
 ### Community 85 - "Community 85"
 Cohesion: 0.12
@@ -420,8 +422,16 @@ Nodes (7): Acceptance criteria, Coverage, Deferred / follow-ups, How the scope c
 Cohesion: 0.33
 Nodes (4): default_tau_clamp_window_is_ordered(), WeaveTuning, Default, Self
 
+### Community 91 - "Community 91"
+Cohesion: 0.48
+Nodes (5): Chakras, ElementField, CompilerContext, EntityId, WeaveTuning
+
+### Community 92 - "Community 92"
+Cohesion: 0.33
+Nodes (5): AC mapping, Deferred / out of scope, Implementation locus, Locked decisions, THEOS-156 — Cast-time from critical-path propagation delay (E13)
+
 ## Knowledge Gaps
-- **329 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+324 more)
+- **333 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+328 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -429,11 +439,11 @@ Nodes (4): default_tau_clamp_window_is_ordered(), WeaveTuning, Default, Self
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `BroadcastEventBus` connect `Community 4` to `Community 80`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **Why does `KeyCode` connect `Community 80` to `Community 23`?**
-  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+  _High betweenness centrality (0.013) - this node is a cross-community bridge._
 - **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
-  _331 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _335 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**

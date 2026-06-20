@@ -287,16 +287,18 @@ impl GraphAssembler {
         // tree edges from the root (root phase = 0); carry a running delay and keep
         // the maximum for `critical_path_delay`.
         let mut max_delay: f32 = 0.0;
+        let mut max_cast_time: f32 = 0.0;
         let mut queue: VecDeque<(
             NodeId,
             f32, /*phase so far*/
             f32, /*delay so far*/
             f32, /* depth */
+            f32, /* cast delay so far */
         )> = VecDeque::new();
 
-        queue.push_back((root, 0.0, 0.0, 0.0));
+        queue.push_back((root, 0.0, 0.0, 0.0, 0.0));
 
-        while let Some((id_u, phase_u, delay_u, depth_u)) = queue.pop_front() {
+        while let Some((id_u, phase_u, delay_u, depth_u, cast_delay_u)) = queue.pop_front() {
             let (pos_u, freq_u) = {
                 // invariant: ids in the queue / CSR are always materialized nodes
                 let u = arena
@@ -316,9 +318,22 @@ impl GraphAssembler {
                     .position;
                 let d = (pos_u - pos_v).length();
 
+                let geometric_delay = edge_delay(d, wave_speed);
+                // E13 cast-time: charge `v`'s dominant-band filter delay, keyed at the
+                // feeder frequency `freq_u` (mirrors the E4 throughput application).
+                // invariant: ids in the queue / CSR are always materialized nodes
+                let filter_delay = filter_bank_response(
+                    &arena
+                        .get(edge.target)
+                        .expect("edge targets are valid")
+                        .transfers,
+                    freq_u,
+                )
+                .1;
                 let phase_v = phase_u + edge_phase_shift(freq_u, d, wave_speed);
-                let delay_v = delay_u + edge_delay(d, wave_speed);
+                let delay_v = delay_u + geometric_delay;
                 let depth_v = depth_u + d;
+                let cast_delay_v = cast_delay_u + geometric_delay + filter_delay;
 
                 // invariant: ids in the queue / CSR are always materialized nodes
                 arena
@@ -333,7 +348,8 @@ impl GraphAssembler {
                     .depth = depth_v;
 
                 max_delay = max_delay.max(delay_v);
-                queue.push_back((edge.target, phase_v, delay_v, depth_v));
+                max_cast_time = max_cast_time.max(cast_delay_v);
+                queue.push_back((edge.target, phase_v, delay_v, depth_v, cast_delay_v));
             }
         }
 
@@ -471,6 +487,7 @@ impl GraphAssembler {
             adjacency: csr,
             root,
             critical_path_delay: max_delay,
+            cast_time: max_cast_time,
         })
     }
 
@@ -1113,5 +1130,133 @@ mod tests {
             delayed_out < base_out - 1.0,
             "the π delay should sharply cut the convergent amplitude: base {base_out}, delayed {delayed_out}"
         );
+    }
+
+    // --- THEOS-156: cast-time (E13) ---
+
+    /// The dominant-band delay a single `temporal(_, 1.0, 1000, _)` charges a crossing
+    /// feeder under default tuning: `clamp(1000/1000, τ_min, τ_max) = 1.0 s`.
+    fn unit_transfer_delay() -> f32 {
+        TemporalTransfer::from_token(1.0, 1000, &CompilerContext::default().weave_tuning).delay_s
+    }
+
+    #[test]
+    fn cast_time_equals_critical_path_delay_when_no_transfers_present() {
+        // With no transfers anywhere, the filter term is 0 on every node, so cast-time
+        // collapses to the purely geometric critical-path delay (the THEOS-149 diamond).
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1, 3]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![2]),
+            spatial(2, Vec3::new(1.0, 1.0, 0.0), vec![]),
+            spatial(3, Vec3::new(0.0, 1.0, 0.0), vec![4]),
+            spatial(4, Vec3::new(0.0, 2.0, 0.0), vec![]),
+        ]);
+        approx(g.cast_time(), g.critical_path_delay());
+        approx(g.cast_time(), 2.0);
+    }
+
+    #[test]
+    fn cast_time_on_acyclic_graph_matches_manual_calc() {
+        // Linear chain root→1→2 (each edge d = 1, c = 1) with a transfer on the leaf.
+        // Manual: into 1 = 1 + 0; into 2 = (1) + 1 (edge) + 1.0 (leaf filter) = 3.0.
+        // Geometry alone is 2.0, so the filter term contributes the extra second.
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![2]),
+            spatial(2, Vec3::new(2.0, 0.0, 0.0), vec![]),
+            temporal(3, 1.0, 1000, vec![2]),
+        ]);
+        approx(g.critical_path_delay(), 2.0);
+        approx(g.cast_time(), 2.0 + unit_transfer_delay());
+    }
+
+    #[test]
+    fn cast_time_on_cyclic_graph_matches_manual_calc() {
+        // The THEOS-149 cyclic diamond plus a transfer on node 2 (on the tree path
+        // 0→1→2). The 2→4 link is a back-edge and is skipped in the delay pass, so the
+        // filter is charged exactly once along 0→1→2: cast = 2.0 geometry + 1.0 filter.
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1, 3]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![2]),
+            spatial(2, Vec3::new(1.0, 1.0, 0.0), vec![4]),
+            spatial(3, Vec3::new(0.0, 1.0, 0.0), vec![4]),
+            spatial(4, Vec3::new(0.0, 2.0, 0.0), vec![]),
+            temporal(5, 1.0, 1000, vec![2]),
+        ]);
+        approx(g.critical_path_delay(), 2.0);
+        approx(g.cast_time(), 2.0 + unit_transfer_delay());
+    }
+
+    #[test]
+    fn transfer_on_critical_path_extends_cast_time_beyond_geometric() {
+        // The centerpiece (AC2): the same graph with and without a transfer on the
+        // critical path. Geometry is identical; cast-time grows by exactly the
+        // transfer's dominant-band delay.
+        let base = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+        ];
+        let mut with_transfer = base.clone();
+        with_transfer.push(temporal(2, 1.0, 1000, vec![1]));
+
+        let g_base = assemble(&base);
+        let g_transfer = assemble(&with_transfer);
+
+        approx(g_base.cast_time(), g_base.critical_path_delay());
+        approx(
+            g_transfer.critical_path_delay(),
+            g_base.critical_path_delay(),
+        );
+        approx(
+            g_transfer.cast_time() - g_base.cast_time(),
+            unit_transfer_delay(),
+        );
+        assert!(
+            g_transfer.cast_time() > g_base.cast_time(),
+            "a transfer on the critical path must extend cast-time: {} !> {}",
+            g_transfer.cast_time(),
+            g_base.cast_time()
+        );
+    }
+
+    #[test]
+    fn transfer_off_critical_path_does_not_extend_cast_time() {
+        // Long branch 0→1 (d = 5) sets the critical path. The short branch 0→2 (d = 1)
+        // carries a transfer, but 1.0 + 1.0 = 2.0 stays well under the long branch's
+        // 5.0, so cast-time still tracks the geometric critical path unchanged.
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1, 2]),
+            spatial(1, Vec3::new(5.0, 0.0, 0.0), vec![]),
+            spatial(2, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            temporal(3, 1.0, 1000, vec![2]),
+        ]);
+        approx(g.critical_path_delay(), 5.0);
+        approx(g.cast_time(), 5.0);
+    }
+
+    #[test]
+    fn root_transfer_does_not_contribute_to_cast_time() {
+        // A link-less temporal falls back onto the root (D2). The root is never crossed
+        // into, so its transfer adds nothing — cast-time matches the transfer-free graph.
+        let plain = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+        ]);
+        let root_transfer = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            temporal(2, 1.0, 1000, vec![]),
+        ]);
+        // The transfer really did land on the root...
+        assert_eq!(
+            root_transfer
+                .node(root_transfer.root())
+                .unwrap()
+                .transfers
+                .len(),
+            1
+        );
+        // ...yet it leaves cast-time untouched.
+        approx(root_transfer.cast_time(), plain.cast_time());
     }
 }

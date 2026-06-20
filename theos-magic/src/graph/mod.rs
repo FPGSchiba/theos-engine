@@ -78,6 +78,9 @@ pub struct TensionGraph {
     pub(crate) adjacency: CsrAdjacency,
     pub(crate) root: NodeId,
     pub(crate) critical_path_delay: f32,
+    /// Cast-time (E13) — geometry + temporal-transfer settling delay.
+    /// See [`TensionGraph::cast_time`].
+    pub(crate) cast_time: f32,
 }
 
 impl TensionGraph {
@@ -108,5 +111,18 @@ impl TensionGraph {
     /// (THEOS-156). Data only — no cast-time mechanic lives here.
     pub fn critical_path_delay(&self) -> f32 {
         self.critical_path_delay
+    }
+
+    /// Cast-time (E13): the critical-path **settling** delay — the longest root→leaf
+    /// path where each edge contributes its geometric delay (`τ = d/c`, E2) and each
+    /// crossed node contributes its dominant-band temporal-transfer delay (E12), keyed
+    /// at the feeder frequency of the crossing wave.
+    ///
+    /// Derived at assembly, read-only after — the same lifecycle as
+    /// [`Self::critical_path_delay`] and [`Node::phase`]. Caster-independent and
+    /// intrinsic to the locked graph; the energy-throughput floor (Option B,
+    /// THEOS-173) is deliberately **not** folded in here.
+    pub fn cast_time(&self) -> f32 {
+        self.cast_time
     }
 }

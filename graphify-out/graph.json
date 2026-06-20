@@ -4730,7 +4730,7 @@
       "source_file": "theos-magic/src/context.rs",
       "source_location": "L1",
       "id": "src_context",
-      "community": 84,
+      "community": 91,
       "norm_label": "context.rs"
     },
     {
@@ -4739,7 +4739,7 @@
       "source_file": "theos-magic/src/context.rs",
       "source_location": "L17",
       "id": "src_context_compilercontext",
-      "community": 84,
+      "community": 91,
       "norm_label": "compilercontext"
     },
     {
@@ -4748,7 +4748,7 @@
       "source_file": "theos-magic/src/context.rs",
       "source_location": "L19",
       "id": "theos_magic_src_context_rs_entityid",
-      "community": 84,
+      "community": 91,
       "norm_label": "entityid"
     },
     {
@@ -4757,7 +4757,7 @@
       "source_file": "theos-magic/src/context.rs",
       "source_location": "L26",
       "id": "elementfield",
-      "community": 84,
+      "community": 91,
       "norm_label": "elementfield"
     },
     {
@@ -4766,7 +4766,7 @@
       "source_file": "theos-magic/src/context.rs",
       "source_location": "L30",
       "id": "chakras",
-      "community": 84,
+      "community": 91,
       "norm_label": "chakras"
     },
     {
@@ -4775,7 +4775,7 @@
       "source_file": "theos-magic/src/context.rs",
       "source_location": "L35",
       "id": "theos_magic_src_context_rs_weavetuning",
-      "community": 84,
+      "community": 91,
       "norm_label": "weavetuning"
     },
     {
@@ -4784,7 +4784,7 @@
       "source_file": "theos-magic/src/context.rs",
       "source_location": "L44",
       "id": "src_context_default_context_has_seven_chakras_zero_caster_and_empty_field",
-      "community": 84,
+      "community": 91,
       "norm_label": "default_context_has_seven_chakras_zero_caster_and_empty_field()"
     },
     {
@@ -5313,7 +5313,7 @@
       "label": ".assemble_default()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L478",
+      "source_location": "L492",
       "id": "graph_assembler_graphassembler_assemble_default",
       "community": 84,
       "norm_label": ".assemble_default()"
@@ -5322,7 +5322,7 @@
       "label": "body()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L495",
+      "source_location": "L509",
       "id": "graph_assembler_body",
       "community": 84,
       "norm_label": "body()"
@@ -5331,7 +5331,7 @@
       "label": "Chakra",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L495",
+      "source_location": "L509",
       "id": "chakra",
       "community": 84,
       "norm_label": "chakra"
@@ -5340,7 +5340,7 @@
       "label": "Vec3",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L495",
+      "source_location": "L509",
       "id": "theos_magic_src_graph_assembler_rs_vec3",
       "community": 84,
       "norm_label": "vec3"
@@ -5349,7 +5349,7 @@
       "label": "Vec",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L495",
+      "source_location": "L509",
       "id": "theos_magic_src_graph_assembler_rs_vec",
       "community": 84,
       "norm_label": "vec"
@@ -5358,7 +5358,7 @@
       "label": "spatial()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L508",
+      "source_location": "L522",
       "id": "graph_assembler_spatial",
       "community": 84,
       "norm_label": "spatial()"
@@ -5367,7 +5367,7 @@
       "label": "kinematic()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L520",
+      "source_location": "L534",
       "id": "graph_assembler_kinematic",
       "community": 84,
       "norm_label": "kinematic()"
@@ -5376,7 +5376,7 @@
       "label": "temporal()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L532",
+      "source_location": "L546",
       "id": "graph_assembler_temporal",
       "community": 84,
       "norm_label": "temporal()"
@@ -5385,7 +5385,7 @@
       "label": "approx()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L543",
+      "source_location": "L557",
       "id": "graph_assembler_approx",
       "community": 84,
       "norm_label": "approx()"
@@ -5394,7 +5394,7 @@
       "label": "errors_when_no_body_anchor_is_present()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L551",
+      "source_location": "L565",
       "id": "graph_assembler_errors_when_no_body_anchor_is_present",
       "community": 84,
       "norm_label": "errors_when_no_body_anchor_is_present()"
@@ -5403,7 +5403,7 @@
       "label": "errors_on_empty_token_stream()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L565",
+      "source_location": "L579",
       "id": "graph_assembler_errors_on_empty_token_stream",
       "community": 84,
       "norm_label": "errors_on_empty_token_stream()"
@@ -5412,7 +5412,7 @@
       "label": "errors_on_duplicate_token_id()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L578",
+      "source_location": "L592",
       "id": "graph_assembler_errors_on_duplicate_token_id",
       "community": 84,
       "norm_label": "errors_on_duplicate_token_id()"
@@ -5421,7 +5421,7 @@
       "label": "errors_on_non_dense_token_ids()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L595",
+      "source_location": "L609",
       "id": "graph_assembler_errors_on_non_dense_token_ids",
       "community": 84,
       "norm_label": "errors_on_non_dense_token_ids()"
@@ -5430,7 +5430,7 @@
       "label": "errors_on_link_to_unknown_token_id()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L612",
+      "source_location": "L626",
       "id": "graph_assembler_errors_on_link_to_unknown_token_id",
       "community": 84,
       "norm_label": "errors_on_link_to_unknown_token_id()"
@@ -5439,7 +5439,7 @@
       "label": "chooses_lowest_index_chakra_as_injection_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L629",
+      "source_location": "L643",
       "id": "graph_assembler_chooses_lowest_index_chakra_as_injection_root",
       "community": 84,
       "norm_label": "chooses_lowest_index_chakra_as_injection_root()"
@@ -5448,7 +5448,7 @@
       "label": "orients_edges_outward_from_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L646",
+      "source_location": "L660",
       "id": "graph_assembler_orients_edges_outward_from_the_root",
       "community": 84,
       "norm_label": "orients_edges_outward_from_the_root()"
@@ -5457,7 +5457,7 @@
       "label": "flags_cycle_inducing_edges_as_back_edges()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L672",
+      "source_location": "L686",
       "id": "graph_assembler_flags_cycle_inducing_edges_as_back_edges",
       "community": 84,
       "norm_label": "flags_cycle_inducing_edges_as_back_edges()"
@@ -5466,7 +5466,7 @@
       "label": "five_node_acyclic_phase_matches_manual_calc_within_tolerance()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L691",
+      "source_location": "L705",
       "id": "graph_assembler_five_node_acyclic_phase_matches_manual_calc_within_tolerance",
       "community": 84,
       "norm_label": "five_node_acyclic_phase_matches_manual_calc_within_tolerance()"
@@ -5475,7 +5475,7 @@
       "label": "five_node_cyclic_terminates_and_phase_matches_within_tolerance()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L737",
+      "source_location": "L751",
       "id": "graph_assembler_five_node_cyclic_terminates_and_phase_matches_within_tolerance",
       "community": 84,
       "norm_label": "five_node_cyclic_terminates_and_phase_matches_within_tolerance()"
@@ -5484,7 +5484,7 @@
       "label": "critical_path_delay_equals_longest_root_to_leaf_over_wave_speed()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L769",
+      "source_location": "L783",
       "id": "graph_assembler_critical_path_delay_equals_longest_root_to_leaf_over_wave_speed",
       "community": 84,
       "norm_label": "critical_path_delay_equals_longest_root_to_leaf_over_wave_speed()"
@@ -5493,7 +5493,7 @@
       "label": "assemble_default_uses_the_default_wave_speed()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L789",
+      "source_location": "L803",
       "id": "graph_assembler_assemble_default_uses_the_default_wave_speed",
       "community": 84,
       "norm_label": "assemble_default_uses_the_default_wave_speed()"
@@ -5502,7 +5502,7 @@
       "label": "kinematic_vector_injects_source_amplitude_into_its_linked_node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L799",
+      "source_location": "L813",
       "id": "graph_assembler_kinematic_vector_injects_source_amplitude_into_its_linked_node",
       "community": 84,
       "norm_label": "kinematic_vector_injects_source_amplitude_into_its_linked_node()"
@@ -5511,7 +5511,7 @@
       "label": "link_less_kinematic_vector_falls_back_to_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L817",
+      "source_location": "L831",
       "id": "graph_assembler_link_less_kinematic_vector_falls_back_to_the_root",
       "community": 84,
       "norm_label": "link_less_kinematic_vector_falls_back_to_the_root()"
@@ -5520,7 +5520,7 @@
       "label": "multiple_kinematic_vectors_on_one_node_sum_their_injection()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L834",
+      "source_location": "L848",
       "id": "graph_assembler_multiple_kinematic_vectors_on_one_node_sum_their_injection",
       "community": 84,
       "norm_label": "multiple_kinematic_vectors_on_one_node_sum_their_injection()"
@@ -5529,7 +5529,7 @@
       "label": "kinematic_vector_into_an_effector_is_allowed()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L852",
+      "source_location": "L866",
       "id": "graph_assembler_kinematic_vector_into_an_effector_is_allowed",
       "community": 84,
       "norm_label": "kinematic_vector_into_an_effector_is_allowed()"
@@ -5538,7 +5538,7 @@
       "label": "injection_attenuates_with_depth_from_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L879",
+      "source_location": "L893",
       "id": "graph_assembler_injection_attenuates_with_depth_from_the_root",
       "community": 84,
       "norm_label": "injection_attenuates_with_depth_from_the_root()"
@@ -5547,7 +5547,7 @@
       "label": "convergent_node_amplitude_adds_when_in_phase()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L906",
+      "source_location": "L920",
       "id": "graph_assembler_convergent_node_amplitude_adds_when_in_phase",
       "community": 84,
       "norm_label": "convergent_node_amplitude_adds_when_in_phase()"
@@ -5556,7 +5556,7 @@
       "label": "convergent_node_amplitude_cancels_when_anti_phase()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L929",
+      "source_location": "L943",
       "id": "graph_assembler_convergent_node_amplitude_cancels_when_anti_phase",
       "community": 84,
       "norm_label": "convergent_node_amplitude_cancels_when_anti_phase()"
@@ -5565,7 +5565,7 @@
       "label": "two_wave_interference_matches_the_closed_form_within_tolerance()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L952",
+      "source_location": "L966",
       "id": "graph_assembler_two_wave_interference_matches_the_closed_form_within_tolerance",
       "community": 84,
       "norm_label": "two_wave_interference_matches_the_closed_form_within_tolerance()"
@@ -5574,7 +5574,7 @@
       "label": "non_node_tokens_and_their_links_are_skipped()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L975",
+      "source_location": "L989",
       "id": "graph_assembler_non_node_tokens_and_their_links_are_skipped",
       "community": 84,
       "norm_label": "non_node_tokens_and_their_links_are_skipped()"
@@ -5583,7 +5583,7 @@
       "label": "assemble()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1003",
+      "source_location": "L1017",
       "id": "graph_assembler_assemble",
       "community": 84,
       "norm_label": "assemble()"
@@ -5592,7 +5592,7 @@
       "label": "temporal_frequency_attaches_a_transfer_to_its_linked_node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1014",
+      "source_location": "L1028",
       "id": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
       "community": 84,
       "norm_label": "temporal_frequency_attaches_a_transfer_to_its_linked_node()"
@@ -5601,7 +5601,7 @@
       "label": "link_less_temporal_frequency_attaches_to_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1027",
+      "source_location": "L1041",
       "id": "graph_assembler_link_less_temporal_frequency_attaches_to_the_root",
       "community": 84,
       "norm_label": "link_less_temporal_frequency_attaches_to_the_root()"
@@ -5610,7 +5610,7 @@
       "label": "temporal_frequency_does_not_increase_node_count()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1037",
+      "source_location": "L1051",
       "id": "graph_assembler_temporal_frequency_does_not_increase_node_count",
       "community": 84,
       "norm_label": "temporal_frequency_does_not_increase_node_count()"
@@ -5619,7 +5619,7 @@
       "label": "stacked_temporal_transfers_accumulate_on_one_node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1048",
+      "source_location": "L1062",
       "id": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node",
       "community": 84,
       "norm_label": "stacked_temporal_transfers_accumulate_on_one_node()"
@@ -5628,7 +5628,7 @@
       "label": "in_band_feeder_passes_largely_unattenuated()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1060",
+      "source_location": "L1074",
       "id": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
       "community": 84,
       "norm_label": "in_band_feeder_passes_largely_unattenuated()"
@@ -5637,7 +5637,7 @@
       "label": "out_of_band_feeder_is_attenuated()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1073",
+      "source_location": "L1087",
       "id": "graph_assembler_out_of_band_feeder_is_attenuated",
       "community": 84,
       "norm_label": "out_of_band_feeder_is_attenuated()"
@@ -5646,10 +5646,73 @@
       "label": "transfer_adds_delay_phase_to_a_crossing_feeder()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1087",
+      "source_location": "L1101",
       "id": "graph_assembler_transfer_adds_delay_phase_to_a_crossing_feeder",
       "community": 84,
       "norm_label": "transfer_adds_delay_phase_to_a_crossing_feeder()"
+    },
+    {
+      "label": "unit_transfer_delay()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1136",
+      "id": "graph_assembler_unit_transfer_delay",
+      "community": 84,
+      "norm_label": "unit_transfer_delay()"
+    },
+    {
+      "label": "cast_time_equals_critical_path_delay_when_no_transfers_present()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1141",
+      "id": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
+      "community": 84,
+      "norm_label": "cast_time_equals_critical_path_delay_when_no_transfers_present()"
+    },
+    {
+      "label": "cast_time_on_acyclic_graph_matches_manual_calc()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1156",
+      "id": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
+      "community": 84,
+      "norm_label": "cast_time_on_acyclic_graph_matches_manual_calc()"
+    },
+    {
+      "label": "cast_time_on_cyclic_graph_matches_manual_calc()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1171",
+      "id": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
+      "community": 84,
+      "norm_label": "cast_time_on_cyclic_graph_matches_manual_calc()"
+    },
+    {
+      "label": "transfer_on_critical_path_extends_cast_time_beyond_geometric()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1188",
+      "id": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
+      "community": 84,
+      "norm_label": "transfer_on_critical_path_extends_cast_time_beyond_geometric()"
+    },
+    {
+      "label": "transfer_off_critical_path_does_not_extend_cast_time()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1220",
+      "id": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
+      "community": 84,
+      "norm_label": "transfer_off_critical_path_does_not_extend_cast_time()"
+    },
+    {
+      "label": "root_transfer_does_not_contribute_to_cast_time()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1235",
+      "id": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
+      "community": 84,
+      "norm_label": "root_transfer_does_not_contribute_to_cast_time()"
     },
     {
       "label": "csr.rs",
@@ -5907,7 +5970,7 @@
       "label": ".root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L86",
+      "source_location": "L89",
       "id": "graph_mod_tensiongraph_root",
       "community": 85,
       "norm_label": ".root()"
@@ -5916,7 +5979,7 @@
       "label": ".node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L91",
+      "source_location": "L94",
       "id": "graph_mod_tensiongraph_node",
       "community": 85,
       "norm_label": ".node()"
@@ -5925,7 +5988,7 @@
       "label": "Option",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L91",
+      "source_location": "L94",
       "id": "theos_magic_src_graph_mod_rs_option",
       "community": 85,
       "norm_label": "option"
@@ -5934,7 +5997,7 @@
       "label": ".neighbors()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L96",
+      "source_location": "L99",
       "id": "graph_mod_tensiongraph_neighbors",
       "community": 85,
       "norm_label": ".neighbors()"
@@ -5943,7 +6006,7 @@
       "label": "Edge",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L96",
+      "source_location": "L99",
       "id": "edge",
       "community": 85,
       "norm_label": "edge"
@@ -5952,7 +6015,7 @@
       "label": ".node_count()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L101",
+      "source_location": "L104",
       "id": "graph_mod_tensiongraph_node_count",
       "community": 85,
       "norm_label": ".node_count()"
@@ -5961,10 +6024,19 @@
       "label": ".critical_path_delay()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L109",
+      "source_location": "L112",
       "id": "graph_mod_tensiongraph_critical_path_delay",
       "community": 85,
       "norm_label": ".critical_path_delay()"
+    },
+    {
+      "label": ".cast_time()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/mod.rs",
+      "source_location": "L125",
+      "id": "graph_mod_tensiongraph_cast_time",
+      "community": 85,
+      "norm_label": ".cast_time()"
     },
     {
       "label": "phase.rs",
@@ -11626,6 +11698,60 @@
       "id": "plans_theos_15_out_of_scope_deferred",
       "community": 61,
       "norm_label": "out of scope (deferred)"
+    },
+    {
+      "label": "THEOS-156.md",
+      "file_type": "document",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L1",
+      "id": "plans_theos_156",
+      "community": 92,
+      "norm_label": "theos-156.md"
+    },
+    {
+      "label": "THEOS-156 \u2014 Cast-time from critical-path propagation delay (E13)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L1",
+      "id": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
+      "community": 92,
+      "norm_label": "theos-156 \u2014 cast-time from critical-path propagation delay (e13)"
+    },
+    {
+      "label": "Locked decisions",
+      "file_type": "document",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L18",
+      "id": "plans_theos_156_locked_decisions",
+      "community": 92,
+      "norm_label": "locked decisions"
+    },
+    {
+      "label": "Implementation locus",
+      "file_type": "document",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L27",
+      "id": "plans_theos_156_implementation_locus",
+      "community": 92,
+      "norm_label": "implementation locus"
+    },
+    {
+      "label": "AC mapping",
+      "file_type": "document",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L41",
+      "id": "plans_theos_156_ac_mapping",
+      "community": 92,
+      "norm_label": "ac mapping"
+    },
+    {
+      "label": "Deferred / out of scope",
+      "file_type": "document",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L50",
+      "id": "plans_theos_156_deferred_out_of_scope",
+      "community": 92,
+      "norm_label": "deferred / out of scope"
     },
     {
       "label": "THEOS-157.md",
@@ -27799,9 +27925,9 @@
       "source_location": "L7",
       "weight": 1.0,
       "context": "import",
+      "confidence_score": 1.0,
       "source": "src_context",
-      "target": "theos_magic_src_context_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_context_rs_weavetuning"
     },
     {
       "relation": "references",
@@ -27843,9 +27969,9 @@
       "source_location": "L35",
       "weight": 1.0,
       "context": "field",
+      "confidence_score": 1.0,
       "source": "src_context_compilercontext",
-      "target": "theos_magic_src_context_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_context_rs_weavetuning"
     },
     {
       "relation": "contains",
@@ -28847,9 +28973,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1003",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "contains",
@@ -28870,6 +28996,36 @@
       "confidence_score": 1.0,
       "source": "graph_assembler",
       "target": "graph_assembler_body"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1141",
+      "weight": 1.0,
+      "source": "graph_assembler",
+      "target": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1156",
+      "weight": 1.0,
+      "source": "graph_assembler",
+      "target": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1171",
+      "weight": 1.0,
+      "source": "graph_assembler",
+      "target": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -29007,9 +29163,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1060",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
-      "confidence_score": 1.0
+      "target": "graph_assembler_in_band_feeder_passes_largely_unattenuated"
     },
     {
       "relation": "contains",
@@ -29067,9 +29223,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1027",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_link_less_temporal_frequency_attaches_to_the_root",
-      "confidence_score": 1.0
+      "target": "graph_assembler_link_less_temporal_frequency_attaches_to_the_root"
     },
     {
       "relation": "contains",
@@ -29107,8 +29263,18 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1073",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_out_of_band_feeder_is_attenuated",
+      "target": "graph_assembler_out_of_band_feeder_is_attenuated"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1235",
+      "weight": 1.0,
+      "source": "graph_assembler",
+      "target": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
       "confidence_score": 1.0
     },
     {
@@ -29127,9 +29293,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1048",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node",
-      "confidence_score": 1.0
+      "target": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node"
     },
     {
       "relation": "contains",
@@ -29137,9 +29303,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L532",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "contains",
@@ -29147,9 +29313,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1014",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node"
     },
     {
       "relation": "contains",
@@ -29157,9 +29323,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1037",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_temporal_frequency_does_not_increase_node_count",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal_frequency_does_not_increase_node_count"
     },
     {
       "relation": "contains",
@@ -29167,8 +29333,28 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1087",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_transfer_adds_delay_phase_to_a_crossing_feeder",
+      "target": "graph_assembler_transfer_adds_delay_phase_to_a_crossing_feeder"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1220",
+      "weight": 1.0,
+      "source": "graph_assembler",
+      "target": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1188",
+      "weight": 1.0,
+      "source": "graph_assembler",
+      "target": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
       "confidence_score": 1.0
     },
     {
@@ -29180,6 +29366,16 @@
       "confidence_score": 1.0,
       "source": "graph_assembler",
       "target": "graph_assembler_two_wave_interference_matches_the_closed_form_within_tolerance"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1136",
+      "weight": 1.0,
+      "source": "graph_assembler",
+      "target": "graph_assembler_unit_transfer_delay",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -29395,9 +29591,9 @@
       "source_location": "L53",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_assembler_graphassembler_assemble",
-      "target": "theos_magic_src_graph_assembler_rs_compilercontext",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_assembler_rs_compilercontext"
     },
     {
       "relation": "references",
@@ -29538,9 +29734,9 @@
       "source_location": "L1003",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_assembler_assemble",
-      "target": "theos_magic_src_graph_assembler_rs_woventoken",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_assembler_rs_woventoken"
     },
     {
       "relation": "references",
@@ -29593,9 +29789,9 @@
       "source_location": "L532",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal",
-      "target": "theos_magic_src_graph_assembler_rs_woventoken",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_assembler_rs_woventoken"
     },
     {
       "relation": "references",
@@ -29615,9 +29811,9 @@
       "source_location": "L1003",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_assembler_assemble",
-      "target": "tensiongraph",
-      "confidence_score": 1.0
+      "target": "tensiongraph"
     },
     {
       "relation": "references",
@@ -29659,9 +29855,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L479",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_graphassembler_assemble_default",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "references",
@@ -29701,11 +29897,44 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1064",
+      "source_location": "L1145",
       "weight": 1.0,
-      "source": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
+      "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
       "target": "graph_assembler_body",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1161",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1176",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1064",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -29714,9 +29943,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1030",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_link_less_temporal_frequency_attaches_to_the_root",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -29725,7 +29954,18 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1077",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_out_of_band_feeder_is_attenuated",
+      "target": "graph_assembler_body"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1239",
+      "weight": 1.0,
+      "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
       "target": "graph_assembler_body",
       "confidence_score": 1.0
     },
@@ -29736,9 +29976,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1050",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -29747,9 +29987,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1016",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -29758,7 +29998,18 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1040",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_does_not_increase_node_count",
+      "target": "graph_assembler_body"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1225",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
       "target": "graph_assembler_body",
       "confidence_score": 1.0
     },
@@ -29813,8 +30064,41 @@
       "source_location": "L532",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal",
-      "target": "theos_magic_src_graph_assembler_rs_vec",
+      "target": "theos_magic_src_graph_assembler_rs_vec"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1146",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
+      "target": "graph_assembler_spatial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1162",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_spatial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1177",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_spatial",
       "confidence_score": 1.0
     },
     {
@@ -29824,9 +30108,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1065",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -29835,7 +30119,18 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1078",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_out_of_band_feeder_is_attenuated",
+      "target": "graph_assembler_spatial"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1240",
+      "weight": 1.0,
+      "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
       "target": "graph_assembler_spatial",
       "confidence_score": 1.0
     },
@@ -29846,9 +30141,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1051",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -29857,9 +30152,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1017",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -29868,7 +30163,18 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1041",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_does_not_increase_node_count",
+      "target": "graph_assembler_spatial"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1226",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
       "target": "graph_assembler_spatial",
       "confidence_score": 1.0
     },
@@ -29888,11 +30194,33 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1066",
+      "source_location": "L1164",
       "weight": 1.0,
-      "source": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
+      "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
       "target": "graph_assembler_temporal",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1181",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_temporal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1066",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -29901,9 +30229,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1031",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_link_less_temporal_frequency_attaches_to_the_root",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -29912,7 +30240,18 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1079",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_out_of_band_feeder_is_attenuated",
+      "target": "graph_assembler_temporal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1245",
+      "weight": 1.0,
+      "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
       "target": "graph_assembler_temporal",
       "confidence_score": 1.0
     },
@@ -29923,9 +30262,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1052",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -29934,9 +30273,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1018",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -29945,9 +30284,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1042",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_does_not_increase_node_count",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -29956,7 +30295,29 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1099",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_adds_delay_phase_to_a_crossing_feeder",
+      "target": "graph_assembler_temporal"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1228",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
+      "target": "graph_assembler_temporal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1197",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
       "target": "graph_assembler_temporal",
       "confidence_score": 1.0
     },
@@ -29970,6 +30331,39 @@
       "confidence_score": 1.0,
       "source": "graph_assembler_assemble_default_uses_the_default_wave_speed",
       "target": "graph_assembler_approx"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1151",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
+      "target": "graph_assembler_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1166",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1183",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_approx",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -30033,9 +30427,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1069",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
-      "target": "graph_assembler_approx",
-      "confidence_score": 1.0
+      "target": "graph_assembler_approx"
     },
     {
       "relation": "calls",
@@ -30075,9 +30469,42 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1257",
+      "weight": 1.0,
+      "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
+      "target": "graph_assembler_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1023",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
+      "target": "graph_assembler_approx"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1230",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
+      "target": "graph_assembler_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1202",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
       "target": "graph_assembler_approx",
       "confidence_score": 1.0
     },
@@ -30099,9 +30526,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L635",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_chooses_lowest_index_chakra_as_injection_root",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30110,9 +30537,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L652",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_orients_edges_outward_from_the_root",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30121,9 +30548,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L679",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_flags_cycle_inducing_edges_as_back_edges",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30132,9 +30559,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L700",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_five_node_acyclic_phase_matches_manual_calc_within_tolerance",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30143,9 +30570,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L747",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_five_node_cyclic_terminates_and_phase_matches_within_tolerance",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30154,9 +30581,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L777",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_critical_path_delay_equals_longest_root_to_leaf_over_wave_speed",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30165,9 +30592,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L806",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_kinematic_vector_injects_source_amplitude_into_its_linked_node",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30176,9 +30603,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L823",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_link_less_kinematic_vector_falls_back_to_the_root",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30187,9 +30614,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L841",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_multiple_kinematic_vectors_on_one_node_sum_their_injection",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30198,9 +30625,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L864",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_kinematic_vector_into_an_effector_is_allowed",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30209,9 +30636,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L889",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_injection_attenuates_with_depth_from_the_root",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30220,9 +30647,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L915",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_convergent_node_amplitude_adds_when_in_phase",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30231,9 +30658,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L938",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_convergent_node_amplitude_cancels_when_anti_phase",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30242,9 +30669,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L961",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_two_wave_interference_matches_the_closed_form_within_tolerance",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30253,7 +30680,40 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L990",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_non_node_tokens_and_their_links_are_skipped",
+      "target": "graph_assembler_assemble"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1144",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
+      "target": "graph_assembler_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1160",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1175",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
       "target": "graph_assembler_assemble",
       "confidence_score": 1.0
     },
@@ -30264,9 +30724,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1063",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30275,9 +30735,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1029",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_link_less_temporal_frequency_attaches_to_the_root",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30286,7 +30746,18 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1076",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_out_of_band_feeder_is_attenuated",
+      "target": "graph_assembler_assemble"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1238",
+      "weight": 1.0,
+      "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
       "target": "graph_assembler_assemble",
       "confidence_score": 1.0
     },
@@ -30297,9 +30768,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1049",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30308,9 +30779,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1015",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30319,9 +30790,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1039",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_temporal_frequency_does_not_increase_node_count",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30330,8 +30801,63 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1101",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_adds_delay_phase_to_a_crossing_feeder",
+      "target": "graph_assembler_assemble"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1224",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
       "target": "graph_assembler_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1199",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
+      "target": "graph_assembler_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1167",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_unit_transfer_delay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1184",
+      "weight": 1.0,
+      "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
+      "target": "graph_assembler_unit_transfer_delay",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L1209",
+      "weight": 1.0,
+      "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
+      "target": "graph_assembler_unit_transfer_delay",
       "confidence_score": 1.0
     },
     {
@@ -30699,9 +31225,9 @@
       "source_location": "L66",
       "weight": 1.0,
       "context": "generic_arg",
+      "confidence_score": 1.0,
       "source": "graph_mod_node",
-      "target": "temporaltransfer",
-      "confidence_score": 1.0
+      "target": "temporaltransfer"
     },
     {
       "relation": "references",
@@ -30710,9 +31236,9 @@
       "source_location": "L66",
       "weight": 1.0,
       "context": "field",
+      "confidence_score": 1.0,
       "source": "graph_mod_node",
-      "target": "theos_magic_src_graph_mod_rs_vec",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_mod_rs_vec"
     },
     {
       "relation": "references",
@@ -30768,6 +31294,16 @@
       "confidence_score": 1.0,
       "source": "graph_mod_tensiongraph",
       "target": "csradjacency"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/mod.rs",
+      "source_location": "L125",
+      "weight": 1.0,
+      "source": "graph_mod_tensiongraph",
+      "target": "graph_mod_tensiongraph_cast_time",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -30941,9 +31477,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L100",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "contains",
@@ -30951,9 +31487,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_band_pass_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response"
     },
     {
       "relation": "contains",
@@ -30961,9 +31497,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_band_pass_response_attenuates_off_center",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response_attenuates_off_center"
     },
     {
       "relation": "contains",
@@ -30971,9 +31507,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L108",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_band_pass_response_is_one_at_center",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response_is_one_at_center"
     },
     {
       "relation": "contains",
@@ -30981,9 +31517,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L124",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_band_pass_response_never_exceeds_one",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response_never_exceeds_one"
     },
     {
       "relation": "contains",
@@ -30991,9 +31527,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L141",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_clamp_tau_pins_huge_duration_to_max",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_pins_huge_duration_to_max"
     },
     {
       "relation": "contains",
@@ -31001,9 +31537,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L135",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_clamp_tau_pins_zero_duration_to_min",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_pins_zero_duration_to_min"
     },
     {
       "relation": "contains",
@@ -31011,9 +31547,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_clamp_tau_seconds",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_seconds"
     },
     {
       "relation": "contains",
@@ -31021,9 +31557,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L233",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_filter_bank_delay_is_the_dominant_band",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_delay_is_the_dominant_band"
     },
     {
       "relation": "contains",
@@ -31031,9 +31567,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L171",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_filter_bank_empty_stack_is_pass_through",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_empty_stack_is_pass_through"
     },
     {
       "relation": "contains",
@@ -31041,9 +31577,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L178",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_filter_bank_far_out_feeder_against_a_nonempty_bank_is_blocked",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_far_out_feeder_against_a_nonempty_bank_is_blocked"
     },
     {
       "relation": "contains",
@@ -31051,9 +31587,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L77",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_filter_bank_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_response"
     },
     {
       "relation": "contains",
@@ -31061,9 +31597,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L212",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_filter_bank_total_never_exceeds_one",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_total_never_exceeds_one"
     },
     {
       "relation": "contains",
@@ -31071,9 +31607,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L194",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_filter_bank_union_passes_a_feeder_in_any_stacked_band",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_union_passes_a_feeder_in_any_stacked_band"
     },
     {
       "relation": "contains",
@@ -31081,9 +31617,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L162",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_from_token_centers_on_frequency_hz",
-      "confidence_score": 1.0
+      "target": "graph_transfer_from_token_centers_on_frequency_hz"
     },
     {
       "relation": "contains",
@@ -31091,9 +31627,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L154",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_longer_duration_gives_a_narrower_band",
-      "confidence_score": 1.0
+      "target": "graph_transfer_longer_duration_gives_a_narrower_band"
     },
     {
       "relation": "contains",
@@ -31101,9 +31637,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L67",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_sigma_from_duration",
-      "confidence_score": 1.0
+      "target": "graph_transfer_sigma_from_duration"
     },
     {
       "relation": "contains",
@@ -31111,9 +31647,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L147",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_sigma_is_reciprocal_to_duration",
-      "confidence_score": 1.0
+      "target": "graph_transfer_sigma_is_reciprocal_to_duration"
     },
     {
       "relation": "contains",
@@ -31121,9 +31657,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L25",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "graph_transfer_temporaltransfer",
-      "confidence_score": 1.0
+      "target": "graph_transfer_temporaltransfer"
     },
     {
       "relation": "imports_from",
@@ -31132,9 +31668,9 @@
       "source_location": "L20",
       "weight": 1.0,
       "context": "import",
+      "confidence_score": 1.0,
       "source": "graph_transfer",
-      "target": "theos_magic_src_graph_transfer_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_transfer_rs_weavetuning"
     },
     {
       "relation": "references",
@@ -31143,9 +31679,9 @@
       "source_location": "L77",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_response",
-      "target": "graph_transfer_temporaltransfer",
-      "confidence_score": 1.0
+      "target": "graph_transfer_temporaltransfer"
     },
     {
       "relation": "method",
@@ -31153,9 +31689,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L38",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_temporaltransfer",
-      "target": "graph_transfer_temporaltransfer_from_token",
-      "confidence_score": 1.0
+      "target": "graph_transfer_temporaltransfer_from_token"
     },
     {
       "relation": "calls",
@@ -31164,9 +31700,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L164",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_from_token_centers_on_frequency_hz",
-      "target": "graph_transfer_temporaltransfer_from_token",
-      "confidence_score": 1.0
+      "target": "graph_transfer_temporaltransfer_from_token"
     },
     {
       "relation": "calls",
@@ -31175,9 +31711,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L42",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_temporaltransfer_from_token",
-      "target": "graph_transfer_clamp_tau_seconds",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_seconds"
     },
     {
       "relation": "calls",
@@ -31186,9 +31722,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_temporaltransfer_from_token",
-      "target": "graph_transfer_sigma_from_duration",
-      "confidence_score": 1.0
+      "target": "graph_transfer_sigma_from_duration"
     },
     {
       "relation": "references",
@@ -31197,9 +31733,9 @@
       "source_location": "L38",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_transfer_temporaltransfer_from_token",
-      "target": "theos_magic_src_graph_transfer_rs_self",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_transfer_rs_self"
     },
     {
       "relation": "references",
@@ -31208,9 +31744,9 @@
       "source_location": "L38",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_transfer_temporaltransfer_from_token",
-      "target": "theos_magic_src_graph_transfer_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_transfer_rs_weavetuning"
     },
     {
       "relation": "references",
@@ -31219,9 +31755,9 @@
       "source_location": "L59",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_transfer_clamp_tau_seconds",
-      "target": "theos_magic_src_graph_transfer_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_transfer_rs_weavetuning"
     },
     {
       "relation": "references",
@@ -31230,9 +31766,9 @@
       "source_location": "L67",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_transfer_sigma_from_duration",
-      "target": "theos_magic_src_graph_transfer_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_transfer_rs_weavetuning"
     },
     {
       "relation": "calls",
@@ -31241,9 +31777,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_band_pass_response_attenuates_off_center",
-      "target": "graph_transfer_band_pass_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response"
     },
     {
       "relation": "calls",
@@ -31252,9 +31788,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_band_pass_response_is_one_at_center",
-      "target": "graph_transfer_band_pass_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response"
     },
     {
       "relation": "calls",
@@ -31263,9 +31799,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L128",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_band_pass_response_never_exceeds_one",
-      "target": "graph_transfer_band_pass_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response"
     },
     {
       "relation": "calls",
@@ -31274,9 +31810,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L86",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_response",
-      "target": "graph_transfer_band_pass_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_band_pass_response"
     },
     {
       "relation": "calls",
@@ -31285,9 +31821,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_clamp_tau_pins_huge_duration_to_max",
-      "target": "graph_transfer_clamp_tau_seconds",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_seconds"
     },
     {
       "relation": "calls",
@@ -31296,9 +31832,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L137",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_clamp_tau_pins_zero_duration_to_min",
-      "target": "graph_transfer_clamp_tau_seconds",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_seconds"
     },
     {
       "relation": "calls",
@@ -31307,9 +31843,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L167",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_from_token_centers_on_frequency_hz",
-      "target": "graph_transfer_clamp_tau_seconds",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_seconds"
     },
     {
       "relation": "calls",
@@ -31318,9 +31854,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_sigma_from_duration",
-      "target": "graph_transfer_clamp_tau_seconds",
-      "confidence_score": 1.0
+      "target": "graph_transfer_clamp_tau_seconds"
     },
     {
       "relation": "calls",
@@ -31329,9 +31865,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L166",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_from_token_centers_on_frequency_hz",
-      "target": "graph_transfer_sigma_from_duration",
-      "confidence_score": 1.0
+      "target": "graph_transfer_sigma_from_duration"
     },
     {
       "relation": "calls",
@@ -31340,9 +31876,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L156",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_longer_duration_gives_a_narrower_band",
-      "target": "graph_transfer_sigma_from_duration",
-      "confidence_score": 1.0
+      "target": "graph_transfer_sigma_from_duration"
     },
     {
       "relation": "calls",
@@ -31351,9 +31887,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L150",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_sigma_is_reciprocal_to_duration",
-      "target": "graph_transfer_sigma_from_duration",
-      "confidence_score": 1.0
+      "target": "graph_transfer_sigma_from_duration"
     },
     {
       "relation": "calls",
@@ -31362,9 +31898,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L245",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_delay_is_the_dominant_band",
-      "target": "graph_transfer_filter_bank_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_response"
     },
     {
       "relation": "calls",
@@ -31373,9 +31909,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L172",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_empty_stack_is_pass_through",
-      "target": "graph_transfer_filter_bank_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_response"
     },
     {
       "relation": "calls",
@@ -31384,9 +31920,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L186",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_far_out_feeder_against_a_nonempty_bank_is_blocked",
-      "target": "graph_transfer_filter_bank_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_response"
     },
     {
       "relation": "calls",
@@ -31395,9 +31931,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L224",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_total_never_exceeds_one",
-      "target": "graph_transfer_filter_bank_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_response"
     },
     {
       "relation": "calls",
@@ -31406,9 +31942,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L207",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_union_passes_a_feeder_in_any_stacked_band",
-      "target": "graph_transfer_filter_bank_response",
-      "confidence_score": 1.0
+      "target": "graph_transfer_filter_bank_response"
     },
     {
       "relation": "calls",
@@ -31417,9 +31953,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L120",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_band_pass_response_attenuates_off_center",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "calls",
@@ -31428,9 +31964,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L109",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_band_pass_response_is_one_at_center",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "calls",
@@ -31439,9 +31975,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L143",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_clamp_tau_pins_huge_duration_to_max",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "calls",
@@ -31450,9 +31986,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L137",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_clamp_tau_pins_zero_duration_to_min",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "calls",
@@ -31461,9 +31997,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L246",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_delay_is_the_dominant_band",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "calls",
@@ -31472,9 +32008,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L173",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_filter_bank_empty_stack_is_pass_through",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "calls",
@@ -31483,9 +32019,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L165",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_from_token_centers_on_frequency_hz",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "calls",
@@ -31494,9 +32030,9 @@
       "source_file": "theos-magic/src/graph/transfer.rs",
       "source_location": "L150",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_transfer_sigma_is_reciprocal_to_duration",
-      "target": "graph_transfer_approx",
-      "confidence_score": 1.0
+      "target": "graph_transfer_approx"
     },
     {
       "relation": "imports_from",
@@ -31568,9 +32104,9 @@
       "source_location": "L3",
       "weight": 1.0,
       "context": "import",
+      "confidence_score": 1.0,
       "source": "src_interface",
-      "target": "theos_magic_src_interface_rs_compilercontext",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_interface_rs_compilercontext"
     },
     {
       "relation": "imports_from",
@@ -31664,9 +32200,9 @@
       "source_location": "L46",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "src_interface_dummymodality_parse_input",
-      "target": "theos_magic_src_interface_rs_compilercontext",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_interface_rs_compilercontext"
     },
     {
       "relation": "references",
@@ -31751,9 +32287,9 @@
       "source_file": "theos-magic/src/tuning.rs",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tuning",
-      "target": "src_tuning_default_bandwidth_constant_is_tau",
-      "confidence_score": 1.0
+      "target": "src_tuning_default_bandwidth_constant_is_tau"
     },
     {
       "relation": "contains",
@@ -31761,9 +32297,9 @@
       "source_file": "theos-magic/src/tuning.rs",
       "source_location": "L60",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tuning",
-      "target": "src_tuning_default_tau_clamp_window_is_ordered",
-      "confidence_score": 1.0
+      "target": "src_tuning_default_tau_clamp_window_is_ordered"
     },
     {
       "relation": "contains",
@@ -31771,9 +32307,9 @@
       "source_file": "theos-magic/src/tuning.rs",
       "source_location": "L31",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tuning",
-      "target": "src_tuning_weavetuning",
-      "confidence_score": 1.0
+      "target": "src_tuning_weavetuning"
     },
     {
       "relation": "method",
@@ -31781,9 +32317,9 @@
       "source_file": "theos-magic/src/tuning.rs",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tuning_weavetuning",
-      "target": "src_tuning_weavetuning_default",
-      "confidence_score": 1.0
+      "target": "src_tuning_weavetuning_default"
     },
     {
       "relation": "implements",
@@ -31791,9 +32327,9 @@
       "source_file": "theos-magic/src/tuning.rs",
       "source_location": "L40",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tuning_weavetuning",
-      "target": "theos_magic_src_tuning_rs_default",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_tuning_rs_default"
     },
     {
       "relation": "calls",
@@ -31802,9 +32338,9 @@
       "source_file": "theos-magic/src/tuning.rs",
       "source_location": "L61",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "src_tuning_default_tau_clamp_window_is_ordered",
-      "target": "src_tuning_weavetuning_default",
-      "confidence_score": 1.0
+      "target": "src_tuning_weavetuning_default"
     },
     {
       "relation": "references",
@@ -31813,9 +32349,9 @@
       "source_location": "L41",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "src_tuning_weavetuning_default",
-      "target": "theos_magic_src_tuning_rs_self",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_tuning_rs_self"
     },
     {
       "relation": "contains",
@@ -45805,12 +46341,62 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_theos_156",
+      "target": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L41",
+      "weight": 1.0,
+      "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
+      "target": "plans_theos_156_ac_mapping",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L50",
+      "weight": 1.0,
+      "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
+      "target": "plans_theos_156_deferred_out_of_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
+      "target": "plans_theos_156_implementation_locus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-156.md",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
+      "target": "plans_theos_156_locked_decisions",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "plans/THEOS-157.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_157",
-      "target": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12",
-      "confidence_score": 1.0
+      "target": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12"
     },
     {
       "relation": "contains",
@@ -45818,9 +46404,9 @@
       "source_file": "plans/THEOS-157.md",
       "source_location": "L69",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12",
-      "target": "plans_theos_157_acceptance_criteria",
-      "confidence_score": 1.0
+      "target": "plans_theos_157_acceptance_criteria"
     },
     {
       "relation": "contains",
@@ -45828,9 +46414,9 @@
       "source_file": "plans/THEOS-157.md",
       "source_location": "L80",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12",
-      "target": "plans_theos_157_coverage",
-      "confidence_score": 1.0
+      "target": "plans_theos_157_coverage"
     },
     {
       "relation": "contains",
@@ -45838,9 +46424,9 @@
       "source_file": "plans/THEOS-157.md",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12",
-      "target": "plans_theos_157_deferred_follow_ups",
-      "confidence_score": 1.0
+      "target": "plans_theos_157_deferred_follow_ups"
     },
     {
       "relation": "contains",
@@ -45848,9 +46434,9 @@
       "source_file": "plans/THEOS-157.md",
       "source_location": "L13",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12",
-      "target": "plans_theos_157_how_the_scope_changed_design_journey_2026_06_14",
-      "confidence_score": 1.0
+      "target": "plans_theos_157_how_the_scope_changed_design_journey_2026_06_14"
     },
     {
       "relation": "contains",
@@ -45858,9 +46444,9 @@
       "source_file": "plans/THEOS-157.md",
       "source_location": "L58",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12",
-      "target": "plans_theos_157_implementation_map",
-      "confidence_score": 1.0
+      "target": "plans_theos_157_implementation_map"
     },
     {
       "relation": "contains",
@@ -45868,9 +46454,9 @@
       "source_file": "plans/THEOS-157.md",
       "source_location": "L44",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_157_theos_157_m2_magic_temporalfrequency_transfer_element_e12",
-      "target": "plans_theos_157_locked_equations_e12",
-      "confidence_score": 1.0
+      "target": "plans_theos_157_locked_equations_e12"
     },
     {
       "relation": "contains",
@@ -48468,5 +49054,5 @@
       "source_file": ".github/workflows/release-packaging.yml"
     }
   ],
-  "built_at_commit": "9ec6b6dedf27a84f6df68b562ca845b2c3aadc1a"
+  "built_at_commit": "3fc5748781744abd9e47adac7cb03ff473b93713"
 }
