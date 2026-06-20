@@ -1,16 +1,16 @@
-# Graph Report - theos-engine  (2026-06-14)
+# Graph Report - theos-engine  (2026-06-20)
 
 ## Corpus Check
-- 86 files · ~60,670 words
+- 89 files · ~63,811 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1556 nodes · 3049 edges · 85 communities (65 shown, 20 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 39 edges (avg confidence: 0.79)
+- 1608 nodes · 3180 edges · 91 communities (71 shown, 20 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 40 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `9dd6b66d`
+- Built from commit: `9ec6b6de`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -89,11 +89,17 @@
 - [[_COMMUNITY_Community 75|Community 75]]
 - [[_COMMUNITY_Community 78|Community 78]]
 - [[_COMMUNITY_Community 79|Community 79]]
+- [[_COMMUNITY_Community 80|Community 80]]
 - [[_COMMUNITY_Community 81|Community 81]]
+- [[_COMMUNITY_Community 82|Community 82]]
 - [[_COMMUNITY_Community 83|Community 83]]
 - [[_COMMUNITY_Community 84|Community 84]]
 - [[_COMMUNITY_Community 85|Community 85]]
 - [[_COMMUNITY_Community 86|Community 86]]
+- [[_COMMUNITY_Community 87|Community 87]]
+- [[_COMMUNITY_Community 88|Community 88]]
+- [[_COMMUNITY_Community 89|Community 89]]
+- [[_COMMUNITY_Community 90|Community 90]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 60 edges
@@ -102,10 +108,10 @@
 4. `Vec2` - 39 edges
 5. `TheosKernel` - 35 edges
 6. `Aabb` - 32 edges
-7. `ChakraState` - 23 edges
-8. `Chakras` - 23 edges
-9. `KernelContext` - 19 edges
-10. `TimingModule` - 17 edges
+7. `assemble()` - 26 edges
+8. `ChakraState` - 23 edges
+9. `Chakras` - 23 edges
+10. `KernelContext` - 19 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Type-Erased EventBus via ChannelHandle adapter` --semantically_similar_to--> `Service Locator encapsulated in KernelContext`  [INFERRED] [semantically similar]
@@ -152,7 +158,7 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (85 total, 20 thin omitted)
+## Communities (91 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.08
@@ -175,8 +181,8 @@ Cohesion: 0.06
 Nodes (68): BroadcastEventBus, CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus() (+60 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.12
-Nodes (31): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam::Mat3, glam::Mat4, Mat3, Mat4 (+23 more)
+Cohesion: 0.11
+Nodes (33): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam interoperability bridge pattern, theos-math lib (public API re-exports), glam::Mat3, glam::Mat4 (+25 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.13
@@ -207,8 +213,8 @@ Cohesion: 0.09
 Nodes (23): Cargo Plugins Workspace Dependency Updates (theos-plugin-deps), Cargo Workspace Dependency Updates (theos-engine-deps), Dependabot Configuration, GitHub Actions Dependency Updates, cargo-geiger Unsafe Audit Tool, Cargo Check Job, Check and Lint Workflow, Clippy and Unsafe Policy Job (+15 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.14
-Nodes (30): BVH / ray-traversal usage pattern for Aabb and Ray, Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none() (+22 more)
+Cohesion: 0.24
+Nodes (17): Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none(), test_new_normalizes_normal() (+9 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.12
@@ -223,8 +229,8 @@ Cohesion: 0.17
 Nodes (17): Service Locator pattern for engine subsystem registry, RwLock, ServiceLocatorResult, get_nonexistent_service_returns_none(), register_and_get_service(), service_locator_is_cloneable_and_shares_registry(), ServiceLocator, TestService (+9 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.16
-Nodes (13): Add, 16-byte SIMD alignment for GPU/SIMD compatibility, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32> (+5 more)
+Cohesion: 0.09
+Nodes (24): Add, AddAssign, 16-byte SIMD alignment for GPU/SIMD compatibility, Div, DivAssign, f32x4, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation) (+16 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.16
@@ -243,8 +249,8 @@ Cohesion: 0.12
 Nodes (15): Build and checks, code:mermaid (flowchart TB), code:text (plugins/theos-audio --> theos-plugin-api --> theos-shared + ), code:powershell (cargo build --workspace), code:powershell (git config core.hooksPath .githooks), Crate dependency graph (overview), Design principles, Entry points and apps (+7 more)
 
 ### Community 23 - "Community 23"
-Cohesion: 0.06
-Nodes (43): KeyCode, NativeKeyCode, PhysicalKey, EscapeToQuitModule, make_initialised_escape_module(), tick_ignores_close_requested(), tick_ignores_key_released_for_escape(), tick_ignores_non_escape_keypresses() (+35 more)
+Cohesion: 0.12
+Nodes (24): EscapeToQuitModule, make_initialised_escape_module(), tick_ignores_close_requested(), tick_ignores_key_released_for_escape(), tick_ignores_non_escape_keypresses(), tick_is_noop_before_init(), tick_requests_shutdown_on_escape_press(), tick_with_empty_receiver_is_idempotent() (+16 more)
 
 ### Community 24 - "Community 24"
 Cohesion: 0.14
@@ -291,8 +297,8 @@ Cohesion: 0.12
 Nodes (23): CloseToExitModule, make_initialised_close_module(), tick_ignores_keypress_events(), tick_ignores_resized_events(), tick_is_noop_before_init(), tick_requests_shutdown_on_close_requested(), tick_with_empty_receiver_is_idempotent(), Arc (+15 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.09
-Nodes (20): AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, Div, DivAssign, f32x4, theos-math lib (public API re-exports), Mat4 * Vec4 (+12 more)
+Cohesion: 0.14
+Nodes (7): mint interoperability bridge pattern, Mat4 * Vec4, glam::Vec4, Vec4, wide::f32x4, Sub, Vector4
 
 ### Community 57 - "Community 57"
 Cohesion: 0.18
@@ -374,34 +380,60 @@ Nodes (20): ElementKind, Attunement, Chakra, chakra_state_round_trips_through_js
 Cohesion: 0.14
 Nodes (9): element_field_round_trips_through_json(), ElementField, ElementKind, uniform_sets_every_element(), Index, IndexMut, Item, Iterator (+1 more)
 
+### Community 80 - "Community 80"
+Cohesion: 0.12
+Nodes (19): KeyCode, NativeKeyCode, PhysicalKey, translator_constructs_with_event_bus_handle(), WindowEventTranslator, assert_maps(), translate_keycode_maps_all_digits(), translate_keycode_maps_all_letters() (+11 more)
+
 ### Community 81 - "Community 81"
 Cohesion: 0.29
 Nodes (6): Acceptance-criteria gap table, Deferred, Locked decisions, Resolved decisions (chakra & element model), Test execution, THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam
 
+### Community 82 - "Community 82"
+Cohesion: 0.21
+Nodes (21): approx(), band_pass_response(), band_pass_response_attenuates_off_center(), band_pass_response_is_one_at_center(), band_pass_response_never_exceeds_one(), clamp_tau_pins_huge_duration_to_max(), clamp_tau_pins_zero_duration_to_min(), clamp_tau_seconds() (+13 more)
+
 ### Community 84 - "Community 84"
-Cohesion: 0.05
-Nodes (48): Chakra, Chakras, CompilerContext, CompilerError, ElementField, approx(), assemble_default_uses_the_default_wave_speed(), body() (+40 more)
+Cohesion: 0.07
+Nodes (50): Chakra, Chakras, ElementField, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), chooses_lowest_index_chakra_as_injection_root() (+42 more)
 
 ### Community 85 - "Community 85"
-Cohesion: 0.14
-Nodes (16): Arena, CsrAdjacency, Edge, CsrAdjacency, Edge, neighbors_is_empty_for_a_sink_node(), neighbors_returns_a_nodes_outgoing_edges(), offsets_length_is_node_count_plus_one() (+8 more)
+Cohesion: 0.12
+Nodes (18): Arena, CsrAdjacency, Edge, CsrAdjacency, Edge, neighbors_is_empty_for_a_sink_node(), neighbors_returns_a_nodes_outgoing_edges(), offsets_length_is_node_count_plus_one() (+10 more)
 
 ### Community 86 - "Community 86"
 Cohesion: 0.17
 Nodes (11): AC → file gap table, Chakra layer (`chakra.rs`), Coverage target, Deferred / out of scope, Graph layer (`graph/`), Locked decisions (design session 2026-06-13), Scaffolding contract, Seam ripple (`interface.rs`, `error.rs`) (+3 more)
 
+### Community 87 - "Community 87"
+Cohesion: 0.35
+Nodes (13): BVH / ray-traversal usage pattern for Aabb and Ray, assert_vec3_eq(), Ray, test_at_known_t_value(), test_at_negative_t_goes_behind_origin(), test_at_one_returns_origin_plus_direction(), test_at_zero_returns_origin(), test_new_accepts_axis_aligned_directions() (+5 more)
+
+### Community 88 - "Community 88"
+Cohesion: 0.22
+Nodes (10): CompilerContext, CompilerError, HarmonicToken, DummyModality, MagicInterface, CompilerContext, CompilerError, Result (+2 more)
+
+### Community 89 - "Community 89"
+Cohesion: 0.25
+Nodes (7): Acceptance criteria, Coverage, Deferred / follow-ups, How the scope changed (design journey, 2026-06-14), Implementation map, Locked equations (E12), THEOS-157 — [M2][magic] TemporalFrequency → transfer element (E12)
+
+### Community 90 - "Community 90"
+Cohesion: 0.33
+Nodes (4): default_tau_clamp_window_is_ordered(), WeaveTuning, Default, Self
+
 ## Knowledge Gaps
-- **317 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+312 more)
+- **329 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+324 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `BroadcastEventBus` connect `Community 4` to `Community 23`?**
-  _High betweenness centrality (0.017) - this node is a cross-community bridge._
+- **Why does `BroadcastEventBus` connect `Community 4` to `Community 80`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
+- **Why does `KeyCode` connect `Community 80` to `Community 23`?**
+  _High betweenness centrality (0.015) - this node is a cross-community bridge._
 - **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
-  _319 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _331 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
@@ -410,5 +442,3 @@ _Questions this graph is uniquely positioned to answer:_
   _Cohesion score 0.06693803708729082 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
   _Cohesion score 0.07756813417190776 - nodes in this community are weakly interconnected._
-- **Should `Community 4` be split into smaller, more focused modules?**
-  _Cohesion score 0.05515170670037927 - nodes in this community are weakly interconnected._

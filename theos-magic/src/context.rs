@@ -4,6 +4,7 @@ use theos_shared::EntityId;
 
 use crate::chakra::Chakras;
 use crate::element::ElementField;
+use crate::tuning::WeaveTuning;
 
 /// Everything a casting modality needs to know about the caster and the world at
 /// compile time, when turning raw input into [`crate::HarmonicToken`]s.
@@ -27,6 +28,11 @@ pub struct CompilerContext {
     pub energy: f32,
     /// The caster's seven chakra points and their per-point state.
     pub chakras: Chakras,
+    /// Engine-physics tuning (E12 temporal-filter knobs, and more over time).
+    ///
+    /// **Distinct in kind** from the caster/world *state* fields above: this is
+    /// configuration, not a per-cast world snapshot. See [`WeaveTuning`].
+    pub weave_tuning: WeaveTuning,
 }
 
 #[cfg(test)]

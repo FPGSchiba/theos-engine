@@ -30,6 +30,7 @@ pub mod error;
 pub mod graph;
 pub mod interface;
 pub mod token;
+pub mod tuning;
 
 pub use chakra::{Attunement, Chakra, ChakraState, Chakras, Polarity};
 pub use context::CompilerContext;
@@ -37,8 +38,10 @@ pub use element::{ElementField, ElementKind};
 pub use error::CompilerError;
 pub use graph::{
     Arena, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, DEFAULT_WAVE_SPEED, Edge, GraphAssembler,
-    Node, NodeId, TensionGraph, edge_delay, edge_phase_shift, injection_attenuation,
-    kinematic_source_amplitude,
+    Node, NodeId, TemporalTransfer, TensionGraph, band_pass_response, clamp_tau_seconds,
+    edge_delay, edge_phase_shift, filter_bank_response, injection_attenuation,
+    kinematic_source_amplitude, sigma_from_duration,
 };
 pub use interface::MagicInterface;
 pub use token::{HarmonicToken, TokenId, WovenToken};
+pub use tuning::WeaveTuning;

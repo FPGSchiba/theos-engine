@@ -5,10 +5,12 @@ use super::phase::DEFAULT_WAVE_SPEED;
 use crate::error::CompilerError;
 use crate::token::WovenToken;
 use crate::{
-    Arena, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, Edge, HarmonicToken, Node, NodeId, TokenId,
-    edge_delay, edge_phase_shift, injection_attenuation, kinematic_source_amplitude,
+    Arena, CompilerContext, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, Edge, HarmonicToken, Node,
+    NodeId, TemporalTransfer, TokenId, edge_delay, edge_phase_shift, filter_bank_response,
+    injection_attenuation, kinematic_source_amplitude,
 };
 use std::collections::{HashSet, VecDeque};
+use std::f32::consts::PI;
 
 /// Assembles a slice of [`WovenToken`]s into a [`TensionGraph`].
 ///
@@ -43,10 +45,14 @@ pub struct GraphAssembler;
 impl GraphAssembler {
     /// Assemble at an explicit wave speed `c`.
     ///
+    /// `ctx` supplies engine tuning — notably `ctx.weave_tuning`, the E12
+    /// temporal-filter knobs read when lowering `TemporalFrequency` tokens.
+    ///
     /// Returns a [`CompilerError`] if the stream has no injection root, a link
     /// references an unknown token, or two tokens share an id.
     pub fn assemble(
         tokens: &[WovenToken],
+        ctx: &CompilerContext,
         wave_speed: f32,
         injection_attenuation_alpha: f32,
     ) -> Result<TensionGraph, CompilerError> {
@@ -96,6 +102,7 @@ impl GraphAssembler {
                         phase: 0.0,            // placeholder; derived in Stage 6
                         depth: 0.0, // placeholder; path length from root, derived in Stage 6
                         output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
+                        transfers: Vec::new(), // attached in Stage 2b (E12, THEOS-157)
                     };
                     let node_id = arena.insert(node);
                     token_map[token.id.0 as usize] = Some(node_id);
@@ -112,6 +119,7 @@ impl GraphAssembler {
                         phase: 0.0,            // placeholder; derived in Stage 6
                         depth: 0.0, // placeholder; path length from root, derived in Stage 6
                         output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
+                        transfers: Vec::new(), // attached in Stage 2b (E12, THEOS-157)
                     };
                     let node_id = arena.insert(node);
                     token_map[token.id.0 as usize] = Some(node_id);
@@ -136,6 +144,54 @@ impl GraphAssembler {
             .and_then(|root_token| {
                 token_map[root_token.id.0 as usize].ok_or(CompilerError::NoInjectionRoot)
             })?;
+
+        // Stage 2b — Attach temporal transfer elements (E12, THEOS-157). A
+        // `TemporalFrequency` is NOT a node; it lowers to a band-pass + delay
+        // (`TemporalTransfer`) attached to the positional node(s) its links resolve to
+        // — or the root, if none resolve (mirroring the `KinematicVector` fallback in
+        // Stage 7). Stacking is allowed: transfers accumulate on a node's `transfers`.
+        for token in tokens {
+            let HarmonicToken::TemporalFrequency {
+                frequency_hz,
+                duration_ms,
+            } = token.token
+            else {
+                continue;
+            };
+            let transfer =
+                TemporalTransfer::from_token(frequency_hz, duration_ms, &ctx.weave_tuning);
+            let mut pushes = 0;
+            for &link_id in &token.links {
+                match token_map.get(link_id.0 as usize) {
+                    // Resolves to a positional node: attach the transfer there.
+                    Some(&Some(v)) => {
+                        arena
+                            .get_mut(v)
+                            .expect("resolves to a node")
+                            .transfers
+                            .push(transfer);
+                        pushes += 1;
+                    }
+                    // In range but a non-node token (another temporal, or a
+                    // KinematicVector): nothing to attach a filter to — skipped.
+                    Some(&None) => {}
+                    // Out of range: the id isn't in the stream at all.
+                    None => {
+                        return Err(CompilerError::DanglingLink {
+                            from: token.id,
+                            to: link_id,
+                        });
+                    }
+                }
+            }
+            if pushes == 0 {
+                arena
+                    .get_mut(root)
+                    .expect("root is a node")
+                    .transfers
+                    .push(transfer);
+            }
+        }
 
         // Stage 3 — Resolve links into undirected adjacency, keyed by node slot.
         // A link is a mutual tension, so each one is recorded in *both* endpoints'
@@ -390,16 +446,21 @@ impl GraphAssembler {
             let slot = id.index() as usize;
             let (re, im) = phasor[slot];
             let amplitude = (re * re + im * im).sqrt();
-            let phase = {
+            let (phase, frequency) = {
                 let node = arena.get_mut(id).expect("live node");
                 node.output_amplitude = amplitude;
-                node.phase
+                (node.phase, node.frequency)
             };
-            let push = (amplitude * phase.cos(), amplitude * phase.sin());
             for &consumer in &downstream[slot] {
                 let c = consumer.index() as usize;
-                phasor[c].0 += push.0;
-                phasor[c].1 += push.1;
+                let filter = filter_bank_response(
+                    &arena.get(consumer).expect("live node").transfers,
+                    frequency,
+                );
+                let eff_phase = phase + PI * 2.0 * frequency * filter.1;
+                let push = (amplitude * eff_phase.cos(), amplitude * eff_phase.sin());
+                phasor[c].0 += push.0 * filter.0;
+                phasor[c].1 += push.1 * filter.0;
             }
         }
 
@@ -415,7 +476,12 @@ impl GraphAssembler {
 
     /// Assemble at [`DEFAULT_WAVE_SPEED`].
     pub fn assemble_default(tokens: &[WovenToken]) -> Result<TensionGraph, CompilerError> {
-        Self::assemble(tokens, DEFAULT_WAVE_SPEED, DEFAULT_INJECTION_ATTENUATION)
+        Self::assemble(
+            tokens,
+            &CompilerContext::default(),
+            DEFAULT_WAVE_SPEED,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
     }
 }
 
@@ -463,6 +529,17 @@ mod tests {
         }
     }
 
+    fn temporal(id: u32, frequency_hz: f32, duration_ms: u32, links: Vec<u32>) -> WovenToken {
+        WovenToken {
+            id: TokenId(id),
+            token: HarmonicToken::TemporalFrequency {
+                frequency_hz,
+                duration_ms,
+            },
+            links: links.into_iter().map(TokenId).collect(),
+        }
+    }
+
     fn approx(got: f32, expected: f32) {
         assert!(
             (got - expected).abs() < 1e-5,
@@ -474,7 +551,12 @@ mod tests {
     fn errors_when_no_body_anchor_is_present() {
         let tokens = vec![spatial(0, Vec3::ZERO, vec![])];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
+            GraphAssembler::assemble(
+                &tokens,
+                &CompilerContext::default(),
+                1.0,
+                DEFAULT_INJECTION_ATTENUATION
+            ),
             Err(CompilerError::NoInjectionRoot)
         ));
     }
@@ -482,7 +564,12 @@ mod tests {
     #[test]
     fn errors_on_empty_token_stream() {
         assert!(matches!(
-            GraphAssembler::assemble(&[], 1.0, DEFAULT_INJECTION_ATTENUATION),
+            GraphAssembler::assemble(
+                &[],
+                &CompilerContext::default(),
+                1.0,
+                DEFAULT_INJECTION_ATTENUATION
+            ),
             Err(CompilerError::NoTokens)
         ));
     }
@@ -494,7 +581,12 @@ mod tests {
             spatial(0, Vec3::new(1.0, 0.0, 0.0), vec![]),
         ];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
+            GraphAssembler::assemble(
+                &tokens,
+                &CompilerContext::default(),
+                1.0,
+                DEFAULT_INJECTION_ATTENUATION
+            ),
             Err(CompilerError::DuplicateTokenId(TokenId(0)))
         ));
     }
@@ -506,7 +598,12 @@ mod tests {
             spatial(2, Vec3::new(1.0, 0.0, 0.0), vec![]),
         ];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
+            GraphAssembler::assemble(
+                &tokens,
+                &CompilerContext::default(),
+                1.0,
+                DEFAULT_INJECTION_ATTENUATION
+            ),
             Err(CompilerError::NonDenseTokenIds)
         ));
     }
@@ -515,7 +612,12 @@ mod tests {
     fn errors_on_link_to_unknown_token_id() {
         let tokens = vec![body(0, Chakra::Root, Vec3::ZERO, vec![5])];
         assert!(matches!(
-            GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION),
+            GraphAssembler::assemble(
+                &tokens,
+                &CompilerContext::default(),
+                1.0,
+                DEFAULT_INJECTION_ATTENUATION
+            ),
             Err(CompilerError::DanglingLink {
                 from: TokenId(0),
                 to: TokenId(5),
@@ -530,7 +632,13 @@ mod tests {
             body(0, Chakra::Heart, Vec3::ZERO, vec![1]),
             body(1, Chakra::Root, Vec3::ZERO, vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         assert_eq!(g.root().index(), 1);
     }
 
@@ -541,7 +649,13 @@ mod tests {
             spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![2]),
             spatial(2, Vec3::new(2.0, 0.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         let root = g.root();
         let r = g.neighbors(root);
         assert_eq!(r.len(), 1);
@@ -562,7 +676,13 @@ mod tests {
             spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![2]),
             spatial(2, Vec3::new(0.0, 1.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         let back = g.adjacency.edges.iter().filter(|e| e.is_back_edge).count();
         assert_eq!(back, 1);
     }
@@ -577,7 +697,13 @@ mod tests {
             spatial(3, Vec3::new(0.0, 1.0, 0.0), vec![4]),
             spatial(4, Vec3::new(0.0, 2.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
 
         assert_eq!(g.node_count(), 5);
         assert_eq!(g.adjacency.offsets, vec![0, 2, 3, 3, 4, 4]);
@@ -618,7 +744,13 @@ mod tests {
             spatial(4, Vec3::new(0.0, 2.0, 0.0), vec![]),
         ];
         // Returning at all proves the traversal terminates on the cycle.
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
 
         assert_eq!(g.node_count(), 5);
         assert_eq!(g.adjacency.offsets, vec![0, 2, 3, 4, 5, 5]);
@@ -642,7 +774,13 @@ mod tests {
             spatial(2, Vec3::new(4.0, 3.0, 0.0), vec![]),
             spatial(3, Vec3::new(1.0, 0.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 2.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            2.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         // Longest path = (4 + 3) / 2 = 3.5, beating the short branch's 0.5.
         approx(g.critical_path_delay(), 3.5);
     }
@@ -665,7 +803,13 @@ mod tests {
             body(0, Chakra::Root, Vec3::ZERO, vec![]),
             kinematic(1, 3.0, 2.0, vec![0]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         approx(g.node(g.root()).unwrap().output_amplitude, 7.0);
     }
 
@@ -676,7 +820,13 @@ mod tests {
             body(0, Chakra::Root, Vec3::ZERO, vec![]),
             kinematic(1, 3.0, 2.0, vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         approx(g.node(g.root()).unwrap().output_amplitude, 7.0);
     }
 
@@ -688,7 +838,13 @@ mod tests {
             kinematic(1, 3.0, 2.0, vec![0]),
             kinematic(2, 1.0, 4.0, vec![0]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         approx(g.node(g.root()).unwrap().output_amplitude, 11.0);
     }
 
@@ -703,9 +859,12 @@ mod tests {
         let mut with_injection = base.clone();
         with_injection.push(kinematic(2, 3.0, 2.0, vec![1]));
 
-        let baseline = GraphAssembler::assemble(&base, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let ctx = CompilerContext::default();
+        let baseline =
+            GraphAssembler::assemble(&base, &ctx, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
         let injected =
-            GraphAssembler::assemble(&with_injection, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+            GraphAssembler::assemble(&with_injection, &ctx, 1.0, DEFAULT_INJECTION_ATTENUATION)
+                .unwrap();
 
         let effector = |g: &TensionGraph| g.neighbors(g.root())[0].target;
         let before = baseline.node(effector(&baseline)).unwrap().output_amplitude;
@@ -727,7 +886,13 @@ mod tests {
             kinematic(3, 3.0, 2.0, vec![1]),
             kinematic(4, 3.0, 2.0, vec![2]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         let neighbors = g.neighbors(g.root());
         let shallow = g.node(neighbors[0].target).unwrap().output_amplitude;
         let deep = g.node(neighbors[1].target).unwrap().output_amplitude;
@@ -747,7 +912,13 @@ mod tests {
             spatial(2, Vec3::new(0.0, 1.0, 0.0), vec![3]),
             spatial(3, Vec3::new(1.0, 1.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         let root = g.root();
         let a = g.neighbors(root)[0].target;
         let c = g.neighbors(a)[0].target;
@@ -764,7 +935,13 @@ mod tests {
             spatial(2, Vec3::new(0.5, 0.0, 0.0), vec![3]),
             spatial(3, Vec3::new(1.0, 1.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         let root = g.root();
         let a = g.neighbors(root)[0].target;
         let c = g.neighbors(a)[0].target;
@@ -781,7 +958,13 @@ mod tests {
             spatial(2, Vec3::new(0.25, 0.0, 0.0), vec![3]),
             spatial(3, Vec3::new(1.0, 1.0, 0.0), vec![]),
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         let root = g.root();
         let a = g.neighbors(root)[0].target;
         let c = g.neighbors(a)[0].target;
@@ -804,8 +987,131 @@ mod tests {
                 links: vec![],
             },
         ];
-        let g = GraphAssembler::assemble(&tokens, 1.0, DEFAULT_INJECTION_ATTENUATION).unwrap();
+        let g = GraphAssembler::assemble(
+            &tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap();
         assert_eq!(g.node_count(), 1); // only the anchor became a node
         assert!(g.neighbors(g.root()).is_empty()); // link to the kinematic was skipped
+    }
+
+    // --- THEOS-157: TemporalFrequency → transfer element (E12) ---
+
+    fn assemble(tokens: &[WovenToken]) -> TensionGraph {
+        GraphAssembler::assemble(
+            tokens,
+            &CompilerContext::default(),
+            1.0,
+            DEFAULT_INJECTION_ATTENUATION,
+        )
+        .unwrap()
+    }
+
+    #[test]
+    fn temporal_frequency_attaches_a_transfer_to_its_linked_node() {
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            temporal(2, 1.0, 1000, vec![1]),
+        ]);
+        let anchor = g.neighbors(g.root())[0].target;
+        let transfers = &g.node(anchor).unwrap().transfers;
+        assert_eq!(transfers.len(), 1);
+        approx(transfers[0].center_hz, 1.0);
+    }
+
+    #[test]
+    fn link_less_temporal_frequency_attaches_to_the_root() {
+        // No link resolves to a node ⇒ the transfer falls back to the injection root.
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![]),
+            temporal(1, 1.0, 1000, vec![]),
+        ]);
+        assert_eq!(g.node(g.root()).unwrap().transfers.len(), 1);
+    }
+
+    #[test]
+    fn temporal_frequency_does_not_increase_node_count() {
+        // Only the body + spatial anchors are nodes; the temporal token is not.
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            temporal(2, 1.0, 1000, vec![1]),
+        ]);
+        assert_eq!(g.node_count(), 2);
+    }
+
+    #[test]
+    fn stacked_temporal_transfers_accumulate_on_one_node() {
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            temporal(2, 1.0, 1000, vec![1]),
+            temporal(3, 5.0, 1000, vec![1]),
+        ]);
+        let anchor = g.neighbors(g.root())[0].target;
+        assert_eq!(g.node(anchor).unwrap().transfers.len(), 2);
+    }
+
+    #[test]
+    fn in_band_feeder_passes_largely_unattenuated() {
+        // The root (f = 1.0) feeds C; a transfer centred on 1.0 sits on C, so the
+        // feeder is in-band (H ≈ 1) and C's output ≈ the unfiltered feeder amplitude.
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            temporal(2, 1.0, 1000, vec![1]),
+        ]);
+        let c = g.neighbors(g.root())[0].target;
+        approx(g.node(c).unwrap().output_amplitude, 1.0);
+    }
+
+    #[test]
+    fn out_of_band_feeder_is_attenuated() {
+        // Same graph, but the transfer is centred far from the feeder's 1.0 Hz, so the
+        // feeder is out-of-band (H ≈ 0) and C's output collapses toward zero.
+        let g = assemble(&[
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            temporal(2, 1000.0, 1000, vec![1]),
+        ]);
+        let c = g.neighbors(g.root())[0].target;
+        let out = g.node(c).unwrap().output_amplitude;
+        assert!(out < 0.01, "out-of-band feeder should be suppressed: {out}");
+    }
+
+    #[test]
+    fn transfer_adds_delay_phase_to_a_crossing_feeder() {
+        // Root (f = 1.0) feeds C, and a KinematicVector injects a fixed-phase source
+        // into C. A transfer centred on 1.0 (H ≈ 1, no attenuation) with a
+        // half-wavelength delay (τ = 0.5 s ⇒ Δφ = 2π·1·0.5 = π) flips the feeder's
+        // contribution relative to the injection, so the convergent amplitude drops
+        // sharply vs the no-transfer baseline — isolating the delay, not the band-pass.
+        let base = vec![
+            body(0, Chakra::Root, Vec3::ZERO, vec![1]),
+            spatial(1, Vec3::new(1.0, 0.0, 0.0), vec![]),
+            kinematic(2, 2.0, 1.0, vec![1]),
+        ];
+        let mut delayed = base.clone();
+        delayed.push(temporal(3, 1.0, 500, vec![1]));
+
+        let g_base = assemble(&base);
+        let g_delayed = assemble(&delayed);
+        let base_out = g_base
+            .node(g_base.neighbors(g_base.root())[0].target)
+            .unwrap()
+            .output_amplitude;
+        let delayed_out = g_delayed
+            .node(g_delayed.neighbors(g_delayed.root())[0].target)
+            .unwrap()
+            .output_amplitude;
+
+        assert!(
+            delayed_out < base_out - 1.0,
+            "the π delay should sharply cut the convergent amplitude: base {base_out}, delayed {delayed_out}"
+        );
     }
 }

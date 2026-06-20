@@ -17,6 +17,7 @@ mod assembler;
 mod csr;
 mod injection;
 mod phase;
+mod transfer;
 
 pub use arena::{Arena, NodeId};
 pub use assembler::GraphAssembler;
@@ -25,11 +26,17 @@ pub use injection::{
     DEFAULT_INJECTION_ATTENUATION, injection_attenuation, kinematic_source_amplitude,
 };
 pub use phase::{DEFAULT_WAVE_SPEED, edge_delay, edge_phase_shift};
+pub use transfer::{
+    TemporalTransfer, band_pass_response, clamp_tau_seconds, filter_bank_response,
+    sigma_from_duration,
+};
 
 use glam::Vec3;
 
 /// A single oscillator node (E1 fields).
-#[derive(Copy, Clone, Debug, PartialEq)]
+///
+/// Not `Copy`: a node owns a `Vec` of attached [`TemporalTransfer`]s (E12).
+#[derive(Clone, Debug, PartialEq)]
 pub struct Node {
     /// World-space position `xᵢ`. For a `BodyAnchor`, this is the derived
     /// `body_position + chakra.body_offset()`.
@@ -51,6 +58,12 @@ pub struct Node {
     /// `KinematicVector` injections folded in at their source. Derived, read-only
     /// after assembly; `0.0` until the interference pass runs (THEOS-158).
     pub output_amplitude: f32,
+    /// Frequency-selective transfer elements (E12) attached here by
+    /// `TemporalFrequency` tokens — a parallel filterbank that band-pass-filters and
+    /// delays this node's *incoming* feeder contributions before the E4 sum
+    /// (throughput-only). Empty on a plain positional node; stacking is allowed
+    /// (Decision 2026-06-14, THEOS-157).
+    pub transfers: Vec<TemporalTransfer>,
 }
 
 /// An assembled, immutable tension graph.
