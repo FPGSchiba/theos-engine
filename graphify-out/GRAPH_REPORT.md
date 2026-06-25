@@ -1,16 +1,16 @@
 # Graph Report - theos-engine  (2026-06-25)
 
 ## Corpus Check
-- 98 files · ~72,107 words
+- 98 files · ~73,410 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1735 nodes · 3372 edges · 100 communities (80 shown, 20 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 40 edges (avg confidence: 0.79)
+- 1768 nodes · 3450 edges · 101 communities (81 shown, 20 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 41 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `e307e270`
+- Built from commit: `85abb3b5`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -109,6 +109,7 @@
 - [[_COMMUNITY_Community 97|Community 97]]
 - [[_COMMUNITY_Community 98|Community 98]]
 - [[_COMMUNITY_Community 99|Community 99]]
+- [[_COMMUNITY_Community 100|Community 100]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 60 edges
@@ -116,7 +117,7 @@
 3. `Self` - 42 edges
 4. `Vec2` - 39 edges
 5. `TheosKernel` - 35 edges
-6. `assemble()` - 32 edges
+6. `assemble()` - 33 edges
 7. `Aabb` - 32 edges
 8. `ChakraState` - 23 edges
 9. `Chakras` - 23 edges
@@ -167,19 +168,19 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (100 total, 20 thin omitted)
+## Communities (101 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.08
 Nodes (39): AtomicU32, Instant, Mutex, ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle() (+31 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.09
-Nodes (41): EventBus split into dyn-compatible core + generic ergonomic extension, KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, ServiceLocator, ChannelHandle, Event, EventBus, EventBusExt (+33 more)
+Cohesion: 0.08
+Nodes (42): EventBus split into dyn-compatible core + generic ergonomic extension, KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, Sender, ServiceLocator, ChannelHandle, Event, EventBus (+34 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.07
-Nodes (36): EventBusSetup, Receiver, Sender, BroadcastBusExt, BroadcastEventBus, ChannelHandle, CrossbeamEventBus, GameEvent (+28 more)
+Nodes (35): EventBusSetup, Receiver, BroadcastBusExt, BroadcastEventBus, ChannelHandle, CrossbeamEventBus, GameEvent, send_fails_when_unregistered() (+27 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.08
@@ -187,7 +188,7 @@ Nodes (43): Engine Module three-phase lifecycle (init, tick, shutdown), ModuleRe
 
 ### Community 4 - "Community 4"
 Cohesion: 0.06
-Nodes (68): BroadcastEventBus, CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus() (+60 more)
+Nodes (67): CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus(), FailingInitModule (+59 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.12
@@ -390,8 +391,8 @@ Cohesion: 0.14
 Nodes (9): element_field_round_trips_through_json(), ElementField, ElementKind, uniform_sets_every_element(), Index, IndexMut, Item, Iterator (+1 more)
 
 ### Community 80 - "Community 80"
-Cohesion: 0.12
-Nodes (19): KeyCode, NativeKeyCode, PhysicalKey, translator_constructs_with_event_bus_handle(), WindowEventTranslator, assert_maps(), translate_keycode_maps_all_digits(), translate_keycode_maps_all_letters() (+11 more)
+Cohesion: 0.11
+Nodes (20): BroadcastEventBus, KeyCode, NativeKeyCode, PhysicalKey, translator_constructs_with_event_bus_handle(), WindowEventTranslator, assert_maps(), translate_keycode_maps_all_digits() (+12 more)
 
 ### Community 81 - "Community 81"
 Cohesion: 0.29
@@ -403,10 +404,10 @@ Nodes (21): approx(), band_pass_response(), band_pass_response_attenuates_off_ce
 
 ### Community 84 - "Community 84"
 Cohesion: 0.08
-Nodes (53): Chakra, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc(), cast_time_on_cyclic_graph_matches_manual_calc() (+45 more)
+Nodes (54): Chakra, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc(), cast_time_on_cyclic_graph_matches_manual_calc() (+46 more)
 
 ### Community 85 - "Community 85"
-Cohesion: 0.11
+Cohesion: 0.10
 Nodes (19): Arena, CsrAdjacency, Edge, CsrAdjacency, Edge, neighbors_is_empty_for_a_sink_node(), neighbors_returns_a_nodes_outgoing_edges(), offsets_length_is_node_count_plus_one() (+11 more)
 
 ### Community 86 - "Community 86"
@@ -443,7 +444,7 @@ Nodes (15): Acceptance criteria → coverage, Canon (pinned from *Equations of t
 
 ### Community 94 - "Community 94"
 Cohesion: 0.12
-Nodes (15): Acceptance criteria → coverage, Canon (pinned from *Shared Formalism: Equations of the Weave*, page 170164225), Current code state (grounding — `theos-magic/src/graph`), D1 — What is the per-edge amplitude `Aᵢⱼ`?  ⚠️ core, D2 — Where do `ρ_med` and `ρ_env` come from? (not in the data model today), D3 — Which nodes are "effectors" for the E10 numerator?  ⚠️ core, D4 — η when `E_cost == 0` (no-injection / zero-energy graph)? (AC3), D5 — Authoring-side (frozen) or execution-side (env-dependent)?  ⚠️ architecture, couples to THEOS-173 (+7 more)
+Nodes (16): Acceptance criteria → coverage, Canon (pinned from *Shared Formalism: Equations of the Weave*, page 170164225), Current code state (grounding — `theos-magic/src/graph`), D1 — What is the per-edge amplitude `Aᵢⱼ`?  ⚠️ core, D2 — Where do `ρ_med` and `ρ_env` come from? (not in the data model today), D3 — Which nodes are "effectors" for the E10 numerator?  ⚠️ core, D4 — η when `E_cost == 0` (no-injection / zero-energy graph)? (AC3), D5 — Authoring-side (frozen) or execution-side (env-dependent)?  ⚠️ architecture, couples to THEOS-173 (+8 more)
 
 ### Community 95 - "Community 95"
 Cohesion: 0.13
@@ -465,6 +466,10 @@ Nodes (5): Acceptance criteria, Agent prompt — THEOS-170: reconcile E12 (Tempo
 Cohesion: 0.40
 Nodes (4): Current focus, Sequence (decided 2026-06-21), 🎯 Sprint Planning Summit — Goal, Success criteria
 
+### Community 100 - "Community 100"
+Cohesion: 0.16
+Nodes (27): approx(), assemble(), body(), coherence_high_for_in_phase_frequency_matched_edge(), coherence_low_for_divergent_frequencies_via_sigma_f(), constructive_graph_is_stable(), cyclic_feedback_runaway_is_volatile(), div() (+19 more)
+
 ## Knowledge Gaps
 - **402 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+397 more)
   These have ≤1 connection - possible missing edges or undocumented components.
@@ -473,17 +478,17 @@ Nodes (4): Current focus, Sequence (decided 2026-06-21), 🎯 Sprint Planning Su
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `BroadcastEventBus` connect `Community 4` to `Community 80`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `BroadcastEventBus` connect `Community 80` to `Community 4`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Why does `KeyCode` connect `Community 80` to `Community 23`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
   _404 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.08583959899749373 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08348457350272233 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.06693803708729082 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06853146853146853 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
   _Cohesion score 0.07756813417190776 - nodes in this community are weakly interconnected._

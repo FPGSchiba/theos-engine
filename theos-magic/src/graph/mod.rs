@@ -18,6 +18,7 @@ mod csr;
 mod energy;
 mod injection;
 mod phase;
+mod stability;
 mod transfer;
 
 pub use arena::{Arena, NodeId};
@@ -28,6 +29,7 @@ pub use injection::{
     DEFAULT_INJECTION_ATTENUATION, injection_attenuation, kinematic_source_amplitude,
 };
 pub use phase::{DEFAULT_WAVE_SPEED, edge_delay, edge_phase_shift};
+pub use stability::{Stability, edge_coherence, edge_tension, spectral_radius};
 pub use transfer::{
     TemporalTransfer, band_pass_response, clamp_tau_seconds, filter_bank_response,
     sigma_from_duration,
@@ -111,6 +113,11 @@ pub struct TensionGraph {
     /// geometry×amplitude part of the energy cost, frozen at assembly like
     /// [`Self::cast_time`]. See [`TensionGraph::authoring_work`].
     pub(crate) authoring_work: f32,
+    /// Spectral radius `ρ(G)` (E6) of the coupling matrix — the intrinsic loop
+    /// gain, frozen at assembly (geometry + stiffness + coherence are all
+    /// compile-time). The execution-side stability `S(ω)` reads this; see
+    /// [`TensionGraph::rho_g`] and [`TensionGraph::stability`]. (D4.)
+    pub(crate) rho_g: f32,
 }
 
 impl TensionGraph {
@@ -163,5 +170,12 @@ impl TensionGraph {
     /// [`Self::cast_time`] vs the THEOS-173 floor).
     pub fn authoring_work(&self) -> f32 {
         self.authoring_work
+    }
+
+    /// Spectral radius `ρ(G)` (E6) — the frozen, world-independent loop gain that
+    /// feeds the execution-side stability `S(ω)` ([`Self::stability`]). Geometry +
+    /// stiffness + coherence are all compile-time, so this is frozen at assembly.
+    pub fn rho_g(&self) -> f32 {
+        self.rho_g
     }
 }

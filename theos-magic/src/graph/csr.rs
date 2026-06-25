@@ -15,6 +15,15 @@ pub struct Edge {
     /// `true` if orienting this edge re-entered the traversal tree — i.e. it
     /// induces a cycle. Flagged, not removed.
     pub is_back_edge: bool,
+    /// Tension coefficient `kᵢⱼ` (E3/E6) — string stiffness. Defaults to
+    /// `WeaveTuning::stiffness` at assembly until a token supplies its own (D1/D2).
+    pub stiffness: f32,
+    /// Natural (rest) length `Lᵢⱼ` (E3). Defaults to the edge's spatial length
+    /// `dᵢⱼ` at assembly ⇒ tension `T ≈ 0` at rest until a token stretches it (D2).
+    pub rest_length: f32,
+    /// Frequency tolerance `σ_f` (E5) — Gaussian coherence width. Defaults to
+    /// `WeaveTuning::sigma_f`; provenance (authentic vs synthetic) deferred (D3).
+    pub sigma_f: f32,
 }
 
 /// Adjacency stored in compressed-sparse-row form.
@@ -56,14 +65,23 @@ mod tests {
                 Edge {
                     target: n1,
                     is_back_edge: false,
+                    stiffness: 1.0,
+                    rest_length: 1.0,
+                    sigma_f: 1.0,
                 },
                 Edge {
                     target: n2,
                     is_back_edge: false,
+                    stiffness: 1.0,
+                    rest_length: 1.0,
+                    sigma_f: 1.0,
                 },
                 Edge {
                     target: n0,
                     is_back_edge: true,
+                    stiffness: 1.0,
+                    rest_length: 1.0,
+                    sigma_f: 1.0,
                 },
             ],
         };

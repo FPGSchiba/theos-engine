@@ -122,6 +122,23 @@ impl<T> Arena<T> {
     pub fn iter(&self) -> impl Iterator<Item = &T> {
         self.values.iter().filter_map(|value| value.as_ref())
     }
+
+    /// Borrow every live value paired with its handle, in slot order. Each yielded
+    /// [`NodeId`] carries the slot's current generation, so it round-trips through
+    /// [`Self::get`].
+    pub fn iter_ids(&self) -> impl Iterator<Item = (NodeId, &T)> {
+        self.values.iter().enumerate().filter_map(|(i, value)| {
+            value.as_ref().map(|v| {
+                (
+                    NodeId {
+                        index: i as u32,
+                        generation: self.generations[i],
+                    },
+                    v,
+                )
+            })
+        })
+    }
 }
 
 impl<T> Default for Arena<T> {

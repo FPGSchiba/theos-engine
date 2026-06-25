@@ -30,6 +30,26 @@ pub const DEFAULT_TAU_MAX_S: f32 = 60.0;
 // TODO(THEOS-159): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
 pub const DEFAULT_E_BASE: f32 = 1.0;
 
+/// Default edge tension coefficient `kᵢⱼ` (E3/E6) — string stiffness.
+// TODO(THEOS-150): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_STIFFNESS: f32 = 1.0;
+
+/// Default reference stiffness `k_ref` (E6) — the normalizer in `Gᵢⱼ = (kᵢⱼ/k_ref)·Iᵢⱼ`.
+/// Equal to [`DEFAULT_STIFFNESS`] so `kᵢⱼ/k_ref = 1` at rest ⇒ `G ≡` coherence matrix (D2).
+pub const DEFAULT_K_REF: f32 = DEFAULT_STIFFNESS;
+
+/// Default frequency tolerance `σ_f` (E5) — Gaussian coherence width.
+// TODO(THEOS-150): `1.0` is a placeholder — confirm the tuned value.
+pub const DEFAULT_SIGMA_F: f32 = 1.0;
+
+/// Default base stability ceiling `Θ₀` (E7) — `Θ_env = Θ₀·(1 − ω)`.
+// TODO(THEOS-150): `1.0` is a placeholder — confirm the tuned value.
+pub const DEFAULT_THETA_0: f32 = 1.0;
+
+/// Default stability threshold `S_min` (E7) — stable iff `S ≥ S_min`, else volatile.
+/// Canon default `0.5`.
+pub const DEFAULT_S_MIN: f32 = 0.5;
+
 /// Engine-physics tuning for weave assembly — currently the E12 temporal-filter knobs.
 ///
 /// Distinct in kind from the caster/world *state* on [`crate::CompilerContext`]:
@@ -45,6 +65,16 @@ pub struct WeaveTuning {
     /// Base energy floor `E_base` (E9) — keeps `E_cost > 0` so η is always defined.
     /// Invariant: `> 0`.
     pub e_base: f32,
+    /// Default edge stiffness `kᵢⱼ` (E3/E6) applied to edges at assembly.
+    pub stiffness: f32,
+    /// Reference stiffness `k_ref` (E6) — the `Gᵢⱼ = (kᵢⱼ/k_ref)·Iᵢⱼ` normalizer.
+    pub k_ref: f32,
+    /// Default edge frequency tolerance `σ_f` (E5).
+    pub sigma_f: f32,
+    /// Base stability ceiling `Θ₀` (E7) — `Θ_env = Θ₀·(1 − ω)`.
+    pub theta_0: f32,
+    /// Stability threshold `S_min` (E7) — stable iff `S ≥ S_min`. Default `0.5`.
+    pub s_min: f32,
 }
 
 impl Default for WeaveTuning {
@@ -54,6 +84,11 @@ impl Default for WeaveTuning {
             tau_min_s: DEFAULT_TAU_MIN_S,
             tau_max_s: DEFAULT_TAU_MAX_S,
             e_base: DEFAULT_E_BASE,
+            stiffness: DEFAULT_STIFFNESS,
+            k_ref: DEFAULT_K_REF,
+            sigma_f: DEFAULT_SIGMA_F,
+            theta_0: DEFAULT_THETA_0,
+            s_min: DEFAULT_S_MIN,
         }
     }
 }

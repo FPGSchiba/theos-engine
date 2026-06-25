@@ -1,6 +1,8 @@
 # THEOS-150 — [M3] resonance stability sparse solver (E3/E5/E6/E7)
 
-**Status:** PLANNING (decisions open). Implementation deferred.
+**Status:** ✅ **IMPLEMENTED** 2026-06-25. Decisions LOCKED 2026-06-21 (D1–D5). Canon
+reconciliation landed (Materialization §1.1 — `ρ(G)` cached, `S`/`η` execution-side). See
+[Implementation notes](#implementation-notes-2026-06-25).
 **Epic:** THEOS-95 · **Crate:** `theos-magic` · **Blocked by:** THEOS-149 (merged) ·
 **Blocks:** THEOS-151, THEOS-152, THEOS-154, THEOS-162, THEOS-167 (5 downstream — highest leverage in sprint)
 
@@ -126,3 +128,33 @@ AC6 fmt/clippy/test green + rustdoc on every `pub`. Per-crate coverage ≥ 85%.
   high `ω` raises runtime volatility. Reconcile (same shape as the E9 `W`/`E_cost` edit): **compile freezes
   `ρ(G)`; execution computes `S(ω)` and the Stable/Volatile spawn decision.** Step 7 should cache `ρ(G)`
   (intrinsic), not `S`. Small doc edit — candidate for a canon-agent prompt like THEOS-159's.
+  **✅ Landed 2026-06-25** via a canon agent: Materialization §1.1 step 6 now caches `ρ(G)` only and
+  defers `S`/Stable-Volatile to execution; step 7 caches `ρ(G)` + `W`, not `S`/`η`. §1.2 unchanged.
+
+---
+
+## Implementation notes (2026-06-25)
+
+All decisions D1–D5 implemented as locked; canon fact-checked first (E3–E7 unchanged on the
+source-of-truth page; the Materialization contradiction was reconciled by a canon agent before
+coding). Highlights:
+
+- **D1 — `Edge` fattened** with `stiffness` (`kᵢⱼ`), `rest_length` (`Lᵢⱼ`), `sigma_f` (`σ_f`),
+  stays `Copy`. Populated at Stage 4: `rest_length = dᵢⱼ` (endpoint distance ⇒ `T ≈ 0` at rest),
+  `stiffness`/`sigma_f` from `WeaveTuning`.
+- **D2/D3 — tuning defaults.** `k_default = k_ref` (⇒ `k/k_ref = 1`, `G ≡` coherence at rest),
+  `σ_f`, `Θ₀` placeholders (`1.0`), `S_min = 0.5` (canon). `σ_f` provenance seam still deferred.
+  `Θ₀`/`k_default`/`σ_f` values are balance-tunable placeholders.
+- **D4 — authoring/execution split** (mirrors 159): `ρ(G)` frozen on `TensionGraph` at assembly
+  (`rho_g` field + accessor); `stability(world_entropy, &tuning) -> (S, Stability)` is an
+  execution `&self` method computing `S = 1 − ρ(G)/Θ_env`, `Θ_env = Θ₀·(1−ω)`. `Stability { Stable,
+  Volatile }` enum.
+- **D5 — solver.** `spectral_radius` is sparse power iteration: seed `x = ones`, `O(E)` matvec
+  per step via **scatter-to-both-endpoints** over the oriented CSR (symmetric `G`, includes
+  back-edges for loop gain), L2-normalize feedback, 64-iter cap, early-exit at `TOL = 1e-6`,
+  zero-norm guard. Added `Arena::iter_ids()` (yields `(NodeId, &Node)`) to walk the graph.
+- **E3/E5** are pure `pub fn`s (`edge_tension`, `edge_coherence`).
+- **Coverage:** `theos-magic` 98.2% region (`stability.rs` 97.1%). 8 tests: E3 rest/stretched,
+  E5 match/divergence, `ρ(G)` vs dense reference (2-node ⇒ 1), termination (K₃ ⇒ 2),
+  constructive⇒Stable, cyclic-runaway⇒Volatile. Uncovered: defensive guards (empty graph,
+  zero-norm, 64-cap fallthrough) — left unpadded.

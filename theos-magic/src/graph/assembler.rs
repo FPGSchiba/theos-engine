@@ -7,7 +7,7 @@ use crate::token::WovenToken;
 use crate::{
     Arena, CompilerContext, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, Edge, HarmonicToken, Node,
     NodeId, NodeKind, TemporalTransfer, TokenId, edge_delay, edge_phase_shift,
-    filter_bank_response, injection_attenuation, kinematic_source_amplitude,
+    filter_bank_response, injection_attenuation, kinematic_source_amplitude, spectral_radius,
 };
 use std::collections::{HashSet, VecDeque};
 use std::f32::consts::PI;
@@ -256,6 +256,13 @@ impl GraphAssembler {
                         full_edges[u.index() as usize].push(Edge {
                             target: *v,
                             is_back_edge: false,
+                            stiffness: ctx.weave_tuning.stiffness,
+                            rest_length: arena
+                                .get(*v)
+                                .expect("v needs a rest")
+                                .position
+                                .distance(arena.get(u).expect("u needs a rest").position),
+                            sigma_f: ctx.weave_tuning.sigma_f,
                         });
                         queue.push_back((*v, Some(u)));
                     } else {
@@ -264,6 +271,13 @@ impl GraphAssembler {
                             full_edges[u.index() as usize].push(Edge {
                                 target: *v,
                                 is_back_edge: true,
+                                stiffness: ctx.weave_tuning.stiffness,
+                                rest_length: arena
+                                    .get(*v)
+                                    .expect("v needs a rest")
+                                    .position
+                                    .distance(arena.get(u).expect("u needs a rest").position),
+                                sigma_f: ctx.weave_tuning.sigma_f,
                             });
                         }
                     }
@@ -501,15 +515,18 @@ impl GraphAssembler {
         }
 
         // Stage 9 — Freeze: arena + CSR + root + critical_path_delay → TensionGraph.
-        // The immutable graph is the proof assembly ran; only `&` accessors escape.
-        Ok(TensionGraph {
+        let mut graph = TensionGraph {
             arena,
             adjacency: csr,
             root,
             critical_path_delay: max_delay,
             cast_time: max_cast_time,
             authoring_work,
-        })
+            rho_g: 0.0, // placeholder; frozen via spectral_radius (E6, THEOS-150)
+        };
+        graph.rho_g = spectral_radius(&graph, &ctx.weave_tuning);
+
+        Ok(graph)
     }
 
     /// Assemble at [`DEFAULT_WAVE_SPEED`].
