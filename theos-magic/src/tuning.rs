@@ -23,6 +23,13 @@ pub const DEFAULT_TAU_MIN_S: f32 = 1.0e-3;
 /// divide-by-near-zero). E12.
 pub const DEFAULT_TAU_MAX_S: f32 = 60.0;
 
+/// Default base energy floor `E_base` (E9, D5).
+///
+/// The minimum cost of any cast, so `E_cost > 0` always and efficiency η (E10) is
+/// always defined. Invariant: **`> 0`**.
+// TODO(THEOS-159): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_E_BASE: f32 = 1.0;
+
 /// Engine-physics tuning for weave assembly — currently the E12 temporal-filter knobs.
 ///
 /// Distinct in kind from the caster/world *state* on [`crate::CompilerContext`]:
@@ -35,6 +42,9 @@ pub struct WeaveTuning {
     pub tau_min_s: f32,
     /// Upper clamp on `τ` (seconds) — guards the `τ→∞` numerical-delta extreme (E12).
     pub tau_max_s: f32,
+    /// Base energy floor `E_base` (E9) — keeps `E_cost > 0` so η is always defined.
+    /// Invariant: `> 0`.
+    pub e_base: f32,
 }
 
 impl Default for WeaveTuning {
@@ -43,6 +53,7 @@ impl Default for WeaveTuning {
             bandwidth_k: DEFAULT_BANDWIDTH_K,
             tau_min_s: DEFAULT_TAU_MIN_S,
             tau_max_s: DEFAULT_TAU_MAX_S,
+            e_base: DEFAULT_E_BASE,
         }
     }
 }

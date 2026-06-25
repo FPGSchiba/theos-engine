@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/lib.rs": {
-    "mtime": 1781942630.0302522,
-    "ast_hash": "a5bc7edb6c39a1eec2e449ee8439ce80",
+    "mtime": 1782381678.4174445,
+    "ast_hash": "54a6ba90ccef2b27bf6ac73f1095b47c",
     "semantic_hash": ""
   },
   "plans/THEOS-148.md": {
@@ -415,13 +415,13 @@
     "semantic_hash": ""
   },
   "theos-magic/src/graph/arena.rs": {
-    "mtime": 1781370023.4327753,
-    "ast_hash": "ddd4ec4dded57d16ece85382df0686f1",
+    "mtime": 1782387105.071296,
+    "ast_hash": "223e25f3fe7fb8d1085957d2046b0183",
     "semantic_hash": ""
   },
   "theos-magic/src/graph/assembler.rs": {
-    "mtime": 1781967055.478106,
-    "ast_hash": "13d915219aa93ffbc0f1d353a6804ccb",
+    "mtime": 1782388221.7115185,
+    "ast_hash": "0f5b2633a418fd706673859b60c41bfe",
     "semantic_hash": ""
   },
   "theos-magic/src/graph/csr.rs": {
@@ -430,8 +430,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/graph/mod.rs": {
-    "mtime": 1781966196.7551079,
-    "ast_hash": "775e03f90aed289fad42ddcc2d78946c",
+    "mtime": 1782387766.6137714,
+    "ast_hash": "159c71bef6e19981282376d630726ccc",
     "semantic_hash": ""
   },
   "theos-magic/src/graph/phase.rs": {
@@ -460,8 +460,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/tuning.rs": {
-    "mtime": 1781942448.1662536,
-    "ast_hash": "1defb27609c6d79bfcb042f90d405a4a",
+    "mtime": 1782381614.3349044,
+    "ast_hash": "4752e462f7a80d17daac957eec1862d5",
     "semantic_hash": ""
   },
   "plans/THEOS-157.md": {
@@ -472,6 +472,46 @@
   "plans/THEOS-156.md": {
     "mtime": 1781966182.6881092,
     "ast_hash": "0017d0a62ed2fd3bc6489b8198ac9ce6",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/energy.rs": {
+    "mtime": 1782399352.1151395,
+    "ast_hash": "c3ee5c1b02a82485d17d146d31685bb4",
+    "semantic_hash": ""
+  },
+  "plans/SPRINT-PLANNING-GOAL.md": {
+    "mtime": 1782071901.2728298,
+    "ast_hash": "65ebb0f254157615d25d12d04d176221",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-150.md": {
+    "mtime": 1782071369.0277114,
+    "ast_hash": "fa867b761b37adc13f417a9a8c443a1f",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-159.md": {
+    "mtime": 1782048928.2908158,
+    "ast_hash": "f33f1a7a6de3ff1069de6b1490e6a2e3",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-170-canon-agent-prompt.md": {
+    "mtime": 1782074997.4998553,
+    "ast_hash": "d2e60f339c5f5e606e5e789251856b8b",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-171.md": {
+    "mtime": 1782072092.3932264,
+    "ast_hash": "d029489e9b64c199948415d5ddb50895",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-173.md": {
+    "mtime": 1782071854.411413,
+    "ast_hash": "e17b445145290937f39e4fa9e486c69c",
+    "semantic_hash": ""
+  },
+  "plans/element-cosmology-2026-06-21.md": {
+    "mtime": 1782073727.8874786,
+    "ast_hash": "feb66e69e2342597289817517ed31884",
     "semantic_hash": ""
   }
 }

@@ -1,16 +1,16 @@
-# Graph Report - theos-engine  (2026-06-20)
+# Graph Report - theos-engine  (2026-06-25)
 
 ## Corpus Check
-- 90 files · ~65,057 words
+- 98 files · ~72,107 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1622 nodes · 3223 edges · 93 communities (73 shown, 20 thin omitted)
+- 1735 nodes · 3372 edges · 100 communities (80 shown, 20 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 40 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `3fc57487`
+- Built from commit: `e307e270`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -102,6 +102,13 @@
 - [[_COMMUNITY_Community 90|Community 90]]
 - [[_COMMUNITY_Community 91|Community 91]]
 - [[_COMMUNITY_Community 92|Community 92]]
+- [[_COMMUNITY_Community 93|Community 93]]
+- [[_COMMUNITY_Community 94|Community 94]]
+- [[_COMMUNITY_Community 95|Community 95]]
+- [[_COMMUNITY_Community 96|Community 96]]
+- [[_COMMUNITY_Community 97|Community 97]]
+- [[_COMMUNITY_Community 98|Community 98]]
+- [[_COMMUNITY_Community 99|Community 99]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 60 edges
@@ -160,7 +167,7 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (93 total, 20 thin omitted)
+## Communities (100 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.08
@@ -183,8 +190,8 @@ Cohesion: 0.06
 Nodes (68): BroadcastEventBus, CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus() (+60 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.11
-Nodes (33): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam interoperability bridge pattern, theos-math lib (public API re-exports), glam::Mat3, glam::Mat4 (+25 more)
+Cohesion: 0.12
+Nodes (31): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam::Mat3, glam::Mat4, Mat3, Mat4 (+23 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.13
@@ -215,8 +222,8 @@ Cohesion: 0.09
 Nodes (23): Cargo Plugins Workspace Dependency Updates (theos-plugin-deps), Cargo Workspace Dependency Updates (theos-engine-deps), Dependabot Configuration, GitHub Actions Dependency Updates, cargo-geiger Unsafe Audit Tool, Cargo Check Job, Check and Lint Workflow, Clippy and Unsafe Policy Job (+15 more)
 
 ### Community 13 - "Community 13"
-Cohesion: 0.24
-Nodes (17): Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none(), test_new_normalizes_normal() (+9 more)
+Cohesion: 0.14
+Nodes (30): BVH / ray-traversal usage pattern for Aabb and Ray, Ray, assert_vec3_eq(), Plane, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none() (+22 more)
 
 ### Community 14 - "Community 14"
 Cohesion: 0.12
@@ -232,7 +239,7 @@ Nodes (17): Service Locator pattern for engine subsystem registry, RwLock, Servi
 
 ### Community 17 - "Community 17"
 Cohesion: 0.09
-Nodes (24): Add, AddAssign, 16-byte SIMD alignment for GPU/SIMD compatibility, Div, DivAssign, f32x4, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation) (+16 more)
+Nodes (20): AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, Div, DivAssign, f32x4, theos-math lib (public API re-exports), Mat4 * Vec4 (+12 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.16
@@ -299,12 +306,12 @@ Cohesion: 0.12
 Nodes (23): CloseToExitModule, make_initialised_close_module(), tick_ignores_keypress_events(), tick_ignores_resized_events(), tick_is_noop_before_init(), tick_requests_shutdown_on_close_requested(), tick_with_empty_receiver_is_idempotent(), Arc (+15 more)
 
 ### Community 56 - "Community 56"
-Cohesion: 0.14
-Nodes (7): mint interoperability bridge pattern, Mat4 * Vec4, glam::Vec4, Vec4, wide::f32x4, Sub, Vector4
+Cohesion: 0.20
+Nodes (21): approx(), assemble(), body(), efficiency_matches_manual_eta_on_constructive_graph(), efficiency_on_zero_energy_graph_is_well_defined(), EnvResistance, full_transfer_graph_efficiency_near_one(), graph_energy_matches_manual_sum_over_edges() (+13 more)
 
 ### Community 57 - "Community 57"
-Cohesion: 0.18
-Nodes (15): Arena, Arena<T>, default_arena_is_empty(), get_mut_allows_in_place_update(), get_returns_none_for_stale_handle_after_remove(), insert_reuses_freed_slot_with_bumped_generation(), insert_then_get_returns_the_value(), len_and_is_empty_track_live_values() (+7 more)
+Cohesion: 0.15
+Nodes (17): Arena, Arena<T>, default_arena_is_empty(), get_mut_allows_in_place_update(), get_returns_none_for_stale_handle_after_remove(), insert_reuses_freed_slot_with_bumped_generation(), insert_then_get_returns_the_value(), len_and_is_empty_track_live_values() (+9 more)
 
 ### Community 58 - "Community 58"
 Cohesion: 0.08
@@ -395,20 +402,20 @@ Cohesion: 0.21
 Nodes (21): approx(), band_pass_response(), band_pass_response_attenuates_off_center(), band_pass_response_is_one_at_center(), band_pass_response_never_exceeds_one(), clamp_tau_pins_huge_duration_to_max(), clamp_tau_pins_zero_duration_to_min(), clamp_tau_seconds() (+13 more)
 
 ### Community 84 - "Community 84"
-Cohesion: 0.09
-Nodes (52): Chakra, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc(), cast_time_on_cyclic_graph_matches_manual_calc() (+44 more)
+Cohesion: 0.08
+Nodes (53): Chakra, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc(), cast_time_on_cyclic_graph_matches_manual_calc() (+45 more)
 
 ### Community 85 - "Community 85"
-Cohesion: 0.12
-Nodes (18): Arena, CsrAdjacency, Edge, CsrAdjacency, Edge, neighbors_is_empty_for_a_sink_node(), neighbors_returns_a_nodes_outgoing_edges(), offsets_length_is_node_count_plus_one() (+10 more)
+Cohesion: 0.11
+Nodes (19): Arena, CsrAdjacency, Edge, CsrAdjacency, Edge, neighbors_is_empty_for_a_sink_node(), neighbors_returns_a_nodes_outgoing_edges(), offsets_length_is_node_count_plus_one() (+11 more)
 
 ### Community 86 - "Community 86"
 Cohesion: 0.17
 Nodes (11): AC → file gap table, Chakra layer (`chakra.rs`), Coverage target, Deferred / out of scope, Graph layer (`graph/`), Locked decisions (design session 2026-06-13), Scaffolding contract, Seam ripple (`interface.rs`, `error.rs`) (+3 more)
 
 ### Community 87 - "Community 87"
-Cohesion: 0.35
-Nodes (13): BVH / ray-traversal usage pattern for Aabb and Ray, assert_vec3_eq(), Ray, test_at_known_t_value(), test_at_negative_t_goes_behind_origin(), test_at_one_returns_origin_plus_direction(), test_at_zero_returns_origin(), test_new_accepts_axis_aligned_directions() (+5 more)
+Cohesion: 0.16
+Nodes (13): Add, 16-byte SIMD alignment for GPU/SIMD compatibility, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32> (+5 more)
 
 ### Community 88 - "Community 88"
 Cohesion: 0.22
@@ -430,8 +437,36 @@ Nodes (5): Chakras, ElementField, CompilerContext, EntityId, WeaveTuning
 Cohesion: 0.33
 Nodes (5): AC mapping, Deferred / out of scope, Implementation locus, Locked decisions, THEOS-156 — Cast-time from critical-path propagation delay (E13)
 
+### Community 93 - "Community 93"
+Cohesion: 0.12
+Nodes (15): Acceptance criteria → coverage, Canon (pinned from *Equations of the Weave*, page 170164225), Cross-story notes, Current code state (`theos-magic/src/graph`), D1 — Where do `kᵢⱼ`, `Lᵢⱼ`, `σ_f` live?  ⚠️ architecture (the ticket's flagged call), D2 — Default values (no token supplies these yet), D3 — `σ_f` (frequency tolerance) source, D4 — Authoring/execution split for `S` (mirror 159 D5)  ⚠️ keep consistent (+7 more)
+
+### Community 94 - "Community 94"
+Cohesion: 0.12
+Nodes (15): Acceptance criteria → coverage, Canon (pinned from *Shared Formalism: Equations of the Weave*, page 170164225), Current code state (grounding — `theos-magic/src/graph`), D1 — What is the per-edge amplitude `Aᵢⱼ`?  ⚠️ core, D2 — Where do `ρ_med` and `ρ_env` come from? (not in the data model today), D3 — Which nodes are "effectors" for the E10 numerator?  ⚠️ core, D4 — η when `E_cost == 0` (no-injection / zero-energy graph)? (AC3), D5 — Authoring-side (frozen) or execution-side (env-dependent)?  ⚠️ architecture, couples to THEOS-173 (+7 more)
+
+### Community 95 - "Community 95"
+Cohesion: 0.13
+Nodes (14): Acceptance criteria, Canon state, Current code state, Decision register — **LOCKED** (2026-06-21), DP1 — **What IS `P`?**  ⚠️ worldbuilding — your call (no canon today), DP2 — Aggregation (if `P` derives from chakras), DP3 — `effective_cast_time` seam (scaffolding), DP4 — `P ≤ 0` guard (+6 more)
+
+### Community 96 - "Community 96"
+Cohesion: 0.17
+Nodes (11): Axis 1 — Frequency `f` (E1): the *material* spectrum — **LOCKED: logarithmic**, Axis 2 — Phase coherence: **Light ↔ Darkness** polarity — **curve: sigmoid (confirm)**, Canon impact (edits this implies), Cultivation & resource economy — DESIGN STUB (own ticket; NOT in the canon prompts), Decisions (LOCKED 2026-06-21 unless noted), Element Cosmology — 2-D (frequency × phase-polarity), Goal, Relationship to sprint stories (+3 more)
+
+### Community 97 - "Community 97"
+Cohesion: 0.18
+Nodes (10): Acceptance criteria, Decision register — **OPEN** (two coupled worldbuilding calls), Delivery, DN1 — Range `[f_min, f_max]` (the "authored frequency range", Hz), DN2 — Curve (linear vs logarithmic), DN3 — Clamp, Goal (one sentence), Grounded context (from *Core UX: Spell Appearance*, page 177897474, §3–4) (+2 more)
+
+### Community 98 - "Community 98"
+Cohesion: 0.33
+Nodes (5): Acceptance criteria, Agent prompt — THEOS-170: reconcile E12 (TemporalFrequency) to the implemented transfer-element model, Constraints, Edits, The canonical model (ground truth = the shipped code)
+
+### Community 99 - "Community 99"
+Cohesion: 0.40
+Nodes (4): Current focus, Sequence (decided 2026-06-21), 🎯 Sprint Planning Summit — Goal, Success criteria
+
 ## Knowledge Gaps
-- **333 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+328 more)
+- **402 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+397 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -439,11 +474,11 @@ Nodes (5): AC mapping, Deferred / out of scope, Implementation locus, Locked dec
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `BroadcastEventBus` connect `Community 4` to `Community 80`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Why does `KeyCode` connect `Community 80` to `Community 23`?**
-  _High betweenness centrality (0.013) - this node is a cross-community bridge._
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
-  _335 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _404 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**

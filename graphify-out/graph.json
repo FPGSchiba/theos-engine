@@ -5157,10 +5157,37 @@
       "norm_label": ".is_empty()"
     },
     {
-      "label": "Default",
+      "label": ".iter()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
       "source_location": "L122",
+      "id": "graph_arena_arena_t_iter",
+      "community": 57,
+      "norm_label": ".iter()"
+    },
+    {
+      "label": "Iterator",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/arena.rs",
+      "source_location": "L122",
+      "id": "theos_magic_src_graph_arena_rs_iterator",
+      "community": 57,
+      "norm_label": "iterator"
+    },
+    {
+      "label": "Item",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/arena.rs",
+      "source_location": "L122",
+      "id": "theos_magic_src_graph_arena_rs_item",
+      "community": 57,
+      "norm_label": "item"
+    },
+    {
+      "label": "Default",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/arena.rs",
+      "source_location": "L127",
       "id": "theos_magic_src_graph_arena_rs_default",
       "community": 57,
       "norm_label": "default"
@@ -5169,7 +5196,7 @@
       "label": ".default()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L123",
+      "source_location": "L128",
       "id": "graph_arena_arena_t_default",
       "community": 57,
       "norm_label": ".default()"
@@ -5178,7 +5205,7 @@
       "label": "insert_then_get_returns_the_value()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L133",
+      "source_location": "L138",
       "id": "graph_arena_insert_then_get_returns_the_value",
       "community": 57,
       "norm_label": "insert_then_get_returns_the_value()"
@@ -5187,7 +5214,7 @@
       "label": "get_returns_none_for_stale_handle_after_remove()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L142",
+      "source_location": "L147",
       "id": "graph_arena_get_returns_none_for_stale_handle_after_remove",
       "community": 57,
       "norm_label": "get_returns_none_for_stale_handle_after_remove()"
@@ -5196,7 +5223,7 @@
       "label": "insert_reuses_freed_slot_with_bumped_generation()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L150",
+      "source_location": "L155",
       "id": "graph_arena_insert_reuses_freed_slot_with_bumped_generation",
       "community": 57,
       "norm_label": "insert_reuses_freed_slot_with_bumped_generation()"
@@ -5205,7 +5232,7 @@
       "label": "remove_returns_value_once_then_none_afterwards()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L166",
+      "source_location": "L171",
       "id": "graph_arena_remove_returns_value_once_then_none_afterwards",
       "community": 57,
       "norm_label": "remove_returns_value_once_then_none_afterwards()"
@@ -5214,7 +5241,7 @@
       "label": "len_and_is_empty_track_live_values()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L174",
+      "source_location": "L179",
       "id": "graph_arena_len_and_is_empty_track_live_values",
       "community": 57,
       "norm_label": "len_and_is_empty_track_live_values()"
@@ -5223,7 +5250,7 @@
       "label": "get_mut_allows_in_place_update()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L185",
+      "source_location": "L190",
       "id": "graph_arena_get_mut_allows_in_place_update",
       "community": 57,
       "norm_label": "get_mut_allows_in_place_update()"
@@ -5232,7 +5259,7 @@
       "label": "default_arena_is_empty()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/arena.rs",
-      "source_location": "L194",
+      "source_location": "L199",
       "id": "graph_arena_default_arena_is_empty",
       "community": 57,
       "norm_label": "default_arena_is_empty()"
@@ -5313,7 +5340,7 @@
       "label": ".assemble_default()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L492",
+      "source_location": "L516",
       "id": "graph_assembler_graphassembler_assemble_default",
       "community": 84,
       "norm_label": ".assemble_default()"
@@ -5322,7 +5349,7 @@
       "label": "body()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L509",
+      "source_location": "L533",
       "id": "graph_assembler_body",
       "community": 84,
       "norm_label": "body()"
@@ -5331,8 +5358,8 @@
       "label": "Chakra",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L509",
-      "id": "chakra",
+      "source_location": "L533",
+      "id": "theos_magic_src_graph_assembler_rs_chakra",
       "community": 84,
       "norm_label": "chakra"
     },
@@ -5340,7 +5367,7 @@
       "label": "Vec3",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L509",
+      "source_location": "L533",
       "id": "theos_magic_src_graph_assembler_rs_vec3",
       "community": 84,
       "norm_label": "vec3"
@@ -5349,7 +5376,7 @@
       "label": "Vec",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L509",
+      "source_location": "L533",
       "id": "theos_magic_src_graph_assembler_rs_vec",
       "community": 84,
       "norm_label": "vec"
@@ -5358,7 +5385,7 @@
       "label": "spatial()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L522",
+      "source_location": "L546",
       "id": "graph_assembler_spatial",
       "community": 84,
       "norm_label": "spatial()"
@@ -5367,7 +5394,7 @@
       "label": "kinematic()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L534",
+      "source_location": "L558",
       "id": "graph_assembler_kinematic",
       "community": 84,
       "norm_label": "kinematic()"
@@ -5376,7 +5403,7 @@
       "label": "temporal()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L546",
+      "source_location": "L570",
       "id": "graph_assembler_temporal",
       "community": 84,
       "norm_label": "temporal()"
@@ -5385,7 +5412,7 @@
       "label": "approx()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L557",
+      "source_location": "L581",
       "id": "graph_assembler_approx",
       "community": 84,
       "norm_label": "approx()"
@@ -5394,7 +5421,7 @@
       "label": "errors_when_no_body_anchor_is_present()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L565",
+      "source_location": "L589",
       "id": "graph_assembler_errors_when_no_body_anchor_is_present",
       "community": 84,
       "norm_label": "errors_when_no_body_anchor_is_present()"
@@ -5403,7 +5430,7 @@
       "label": "errors_on_empty_token_stream()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L579",
+      "source_location": "L603",
       "id": "graph_assembler_errors_on_empty_token_stream",
       "community": 84,
       "norm_label": "errors_on_empty_token_stream()"
@@ -5412,7 +5439,7 @@
       "label": "errors_on_duplicate_token_id()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L592",
+      "source_location": "L616",
       "id": "graph_assembler_errors_on_duplicate_token_id",
       "community": 84,
       "norm_label": "errors_on_duplicate_token_id()"
@@ -5421,7 +5448,7 @@
       "label": "errors_on_non_dense_token_ids()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L609",
+      "source_location": "L633",
       "id": "graph_assembler_errors_on_non_dense_token_ids",
       "community": 84,
       "norm_label": "errors_on_non_dense_token_ids()"
@@ -5430,7 +5457,7 @@
       "label": "errors_on_link_to_unknown_token_id()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L626",
+      "source_location": "L650",
       "id": "graph_assembler_errors_on_link_to_unknown_token_id",
       "community": 84,
       "norm_label": "errors_on_link_to_unknown_token_id()"
@@ -5439,7 +5466,7 @@
       "label": "chooses_lowest_index_chakra_as_injection_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L643",
+      "source_location": "L667",
       "id": "graph_assembler_chooses_lowest_index_chakra_as_injection_root",
       "community": 84,
       "norm_label": "chooses_lowest_index_chakra_as_injection_root()"
@@ -5448,7 +5475,7 @@
       "label": "orients_edges_outward_from_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L660",
+      "source_location": "L684",
       "id": "graph_assembler_orients_edges_outward_from_the_root",
       "community": 84,
       "norm_label": "orients_edges_outward_from_the_root()"
@@ -5457,7 +5484,7 @@
       "label": "flags_cycle_inducing_edges_as_back_edges()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L686",
+      "source_location": "L710",
       "id": "graph_assembler_flags_cycle_inducing_edges_as_back_edges",
       "community": 84,
       "norm_label": "flags_cycle_inducing_edges_as_back_edges()"
@@ -5466,7 +5493,7 @@
       "label": "five_node_acyclic_phase_matches_manual_calc_within_tolerance()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L705",
+      "source_location": "L729",
       "id": "graph_assembler_five_node_acyclic_phase_matches_manual_calc_within_tolerance",
       "community": 84,
       "norm_label": "five_node_acyclic_phase_matches_manual_calc_within_tolerance()"
@@ -5475,7 +5502,7 @@
       "label": "five_node_cyclic_terminates_and_phase_matches_within_tolerance()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L751",
+      "source_location": "L775",
       "id": "graph_assembler_five_node_cyclic_terminates_and_phase_matches_within_tolerance",
       "community": 84,
       "norm_label": "five_node_cyclic_terminates_and_phase_matches_within_tolerance()"
@@ -5484,7 +5511,7 @@
       "label": "critical_path_delay_equals_longest_root_to_leaf_over_wave_speed()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L783",
+      "source_location": "L807",
       "id": "graph_assembler_critical_path_delay_equals_longest_root_to_leaf_over_wave_speed",
       "community": 84,
       "norm_label": "critical_path_delay_equals_longest_root_to_leaf_over_wave_speed()"
@@ -5493,7 +5520,7 @@
       "label": "assemble_default_uses_the_default_wave_speed()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L803",
+      "source_location": "L827",
       "id": "graph_assembler_assemble_default_uses_the_default_wave_speed",
       "community": 84,
       "norm_label": "assemble_default_uses_the_default_wave_speed()"
@@ -5502,7 +5529,7 @@
       "label": "kinematic_vector_injects_source_amplitude_into_its_linked_node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L813",
+      "source_location": "L837",
       "id": "graph_assembler_kinematic_vector_injects_source_amplitude_into_its_linked_node",
       "community": 84,
       "norm_label": "kinematic_vector_injects_source_amplitude_into_its_linked_node()"
@@ -5511,7 +5538,7 @@
       "label": "link_less_kinematic_vector_falls_back_to_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L831",
+      "source_location": "L855",
       "id": "graph_assembler_link_less_kinematic_vector_falls_back_to_the_root",
       "community": 84,
       "norm_label": "link_less_kinematic_vector_falls_back_to_the_root()"
@@ -5520,7 +5547,7 @@
       "label": "multiple_kinematic_vectors_on_one_node_sum_their_injection()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L848",
+      "source_location": "L872",
       "id": "graph_assembler_multiple_kinematic_vectors_on_one_node_sum_their_injection",
       "community": 84,
       "norm_label": "multiple_kinematic_vectors_on_one_node_sum_their_injection()"
@@ -5529,7 +5556,7 @@
       "label": "kinematic_vector_into_an_effector_is_allowed()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L866",
+      "source_location": "L890",
       "id": "graph_assembler_kinematic_vector_into_an_effector_is_allowed",
       "community": 84,
       "norm_label": "kinematic_vector_into_an_effector_is_allowed()"
@@ -5538,7 +5565,7 @@
       "label": "injection_attenuates_with_depth_from_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L893",
+      "source_location": "L917",
       "id": "graph_assembler_injection_attenuates_with_depth_from_the_root",
       "community": 84,
       "norm_label": "injection_attenuates_with_depth_from_the_root()"
@@ -5547,7 +5574,7 @@
       "label": "convergent_node_amplitude_adds_when_in_phase()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L920",
+      "source_location": "L944",
       "id": "graph_assembler_convergent_node_amplitude_adds_when_in_phase",
       "community": 84,
       "norm_label": "convergent_node_amplitude_adds_when_in_phase()"
@@ -5556,7 +5583,7 @@
       "label": "convergent_node_amplitude_cancels_when_anti_phase()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L943",
+      "source_location": "L967",
       "id": "graph_assembler_convergent_node_amplitude_cancels_when_anti_phase",
       "community": 84,
       "norm_label": "convergent_node_amplitude_cancels_when_anti_phase()"
@@ -5565,7 +5592,7 @@
       "label": "two_wave_interference_matches_the_closed_form_within_tolerance()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L966",
+      "source_location": "L990",
       "id": "graph_assembler_two_wave_interference_matches_the_closed_form_within_tolerance",
       "community": 84,
       "norm_label": "two_wave_interference_matches_the_closed_form_within_tolerance()"
@@ -5574,7 +5601,7 @@
       "label": "non_node_tokens_and_their_links_are_skipped()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L989",
+      "source_location": "L1013",
       "id": "graph_assembler_non_node_tokens_and_their_links_are_skipped",
       "community": 84,
       "norm_label": "non_node_tokens_and_their_links_are_skipped()"
@@ -5583,7 +5610,7 @@
       "label": "assemble()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1017",
+      "source_location": "L1041",
       "id": "graph_assembler_assemble",
       "community": 84,
       "norm_label": "assemble()"
@@ -5592,7 +5619,7 @@
       "label": "temporal_frequency_attaches_a_transfer_to_its_linked_node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1028",
+      "source_location": "L1052",
       "id": "graph_assembler_temporal_frequency_attaches_a_transfer_to_its_linked_node",
       "community": 84,
       "norm_label": "temporal_frequency_attaches_a_transfer_to_its_linked_node()"
@@ -5601,7 +5628,7 @@
       "label": "link_less_temporal_frequency_attaches_to_the_root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1041",
+      "source_location": "L1065",
       "id": "graph_assembler_link_less_temporal_frequency_attaches_to_the_root",
       "community": 84,
       "norm_label": "link_less_temporal_frequency_attaches_to_the_root()"
@@ -5610,7 +5637,7 @@
       "label": "temporal_frequency_does_not_increase_node_count()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1051",
+      "source_location": "L1075",
       "id": "graph_assembler_temporal_frequency_does_not_increase_node_count",
       "community": 84,
       "norm_label": "temporal_frequency_does_not_increase_node_count()"
@@ -5619,7 +5646,7 @@
       "label": "stacked_temporal_transfers_accumulate_on_one_node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1062",
+      "source_location": "L1086",
       "id": "graph_assembler_stacked_temporal_transfers_accumulate_on_one_node",
       "community": 84,
       "norm_label": "stacked_temporal_transfers_accumulate_on_one_node()"
@@ -5628,7 +5655,7 @@
       "label": "in_band_feeder_passes_largely_unattenuated()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1074",
+      "source_location": "L1098",
       "id": "graph_assembler_in_band_feeder_passes_largely_unattenuated",
       "community": 84,
       "norm_label": "in_band_feeder_passes_largely_unattenuated()"
@@ -5637,7 +5664,7 @@
       "label": "out_of_band_feeder_is_attenuated()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1087",
+      "source_location": "L1111",
       "id": "graph_assembler_out_of_band_feeder_is_attenuated",
       "community": 84,
       "norm_label": "out_of_band_feeder_is_attenuated()"
@@ -5646,7 +5673,7 @@
       "label": "transfer_adds_delay_phase_to_a_crossing_feeder()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1101",
+      "source_location": "L1125",
       "id": "graph_assembler_transfer_adds_delay_phase_to_a_crossing_feeder",
       "community": 84,
       "norm_label": "transfer_adds_delay_phase_to_a_crossing_feeder()"
@@ -5655,7 +5682,7 @@
       "label": "unit_transfer_delay()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1136",
+      "source_location": "L1160",
       "id": "graph_assembler_unit_transfer_delay",
       "community": 84,
       "norm_label": "unit_transfer_delay()"
@@ -5664,7 +5691,7 @@
       "label": "cast_time_equals_critical_path_delay_when_no_transfers_present()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1141",
+      "source_location": "L1165",
       "id": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
       "community": 84,
       "norm_label": "cast_time_equals_critical_path_delay_when_no_transfers_present()"
@@ -5673,7 +5700,7 @@
       "label": "cast_time_on_acyclic_graph_matches_manual_calc()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1156",
+      "source_location": "L1180",
       "id": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
       "community": 84,
       "norm_label": "cast_time_on_acyclic_graph_matches_manual_calc()"
@@ -5682,7 +5709,7 @@
       "label": "cast_time_on_cyclic_graph_matches_manual_calc()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1171",
+      "source_location": "L1195",
       "id": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
       "community": 84,
       "norm_label": "cast_time_on_cyclic_graph_matches_manual_calc()"
@@ -5691,7 +5718,7 @@
       "label": "transfer_on_critical_path_extends_cast_time_beyond_geometric()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1188",
+      "source_location": "L1212",
       "id": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
       "community": 84,
       "norm_label": "transfer_on_critical_path_extends_cast_time_beyond_geometric()"
@@ -5700,7 +5727,7 @@
       "label": "transfer_off_critical_path_does_not_extend_cast_time()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1220",
+      "source_location": "L1244",
       "id": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
       "community": 84,
       "norm_label": "transfer_off_critical_path_does_not_extend_cast_time()"
@@ -5709,7 +5736,7 @@
       "label": "root_transfer_does_not_contribute_to_cast_time()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/assembler.rs",
-      "source_location": "L1235",
+      "source_location": "L1259",
       "id": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
       "community": 84,
       "norm_label": "root_transfer_does_not_contribute_to_cast_time()"
@@ -5814,6 +5841,240 @@
       "norm_label": "offsets_length_is_node_count_plus_one()"
     },
     {
+      "label": "energy.rs",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L1",
+      "id": "graph_energy",
+      "community": 56,
+      "norm_label": "energy.rs"
+    },
+    {
+      "label": "EnvResistance",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L18",
+      "id": "graph_energy_envresistance",
+      "community": 56,
+      "norm_label": "envresistance"
+    },
+    {
+      "label": "Default",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L25",
+      "id": "theos_magic_src_graph_energy_rs_default",
+      "community": 56,
+      "norm_label": "default"
+    },
+    {
+      "label": ".default()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L26",
+      "id": "graph_energy_envresistance_default",
+      "community": 56,
+      "norm_label": ".default()"
+    },
+    {
+      "label": "Self",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L26",
+      "id": "theos_magic_src_graph_energy_rs_self",
+      "community": 56,
+      "norm_label": "self"
+    },
+    {
+      "label": "TensionGraph",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L34",
+      "id": "graph_energy_tensiongraph",
+      "community": 56,
+      "norm_label": "tensiongraph"
+    },
+    {
+      "label": ".node_energy()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L38",
+      "id": "graph_energy_tensiongraph_node_energy",
+      "community": 56,
+      "norm_label": ".node_energy()"
+    },
+    {
+      "label": "NodeId",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L38",
+      "id": "theos_magic_src_graph_energy_rs_nodeid",
+      "community": 56,
+      "norm_label": "nodeid"
+    },
+    {
+      "label": "Option",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L38",
+      "id": "theos_magic_src_graph_energy_rs_option",
+      "community": 56,
+      "norm_label": "option"
+    },
+    {
+      "label": ".energy_cost()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L48",
+      "id": "graph_energy_tensiongraph_energy_cost",
+      "community": 56,
+      "norm_label": ".energy_cost()"
+    },
+    {
+      "label": "WeaveTuning",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L48",
+      "id": "theos_magic_src_graph_energy_rs_weavetuning",
+      "community": 56,
+      "norm_label": "weavetuning"
+    },
+    {
+      "label": ".efficiency()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L56",
+      "id": "graph_energy_tensiongraph_efficiency",
+      "community": 56,
+      "norm_label": ".efficiency()"
+    },
+    {
+      "label": "body()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "id": "graph_energy_body",
+      "community": 56,
+      "norm_label": "body()"
+    },
+    {
+      "label": "Chakra",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "id": "theos_magic_src_graph_energy_rs_chakra",
+      "community": 56,
+      "norm_label": "chakra"
+    },
+    {
+      "label": "Vec3",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "id": "theos_magic_src_graph_energy_rs_vec3",
+      "community": 56,
+      "norm_label": "vec3"
+    },
+    {
+      "label": "Vec",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "id": "theos_magic_src_graph_energy_rs_vec",
+      "community": 56,
+      "norm_label": "vec"
+    },
+    {
+      "label": "WovenToken",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "id": "theos_magic_src_graph_energy_rs_woventoken",
+      "community": 56,
+      "norm_label": "woventoken"
+    },
+    {
+      "label": "spatial()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L94",
+      "id": "graph_energy_spatial",
+      "community": 56,
+      "norm_label": "spatial()"
+    },
+    {
+      "label": "assemble()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L106",
+      "id": "graph_energy_assemble",
+      "community": 56,
+      "norm_label": "assemble()"
+    },
+    {
+      "label": "approx()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L116",
+      "id": "graph_energy_approx",
+      "community": 56,
+      "norm_label": "approx()"
+    },
+    {
+      "label": "star()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L126",
+      "id": "graph_energy_star",
+      "community": 56,
+      "norm_label": "star()"
+    },
+    {
+      "label": "graph_energy_matches_manual_sum_over_edges()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L135",
+      "id": "graph_energy_graph_energy_matches_manual_sum_over_edges",
+      "community": 56,
+      "norm_label": "graph_energy_matches_manual_sum_over_edges()"
+    },
+    {
+      "label": "node_energy_scales_with_edge_length_and_amplitude()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L144",
+      "id": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "community": 56,
+      "norm_label": "node_energy_scales_with_edge_length_and_amplitude()"
+    },
+    {
+      "label": "efficiency_matches_manual_eta_on_constructive_graph()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L175",
+      "id": "graph_energy_efficiency_matches_manual_eta_on_constructive_graph",
+      "community": 56,
+      "norm_label": "efficiency_matches_manual_eta_on_constructive_graph()"
+    },
+    {
+      "label": "efficiency_on_zero_energy_graph_is_well_defined()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L187",
+      "id": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "community": 56,
+      "norm_label": "efficiency_on_zero_energy_graph_is_well_defined()"
+    },
+    {
+      "label": "full_transfer_graph_efficiency_near_one()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L201",
+      "id": "graph_energy_full_transfer_graph_efficiency_near_one",
+      "community": 56,
+      "norm_label": "full_transfer_graph_efficiency_near_one()"
+    },
+    {
       "label": "injection.rs",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/injection.rs",
@@ -5895,10 +6156,19 @@
       "norm_label": "mod.rs"
     },
     {
+      "label": "NodeKind",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/mod.rs",
+      "source_location": "L43",
+      "id": "graph_mod_nodekind",
+      "community": 85,
+      "norm_label": "nodekind"
+    },
+    {
       "label": "Node",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L40",
+      "source_location": "L58",
       "id": "graph_mod_node",
       "community": 85,
       "norm_label": "node"
@@ -5907,7 +6177,7 @@
       "label": "Vec3",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L43",
+      "source_location": "L61",
       "id": "theos_magic_src_graph_mod_rs_vec3",
       "community": 85,
       "norm_label": "vec3"
@@ -5916,7 +6186,7 @@
       "label": "Vec",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L66",
+      "source_location": "L92",
       "id": "theos_magic_src_graph_mod_rs_vec",
       "community": 85,
       "norm_label": "vec"
@@ -5925,7 +6195,7 @@
       "label": "TemporalTransfer",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L66",
+      "source_location": "L92",
       "id": "temporaltransfer",
       "community": 85,
       "norm_label": "temporaltransfer"
@@ -5934,7 +6204,7 @@
       "label": "TensionGraph",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L76",
+      "source_location": "L102",
       "id": "graph_mod_tensiongraph",
       "community": 85,
       "norm_label": "tensiongraph"
@@ -5943,7 +6213,7 @@
       "label": "Arena",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L77",
+      "source_location": "L103",
       "id": "arena",
       "community": 85,
       "norm_label": "arena"
@@ -5952,7 +6222,7 @@
       "label": "CsrAdjacency",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L78",
+      "source_location": "L104",
       "id": "csradjacency",
       "community": 85,
       "norm_label": "csradjacency"
@@ -5961,7 +6231,7 @@
       "label": "NodeId",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L79",
+      "source_location": "L105",
       "id": "theos_magic_src_graph_mod_rs_nodeid",
       "community": 85,
       "norm_label": "nodeid"
@@ -5970,7 +6240,7 @@
       "label": ".root()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L89",
+      "source_location": "L119",
       "id": "graph_mod_tensiongraph_root",
       "community": 85,
       "norm_label": ".root()"
@@ -5979,7 +6249,7 @@
       "label": ".node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L94",
+      "source_location": "L124",
       "id": "graph_mod_tensiongraph_node",
       "community": 85,
       "norm_label": ".node()"
@@ -5988,7 +6258,7 @@
       "label": "Option",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L94",
+      "source_location": "L124",
       "id": "theos_magic_src_graph_mod_rs_option",
       "community": 85,
       "norm_label": "option"
@@ -5997,7 +6267,7 @@
       "label": ".neighbors()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L99",
+      "source_location": "L129",
       "id": "graph_mod_tensiongraph_neighbors",
       "community": 85,
       "norm_label": ".neighbors()"
@@ -6006,7 +6276,7 @@
       "label": "Edge",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L99",
+      "source_location": "L129",
       "id": "edge",
       "community": 85,
       "norm_label": "edge"
@@ -6015,7 +6285,7 @@
       "label": ".node_count()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L104",
+      "source_location": "L134",
       "id": "graph_mod_tensiongraph_node_count",
       "community": 85,
       "norm_label": ".node_count()"
@@ -6024,7 +6294,7 @@
       "label": ".critical_path_delay()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L112",
+      "source_location": "L142",
       "id": "graph_mod_tensiongraph_critical_path_delay",
       "community": 85,
       "norm_label": ".critical_path_delay()"
@@ -6033,10 +6303,19 @@
       "label": ".cast_time()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L125",
+      "source_location": "L155",
       "id": "graph_mod_tensiongraph_cast_time",
       "community": 85,
       "norm_label": ".cast_time()"
+    },
+    {
+      "label": ".authoring_work()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/mod.rs",
+      "source_location": "L164",
+      "id": "graph_mod_tensiongraph_authoring_work",
+      "community": 85,
+      "norm_label": ".authoring_work()"
     },
     {
       "label": "phase.rs",
@@ -6420,7 +6699,7 @@
       "label": "WeaveTuning",
       "file_type": "code",
       "source_file": "theos-magic/src/tuning.rs",
-      "source_location": "L31",
+      "source_location": "L38",
       "id": "src_tuning_weavetuning",
       "community": 90,
       "norm_label": "weavetuning"
@@ -6429,7 +6708,7 @@
       "label": "Default",
       "file_type": "code",
       "source_file": "theos-magic/src/tuning.rs",
-      "source_location": "L40",
+      "source_location": "L50",
       "id": "theos_magic_src_tuning_rs_default",
       "community": 90,
       "norm_label": "default"
@@ -6438,7 +6717,7 @@
       "label": ".default()",
       "file_type": "code",
       "source_file": "theos-magic/src/tuning.rs",
-      "source_location": "L41",
+      "source_location": "L51",
       "id": "src_tuning_weavetuning_default",
       "community": 90,
       "norm_label": ".default()"
@@ -6447,7 +6726,7 @@
       "label": "Self",
       "file_type": "code",
       "source_file": "theos-magic/src/tuning.rs",
-      "source_location": "L41",
+      "source_location": "L51",
       "id": "theos_magic_src_tuning_rs_self",
       "community": 90,
       "norm_label": "self"
@@ -6456,7 +6735,7 @@
       "label": "default_bandwidth_constant_is_tau()",
       "file_type": "code",
       "source_file": "theos-magic/src/tuning.rs",
-      "source_location": "L55",
+      "source_location": "L66",
       "id": "src_tuning_default_bandwidth_constant_is_tau",
       "community": 90,
       "norm_label": "default_bandwidth_constant_is_tau()"
@@ -6465,7 +6744,7 @@
       "label": "default_tau_clamp_window_is_ordered()",
       "file_type": "code",
       "source_file": "theos-magic/src/tuning.rs",
-      "source_location": "L60",
+      "source_location": "L71",
       "id": "src_tuning_default_tau_clamp_window_is_ordered",
       "community": 90,
       "norm_label": "default_tau_clamp_window_is_ordered()"
@@ -7619,7 +7898,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L1",
       "id": "src_ray",
-      "community": 87,
+      "community": 13,
       "norm_label": "ray.rs"
     },
     {
@@ -7628,7 +7907,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L12",
       "id": "src_ray_ray",
-      "community": 87,
+      "community": 13,
       "norm_label": "ray"
     },
     {
@@ -7637,7 +7916,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L14",
       "id": "theos_math_src_ray_rs_vec3",
-      "community": 87,
+      "community": 13,
       "norm_label": "vec3"
     },
     {
@@ -7646,7 +7925,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L26",
       "id": "src_ray_ray_new",
-      "community": 87,
+      "community": 13,
       "norm_label": ".new()"
     },
     {
@@ -7655,7 +7934,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L26",
       "id": "theos_math_src_ray_rs_self",
-      "community": 87,
+      "community": 13,
       "norm_label": "self"
     },
     {
@@ -7664,7 +7943,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L40",
       "id": "src_ray_ray_at",
-      "community": 87,
+      "community": 13,
       "norm_label": ".at()"
     },
     {
@@ -7673,7 +7952,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L52",
       "id": "src_ray_assert_vec3_eq",
-      "community": 87,
+      "community": 13,
       "norm_label": "assert_vec3_eq()"
     },
     {
@@ -7682,7 +7961,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L63",
       "id": "src_ray_test_new_stores_origin_and_direction",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_new_stores_origin_and_direction()"
     },
     {
@@ -7691,7 +7970,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L73",
       "id": "src_ray_test_new_panics_on_non_unit_direction",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_new_panics_on_non_unit_direction()"
     },
     {
@@ -7700,7 +7979,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L79",
       "id": "src_ray_test_new_panics_on_zero_direction",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_new_panics_on_zero_direction()"
     },
     {
@@ -7709,7 +7988,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L84",
       "id": "src_ray_test_new_accepts_axis_aligned_directions",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_new_accepts_axis_aligned_directions()"
     },
     {
@@ -7718,7 +7997,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L98",
       "id": "src_ray_test_at_zero_returns_origin",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_at_zero_returns_origin()"
     },
     {
@@ -7727,7 +8006,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L104",
       "id": "src_ray_test_at_one_returns_origin_plus_direction",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_at_one_returns_origin_plus_direction()"
     },
     {
@@ -7736,7 +8015,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L110",
       "id": "src_ray_test_at_known_t_value",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_at_known_t_value()"
     },
     {
@@ -7745,7 +8024,7 @@
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L116",
       "id": "src_ray_test_at_negative_t_goes_behind_origin",
-      "community": 87,
+      "community": 13,
       "norm_label": "test_at_negative_t_goes_behind_origin()"
     },
     {
@@ -7772,7 +8051,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L28",
       "id": "src_vec_vec3",
-      "community": 17,
+      "community": 87,
       "norm_label": "vec3"
     },
     {
@@ -7781,7 +8060,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L42",
       "id": "src_vec_vec4",
-      "community": 56,
+      "community": 17,
       "norm_label": "vec4"
     },
     {
@@ -7808,7 +8087,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L68",
       "id": "src_vec_vec2_dot",
-      "community": 17,
+      "community": 18,
       "norm_label": ".dot()"
     },
     {
@@ -7925,7 +8204,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L213",
       "id": "src_vec_vec4_xyz",
-      "community": 56,
+      "community": 17,
       "norm_label": ".xyz()"
     },
     {
@@ -7934,7 +8213,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L218",
       "id": "src_vec_vec4_xy",
-      "community": 56,
+      "community": 17,
       "norm_label": ".xy()"
     },
     {
@@ -7943,7 +8222,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L223",
       "id": "src_vec_vec4_zw",
-      "community": 56,
+      "community": 17,
       "norm_label": ".zw()"
     },
     {
@@ -7988,7 +8267,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L261",
       "id": "add",
-      "community": 17,
+      "community": 87,
       "norm_label": "add"
     },
     {
@@ -7997,7 +8276,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L265",
       "id": "src_vec_vec2_add",
-      "community": 17,
+      "community": 18,
       "norm_label": ".add()"
     },
     {
@@ -8060,7 +8339,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L333",
       "id": "src_vec_vec4_add_assign",
-      "community": 56,
+      "community": 17,
       "norm_label": ".add_assign()"
     },
     {
@@ -8069,7 +8348,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L338",
       "id": "sub",
-      "community": 56,
+      "community": 17,
       "norm_label": "sub"
     },
     {
@@ -8123,7 +8402,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L404",
       "id": "src_vec_vec3_sub_assign",
-      "community": 17,
+      "community": 18,
       "norm_label": ".sub_assign()"
     },
     {
@@ -8132,7 +8411,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L410",
       "id": "src_vec_vec4_sub_assign",
-      "community": 56,
+      "community": 17,
       "norm_label": ".sub_assign()"
     },
     {
@@ -8141,7 +8420,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L415",
       "id": "theos_math_src_vec_rs_mul",
-      "community": 17,
+      "community": 87,
       "norm_label": "mul"
     },
     {
@@ -8177,7 +8456,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L471",
       "id": "theos_math_src_vec_rs_mulassign",
-      "community": 17,
+      "community": 87,
       "norm_label": "mulassign"
     },
     {
@@ -8204,7 +8483,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L484",
       "id": "src_vec_vec4_mul_assign",
-      "community": 56,
+      "community": 17,
       "norm_label": ".mul_assign()"
     },
     {
@@ -8258,7 +8537,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L546",
       "id": "src_vec_vec2_div_assign",
-      "community": 18,
+      "community": 17,
       "norm_label": ".div_assign()"
     },
     {
@@ -8276,7 +8555,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L558",
       "id": "src_vec_vec4_div_assign",
-      "community": 56,
+      "community": 18,
       "norm_label": ".div_assign()"
     },
     {
@@ -8285,7 +8564,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L589",
       "id": "src_vec_f32",
-      "community": 17,
+      "community": 87,
       "norm_label": "f32"
     },
     {
@@ -8294,7 +8573,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L592",
       "id": "src_vec_f32_mul",
-      "community": 17,
+      "community": 87,
       "norm_label": ".mul()"
     },
     {
@@ -8339,7 +8618,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L713",
       "id": "src_vec_vec3_from",
-      "community": 17,
+      "community": 87,
       "norm_label": ".from()"
     },
     {
@@ -8348,7 +8627,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L718",
       "id": "src_vec_glam_vec3",
-      "community": 17,
+      "community": 87,
       "norm_label": "glam::vec3"
     },
     {
@@ -8357,7 +8636,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L721",
       "id": "src_vec_glam_vec3_from",
-      "community": 17,
+      "community": 87,
       "norm_label": ".from()"
     },
     {
@@ -8366,7 +8645,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L726",
       "id": "vec3a",
-      "community": 17,
+      "community": 87,
       "norm_label": "vec3a"
     },
     {
@@ -8375,7 +8654,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L736",
       "id": "src_vec_glam_vec3a",
-      "community": 17,
+      "community": 87,
       "norm_label": "glam::vec3a"
     },
     {
@@ -8384,7 +8663,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L741",
       "id": "src_vec_glam_vec3a_from",
-      "community": 17,
+      "community": 87,
       "norm_label": ".from()"
     },
     {
@@ -8393,7 +8672,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L749",
       "id": "src_vec_vec4_from",
-      "community": 56,
+      "community": 17,
       "norm_label": ".from()"
     },
     {
@@ -8402,7 +8681,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L754",
       "id": "src_vec_glam_vec4",
-      "community": 56,
+      "community": 17,
       "norm_label": "glam::vec4"
     },
     {
@@ -8411,7 +8690,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L757",
       "id": "src_vec_glam_vec4_from",
-      "community": 56,
+      "community": 17,
       "norm_label": ".from()"
     },
     {
@@ -8429,7 +8708,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L793",
       "id": "src_vec_wide_f32x4",
-      "community": 56,
+      "community": 17,
       "norm_label": "wide::f32x4"
     },
     {
@@ -8438,7 +8717,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L795",
       "id": "src_vec_wide_f32x4_from",
-      "community": 56,
+      "community": 17,
       "norm_label": ".from()"
     },
     {
@@ -8456,7 +8735,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L807",
       "id": "vector3",
-      "community": 17,
+      "community": 87,
       "norm_label": "vector3"
     },
     {
@@ -8465,7 +8744,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L814",
       "id": "vector4",
-      "community": 56,
+      "community": 17,
       "norm_label": "vector4"
     },
     {
@@ -8492,7 +8771,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L828",
       "id": "src_vec_mint_vector3_f32",
-      "community": 17,
+      "community": 87,
       "norm_label": "mint::vector3<f32>"
     },
     {
@@ -8501,7 +8780,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L830",
       "id": "src_vec_mint_vector3_f32_from",
-      "community": 17,
+      "community": 87,
       "norm_label": ".from()"
     },
     {
@@ -11196,6 +11475,51 @@
       "norm_label": "mentor.md"
     },
     {
+      "label": "SPRINT-PLANNING-GOAL.md",
+      "file_type": "document",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L1",
+      "id": "plans_sprint_planning_goal",
+      "community": 99,
+      "norm_label": "sprint-planning-goal.md"
+    },
+    {
+      "label": "\ud83c\udfaf Sprint Planning Summit \u2014 Goal",
+      "file_type": "document",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L1",
+      "id": "plans_sprint_planning_goal_sprint_planning_summit_goal",
+      "community": 99,
+      "norm_label": "\ud83c\udfaf sprint planning summit \u2014 goal"
+    },
+    {
+      "label": "Success criteria",
+      "file_type": "document",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L6",
+      "id": "plans_sprint_planning_goal_success_criteria",
+      "community": 99,
+      "norm_label": "success criteria"
+    },
+    {
+      "label": "Sequence (decided 2026-06-21)",
+      "file_type": "document",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L15",
+      "id": "plans_sprint_planning_goal_sequence_decided_2026_06_21",
+      "community": 99,
+      "norm_label": "sequence (decided 2026-06-21)"
+    },
+    {
+      "label": "Current focus",
+      "file_type": "document",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L20",
+      "id": "plans_sprint_planning_goal_current_focus",
+      "community": 99,
+      "norm_label": "current focus"
+    },
+    {
       "label": "THEOS-12.md",
       "file_type": "document",
       "source_file": "plans/THEOS-12.md",
@@ -11700,6 +12024,150 @@
       "norm_label": "out of scope (deferred)"
     },
     {
+      "label": "THEOS-150.md",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L1",
+      "id": "plans_theos_150",
+      "community": 93,
+      "norm_label": "theos-150.md"
+    },
+    {
+      "label": "THEOS-150 \u2014 [M3] resonance stability sparse solver (E3/E5/E6/E7)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L1",
+      "id": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "community": 93,
+      "norm_label": "theos-150 \u2014 [m3] resonance stability sparse solver (e3/e5/e6/e7)"
+    },
+    {
+      "label": "Goal (one sentence)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L9",
+      "id": "plans_theos_150_goal_one_sentence",
+      "community": 93,
+      "norm_label": "goal (one sentence)"
+    },
+    {
+      "label": "Canon (pinned from *Equations of the Weave*, page 170164225)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L14",
+      "id": "plans_theos_150_canon_pinned_from_equations_of_the_weave_page_170164225",
+      "community": 93,
+      "norm_label": "canon (pinned from *equations of the weave*, page 170164225)"
+    },
+    {
+      "label": "Current code state (`theos-magic/src/graph`)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L25",
+      "id": "plans_theos_150_current_code_state_theos_magic_src_graph",
+      "community": 93,
+      "norm_label": "current code state (`theos-magic/src/graph`)"
+    },
+    {
+      "label": "Decision register \u2014 **LOCKED** (2026-06-21; D5 approach-level)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L36",
+      "id": "plans_theos_150_decision_register_locked_2026_06_21_d5_approach_level",
+      "community": 93,
+      "norm_label": "decision register \u2014 **locked** (2026-06-21; d5 approach-level)"
+    },
+    {
+      "label": "D1 \u2014 Where do `k\u1d62\u2c7c`, `L\u1d62\u2c7c`, `\u03c3_f` live?  \u26a0\ufe0f architecture (the ticket's flagged call)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L48",
+      "id": "plans_theos_150_d1_where_do_kij_lij_\u03c3_f_live_architecture_the_ticket_s_flagged_call",
+      "community": 93,
+      "norm_label": "d1 \u2014 where do `kij`, `lij`, `\u03c3_f` live?  \u26a0\ufe0f architecture (the ticket's flagged call)"
+    },
+    {
+      "label": "D2 \u2014 Default values (no token supplies these yet)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L56",
+      "id": "plans_theos_150_d2_default_values_no_token_supplies_these_yet",
+      "community": 93,
+      "norm_label": "d2 \u2014 default values (no token supplies these yet)"
+    },
+    {
+      "label": "D3 \u2014 `\u03c3_f` (frequency tolerance) source",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L65",
+      "id": "plans_theos_150_d3_\u03c3_f_frequency_tolerance_source",
+      "community": 93,
+      "norm_label": "d3 \u2014 `\u03c3_f` (frequency tolerance) source"
+    },
+    {
+      "label": "D4 \u2014 Authoring/execution split for `S` (mirror 159 D5)  \u26a0\ufe0f keep consistent",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L72",
+      "id": "plans_theos_150_d4_authoring_execution_split_for_s_mirror_159_d5_keep_consistent",
+      "community": 93,
+      "norm_label": "d4 \u2014 authoring/execution split for `s` (mirror 159 d5)  \u26a0\ufe0f keep consistent"
+    },
+    {
+      "label": "D5 \u2014 Solver mechanics (mostly canon-driven; one design note)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L80",
+      "id": "plans_theos_150_d5_solver_mechanics_mostly_canon_driven_one_design_note",
+      "community": 93,
+      "norm_label": "d5 \u2014 solver mechanics (mostly canon-driven; one design note)"
+    },
+    {
+      "label": "Proposed shape (scaffolding only)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L92",
+      "id": "plans_theos_150_proposed_shape_scaffolding_only",
+      "community": 93,
+      "norm_label": "proposed shape (scaffolding only)"
+    },
+    {
+      "label": "Test scenarios (names only)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L104",
+      "id": "plans_theos_150_test_scenarios_names_only",
+      "community": 93,
+      "norm_label": "test scenarios (names only)"
+    },
+    {
+      "label": "Out of scope",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L112",
+      "id": "plans_theos_150_out_of_scope",
+      "community": 93,
+      "norm_label": "out of scope"
+    },
+    {
+      "label": "Acceptance criteria \u2192 coverage",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L115",
+      "id": "plans_theos_150_acceptance_criteria_coverage",
+      "community": 93,
+      "norm_label": "acceptance criteria \u2192 coverage"
+    },
+    {
+      "label": "Cross-story notes",
+      "file_type": "document",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L120",
+      "id": "plans_theos_150_cross_story_notes",
+      "community": 93,
+      "norm_label": "cross-story notes"
+    },
+    {
       "label": "THEOS-156.md",
       "file_type": "document",
       "source_file": "plans/THEOS-156.md",
@@ -11907,6 +12375,150 @@
       "norm_label": "coverage target"
     },
     {
+      "label": "THEOS-159.md",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L1",
+      "id": "plans_theos_159",
+      "community": 94,
+      "norm_label": "theos-159.md"
+    },
+    {
+      "label": "THEOS-159 \u2014 E9 energy + E10 efficiency (\u03b7)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L1",
+      "id": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "community": 94,
+      "norm_label": "theos-159 \u2014 e9 energy + e10 efficiency (\u03b7)"
+    },
+    {
+      "label": "Goal (one sentence)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L8",
+      "id": "plans_theos_159_goal_one_sentence",
+      "community": 94,
+      "norm_label": "goal (one sentence)"
+    },
+    {
+      "label": "Canon (pinned from *Shared Formalism: Equations of the Weave*, page 170164225)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L13",
+      "id": "plans_theos_159_canon_pinned_from_shared_formalism_equations_of_the_weave_page_170164225",
+      "community": 94,
+      "norm_label": "canon (pinned from *shared formalism: equations of the weave*, page 170164225)"
+    },
+    {
+      "label": "Current code state (grounding \u2014 `theos-magic/src/graph`)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L26",
+      "id": "plans_theos_159_current_code_state_grounding_theos_magic_src_graph",
+      "community": 94,
+      "norm_label": "current code state (grounding \u2014 `theos-magic/src/graph`)"
+    },
+    {
+      "label": "Decision register \u2014 **LOCKED** (2026-06-21)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L37",
+      "id": "plans_theos_159_decision_register_locked_2026_06_21",
+      "community": 94,
+      "norm_label": "decision register \u2014 **locked** (2026-06-21)"
+    },
+    {
+      "label": "D1 \u2014 What is the per-edge amplitude `A\u1d62\u2c7c`?  \u26a0\ufe0f core",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L54",
+      "id": "plans_theos_159_d1_what_is_the_per_edge_amplitude_aij_core",
+      "community": 94,
+      "norm_label": "d1 \u2014 what is the per-edge amplitude `aij`?  \u26a0\ufe0f core"
+    },
+    {
+      "label": "D2 \u2014 Where do `\u03c1_med` and `\u03c1_env` come from? (not in the data model today)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L64",
+      "id": "plans_theos_159_d2_where_do_\u03c1_med_and_\u03c1_env_come_from_not_in_the_data_model_today",
+      "community": 94,
+      "norm_label": "d2 \u2014 where do `\u03c1_med` and `\u03c1_env` come from? (not in the data model today)"
+    },
+    {
+      "label": "D3 \u2014 Which nodes are \"effectors\" for the E10 numerator?  \u26a0\ufe0f core",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L70",
+      "id": "plans_theos_159_d3_which_nodes_are_effectors_for_the_e10_numerator_core",
+      "community": 94,
+      "norm_label": "d3 \u2014 which nodes are \"effectors\" for the e10 numerator?  \u26a0\ufe0f core"
+    },
+    {
+      "label": "D4 \u2014 \u03b7 when `E_cost == 0` (no-injection / zero-energy graph)? (AC3)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L76",
+      "id": "plans_theos_159_d4_\u03b7_when_e_cost_0_no_injection_zero_energy_graph_ac3",
+      "community": 94,
+      "norm_label": "d4 \u2014 \u03b7 when `e_cost == 0` (no-injection / zero-energy graph)? (ac3)"
+    },
+    {
+      "label": "D5 \u2014 Authoring-side (frozen) or execution-side (env-dependent)?  \u26a0\ufe0f architecture, couples to THEOS-173",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L81",
+      "id": "plans_theos_159_d5_authoring_side_frozen_or_execution_side_env_dependent_architecture_couples_to_theos_173",
+      "community": 94,
+      "norm_label": "d5 \u2014 authoring-side (frozen) or execution-side (env-dependent)?  \u26a0\ufe0f architecture, couples to theos-173"
+    },
+    {
+      "label": "Proposed shape (scaffolding only \u2014 fill bodies in the impl chat)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L91",
+      "id": "plans_theos_159_proposed_shape_scaffolding_only_fill_bodies_in_the_impl_chat",
+      "community": 94,
+      "norm_label": "proposed shape (scaffolding only \u2014 fill bodies in the impl chat)"
+    },
+    {
+      "label": "Test scenarios (names only \u2014 AAA bodies in the impl chat)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L102",
+      "id": "plans_theos_159_test_scenarios_names_only_aaa_bodies_in_the_impl_chat",
+      "community": 94,
+      "norm_label": "test scenarios (names only \u2014 aaa bodies in the impl chat)"
+    },
+    {
+      "label": "Out of scope",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L109",
+      "id": "plans_theos_159_out_of_scope",
+      "community": 94,
+      "norm_label": "out of scope"
+    },
+    {
+      "label": "Acceptance criteria \u2192 coverage",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L112",
+      "id": "plans_theos_159_acceptance_criteria_coverage",
+      "community": 94,
+      "norm_label": "acceptance criteria \u2192 coverage"
+    },
+    {
+      "label": "Open questions to carry into canon",
+      "file_type": "document",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L116",
+      "id": "plans_theos_159_open_questions_to_carry_into_canon",
+      "community": 94,
+      "norm_label": "open questions to carry into canon"
+    },
+    {
       "label": "THEOS-16.md",
       "file_type": "document",
       "source_file": "plans/THEOS-16.md",
@@ -12103,6 +12715,294 @@
       "id": "plans_theos_17_companion_artifact",
       "community": 71,
       "norm_label": "companion artifact"
+    },
+    {
+      "label": "THEOS-170-canon-agent-prompt.md",
+      "file_type": "document",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L1",
+      "id": "plans_theos_170_canon_agent_prompt",
+      "community": 98,
+      "norm_label": "theos-170-canon-agent-prompt.md"
+    },
+    {
+      "label": "Agent prompt \u2014 THEOS-170: reconcile E12 (TemporalFrequency) to the implemented transfer-element model",
+      "file_type": "document",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L1",
+      "id": "plans_theos_170_canon_agent_prompt_agent_prompt_theos_170_reconcile_e12_temporalfrequency_to_the_implemented_transfer_element_model",
+      "community": 98,
+      "norm_label": "agent prompt \u2014 theos-170: reconcile e12 (temporalfrequency) to the implemented transfer-element model"
+    },
+    {
+      "label": "The canonical model (ground truth = the shipped code)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L18",
+      "id": "plans_theos_170_canon_agent_prompt_the_canonical_model_ground_truth_the_shipped_code",
+      "community": 98,
+      "norm_label": "the canonical model (ground truth = the shipped code)"
+    },
+    {
+      "label": "Edits",
+      "file_type": "document",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L25",
+      "id": "plans_theos_170_canon_agent_prompt_edits",
+      "community": 98,
+      "norm_label": "edits"
+    },
+    {
+      "label": "Constraints",
+      "file_type": "document",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L44",
+      "id": "plans_theos_170_canon_agent_prompt_constraints",
+      "community": 98,
+      "norm_label": "constraints"
+    },
+    {
+      "label": "Acceptance criteria",
+      "file_type": "document",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L49",
+      "id": "plans_theos_170_canon_agent_prompt_acceptance_criteria",
+      "community": 98,
+      "norm_label": "acceptance criteria"
+    },
+    {
+      "label": "THEOS-171.md",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L1",
+      "id": "plans_theos_171",
+      "community": 97,
+      "norm_label": "theos-171.md"
+    },
+    {
+      "label": "THEOS-171 \u2014 [formalism] Pin physical-`f` \u2192 `f_norm` normalization on Shared Formalism",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L1",
+      "id": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "community": 97,
+      "norm_label": "theos-171 \u2014 [formalism] pin physical-`f` \u2192 `f_norm` normalization on shared formalism"
+    },
+    {
+      "label": "Goal (one sentence)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L8",
+      "id": "plans_theos_171_goal_one_sentence",
+      "community": 97,
+      "norm_label": "goal (one sentence)"
+    },
+    {
+      "label": "Grounded context (from *Core UX: Spell Appearance*, page 177897474, \u00a73\u20134)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L13",
+      "id": "plans_theos_171_grounded_context_from_core_ux_spell_appearance_page_177897474_3_4",
+      "community": 97,
+      "norm_label": "grounded context (from *core ux: spell appearance*, page 177897474, \u00a73\u20134)"
+    },
+    {
+      "label": "Decision register \u2014 **OPEN** (two coupled worldbuilding calls)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L20",
+      "id": "plans_theos_171_decision_register_open_two_coupled_worldbuilding_calls",
+      "community": 97,
+      "norm_label": "decision register \u2014 **open** (two coupled worldbuilding calls)"
+    },
+    {
+      "label": "DN1 \u2014 Range `[f_min, f_max]` (the \"authored frequency range\", Hz)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L22",
+      "id": "plans_theos_171_dn1_range_f_min_f_max_the_authored_frequency_range_hz",
+      "community": 97,
+      "norm_label": "dn1 \u2014 range `[f_min, f_max]` (the \"authored frequency range\", hz)"
+    },
+    {
+      "label": "DN2 \u2014 Curve (linear vs logarithmic)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L28",
+      "id": "plans_theos_171_dn2_curve_linear_vs_logarithmic",
+      "community": 97,
+      "norm_label": "dn2 \u2014 curve (linear vs logarithmic)"
+    },
+    {
+      "label": "DN3 \u2014 Clamp",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L39",
+      "id": "plans_theos_171_dn3_clamp",
+      "community": 97,
+      "norm_label": "dn3 \u2014 clamp"
+    },
+    {
+      "label": "Out of scope",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L42",
+      "id": "plans_theos_171_out_of_scope",
+      "community": 97,
+      "norm_label": "out of scope"
+    },
+    {
+      "label": "Acceptance criteria",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L45",
+      "id": "plans_theos_171_acceptance_criteria",
+      "community": 97,
+      "norm_label": "acceptance criteria"
+    },
+    {
+      "label": "Delivery",
+      "file_type": "document",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L49",
+      "id": "plans_theos_171_delivery",
+      "community": 97,
+      "norm_label": "delivery"
+    },
+    {
+      "label": "THEOS-173.md",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L1",
+      "id": "plans_theos_173",
+      "community": 95,
+      "norm_label": "theos-173.md"
+    },
+    {
+      "label": "THEOS-173 \u2014 [M2] Cast-time energy-throughput floor (Option B): `E_cost / P`",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L1",
+      "id": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "community": 95,
+      "norm_label": "theos-173 \u2014 [m2] cast-time energy-throughput floor (option b): `e_cost / p`"
+    },
+    {
+      "label": "Goal (one sentence)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L9",
+      "id": "plans_theos_173_goal_one_sentence",
+      "community": 95,
+      "norm_label": "goal (one sentence)"
+    },
+    {
+      "label": "Canon state",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L18",
+      "id": "plans_theos_173_canon_state",
+      "community": 95,
+      "norm_label": "canon state"
+    },
+    {
+      "label": "Current code state",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L29",
+      "id": "plans_theos_173_current_code_state",
+      "community": 95,
+      "norm_label": "current code state"
+    },
+    {
+      "label": "Decision register \u2014 **LOCKED** (2026-06-21)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L37",
+      "id": "plans_theos_173_decision_register_locked_2026_06_21",
+      "community": 95,
+      "norm_label": "decision register \u2014 **locked** (2026-06-21)"
+    },
+    {
+      "label": "DP1 \u2014 **What IS `P`?**  \u26a0\ufe0f worldbuilding \u2014 your call (no canon today)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L49",
+      "id": "plans_theos_173_dp1_what_is_p_worldbuilding_your_call_no_canon_today",
+      "community": 95,
+      "norm_label": "dp1 \u2014 **what is `p`?**  \u26a0\ufe0f worldbuilding \u2014 your call (no canon today)"
+    },
+    {
+      "label": "DP2 \u2014 Aggregation (if `P` derives from chakras)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L71",
+      "id": "plans_theos_173_dp2_aggregation_if_p_derives_from_chakras",
+      "community": 95,
+      "norm_label": "dp2 \u2014 aggregation (if `p` derives from chakras)"
+    },
+    {
+      "label": "DP3 \u2014 `effective_cast_time` seam (scaffolding)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L76",
+      "id": "plans_theos_173_dp3_effective_cast_time_seam_scaffolding",
+      "community": 95,
+      "norm_label": "dp3 \u2014 `effective_cast_time` seam (scaffolding)"
+    },
+    {
+      "label": "DP4 \u2014 `P \u2264 0` guard",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L82",
+      "id": "plans_theos_173_dp4_p_0_guard",
+      "community": 95,
+      "norm_label": "dp4 \u2014 `p \u2264 0` guard"
+    },
+    {
+      "label": "DP5 \u2014 Canon home + numbering",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L87",
+      "id": "plans_theos_173_dp5_canon_home_numbering",
+      "community": 95,
+      "norm_label": "dp5 \u2014 canon home + numbering"
+    },
+    {
+      "label": "Proposed shape (scaffolding only)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L97",
+      "id": "plans_theos_173_proposed_shape_scaffolding_only",
+      "community": 95,
+      "norm_label": "proposed shape (scaffolding only)"
+    },
+    {
+      "label": "Test scenarios (names only)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L104",
+      "id": "plans_theos_173_test_scenarios_names_only",
+      "community": 95,
+      "norm_label": "test scenarios (names only)"
+    },
+    {
+      "label": "Out of scope",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L111",
+      "id": "plans_theos_173_out_of_scope",
+      "community": 95,
+      "norm_label": "out of scope"
+    },
+    {
+      "label": "Acceptance criteria",
+      "file_type": "document",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L115",
+      "id": "plans_theos_173_acceptance_criteria",
+      "community": 95,
+      "norm_label": "acceptance criteria"
     },
     {
       "label": "THEOS-86.md",
@@ -12492,6 +13392,114 @@
       "norm_label": "notes"
     },
     {
+      "label": "element-cosmology-2026-06-21.md",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L1",
+      "id": "plans_element_cosmology_2026_06_21",
+      "community": 96,
+      "norm_label": "element-cosmology-2026-06-21.md"
+    },
+    {
+      "label": "Element Cosmology \u2014 2-D (frequency \u00d7 phase-polarity)",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L1",
+      "id": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "community": 96,
+      "norm_label": "element cosmology \u2014 2-d (frequency \u00d7 phase-polarity)"
+    },
+    {
+      "label": "Goal",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L7",
+      "id": "plans_element_cosmology_2026_06_21_goal",
+      "community": 96,
+      "norm_label": "goal"
+    },
+    {
+      "label": "The two axes",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L11",
+      "id": "plans_element_cosmology_2026_06_21_the_two_axes",
+      "community": 96,
+      "norm_label": "the two axes"
+    },
+    {
+      "label": "Axis 1 \u2014 Frequency `f` (E1): the *material* spectrum \u2014 **LOCKED: logarithmic**",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L13",
+      "id": "plans_element_cosmology_2026_06_21_axis_1_frequency_f_e1_the_material_spectrum_locked_logarithmic",
+      "community": 96,
+      "norm_label": "axis 1 \u2014 frequency `f` (e1): the *material* spectrum \u2014 **locked: logarithmic**"
+    },
+    {
+      "label": "Axis 2 \u2014 Phase coherence: **Light \u2194 Darkness** polarity \u2014 **curve: sigmoid (confirm)**",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L27",
+      "id": "plans_element_cosmology_2026_06_21_axis_2_phase_coherence_light_darkness_polarity_curve_sigmoid_confirm",
+      "community": 96,
+      "norm_label": "axis 2 \u2014 phase coherence: **light \u2194 darkness** polarity \u2014 **curve: sigmoid (confirm)**"
+    },
+    {
+      "label": "Why choose Darkness? \u2014 murim risk/reward (Orthodox vs Demonic)",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L44",
+      "id": "plans_element_cosmology_2026_06_21_why_choose_darkness_murim_risk_reward_orthodox_vs_demonic",
+      "community": 96,
+      "norm_label": "why choose darkness? \u2014 murim risk/reward (orthodox vs demonic)"
+    },
+    {
+      "label": "The seven elements as a grid",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L72",
+      "id": "plans_element_cosmology_2026_06_21_the_seven_elements_as_a_grid",
+      "community": 96,
+      "norm_label": "the seven elements as a grid"
+    },
+    {
+      "label": "Canon impact (edits this implies)",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L76",
+      "id": "plans_element_cosmology_2026_06_21_canon_impact_edits_this_implies",
+      "community": 96,
+      "norm_label": "canon impact (edits this implies)"
+    },
+    {
+      "label": "Decisions (LOCKED 2026-06-21 unless noted)",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L86",
+      "id": "plans_element_cosmology_2026_06_21_decisions_locked_2026_06_21_unless_noted",
+      "community": 96,
+      "norm_label": "decisions (locked 2026-06-21 unless noted)"
+    },
+    {
+      "label": "Cultivation & resource economy \u2014 DESIGN STUB (own ticket; NOT in the canon prompts)",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L98",
+      "id": "plans_element_cosmology_2026_06_21_cultivation_resource_economy_design_stub_own_ticket_not_in_the_canon_prompts",
+      "community": 96,
+      "norm_label": "cultivation & resource economy \u2014 design stub (own ticket; not in the canon prompts)"
+    },
+    {
+      "label": "Relationship to sprint stories",
+      "file_type": "document",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L111",
+      "id": "plans_element_cosmology_2026_06_21_relationship_to_sprint_stories",
+      "community": 96,
+      "norm_label": "relationship to sprint stories"
+    },
+    {
       "label": "test-coverage-2026-06-08.md",
       "file_type": "document",
       "source_file": "plans/test-coverage-2026-06-08.md",
@@ -12861,6 +13869,15 @@
       "norm_label": "build"
     },
     {
+      "label": "Chakra",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L509",
+      "community": 84,
+      "norm_label": "chakra",
+      "id": "chakra"
+    },
+    {
       "label": "CompilerContext",
       "file_type": "code",
       "source_file": "theos-magic/src/interface.rs",
@@ -12955,7 +13972,7 @@
       "file_type": "code",
       "source_file": "theos-math/src/ray.rs",
       "source_location": "L1",
-      "community": 87,
+      "community": 13,
       "norm_label": "ray.rs",
       "id": "theos_math_src_ray_rs"
     },
@@ -14122,7 +15139,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 17,
       "norm_label": "theos-math lib (public api re-exports)",
       "id": "src_lib_theos_math"
     },
@@ -14135,7 +15152,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 87,
       "norm_label": "quat * vec3 (rodrigues rotation)",
       "id": "src_quat_quat_mul_vec3"
     },
@@ -14148,7 +15165,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 56,
+      "community": 17,
       "norm_label": "mat4 * vec4",
       "id": "src_mat_mat4_mul_vec4"
     },
@@ -14161,7 +15178,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 87,
       "norm_label": "mat3 * vec3",
       "id": "src_mat_mat3_mul_vec3"
     },
@@ -14226,7 +15243,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 87,
       "norm_label": "16-byte simd alignment for gpu/simd compatibility",
       "id": "concept_simd_alignment_16byte"
     },
@@ -14239,7 +15256,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 17,
       "norm_label": "glam interoperability bridge pattern",
       "id": "concept_glam_interop"
     },
@@ -14252,7 +15269,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 56,
+      "community": 17,
       "norm_label": "mint interoperability bridge pattern",
       "id": "concept_mint_interop"
     },
@@ -14317,7 +15334,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 87,
+      "community": 13,
       "norm_label": "bvh / ray-traversal usage pattern for aabb and ray",
       "id": "concept_bvh_ray_traversal"
     },
@@ -28597,6 +29614,17 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/arena.rs",
+      "source_location": "L122",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "graph_arena_arena_t_iter",
+      "target": "theos_magic_src_graph_arena_rs_t",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/arena.rs",
       "source_location": "L73",
       "weight": 1.0,
       "context": "generic_arg",
@@ -28663,6 +29691,16 @@
       "confidence_score": 1.0,
       "source": "graph_arena_arena_t",
       "target": "graph_arena_arena_t_is_valid_handle"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/arena.rs",
+      "source_location": "L122",
+      "weight": 1.0,
+      "source": "graph_arena_arena_t",
+      "target": "graph_arena_arena_t_iter",
+      "confidence_score": 1.0
     },
     {
       "relation": "method",
@@ -28936,6 +29974,28 @@
       "target": "graph_arena_arena_t_remove"
     },
     {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/arena.rs",
+      "source_location": "L122",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "graph_arena_arena_t_iter",
+      "target": "theos_magic_src_graph_arena_rs_item",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/arena.rs",
+      "source_location": "L122",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_arena_arena_t_iter",
+      "target": "theos_magic_src_graph_arena_rs_iterator",
+      "confidence_score": 1.0
+    },
+    {
       "relation": "calls",
       "context": "call",
       "confidence": "EXTRACTED",
@@ -29003,9 +30063,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1141",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
-      "confidence_score": 1.0
+      "target": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present"
     },
     {
       "relation": "contains",
@@ -29013,9 +30073,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1156",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
-      "confidence_score": 1.0
+      "target": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc"
     },
     {
       "relation": "contains",
@@ -29023,9 +30083,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1171",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
-      "confidence_score": 1.0
+      "target": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc"
     },
     {
       "relation": "contains",
@@ -29273,9 +30333,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1235",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
-      "confidence_score": 1.0
+      "target": "graph_assembler_root_transfer_does_not_contribute_to_cast_time"
     },
     {
       "relation": "contains",
@@ -29343,9 +30403,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1220",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
-      "confidence_score": 1.0
+      "target": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time"
     },
     {
       "relation": "contains",
@@ -29353,9 +30413,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1188",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
-      "confidence_score": 1.0
+      "target": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric"
     },
     {
       "relation": "contains",
@@ -29373,9 +30433,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1136",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler",
-      "target": "graph_assembler_unit_transfer_delay",
-      "confidence_score": 1.0
+      "target": "graph_assembler_unit_transfer_delay"
     },
     {
       "relation": "imports_from",
@@ -29387,6 +30447,17 @@
       "confidence_score": 1.0,
       "source": "graph_assembler",
       "target": "tensiongraph"
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L529",
+      "weight": 1.0,
+      "context": "import",
+      "source": "graph_assembler",
+      "target": "theos_magic_src_graph_assembler_rs_chakra",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -29874,6 +30945,17 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/assembler.rs",
+      "source_location": "L533",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_assembler_body",
+      "target": "theos_magic_src_graph_assembler_rs_chakra",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L287",
       "weight": 1.0,
       "context": "parameter_type",
@@ -29899,9 +30981,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1145",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -29910,9 +30992,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1161",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -29921,9 +31003,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1176",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -29965,9 +31047,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1239",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
+      "target": "graph_assembler_body"
     },
     {
       "relation": "calls",
@@ -30009,20 +31091,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1225",
       "weight": 1.0,
-      "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
-      "target": "graph_assembler_body",
-      "confidence_score": 1.0
-    },
-    {
-      "relation": "imports_from",
-      "confidence": "EXTRACTED",
-      "source_file": "theos-magic/src/lib.rs",
-      "source_location": "L34",
-      "weight": 1.0,
-      "context": "import",
       "confidence_score": 1.0,
-      "source": "theos_magic_src_lib_rs_src_lib",
-      "target": "chakra"
+      "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
+      "target": "graph_assembler_body"
     },
     {
       "relation": "references",
@@ -30075,9 +31146,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1146",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -30086,9 +31157,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1162",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -30097,9 +31168,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1177",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -30130,9 +31201,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1240",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -30174,9 +31245,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1226",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
-      "target": "graph_assembler_spatial",
-      "confidence_score": 1.0
+      "target": "graph_assembler_spatial"
     },
     {
       "relation": "calls",
@@ -30196,9 +31267,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1164",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -30207,9 +31278,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1181",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -30251,9 +31322,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1245",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -30306,9 +31377,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1228",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -30317,9 +31388,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1197",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
-      "target": "graph_assembler_temporal",
-      "confidence_score": 1.0
+      "target": "graph_assembler_temporal"
     },
     {
       "relation": "calls",
@@ -30339,9 +31410,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1151",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
-      "target": "graph_assembler_approx",
-      "confidence_score": 1.0
+      "target": "graph_assembler_approx"
     },
     {
       "relation": "calls",
@@ -30350,9 +31421,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1166",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_approx",
-      "confidence_score": 1.0
+      "target": "graph_assembler_approx"
     },
     {
       "relation": "calls",
@@ -30361,9 +31432,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1183",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_approx",
-      "confidence_score": 1.0
+      "target": "graph_assembler_approx"
     },
     {
       "relation": "calls",
@@ -30471,9 +31542,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1257",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
-      "target": "graph_assembler_approx",
-      "confidence_score": 1.0
+      "target": "graph_assembler_approx"
     },
     {
       "relation": "calls",
@@ -30493,9 +31564,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1230",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
-      "target": "graph_assembler_approx",
-      "confidence_score": 1.0
+      "target": "graph_assembler_approx"
     },
     {
       "relation": "calls",
@@ -30504,9 +31575,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1202",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
-      "target": "graph_assembler_approx",
-      "confidence_score": 1.0
+      "target": "graph_assembler_approx"
     },
     {
       "relation": "calls",
@@ -30691,9 +31762,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1144",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_equals_critical_path_delay_when_no_transfers_present",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30702,9 +31773,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1160",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30713,9 +31784,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1175",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30757,9 +31828,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1238",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_root_transfer_does_not_contribute_to_cast_time",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30812,9 +31883,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1224",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_off_critical_path_does_not_extend_cast_time",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30823,9 +31894,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1199",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
-      "target": "graph_assembler_assemble",
-      "confidence_score": 1.0
+      "target": "graph_assembler_assemble"
     },
     {
       "relation": "calls",
@@ -30834,9 +31905,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1167",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_acyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_unit_transfer_delay",
-      "confidence_score": 1.0
+      "target": "graph_assembler_unit_transfer_delay"
     },
     {
       "relation": "calls",
@@ -30845,9 +31916,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1184",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_cast_time_on_cyclic_graph_matches_manual_calc",
-      "target": "graph_assembler_unit_transfer_delay",
-      "confidence_score": 1.0
+      "target": "graph_assembler_unit_transfer_delay"
     },
     {
       "relation": "calls",
@@ -30856,9 +31927,9 @@
       "source_file": "theos-magic/src/graph/assembler.rs",
       "source_location": "L1209",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_assembler_transfer_on_critical_path_extends_cast_time_beyond_geometric",
-      "target": "graph_assembler_unit_transfer_delay",
-      "confidence_score": 1.0
+      "target": "graph_assembler_unit_transfer_delay"
     },
     {
       "relation": "imports_from",
@@ -31086,6 +32157,716 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L106",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L175",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_efficiency_matches_manual_eta_on_constructive_graph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L187",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_envresistance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L201",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_full_transfer_graph_efficiency_near_one",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L135",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_graph_energy_matches_manual_sum_over_edges",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L144",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_spatial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L126",
+      "weight": 1.0,
+      "source": "graph_energy",
+      "target": "graph_energy_star",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L79",
+      "weight": 1.0,
+      "context": "import",
+      "source": "graph_energy",
+      "target": "theos_magic_src_graph_energy_rs_vec3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L11",
+      "weight": 1.0,
+      "context": "import",
+      "source": "graph_energy",
+      "target": "theos_magic_src_graph_energy_rs_weavetuning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "graph_energy_envresistance",
+      "target": "graph_energy_envresistance_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "graph_energy_envresistance",
+      "target": "theos_magic_src_graph_energy_rs_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L56",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_tensiongraph_efficiency",
+      "target": "graph_energy_envresistance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L48",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_tensiongraph_energy_cost",
+      "target": "graph_energy_envresistance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_tensiongraph_node_energy",
+      "target": "graph_energy_envresistance",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "graph_energy_assemble",
+      "target": "graph_energy_envresistance_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L177",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_matches_manual_eta_on_constructive_graph",
+      "target": "graph_energy_envresistance_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L191",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "target": "graph_energy_envresistance_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L26",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_energy_envresistance_default",
+      "target": "theos_magic_src_graph_energy_rs_self",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L209",
+      "weight": 1.0,
+      "source": "graph_energy_full_transfer_graph_efficiency_near_one",
+      "target": "graph_energy_envresistance_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L137",
+      "weight": 1.0,
+      "source": "graph_energy_graph_energy_matches_manual_sum_over_edges",
+      "target": "graph_energy_envresistance_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L145",
+      "weight": 1.0,
+      "source": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "target": "graph_energy_envresistance_default",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L106",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_energy_assemble",
+      "target": "graph_energy_tensiongraph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L126",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_energy_star",
+      "target": "graph_energy_tensiongraph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "graph_energy_tensiongraph",
+      "target": "graph_energy_tensiongraph_efficiency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "graph_energy_tensiongraph",
+      "target": "graph_energy_tensiongraph_energy_cost",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "source": "graph_energy_tensiongraph",
+      "target": "graph_energy_tensiongraph_node_energy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L162",
+      "weight": 1.0,
+      "source": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "target": "graph_energy_tensiongraph_node_energy",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_tensiongraph_node_energy",
+      "target": "theos_magic_src_graph_energy_rs_nodeid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L38",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_energy_tensiongraph_node_energy",
+      "target": "theos_magic_src_graph_energy_rs_option",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L193",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "target": "graph_energy_tensiongraph_energy_cost",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "graph_energy_graph_energy_matches_manual_sum_over_edges",
+      "target": "graph_energy_tensiongraph_energy_cost",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L68",
+      "weight": 1.0,
+      "source": "graph_energy_tensiongraph_efficiency",
+      "target": "graph_energy_tensiongraph_energy_cost",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L48",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_tensiongraph_energy_cost",
+      "target": "theos_magic_src_graph_energy_rs_weavetuning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L56",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_tensiongraph_efficiency",
+      "target": "theos_magic_src_graph_energy_rs_weavetuning",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L183",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_matches_manual_eta_on_constructive_graph",
+      "target": "graph_energy_tensiongraph_efficiency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L194",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "target": "graph_energy_tensiongraph_efficiency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L214",
+      "weight": 1.0,
+      "source": "graph_energy_full_transfer_graph_efficiency_near_one",
+      "target": "graph_energy_tensiongraph_efficiency",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_body",
+      "target": "theos_magic_src_graph_energy_rs_chakra",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_body",
+      "target": "theos_magic_src_graph_energy_rs_vec",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_body",
+      "target": "theos_magic_src_graph_energy_rs_vec3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_energy_body",
+      "target": "theos_magic_src_graph_energy_rs_woventoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "target": "graph_energy_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L206",
+      "weight": 1.0,
+      "source": "graph_energy_full_transfer_graph_efficiency_near_one",
+      "target": "graph_energy_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L148",
+      "weight": 1.0,
+      "source": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "target": "graph_energy_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L128",
+      "weight": 1.0,
+      "source": "graph_energy_star",
+      "target": "graph_energy_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_spatial",
+      "target": "theos_magic_src_graph_energy_rs_vec3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_spatial",
+      "target": "theos_magic_src_graph_energy_rs_vec",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L106",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_energy_assemble",
+      "target": "theos_magic_src_graph_energy_rs_woventoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L94",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_energy_spatial",
+      "target": "theos_magic_src_graph_energy_rs_woventoken",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L207",
+      "weight": 1.0,
+      "source": "graph_energy_full_transfer_graph_efficiency_near_one",
+      "target": "graph_energy_spatial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L149",
+      "weight": 1.0,
+      "source": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "target": "graph_energy_spatial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L129",
+      "weight": 1.0,
+      "source": "graph_energy_star",
+      "target": "graph_energy_spatial",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L190",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "target": "graph_energy_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L205",
+      "weight": 1.0,
+      "source": "graph_energy_full_transfer_graph_efficiency_near_one",
+      "target": "graph_energy_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L147",
+      "weight": 1.0,
+      "source": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "target": "graph_energy_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L127",
+      "weight": 1.0,
+      "source": "graph_energy_star",
+      "target": "graph_energy_assemble",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L181",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_matches_manual_eta_on_constructive_graph",
+      "target": "graph_energy_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L193",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_on_zero_energy_graph_is_well_defined",
+      "target": "graph_energy_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L140",
+      "weight": 1.0,
+      "source": "graph_energy_graph_energy_matches_manual_sum_over_edges",
+      "target": "graph_energy_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L169",
+      "weight": 1.0,
+      "source": "graph_energy_node_energy_scales_with_edge_length_and_amplitude",
+      "target": "graph_energy_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L176",
+      "weight": 1.0,
+      "source": "graph_energy_efficiency_matches_manual_eta_on_constructive_graph",
+      "target": "graph_energy_star",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/energy.rs",
+      "source_location": "L136",
+      "weight": 1.0,
+      "source": "graph_energy_graph_energy_matches_manual_sum_over_edges",
+      "target": "graph_energy_star",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/injection.rs",
       "source_location": "L32",
       "weight": 1.0,
@@ -31201,6 +32982,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/mod.rs",
+      "source_location": "L43",
+      "weight": 1.0,
+      "source": "graph_mod",
+      "target": "graph_mod_nodekind",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/mod.rs",
       "source_location": "L45",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -31217,6 +33008,17 @@
       "confidence_score": 1.0,
       "source": "graph_mod",
       "target": "theos_magic_src_graph_mod_rs_vec3"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/mod.rs",
+      "source_location": "L81",
+      "weight": 1.0,
+      "context": "field",
+      "source": "graph_mod_node",
+      "target": "graph_mod_nodekind",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -31299,11 +33101,21 @@
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/mod.rs",
-      "source_location": "L125",
+      "source_location": "L164",
       "weight": 1.0,
       "source": "graph_mod_tensiongraph",
-      "target": "graph_mod_tensiongraph_cast_time",
+      "target": "graph_mod_tensiongraph_authoring_work",
       "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/mod.rs",
+      "source_location": "L125",
+      "weight": 1.0,
+      "confidence_score": 1.0,
+      "source": "graph_mod_tensiongraph",
+      "target": "graph_mod_tensiongraph_cast_time"
     },
     {
       "relation": "method",
@@ -32247,6 +34059,17 @@
       "confidence_score": 1.0,
       "source": "src_interface_dummymodality_parse_input",
       "target": "theos_magic_src_interface_rs_woventoken"
+    },
+    {
+      "relation": "imports_from",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/lib.rs",
+      "source_location": "L34",
+      "weight": 1.0,
+      "context": "import",
+      "confidence_score": 1.0,
+      "source": "theos_magic_src_lib_rs_src_lib",
+      "target": "chakra"
     },
     {
       "relation": "imports_from",
@@ -45821,6 +47644,46 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_sprint_planning_goal",
+      "target": "plans_sprint_planning_goal_sprint_planning_summit_goal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "plans_sprint_planning_goal_sprint_planning_summit_goal",
+      "target": "plans_sprint_planning_goal_current_focus",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L15",
+      "weight": 1.0,
+      "source": "plans_sprint_planning_goal_sprint_planning_summit_goal",
+      "target": "plans_sprint_planning_goal_sequence_decided_2026_06_21",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/SPRINT-PLANNING-GOAL.md",
+      "source_location": "L6",
+      "weight": 1.0,
+      "source": "plans_sprint_planning_goal_sprint_planning_summit_goal",
+      "target": "plans_sprint_planning_goal_success_criteria",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "plans/THEOS-12.md",
       "source_location": "L1",
       "weight": 1.0,
@@ -46341,12 +48204,162 @@
     {
       "relation": "contains",
       "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_theos_150",
+      "target": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_acceptance_criteria_coverage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L14",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_canon_pinned_from_equations_of_the_weave_page_170164225",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L120",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_cross_story_notes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_current_code_state_theos_magic_src_graph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_decision_register_locked_2026_06_21_d5_approach_level",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_goal_one_sentence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_out_of_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L92",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_proposed_shape_scaffolding_only",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "plans_theos_150_theos_150_m3_resonance_stability_sparse_solver_e3_e5_e6_e7",
+      "target": "plans_theos_150_test_scenarios_names_only",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L48",
+      "weight": 1.0,
+      "source": "plans_theos_150_decision_register_locked_2026_06_21_d5_approach_level",
+      "target": "plans_theos_150_d1_where_do_kij_lij_\u03c3_f_live_architecture_the_ticket_s_flagged_call",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L56",
+      "weight": 1.0,
+      "source": "plans_theos_150_decision_register_locked_2026_06_21_d5_approach_level",
+      "target": "plans_theos_150_d2_default_values_no_token_supplies_these_yet",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L65",
+      "weight": 1.0,
+      "source": "plans_theos_150_decision_register_locked_2026_06_21_d5_approach_level",
+      "target": "plans_theos_150_d3_\u03c3_f_frequency_tolerance_source",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "plans_theos_150_decision_register_locked_2026_06_21_d5_approach_level",
+      "target": "plans_theos_150_d4_authoring_execution_split_for_s_mirror_159_d5_keep_consistent",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-150.md",
+      "source_location": "L80",
+      "weight": 1.0,
+      "source": "plans_theos_150_decision_register_locked_2026_06_21_d5_approach_level",
+      "target": "plans_theos_150_d5_solver_mechanics_mostly_canon_driven_one_design_note",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
       "source_file": "plans/THEOS-156.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_156",
-      "target": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
-      "confidence_score": 1.0
+      "target": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13"
     },
     {
       "relation": "contains",
@@ -46354,9 +48367,9 @@
       "source_file": "plans/THEOS-156.md",
       "source_location": "L41",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
-      "target": "plans_theos_156_ac_mapping",
-      "confidence_score": 1.0
+      "target": "plans_theos_156_ac_mapping"
     },
     {
       "relation": "contains",
@@ -46364,9 +48377,9 @@
       "source_file": "plans/THEOS-156.md",
       "source_location": "L50",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
-      "target": "plans_theos_156_deferred_out_of_scope",
-      "confidence_score": 1.0
+      "target": "plans_theos_156_deferred_out_of_scope"
     },
     {
       "relation": "contains",
@@ -46374,9 +48387,9 @@
       "source_file": "plans/THEOS-156.md",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
-      "target": "plans_theos_156_implementation_locus",
-      "confidence_score": 1.0
+      "target": "plans_theos_156_implementation_locus"
     },
     {
       "relation": "contains",
@@ -46384,9 +48397,9 @@
       "source_file": "plans/THEOS-156.md",
       "source_location": "L18",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_156_theos_156_cast_time_from_critical_path_propagation_delay_e13",
-      "target": "plans_theos_156_locked_decisions",
-      "confidence_score": 1.0
+      "target": "plans_theos_156_locked_decisions"
     },
     {
       "relation": "contains",
@@ -46537,6 +48550,156 @@
       "confidence_score": 1.0,
       "source": "plans_theos_158_locked_decisions_planning_session_2026_06_14",
       "target": "plans_theos_158_canon_anchors_from_equations_of_the_weave_e4"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_theos_159",
+      "target": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L112",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_acceptance_criteria_coverage",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_canon_pinned_from_shared_formalism_equations_of_the_weave_page_170164225",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L26",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_current_code_state_grounding_theos_magic_src_graph",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_decision_register_locked_2026_06_21",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_goal_one_sentence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L116",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_open_questions_to_carry_into_canon",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L109",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_out_of_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L91",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_proposed_shape_scaffolding_only_fill_bodies_in_the_impl_chat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L102",
+      "weight": 1.0,
+      "source": "plans_theos_159_theos_159_e9_energy_e10_efficiency_\u03b7",
+      "target": "plans_theos_159_test_scenarios_names_only_aaa_bodies_in_the_impl_chat",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L54",
+      "weight": 1.0,
+      "source": "plans_theos_159_decision_register_locked_2026_06_21",
+      "target": "plans_theos_159_d1_what_is_the_per_edge_amplitude_aij_core",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "plans_theos_159_decision_register_locked_2026_06_21",
+      "target": "plans_theos_159_d2_where_do_\u03c1_med_and_\u03c1_env_come_from_not_in_the_data_model_today",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L70",
+      "weight": 1.0,
+      "source": "plans_theos_159_decision_register_locked_2026_06_21",
+      "target": "plans_theos_159_d3_which_nodes_are_effectors_for_the_e10_numerator_core",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "plans_theos_159_decision_register_locked_2026_06_21",
+      "target": "plans_theos_159_d4_\u03b7_when_e_cost_0_no_injection_zero_energy_graph_ac3",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-159.md",
+      "source_location": "L81",
+      "weight": 1.0,
+      "source": "plans_theos_159_decision_register_locked_2026_06_21",
+      "target": "plans_theos_159_d5_authoring_side_frozen_or_execution_side_env_dependent_architecture_couples_to_theos_173",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -46737,6 +48900,296 @@
       "confidence_score": 1.0,
       "source": "plans_theos_17_theos_17_integration_verification",
       "target": "plans_theos_17_summary"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_theos_170_canon_agent_prompt",
+      "target": "plans_theos_170_canon_agent_prompt_agent_prompt_theos_170_reconcile_e12_temporalfrequency_to_the_implemented_transfer_element_model",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "plans_theos_170_canon_agent_prompt_agent_prompt_theos_170_reconcile_e12_temporalfrequency_to_the_implemented_transfer_element_model",
+      "target": "plans_theos_170_canon_agent_prompt_acceptance_criteria",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "plans_theos_170_canon_agent_prompt_agent_prompt_theos_170_reconcile_e12_temporalfrequency_to_the_implemented_transfer_element_model",
+      "target": "plans_theos_170_canon_agent_prompt_constraints",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L25",
+      "weight": 1.0,
+      "source": "plans_theos_170_canon_agent_prompt_agent_prompt_theos_170_reconcile_e12_temporalfrequency_to_the_implemented_transfer_element_model",
+      "target": "plans_theos_170_canon_agent_prompt_edits",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-170-canon-agent-prompt.md",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "plans_theos_170_canon_agent_prompt_agent_prompt_theos_170_reconcile_e12_temporalfrequency_to_the_implemented_transfer_element_model",
+      "target": "plans_theos_170_canon_agent_prompt_the_canonical_model_ground_truth_the_shipped_code",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_theos_171",
+      "target": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L45",
+      "weight": 1.0,
+      "source": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "target": "plans_theos_171_acceptance_criteria",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L20",
+      "weight": 1.0,
+      "source": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "target": "plans_theos_171_decision_register_open_two_coupled_worldbuilding_calls",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "target": "plans_theos_171_delivery",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L8",
+      "weight": 1.0,
+      "source": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "target": "plans_theos_171_goal_one_sentence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "target": "plans_theos_171_grounded_context_from_core_ux_spell_appearance_page_177897474_3_4",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "plans_theos_171_theos_171_formalism_pin_physical_f_f_norm_normalization_on_shared_formalism",
+      "target": "plans_theos_171_out_of_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L22",
+      "weight": 1.0,
+      "source": "plans_theos_171_decision_register_open_two_coupled_worldbuilding_calls",
+      "target": "plans_theos_171_dn1_range_f_min_f_max_the_authored_frequency_range_hz",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L28",
+      "weight": 1.0,
+      "source": "plans_theos_171_decision_register_open_two_coupled_worldbuilding_calls",
+      "target": "plans_theos_171_dn2_curve_linear_vs_logarithmic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-171.md",
+      "source_location": "L39",
+      "weight": 1.0,
+      "source": "plans_theos_171_decision_register_open_two_coupled_worldbuilding_calls",
+      "target": "plans_theos_171_dn3_clamp",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_theos_173",
+      "target": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L115",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_acceptance_criteria",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L18",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_canon_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L29",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_current_code_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L37",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_decision_register_locked_2026_06_21",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L9",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_goal_one_sentence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_out_of_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_proposed_shape_scaffolding_only",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L104",
+      "weight": 1.0,
+      "source": "plans_theos_173_theos_173_m2_cast_time_energy_throughput_floor_option_b_e_cost_p",
+      "target": "plans_theos_173_test_scenarios_names_only",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L49",
+      "weight": 1.0,
+      "source": "plans_theos_173_decision_register_locked_2026_06_21",
+      "target": "plans_theos_173_dp1_what_is_p_worldbuilding_your_call_no_canon_today",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L71",
+      "weight": 1.0,
+      "source": "plans_theos_173_decision_register_locked_2026_06_21",
+      "target": "plans_theos_173_dp2_aggregation_if_p_derives_from_chakras",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "plans_theos_173_decision_register_locked_2026_06_21",
+      "target": "plans_theos_173_dp3_effective_cast_time_seam_scaffolding",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L82",
+      "weight": 1.0,
+      "source": "plans_theos_173_decision_register_locked_2026_06_21",
+      "target": "plans_theos_173_dp4_p_0_guard",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-173.md",
+      "source_location": "L87",
+      "weight": 1.0,
+      "source": "plans_theos_173_decision_register_locked_2026_06_21",
+      "target": "plans_theos_173_dp5_canon_home_numbering",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -47187,6 +49640,116 @@
       "confidence_score": 1.0,
       "source": "plans_theos_86_dependency_crate_audit",
       "target": "plans_theos_86_required_crates_to_check_add"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21",
+      "target": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L76",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "target": "plans_element_cosmology_2026_06_21_canon_impact_edits_this_implies",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L98",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "target": "plans_element_cosmology_2026_06_21_cultivation_resource_economy_design_stub_own_ticket_not_in_the_canon_prompts",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L86",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "target": "plans_element_cosmology_2026_06_21_decisions_locked_2026_06_21_unless_noted",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L7",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "target": "plans_element_cosmology_2026_06_21_goal",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L111",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "target": "plans_element_cosmology_2026_06_21_relationship_to_sprint_stories",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "target": "plans_element_cosmology_2026_06_21_the_seven_elements_as_a_grid",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L11",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_element_cosmology_2_d_frequency_phase_polarity",
+      "target": "plans_element_cosmology_2026_06_21_the_two_axes",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L13",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_the_two_axes",
+      "target": "plans_element_cosmology_2026_06_21_axis_1_frequency_f_e1_the_material_spectrum_locked_logarithmic",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_the_two_axes",
+      "target": "plans_element_cosmology_2026_06_21_axis_2_phase_coherence_light_darkness_polarity_curve_sigmoid_confirm",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/element-cosmology-2026-06-21.md",
+      "source_location": "L44",
+      "weight": 1.0,
+      "source": "plans_element_cosmology_2026_06_21_the_two_axes",
+      "target": "plans_element_cosmology_2026_06_21_why_choose_darkness_murim_risk_reward_orthodox_vs_demonic",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -49054,5 +51617,5 @@
       "source_file": ".github/workflows/release-packaging.yml"
     }
   ],
-  "built_at_commit": "3fc5748781744abd9e47adac7cb03ff473b93713"
+  "built_at_commit": "e307e270639f1ea5e5884346bdc42fb279e88489"
 }

@@ -117,6 +117,11 @@ impl<T> Arena<T> {
     pub fn is_empty(&self) -> bool {
         self.len() == 0
     }
+
+    /// Borrow every live value in the arena, in slot order.
+    pub fn iter(&self) -> impl Iterator<Item = &T> {
+        self.values.iter().filter_map(|value| value.as_ref())
+    }
 }
 
 impl<T> Default for Arena<T> {

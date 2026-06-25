@@ -15,6 +15,7 @@
 mod arena;
 mod assembler;
 mod csr;
+mod energy;
 mod injection;
 mod phase;
 mod transfer;
@@ -22,6 +23,7 @@ mod transfer;
 pub use arena::{Arena, NodeId};
 pub use assembler::GraphAssembler;
 pub use csr::{CsrAdjacency, Edge};
+pub use energy::EnvResistance;
 pub use injection::{
     DEFAULT_INJECTION_ATTENUATION, injection_attenuation, kinematic_source_amplitude,
 };
@@ -32,6 +34,22 @@ pub use transfer::{
 };
 
 use glam::Vec3;
+
+/// The structural role a node plays in an assembled graph (D3, THEOS-159).
+///
+/// Derived at assembly from the oriented edge structure, read-only after. E10's
+/// efficiency η sums output amplitudes over [`NodeKind::Effector`] nodes only.
+#[derive(Copy, Clone, Debug, PartialEq, Eq)]
+pub enum NodeKind {
+    /// A wave origin: no feeders (no incoming forward edge). Seeds its own authored
+    /// amplitude `Aᵢ` (E1). Canon's "Anchor/Source".
+    Source,
+    /// An interior node: has both feeders and at least one downstream consumer.
+    Router,
+    /// A sink: has feeders but no outgoing forward edge. The E10 η numerator sums
+    /// effector output amplitudes.
+    Effector,
+}
 
 /// A single oscillator node (E1 fields).
 ///
@@ -58,6 +76,14 @@ pub struct Node {
     /// `KinematicVector` injections folded in at their source. Derived, read-only
     /// after assembly; `0.0` until the interference pass runs (THEOS-158).
     pub output_amplitude: f32,
+    /// Structural role (E10) — derived at assembly from the oriented edge
+    /// structure, read-only after. Selects whether this node feeds the η numerator.
+    pub kind: NodeKind,
+    /// Authoring-side energy work this node *emits* (E9, D1): `Σ over edges this
+    /// node feeds of dᵢⱼ·Aᵢ`, with `Aᵢ` this node's `output_amplitude`. Derived at
+    /// assembly, read-only after; `Σ` over all nodes equals
+    /// [`TensionGraph::authoring_work`]. Read by [`TensionGraph::node_energy`].
+    pub node_work: f32,
     /// Frequency-selective transfer elements (E12) attached here by
     /// `TemporalFrequency` tokens — a parallel filterbank that band-pass-filters and
     /// delays this node's *incoming* feeder contributions before the E4 sum
@@ -81,6 +107,10 @@ pub struct TensionGraph {
     /// Cast-time (E13) — geometry + temporal-transfer settling delay.
     /// See [`TensionGraph::cast_time`].
     pub(crate) cast_time: f32,
+    /// Authoring-side energy work term `W = Σ dᵢⱼ·Aᵢ` (E9, D1) — the intrinsic
+    /// geometry×amplitude part of the energy cost, frozen at assembly like
+    /// [`Self::cast_time`]. See [`TensionGraph::authoring_work`].
+    pub(crate) authoring_work: f32,
 }
 
 impl TensionGraph {
@@ -124,5 +154,14 @@ impl TensionGraph {
     /// THEOS-173) is deliberately **not** folded in here.
     pub fn cast_time(&self) -> f32 {
         self.cast_time
+    }
+
+    /// Authoring-side energy work term `W = Σ dᵢⱼ·Aᵢ` (E9, D1) — the frozen,
+    /// world-independent input to [`Self::energy_cost`]. `Aᵢ` is the emitting
+    /// (upstream) endpoint's output amplitude; world-dependent `ρ`/`E_base` factors
+    /// are applied at execution, not here (the same authoring/execution split as
+    /// [`Self::cast_time`] vs the THEOS-173 floor).
+    pub fn authoring_work(&self) -> f32 {
+        self.authoring_work
     }
 }

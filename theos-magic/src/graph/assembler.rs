@@ -6,8 +6,8 @@ use crate::error::CompilerError;
 use crate::token::WovenToken;
 use crate::{
     Arena, CompilerContext, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, Edge, HarmonicToken, Node,
-    NodeId, TemporalTransfer, TokenId, edge_delay, edge_phase_shift, filter_bank_response,
-    injection_attenuation, kinematic_source_amplitude,
+    NodeId, NodeKind, TemporalTransfer, TokenId, edge_delay, edge_phase_shift,
+    filter_bank_response, injection_attenuation, kinematic_source_amplitude,
 };
 use std::collections::{HashSet, VecDeque};
 use std::f32::consts::PI;
@@ -99,9 +99,11 @@ impl GraphAssembler {
                         position,
                         frequency,
                         amplitude,
-                        phase: 0.0,            // placeholder; derived in Stage 6
+                        phase: 0.0,             // placeholder; derived in Stage 6
                         depth: 0.0, // placeholder; path length from root, derived in Stage 6
                         output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
+                        kind: NodeKind::Router, // placeholder; derived in Stage 8.5 (THEOS-159)
+                        node_work: 0.0, // placeholder; derived in Stage 8 loop (THEOS-159)
                         transfers: Vec::new(), // attached in Stage 2b (E12, THEOS-157)
                     };
                     let node_id = arena.insert(node);
@@ -116,9 +118,11 @@ impl GraphAssembler {
                         position,
                         frequency,
                         amplitude,
-                        phase: 0.0,            // placeholder; derived in Stage 6
+                        phase: 0.0,             // placeholder; derived in Stage 6
                         depth: 0.0, // placeholder; path length from root, derived in Stage 6
                         output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
+                        kind: NodeKind::Router, // placeholder; derived in Stage 8.5 (THEOS-159)
+                        node_work: 0.0, // placeholder; derived in Stage 8 loop (THEOS-159)
                         transfers: Vec::new(), // attached in Stage 2b (E12, THEOS-157)
                     };
                     let node_id = arena.insert(node);
@@ -458,6 +462,7 @@ impl GraphAssembler {
                 .total_cmp(&depth_b)
                 .then_with(|| a.index().cmp(&b.index()))
         });
+        let mut authoring_work = 0.0;
         for id in order {
             let slot = id.index() as usize;
             let (re, im) = phasor[slot];
@@ -467,6 +472,16 @@ impl GraphAssembler {
                 node.output_amplitude = amplitude;
                 (node.phase, node.frequency)
             };
+            let pos_s = arena.get(id).expect("live node").position;
+            if !has_feeder[slot] {
+                arena.get_mut(id).expect("live node").kind = NodeKind::Source;
+            }
+            if downstream[slot].is_empty() {
+                arena.get_mut(id).expect("live node").kind = NodeKind::Effector;
+                continue;
+            }
+            let mut current_authoring_work = 0.0;
+
             for &consumer in &downstream[slot] {
                 let c = consumer.index() as usize;
                 let filter = filter_bank_response(
@@ -477,7 +492,12 @@ impl GraphAssembler {
                 let push = (amplitude * eff_phase.cos(), amplitude * eff_phase.sin());
                 phasor[c].0 += push.0 * filter.0;
                 phasor[c].1 += push.1 * filter.0;
+                let pos_c = arena.get(consumer).expect("live node").position;
+                let distance = pos_c.distance(pos_s);
+                current_authoring_work += amplitude * distance;
             }
+            arena.get_mut(id).expect("live node").node_work = current_authoring_work;
+            authoring_work += current_authoring_work;
         }
 
         // Stage 9 — Freeze: arena + CSR + root + critical_path_delay → TensionGraph.
@@ -488,6 +508,7 @@ impl GraphAssembler {
             root,
             critical_path_delay: max_delay,
             cast_time: max_cast_time,
+            authoring_work,
         })
     }
 
