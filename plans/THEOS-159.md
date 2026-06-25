@@ -1,6 +1,6 @@
 # THEOS-159 — E9 energy + E10 efficiency (η)
 
-**Status:** PLANNING (decisions LOCKED 2026-06-21; canon edits **LANDED** 2026-06-21 on pages 170164225, 168951809, 174063617). Implementation deferred to a dedicated chat.
+**Status:** ✅ **IMPLEMENTED** 2026-06-25 (commit `6fe2da0`). Decisions LOCKED 2026-06-21; canon edits LANDED 2026-06-21 on pages 170164225, 168951809, 174063617. See [Implementation notes](#implementation-notes-2026-06-25).
 **Epic:** THEOS-95 · **Crate:** `theos-magic` · **Blocked by:** THEOS-158 (merged) · **Blocks:** THEOS-152 (M5), THEOS-153 (M7), THEOS-154 (M6), THEOS-173 (cast-time floor)
 
 ---
@@ -116,3 +116,33 @@ AC4 fmt/clippy/test green + rustdoc on every `pub`. Per-crate coverage ≥ 85%.
 ## Open questions to carry into canon
 - D1 resolution → one-line clarification of `Aᵢⱼ` on the E9 page.
 - D3 resolution → if "effector" ≠ "leaf", canon should say how an effector is identified.
+
+---
+
+## Implementation notes (2026-06-25)
+
+Shipped in commit `6fe2da0` on `main`. Decisions made during implementation:
+
+- **`NodeKind` lives on `Node`** (not a parallel array), beside the other derived
+  per-node fields (`phase`, `depth`, `output_amplitude`). Derived inside the
+  existing Stage 8 output-amplitude loop using the depth-based `downstream` /
+  `has_feeder` maps (so back-edges classify correctly): no `downstream` ⇒
+  `Effector`, no feeder ⇒ `Source`, else `Router`. **A lone node classifies as
+  `Effector`** (the effector check wins), giving the minimal graph `η = 1.0` — pinned
+  by a test; flag for canon if a deliberate ruling is wanted.
+- **`W` decomposition (D5).** Graph-level scalar `authoring_work` (= `W`) frozen on
+  `TensionGraph`; per-node `node_work: f32` frozen on each `Node`, **bucketed by the
+  depth-feeder** so `Σ node.node_work == authoring_work` *even on cyclic graphs* (the
+  CSR is single-orientation, but the depth rule can flip a back-edge relative to its
+  storage — bucketing by feeder during the same loop sidesteps that).
+- **D2 — ρ plumbing.** `ρ_med`/`ρ_env` arrive via a small `EnvResistance { medium,
+  environment }` param struct (`Default` = `1.0`/`1.0`); the energy methods also take
+  `&WeaveTuning` for `E_base`. The graph does **not** store ρ or `E_base`.
+- **API** (`graph::energy`, methods on `TensionGraph`): `energy_cost(env, &tuning)`,
+  `efficiency(env, &tuning)`, `node_energy(id, env) -> Option<f32>` (per-node E9
+  diagnostic; `Σ node_energy == ρ²·W == energy_cost − E_base`). `Arena::iter()` added
+  to walk live nodes for the η effector sum.
+- **`E_base = 1.0` is a placeholder** (`DEFAULT_E_BASE` in `tuning.rs`) — satisfies the
+  `> 0` invariant; real value is a balance decision for later tuning.
+- **Coverage:** `theos-magic` 97.6% region. 5 tests (graph + per-node E9, η on a
+  constructive graph, the zero-energy floor, the full-transfer η→1 boundary).
