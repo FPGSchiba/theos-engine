@@ -1,7 +1,8 @@
 # THEOS-173 — [M2] Cast-time energy-throughput floor (Option B): `E_cost / P`
 
-**Status:** PLANNING (decisions open). **Hard-blocked by THEOS-159** (needs `E_cost` computable) —
-plan-only until 159 ships. **Blocked by:** THEOS-156 (E13 settling seam, merged) + THEOS-159 (E9).
+**Status:** ✅ **IMPLEMENTED** 2026-06-25. Decisions DP1–DP5 LOCKED 2026-06-21; canon **E14**
+landed (Equations of the Weave). Unblocked once THEOS-159 (E_cost) + THEOS-156 (E13 settling)
+shipped. See [Implementation notes](#implementation-notes-2026-06-25).
 **Epic:** THEOS-95 · **Crate:** `theos-magic`.
 
 ---
@@ -117,3 +118,28 @@ AC1 `P` defined in canon (Equations of the Weave + Core Lore), cited by number �
 `effective_cast_time = max(settling, E_cost/P)` vs manual calc within 1e-5 on both bound cases ·
 AC3 frozen `TensionGraph`/`cast_time()` unchanged (floor composes at execution) · AC4 fmt/clippy/test
 green + rustdoc. Per-crate coverage ≥ 85%.
+
+---
+
+## Implementation notes (2026-06-25)
+
+Implemented as locked (DP1–DP5); canon **E14** was already in place (it landed with the
+THEOS-171/173 cosmology pass and the equations page reads "E14 … closes THEOS-173").
+
+- **DP1/DP2 — `channel_power`** added to `ChakraState` (mirrors `capacity`), framed as passive
+  conductance. A spell's `P` is the **bottleneck `min`** over the chakras it anchors through;
+  newborn point defaults to `0.0` ⇒ cannot channel.
+- **Anchor-chakra retention — chose per-`Node` storage (option b, not a frozen graph set).**
+  `Node.chakra: Option<Chakra>` (`Some` for body anchors, `None` for spatial), set at Stage 1.
+  Picked over a frozen `TensionGraph` set because the per-node chakra is the hook E16/E18
+  (per-chakra occupation/depth) will need — foresight for the cultivation stories.
+- **DP3 — `effective_cast_time(&self, &Chakras, EnvResistance, &WeaveTuning) -> Result<f32,
+  CannotChannel>`** in new `graph/cast.rs`, an execution `&self` method (consistent with how
+  159/150's execution methods landed; reads frozen state, never mutates). `= max(cast_time,
+  E_cost/P)`; gathers anchor chakras via `arena.iter()`, folds the bottleneck `min`.
+- **DP4 — typed error.** `P ≤ 0` ⇒ `Err(CannotChannel)` (a `thiserror` unit error), not `∞` —
+  honest Rust over canon's "energy_time → ∞" phrasing.
+- **Coverage:** `theos-magic` 98.2% (`cast.rs` 98.0%). 5 tests: settling-bound, throughput-bound,
+  two-casters-differ, frozen-cast_time-unchanged, zero-P-cannot-cast.
+- **Out of scope (deferred):** E14's **B2 overdraw** (channelling past `P` / `Aᵢ > Cᵢ` → E8 snap)
+  is richer canon added after this plan; not implemented here — the core floor only.

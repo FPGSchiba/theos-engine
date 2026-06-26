@@ -99,7 +99,8 @@ impl GraphAssembler {
                         position,
                         frequency,
                         amplitude,
-                        phase: 0.0,             // placeholder; derived in Stage 6
+                        chakra: Some(chakra), // a body anchor is a conduit (E14, THEOS-173)
+                        phase: 0.0,           // placeholder; derived in Stage 6
                         depth: 0.0, // placeholder; path length from root, derived in Stage 6
                         output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
                         kind: NodeKind::Router, // placeholder; derived in Stage 8.5 (THEOS-159)
@@ -118,8 +119,9 @@ impl GraphAssembler {
                         position,
                         frequency,
                         amplitude,
-                        phase: 0.0,             // placeholder; derived in Stage 6
-                        depth: 0.0, // placeholder; path length from root, derived in Stage 6
+                        chakra: None, // a spatial anchor is not a body conduit (E14)
+                        phase: 0.0,   // placeholder; derived in Stage 6
+                        depth: 0.0,   // placeholder; path length from root, derived in Stage 6
                         output_amplitude: 0.0, // placeholder; derived by the E4 pass (THEOS-158)
                         kind: NodeKind::Router, // placeholder; derived in Stage 8.5 (THEOS-159)
                         node_work: 0.0, // placeholder; derived in Stage 8 loop (THEOS-159)

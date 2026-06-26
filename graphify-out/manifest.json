@@ -380,8 +380,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/chakra.rs": {
-    "mtime": 1781342296.112067,
-    "ast_hash": "4fa7e72921d131089a7e1ba3569c4f52",
+    "mtime": 1782411639.1036303,
+    "ast_hash": "af1b08fe817e25a48f35cfb7a51daa3d",
     "semantic_hash": ""
   },
   "theos-magic/src/context.rs": {
@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/lib.rs": {
-    "mtime": 1782402309.742904,
-    "ast_hash": "6f4adc85a43b5a86c05bb184ec24ab5a",
+    "mtime": 1782411616.0531187,
+    "ast_hash": "fd879535cba7f37c5081dbc72a6a1ccb",
     "semantic_hash": ""
   },
   "plans/THEOS-148.md": {
@@ -420,8 +420,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/graph/assembler.rs": {
-    "mtime": 1782408336.0716026,
-    "ast_hash": "8ba20c0518350e931c73f4a472c95ee7",
+    "mtime": 1782411616.0431187,
+    "ast_hash": "3cd0305c072a8e9e645756b0a454464e",
     "semantic_hash": ""
   },
   "theos-magic/src/graph/csr.rs": {
@@ -430,8 +430,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/graph/mod.rs": {
-    "mtime": 1782402221.8177035,
-    "ast_hash": "4d2a3683ad8ca07f61360c060a67e361",
+    "mtime": 1782411530.059045,
+    "ast_hash": "d29deb3c90405bc1d6c7f26f8181f58a",
     "semantic_hash": ""
   },
   "theos-magic/src/graph/phase.rs": {
@@ -485,8 +485,8 @@
     "semantic_hash": ""
   },
   "plans/THEOS-150.md": {
-    "mtime": 1782071369.0277114,
-    "ast_hash": "fa867b761b37adc13f417a9a8c443a1f",
+    "mtime": 1782409085.5019479,
+    "ast_hash": "c654533dce693bfeddec7bdcb49a3bfc",
     "semantic_hash": ""
   },
   "plans/THEOS-159.md": {
@@ -500,8 +500,8 @@
     "semantic_hash": ""
   },
   "plans/THEOS-173.md": {
-    "mtime": 1782071854.411413,
-    "ast_hash": "e17b445145290937f39e4fa9e486c69c",
+    "mtime": 1782458486.5911875,
+    "ast_hash": "7150853c85ab04ea89d50656e3611e86",
     "semantic_hash": ""
   },
   "plans/element-cosmology-2026-06-21.md": {
@@ -512,6 +512,11 @@
   "theos-magic/src/graph/stability.rs": {
     "mtime": 1782408787.044026,
     "ast_hash": "97dab349ac80b360db72af54ab4e2c58",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/cast.rs": {
+    "mtime": 1782458429.437609,
+    "ast_hash": "2502f6329faabe0efdbd57c72ae064b3",
     "semantic_hash": ""
   }
 }

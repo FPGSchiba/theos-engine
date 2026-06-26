@@ -1,16 +1,16 @@
-# Graph Report - theos-engine  (2026-06-25)
+# Graph Report - theos-engine  (2026-06-26)
 
 ## Corpus Check
-- 98 files · ~73,410 words
+- 99 files · ~74,819 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1768 nodes · 3450 edges · 101 communities (81 shown, 20 thin omitted)
+- 1794 nodes · 3507 edges · 102 communities (82 shown, 20 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 41 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `85abb3b5`
+- Built from commit: `ee9b4969`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -110,6 +110,7 @@
 - [[_COMMUNITY_Community 98|Community 98]]
 - [[_COMMUNITY_Community 99|Community 99]]
 - [[_COMMUNITY_Community 100|Community 100]]
+- [[_COMMUNITY_Community 101|Community 101]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 60 edges
@@ -168,19 +169,19 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (101 total, 20 thin omitted)
+## Communities (102 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.08
 Nodes (39): AtomicU32, Instant, Mutex, ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle() (+31 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.08
-Nodes (42): EventBus split into dyn-compatible core + generic ergonomic extension, KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, Sender, ServiceLocator, ChannelHandle, Event, EventBus (+34 more)
+Cohesion: 0.09
+Nodes (41): EventBus split into dyn-compatible core + generic ergonomic extension, KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, ServiceLocator, ChannelHandle, Event, EventBus, EventBusExt (+33 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.07
-Nodes (35): EventBusSetup, Receiver, BroadcastBusExt, BroadcastEventBus, ChannelHandle, CrossbeamEventBus, GameEvent, send_fails_when_unregistered() (+27 more)
+Nodes (36): EventBusSetup, Receiver, Sender, BroadcastBusExt, BroadcastEventBus, ChannelHandle, CrossbeamEventBus, GameEvent (+28 more)
 
 ### Community 3 - "Community 3"
 Cohesion: 0.08
@@ -188,7 +189,7 @@ Nodes (43): Engine Module three-phase lifecycle (init, tick, shutdown), ModuleRe
 
 ### Community 4 - "Community 4"
 Cohesion: 0.06
-Nodes (67): CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus(), FailingInitModule (+59 more)
+Nodes (68): BroadcastEventBus, CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus() (+60 more)
 
 ### Community 5 - "Community 5"
 Cohesion: 0.12
@@ -391,8 +392,8 @@ Cohesion: 0.14
 Nodes (9): element_field_round_trips_through_json(), ElementField, ElementKind, uniform_sets_every_element(), Index, IndexMut, Item, Iterator (+1 more)
 
 ### Community 80 - "Community 80"
-Cohesion: 0.11
-Nodes (20): BroadcastEventBus, KeyCode, NativeKeyCode, PhysicalKey, translator_constructs_with_event_bus_handle(), WindowEventTranslator, assert_maps(), translate_keycode_maps_all_digits() (+12 more)
+Cohesion: 0.12
+Nodes (19): KeyCode, NativeKeyCode, PhysicalKey, translator_constructs_with_event_bus_handle(), WindowEventTranslator, assert_maps(), translate_keycode_maps_all_digits(), translate_keycode_maps_all_letters() (+11 more)
 
 ### Community 81 - "Community 81"
 Cohesion: 0.29
@@ -408,7 +409,7 @@ Nodes (54): Chakra, approx(), assemble(), assemble_default_uses_the_default_wave
 
 ### Community 85 - "Community 85"
 Cohesion: 0.10
-Nodes (19): Arena, CsrAdjacency, Edge, CsrAdjacency, Edge, neighbors_is_empty_for_a_sink_node(), neighbors_returns_a_nodes_outgoing_edges(), offsets_length_is_node_count_plus_one() (+11 more)
+Nodes (21): Arena, CsrAdjacency, Edge, EnvResistance, CsrAdjacency, Edge, neighbors_is_empty_for_a_sink_node(), neighbors_returns_a_nodes_outgoing_edges() (+13 more)
 
 ### Community 86 - "Community 86"
 Cohesion: 0.17
@@ -431,8 +432,8 @@ Cohesion: 0.33
 Nodes (4): default_tau_clamp_window_is_ordered(), WeaveTuning, Default, Self
 
 ### Community 91 - "Community 91"
-Cohesion: 0.48
-Nodes (5): Chakras, ElementField, CompilerContext, EntityId, WeaveTuning
+Cohesion: 0.43
+Nodes (6): Chakras, ElementField, CompilerContext, Chakras, EntityId, WeaveTuning
 
 ### Community 92 - "Community 92"
 Cohesion: 0.33
@@ -440,15 +441,15 @@ Nodes (5): AC mapping, Deferred / out of scope, Implementation locus, Locked dec
 
 ### Community 93 - "Community 93"
 Cohesion: 0.12
-Nodes (15): Acceptance criteria → coverage, Canon (pinned from *Equations of the Weave*, page 170164225), Cross-story notes, Current code state (`theos-magic/src/graph`), D1 — Where do `kᵢⱼ`, `Lᵢⱼ`, `σ_f` live?  ⚠️ architecture (the ticket's flagged call), D2 — Default values (no token supplies these yet), D3 — `σ_f` (frequency tolerance) source, D4 — Authoring/execution split for `S` (mirror 159 D5)  ⚠️ keep consistent (+7 more)
+Nodes (16): Acceptance criteria → coverage, Canon (pinned from *Equations of the Weave*, page 170164225), Cross-story notes, Current code state (`theos-magic/src/graph`), D1 — Where do `kᵢⱼ`, `Lᵢⱼ`, `σ_f` live?  ⚠️ architecture (the ticket's flagged call), D2 — Default values (no token supplies these yet), D3 — `σ_f` (frequency tolerance) source, D4 — Authoring/execution split for `S` (mirror 159 D5)  ⚠️ keep consistent (+8 more)
 
 ### Community 94 - "Community 94"
 Cohesion: 0.12
 Nodes (16): Acceptance criteria → coverage, Canon (pinned from *Shared Formalism: Equations of the Weave*, page 170164225), Current code state (grounding — `theos-magic/src/graph`), D1 — What is the per-edge amplitude `Aᵢⱼ`?  ⚠️ core, D2 — Where do `ρ_med` and `ρ_env` come from? (not in the data model today), D3 — Which nodes are "effectors" for the E10 numerator?  ⚠️ core, D4 — η when `E_cost == 0` (no-injection / zero-energy graph)? (AC3), D5 — Authoring-side (frozen) or execution-side (env-dependent)?  ⚠️ architecture, couples to THEOS-173 (+8 more)
 
 ### Community 95 - "Community 95"
-Cohesion: 0.13
-Nodes (14): Acceptance criteria, Canon state, Current code state, Decision register — **LOCKED** (2026-06-21), DP1 — **What IS `P`?**  ⚠️ worldbuilding — your call (no canon today), DP2 — Aggregation (if `P` derives from chakras), DP3 — `effective_cast_time` seam (scaffolding), DP4 — `P ≤ 0` guard (+6 more)
+Cohesion: 0.12
+Nodes (15): Acceptance criteria, Canon state, Current code state, Decision register — **LOCKED** (2026-06-21), DP1 — **What IS `P`?**  ⚠️ worldbuilding — your call (no canon today), DP2 — Aggregation (if `P` derives from chakras), DP3 — `effective_cast_time` seam (scaffolding), DP4 — `P ≤ 0` guard (+7 more)
 
 ### Community 96 - "Community 96"
 Cohesion: 0.17
@@ -470,25 +471,29 @@ Nodes (4): Current focus, Sequence (decided 2026-06-21), 🎯 Sprint Planning Su
 Cohesion: 0.16
 Nodes (27): approx(), assemble(), body(), coherence_high_for_in_phase_frequency_matched_edge(), coherence_low_for_divergent_frequencies_via_sigma_f(), constructive_graph_is_stable(), cyclic_feedback_runaway_is_volatile(), div() (+19 more)
 
+### Community 101 - "Community 101"
+Cohesion: 0.22
+Nodes (19): approx(), body(), CannotChannel, caster_with_root_power(), effective_cast_time_is_energy_time_when_throughput_bound(), effective_cast_time_is_settling_when_propagation_bound(), frozen_cast_time_unchanged_by_floor(), same_graph_two_casters_differ_only_in_effective_time() (+11 more)
+
 ## Knowledge Gaps
-- **402 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+397 more)
+- **406 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+401 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `BroadcastEventBus` connect `Community 80` to `Community 4`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **Why does `KeyCode` connect `Community 80` to `Community 23`?**
-  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+- **Why does `BroadcastEventBus` connect `Community 4` to `Community 80`?**
+  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
-  _404 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _408 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
 - **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.08348457350272233 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.08583959899749373 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
-  _Cohesion score 0.06853146853146853 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.06693803708729082 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
   _Cohesion score 0.07756813417190776 - nodes in this community are weakly interconnected._

@@ -14,6 +14,7 @@
 
 mod arena;
 mod assembler;
+mod cast;
 mod csr;
 mod energy;
 mod injection;
@@ -23,6 +24,7 @@ mod transfer;
 
 pub use arena::{Arena, NodeId};
 pub use assembler::GraphAssembler;
+pub use cast::CannotChannel;
 pub use csr::{CsrAdjacency, Edge};
 pub use energy::EnvResistance;
 pub use injection::{
@@ -35,6 +37,7 @@ pub use transfer::{
     sigma_from_duration,
 };
 
+use crate::Chakra;
 use glam::Vec3;
 
 /// The structural role a node plays in an assembled graph (D3, THEOS-159).
@@ -66,6 +69,12 @@ pub struct Node {
     /// Authored oscillation amplitude `Aᵢ` (E1) — the node's intrinsic source
     /// amplitude, as emitted by its anchor token. Distinct from [`Self::output_amplitude`].
     pub amplitude: f32,
+    /// The body [`Chakra`] this node anchors, or `None` for a non-body node (a
+    /// `SpatialAnchor`). Set at materialization (Stage 1). The set of `Some` values
+    /// across a graph is the chakras it "anchors through" — the conduits whose
+    /// Channel Power `P` bounds the cast (E14, THEOS-173); also the per-chakra hook
+    /// future stories (E16/E18 occupation) will read.
+    pub chakra: Option<Chakra>,
     /// Phase `φᵢ`, derived from geometry per E2. Read-only after assembly.
     pub phase: f32,
     /// Depth `D(n)` — the accumulated path length `Σ dᵢⱼ` from the injection root

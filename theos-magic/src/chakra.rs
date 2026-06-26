@@ -114,6 +114,13 @@ impl Default for Polarity {
 pub struct ChakraState {
     /// Energy capacity of the point; grows with cultivation.
     pub capacity: f32,
+    /// Channel Power `P` (E14) — the point's **conductance**, how freely it admits
+    /// energy into the weave (energy per unit time). A *passive* flow property, not
+    /// an act of forcing energy through; the flow-rate sibling of [`Self::capacity`]
+    /// (a withstand limit). Grows with cultivation; `0.0` on a newborn point ⇒
+    /// cannot channel. A spell's effective `P` is the bottleneck `min` over the
+    /// chakras it anchors through.
+    pub channel_power: f32,
     /// Elemental attunement, or `None` if the point is not yet attuned.
     pub attunement: Option<Attunement>,
     /// Dynamic Yin↔Yang polarity of the point.
@@ -301,6 +308,7 @@ mod tests {
     fn chakra_state_round_trips_through_json() {
         let state = ChakraState {
             capacity: 3.0,
+            channel_power: 1.5,
             attunement: Some(Attunement {
                 kind: ElementKind::Fire,
                 strength: 0.5,
