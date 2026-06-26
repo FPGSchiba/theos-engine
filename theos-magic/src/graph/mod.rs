@@ -25,7 +25,7 @@ mod transfer;
 
 pub use arena::{Arena, NodeId};
 pub use assembler::GraphAssembler;
-pub use cast::CannotChannel;
+pub use cast::{CannotChannel, OverdrawOutcome};
 pub use csr::{CsrAdjacency, Edge};
 pub use energy::EnvResistance;
 pub use gain::ResonanceRunaway;

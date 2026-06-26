@@ -405,8 +405,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/lib.rs": {
-    "mtime": 1782459373.7344403,
-    "ast_hash": "71dd1d31a24009486be15f580bbb56e2",
+    "mtime": 1782461353.9022958,
+    "ast_hash": "8768c2f86916095a0c6c008265785ad1",
     "semantic_hash": ""
   },
   "plans/THEOS-148.md": {
@@ -430,8 +430,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/graph/mod.rs": {
-    "mtime": 1782459347.4513555,
-    "ast_hash": "edab1d68ea0d9e2b61900619564740cf",
+    "mtime": 1782461334.347147,
+    "ast_hash": "ca742fda22cec39ad23b5bece18b9539",
     "semantic_hash": ""
   },
   "theos-magic/src/graph/phase.rs": {
@@ -515,8 +515,8 @@
     "semantic_hash": ""
   },
   "theos-magic/src/graph/cast.rs": {
-    "mtime": 1782458429.437609,
-    "ast_hash": "2502f6329faabe0efdbd57c72ae064b3",
+    "mtime": 1782462386.0696712,
+    "ast_hash": "eae6b620f9e385dd0a43ff6dcc89f124",
     "semantic_hash": ""
   },
   "theos-magic/src/graph/gain.rs": {
@@ -527,6 +527,11 @@
   "plans/THEOS-176.md": {
     "mtime": 1782459712.8810005,
     "ast_hash": "99059faa9eb0dc685b23009a28ebe126",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-177.md": {
+    "mtime": 1782462420.4427342,
+    "ast_hash": "caff00a1c1fe7a6410126c2fc4c7357e",
     "semantic_hash": ""
   }
 }

@@ -38,10 +38,10 @@ pub use element::{ElementField, ElementKind};
 pub use error::CompilerError;
 pub use graph::{
     Arena, CannotChannel, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, DEFAULT_WAVE_SPEED, Edge,
-    EnvResistance, GraphAssembler, Node, NodeId, NodeKind, ResonanceRunaway, Stability,
-    TemporalTransfer, TensionGraph, band_pass_response, clamp_tau_seconds, edge_coherence,
-    edge_delay, edge_phase_shift, edge_tension, filter_bank_response, injection_attenuation,
-    kinematic_source_amplitude, sigma_from_duration, spectral_radius,
+    EnvResistance, GraphAssembler, Node, NodeId, NodeKind, OverdrawOutcome, ResonanceRunaway,
+    Stability, TemporalTransfer, TensionGraph, band_pass_response, clamp_tau_seconds,
+    edge_coherence, edge_delay, edge_phase_shift, edge_tension, filter_bank_response,
+    injection_attenuation, kinematic_source_amplitude, sigma_from_duration, spectral_radius,
 };
 pub use interface::MagicInterface;
 pub use token::{HarmonicToken, TokenId, WovenToken};

@@ -5769,46 +5769,82 @@
       "norm_label": "cannotchannel"
     },
     {
+      "label": "OverdrawOutcome",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L36",
+      "id": "graph_cast_overdrawoutcome",
+      "community": 101,
+      "norm_label": "overdrawoutcome"
+    },
+    {
+      "label": "Vec",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L42",
+      "id": "theos_magic_src_graph_cast_rs_vec",
+      "community": 101,
+      "norm_label": "vec"
+    },
+    {
+      "label": "Chakra",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L42",
+      "id": "theos_magic_src_graph_cast_rs_chakra",
+      "community": 101,
+      "norm_label": "chakra"
+    },
+    {
       "label": "TensionGraph",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L33",
+      "source_location": "L45",
       "id": "graph_cast_tensiongraph",
       "community": 101,
       "norm_label": "tensiongraph"
     },
     {
-      "label": ".effective_cast_time()",
+      "label": ".min_channel_power()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L42",
-      "id": "graph_cast_tensiongraph_effective_cast_time",
+      "source_location": "L46",
+      "id": "graph_cast_tensiongraph_min_channel_power",
       "community": 101,
-      "norm_label": ".effective_cast_time()"
+      "norm_label": ".min_channel_power()"
     },
     {
       "label": "Chakras",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L42",
+      "source_location": "L46",
       "id": "theos_magic_src_graph_cast_rs_chakras",
       "community": 101,
       "norm_label": "chakras"
     },
     {
+      "label": ".effective_cast_time()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L66",
+      "id": "graph_cast_tensiongraph_effective_cast_time",
+      "community": 101,
+      "norm_label": ".effective_cast_time()"
+    },
+    {
       "label": "EnvResistance",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L42",
+      "source_location": "L66",
       "id": "envresistance",
-      "community": 85,
+      "community": 101,
       "norm_label": "envresistance"
     },
     {
       "label": "WeaveTuning",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L42",
+      "source_location": "L66",
       "id": "theos_magic_src_graph_cast_rs_weavetuning",
       "community": 101,
       "norm_label": "weavetuning"
@@ -5817,52 +5853,43 @@
       "label": "Result",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L42",
+      "source_location": "L66",
       "id": "theos_magic_src_graph_cast_rs_result",
       "community": 101,
       "norm_label": "result"
     },
     {
+      "label": ".overdraw_cast_time()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L89",
+      "id": "graph_cast_tensiongraph_overdraw_cast_time",
+      "community": 101,
+      "norm_label": ".overdraw_cast_time()"
+    },
+    {
       "label": "body()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L74",
+      "source_location": "L126",
       "id": "graph_cast_body",
       "community": 101,
       "norm_label": "body()"
     },
     {
-      "label": "Chakra",
-      "file_type": "code",
-      "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L74",
-      "id": "theos_magic_src_graph_cast_rs_chakra",
-      "community": 101,
-      "norm_label": "chakra"
-    },
-    {
       "label": "Vec3",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L74",
+      "source_location": "L126",
       "id": "theos_magic_src_graph_cast_rs_vec3",
       "community": 101,
       "norm_label": "vec3"
     },
     {
-      "label": "Vec",
-      "file_type": "code",
-      "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L74",
-      "id": "theos_magic_src_graph_cast_rs_vec",
-      "community": 101,
-      "norm_label": "vec"
-    },
-    {
       "label": "WovenToken",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L74",
+      "source_location": "L126",
       "id": "theos_magic_src_graph_cast_rs_woventoken",
       "community": 101,
       "norm_label": "woventoken"
@@ -5871,7 +5898,7 @@
       "label": "spatial()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L87",
+      "source_location": "L139",
       "id": "graph_cast_spatial",
       "community": 101,
       "norm_label": "spatial()"
@@ -5880,7 +5907,7 @@
       "label": "two_node()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L101",
+      "source_location": "L153",
       "id": "graph_cast_two_node",
       "community": 101,
       "norm_label": "two_node()"
@@ -5889,7 +5916,7 @@
       "label": "caster_with_root_power()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L115",
+      "source_location": "L167",
       "id": "graph_cast_caster_with_root_power",
       "community": 101,
       "norm_label": "caster_with_root_power()"
@@ -5898,7 +5925,7 @@
       "label": "approx()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L121",
+      "source_location": "L173",
       "id": "graph_cast_approx",
       "community": 101,
       "norm_label": "approx()"
@@ -5907,7 +5934,7 @@
       "label": "effective_cast_time_is_settling_when_propagation_bound()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L129",
+      "source_location": "L181",
       "id": "graph_cast_effective_cast_time_is_settling_when_propagation_bound",
       "community": 101,
       "norm_label": "effective_cast_time_is_settling_when_propagation_bound()"
@@ -5916,7 +5943,7 @@
       "label": "effective_cast_time_is_energy_time_when_throughput_bound()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L144",
+      "source_location": "L196",
       "id": "graph_cast_effective_cast_time_is_energy_time_when_throughput_bound",
       "community": 101,
       "norm_label": "effective_cast_time_is_energy_time_when_throughput_bound()"
@@ -5925,7 +5952,7 @@
       "label": "same_graph_two_casters_differ_only_in_effective_time()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L159",
+      "source_location": "L211",
       "id": "graph_cast_same_graph_two_casters_differ_only_in_effective_time",
       "community": 101,
       "norm_label": "same_graph_two_casters_differ_only_in_effective_time()"
@@ -5934,7 +5961,7 @@
       "label": "frozen_cast_time_unchanged_by_floor()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L175",
+      "source_location": "L227",
       "id": "graph_cast_frozen_cast_time_unchanged_by_floor",
       "community": 101,
       "norm_label": "frozen_cast_time_unchanged_by_floor()"
@@ -5943,10 +5970,73 @@
       "label": "zero_channel_power_caster_cannot_cast()",
       "file_type": "code",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L190",
+      "source_location": "L242",
       "id": "graph_cast_zero_channel_power_caster_cannot_cast",
       "community": 101,
       "norm_label": "zero_channel_power_caster_cannot_cast()"
+    },
+    {
+      "label": "caster()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L256",
+      "id": "graph_cast_caster",
+      "community": 101,
+      "norm_label": "caster()"
+    },
+    {
+      "label": "overdraw_shortens_cast_vs_safe_floor()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L265",
+      "id": "graph_cast_overdraw_shortens_cast_vs_safe_floor",
+      "community": 101,
+      "norm_label": "overdraw_shortens_cast_vs_safe_floor()"
+    },
+    {
+      "label": "safe_factor_one_matches_throughput_floor()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L282",
+      "id": "graph_cast_safe_factor_one_matches_throughput_floor",
+      "community": 101,
+      "norm_label": "safe_factor_one_matches_throughput_floor()"
+    },
+    {
+      "label": "overdraw_within_capacity_does_not_snap()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L295",
+      "id": "graph_cast_overdraw_within_capacity_does_not_snap",
+      "community": 101,
+      "norm_label": "overdraw_within_capacity_does_not_snap()"
+    },
+    {
+      "label": "overdraw_past_capacity_snaps_the_anchor()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L309",
+      "id": "graph_cast_overdraw_past_capacity_snaps_the_anchor",
+      "community": 101,
+      "norm_label": "overdraw_past_capacity_snaps_the_anchor()"
+    },
+    {
+      "label": "overdraw_snaps_multiple_anchors()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L323",
+      "id": "graph_cast_overdraw_snaps_multiple_anchors",
+      "community": 101,
+      "norm_label": "overdraw_snaps_multiple_anchors()"
+    },
+    {
+      "label": "zero_channel_power_cannot_overdraw()",
+      "file_type": "code",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L353",
+      "id": "graph_cast_zero_channel_power_cannot_overdraw",
+      "community": 101,
+      "norm_label": "zero_channel_power_cannot_overdraw()"
     },
     {
       "label": "csr.rs",
@@ -7421,7 +7511,7 @@
       "source_file": "theos-math/benches/math_benches.rs",
       "source_location": "L1",
       "id": "benches_math_benches",
-      "community": 5,
+      "community": 104,
       "norm_label": "math_benches.rs"
     },
     {
@@ -7430,7 +7520,7 @@
       "source_file": "theos-math/benches/math_benches.rs",
       "source_location": "L5",
       "id": "benches_math_benches_bench_mat4_mul",
-      "community": 5,
+      "community": 104,
       "norm_label": "bench_mat4_mul()"
     },
     {
@@ -7439,7 +7529,7 @@
       "source_file": "theos-math/benches/math_benches.rs",
       "source_location": "L5",
       "id": "theos_math_benches_math_benches_rs_criterion",
-      "community": 5,
+      "community": 104,
       "norm_label": "criterion"
     },
     {
@@ -7448,7 +7538,7 @@
       "source_file": "theos-math/benches/math_benches.rs",
       "source_location": "L33",
       "id": "benches_math_benches_bench_mat3_mul",
-      "community": 5,
+      "community": 104,
       "norm_label": "bench_mat3_mul()"
     },
     {
@@ -7457,7 +7547,7 @@
       "source_file": "theos-math/benches/math_benches.rs",
       "source_location": "L53",
       "id": "benches_math_benches_bench_vec3_dot",
-      "community": 5,
+      "community": 104,
       "norm_label": "bench_vec3_dot()"
     },
     {
@@ -7466,7 +7556,7 @@
       "source_file": "theos-math/benches/math_benches.rs",
       "source_location": "L63",
       "id": "benches_math_benches_bench_vec3_cross",
-      "community": 5,
+      "community": 104,
       "norm_label": "bench_vec3_cross()"
     },
     {
@@ -8717,7 +8807,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L28",
       "id": "src_vec_vec3",
-      "community": 87,
+      "community": 17,
       "norm_label": "vec3"
     },
     {
@@ -8726,7 +8816,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L42",
       "id": "src_vec_vec4",
-      "community": 17,
+      "community": 87,
       "norm_label": "vec4"
     },
     {
@@ -8735,7 +8825,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L56",
       "id": "src_vec_vec2_new",
-      "community": 18,
+      "community": 87,
       "norm_label": ".new()"
     },
     {
@@ -8870,7 +8960,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L213",
       "id": "src_vec_vec4_xyz",
-      "community": 17,
+      "community": 87,
       "norm_label": ".xyz()"
     },
     {
@@ -8879,7 +8969,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L218",
       "id": "src_vec_vec4_xy",
-      "community": 17,
+      "community": 87,
       "norm_label": ".xy()"
     },
     {
@@ -8888,7 +8978,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L223",
       "id": "src_vec_vec4_zw",
-      "community": 17,
+      "community": 87,
       "norm_label": ".zw()"
     },
     {
@@ -8942,7 +9032,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L265",
       "id": "src_vec_vec2_add",
-      "community": 87,
+      "community": 18,
       "norm_label": ".add()"
     },
     {
@@ -8987,7 +9077,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L321",
       "id": "src_vec_vec2_add_assign",
-      "community": 18,
+      "community": 87,
       "norm_label": ".add_assign()"
     },
     {
@@ -9005,7 +9095,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L333",
       "id": "src_vec_vec4_add_assign",
-      "community": 17,
+      "community": 87,
       "norm_label": ".add_assign()"
     },
     {
@@ -9014,7 +9104,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L338",
       "id": "sub",
-      "community": 17,
+      "community": 87,
       "norm_label": "sub"
     },
     {
@@ -9068,7 +9158,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L404",
       "id": "src_vec_vec3_sub_assign",
-      "community": 87,
+      "community": 18,
       "norm_label": ".sub_assign()"
     },
     {
@@ -9077,7 +9167,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L410",
       "id": "src_vec_vec4_sub_assign",
-      "community": 17,
+      "community": 18,
       "norm_label": ".sub_assign()"
     },
     {
@@ -9086,7 +9176,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L415",
       "id": "theos_math_src_vec_rs_mul",
-      "community": 87,
+      "community": 17,
       "norm_label": "mul"
     },
     {
@@ -9149,7 +9239,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L484",
       "id": "src_vec_vec4_mul_assign",
-      "community": 17,
+      "community": 87,
       "norm_label": ".mul_assign()"
     },
     {
@@ -9221,7 +9311,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L558",
       "id": "src_vec_vec4_div_assign",
-      "community": 17,
+      "community": 87,
       "norm_label": ".div_assign()"
     },
     {
@@ -9230,7 +9320,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L589",
       "id": "src_vec_f32",
-      "community": 87,
+      "community": 17,
       "norm_label": "f32"
     },
     {
@@ -9239,7 +9329,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L592",
       "id": "src_vec_f32_mul",
-      "community": 87,
+      "community": 17,
       "norm_label": ".mul()"
     },
     {
@@ -9248,7 +9338,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L692",
       "id": "theos_math_src_vec_rs_from",
-      "community": 87,
+      "community": 17,
       "norm_label": "from"
     },
     {
@@ -9257,7 +9347,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L695",
       "id": "src_vec_vec2_from",
-      "community": 17,
+      "community": 87,
       "norm_label": ".from()"
     },
     {
@@ -9284,7 +9374,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L713",
       "id": "src_vec_vec3_from",
-      "community": 87,
+      "community": 17,
       "norm_label": ".from()"
     },
     {
@@ -9293,7 +9383,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L718",
       "id": "src_vec_glam_vec3",
-      "community": 87,
+      "community": 17,
       "norm_label": "glam::vec3"
     },
     {
@@ -9302,7 +9392,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L721",
       "id": "src_vec_glam_vec3_from",
-      "community": 87,
+      "community": 17,
       "norm_label": ".from()"
     },
     {
@@ -9311,7 +9401,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L726",
       "id": "vec3a",
-      "community": 87,
+      "community": 17,
       "norm_label": "vec3a"
     },
     {
@@ -9320,7 +9410,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L736",
       "id": "src_vec_glam_vec3a",
-      "community": 87,
+      "community": 17,
       "norm_label": "glam::vec3a"
     },
     {
@@ -9329,7 +9419,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L741",
       "id": "src_vec_glam_vec3a_from",
-      "community": 87,
+      "community": 17,
       "norm_label": ".from()"
     },
     {
@@ -9338,7 +9428,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L749",
       "id": "src_vec_vec4_from",
-      "community": 17,
+      "community": 87,
       "norm_label": ".from()"
     },
     {
@@ -9347,7 +9437,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L754",
       "id": "src_vec_glam_vec4",
-      "community": 17,
+      "community": 87,
       "norm_label": "glam::vec4"
     },
     {
@@ -9356,7 +9446,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L757",
       "id": "src_vec_glam_vec4_from",
-      "community": 17,
+      "community": 87,
       "norm_label": ".from()"
     },
     {
@@ -9365,7 +9455,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L766",
       "id": "f32x4",
-      "community": 17,
+      "community": 87,
       "norm_label": "f32x4"
     },
     {
@@ -9374,7 +9464,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L793",
       "id": "src_vec_wide_f32x4",
-      "community": 17,
+      "community": 18,
       "norm_label": "wide::f32x4"
     },
     {
@@ -9383,7 +9473,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L795",
       "id": "src_vec_wide_f32x4_from",
-      "community": 17,
+      "community": 18,
       "norm_label": ".from()"
     },
     {
@@ -9392,7 +9482,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L800",
       "id": "vector2",
-      "community": 17,
+      "community": 87,
       "norm_label": "vector2"
     },
     {
@@ -9401,7 +9491,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L807",
       "id": "vector3",
-      "community": 87,
+      "community": 17,
       "norm_label": "vector3"
     },
     {
@@ -9410,7 +9500,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L814",
       "id": "vector4",
-      "community": 17,
+      "community": 87,
       "norm_label": "vector4"
     },
     {
@@ -9437,7 +9527,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L828",
       "id": "src_vec_mint_vector3_f32",
-      "community": 87,
+      "community": 17,
       "norm_label": "mint::vector3<f32>"
     },
     {
@@ -9446,7 +9536,7 @@
       "source_file": "theos-math/src/vec.rs",
       "source_location": "L830",
       "id": "src_vec_mint_vector3_f32_from",
-      "community": 87,
+      "community": 17,
       "norm_label": ".from()"
     },
     {
@@ -10148,7 +10238,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L1",
       "id": "src_event_bus",
-      "community": 104,
+      "community": 1,
       "norm_label": "event_bus.rs"
     },
     {
@@ -10157,7 +10247,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L42",
       "id": "src_event_bus_event",
-      "community": 104,
+      "community": 1,
       "norm_label": "event"
     },
     {
@@ -10166,7 +10256,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L42",
       "id": "theos_shared_src_event_bus_rs_send",
-      "community": 104,
+      "community": 1,
       "norm_label": "send"
     },
     {
@@ -10175,7 +10265,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L42",
       "id": "theos_shared_src_event_bus_rs_sync",
-      "community": 104,
+      "community": 1,
       "norm_label": "sync"
     },
     {
@@ -10184,7 +10274,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L42",
       "id": "theos_shared_src_event_bus_rs_debug",
-      "community": 104,
+      "community": 1,
       "norm_label": "debug"
     },
     {
@@ -10193,7 +10283,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L42",
       "id": "theos_shared_src_event_bus_rs_clone",
-      "community": 104,
+      "community": 1,
       "norm_label": "clone"
     },
     {
@@ -10202,7 +10292,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L55",
       "id": "src_event_bus_channelhandle",
-      "community": 104,
+      "community": 1,
       "norm_label": "channelhandle"
     },
     {
@@ -10211,7 +10301,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L96",
       "id": "src_event_bus_eventbus",
-      "community": 104,
+      "community": 1,
       "norm_label": "eventbus"
     },
     {
@@ -10220,7 +10310,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L150",
       "id": "src_event_bus_eventbusext",
-      "community": 104,
+      "community": 1,
       "norm_label": "eventbusext"
     },
     {
@@ -10229,7 +10319,7 @@
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L166",
       "id": "src_event_bus_t",
-      "community": 104,
+      "community": 1,
       "norm_label": "t"
     },
     {
@@ -10238,7 +10328,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L1",
       "id": "src_kernel_context",
-      "community": 106,
+      "community": 1,
       "norm_label": "kernel_context.rs"
     },
     {
@@ -10247,7 +10337,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L38",
       "id": "src_kernel_context_theosservice",
-      "community": 106,
+      "community": 1,
       "norm_label": "theosservice"
     },
     {
@@ -10274,7 +10364,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L50",
       "id": "src_kernel_context_kernelcontext",
-      "community": 105,
+      "community": 1,
       "norm_label": "kernelcontext"
     },
     {
@@ -10283,7 +10373,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L57",
       "id": "servicelocator",
-      "community": 106,
+      "community": 1,
       "norm_label": "servicelocator"
     },
     {
@@ -10292,7 +10382,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L63",
       "id": "theos_shared_src_kernel_context_rs_arc",
-      "community": 105,
+      "community": 1,
       "norm_label": "arc"
     },
     {
@@ -10301,7 +10391,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L63",
       "id": "theos_shared_src_kernel_context_rs_eventbus",
-      "community": 105,
+      "community": 1,
       "norm_label": "eventbus"
     },
     {
@@ -10310,7 +10400,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L66",
       "id": "theos_shared_src_kernel_context_rs_atomicu32",
-      "community": 105,
+      "community": 1,
       "norm_label": "atomicu32"
     },
     {
@@ -10319,7 +10409,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L75",
       "id": "src_kernel_context_kernelcontext_new",
-      "community": 105,
+      "community": 1,
       "norm_label": ".new()"
     },
     {
@@ -10328,7 +10418,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L75",
       "id": "theos_shared_src_kernel_context_rs_self",
-      "community": 105,
+      "community": 1,
       "norm_label": "self"
     },
     {
@@ -10337,7 +10427,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L101",
       "id": "src_kernel_context_kernelcontext_register",
-      "community": 105,
+      "community": 1,
       "norm_label": ".register()"
     },
     {
@@ -10346,7 +10436,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L101",
       "id": "theos_shared_src_kernel_context_rs_t",
-      "community": 105,
+      "community": 1,
       "norm_label": "t"
     },
     {
@@ -10355,7 +10445,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L101",
       "id": "kernelcontextresult",
-      "community": 105,
+      "community": 1,
       "norm_label": "kernelcontextresult"
     },
     {
@@ -10364,7 +10454,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L124",
       "id": "src_kernel_context_kernelcontext_get",
-      "community": 105,
+      "community": 1,
       "norm_label": ".get()"
     },
     {
@@ -10373,7 +10463,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L139",
       "id": "src_kernel_context_kernelcontext_event_bus",
-      "community": 105,
+      "community": 1,
       "norm_label": ".event_bus()"
     },
     {
@@ -10409,7 +10499,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L167",
       "id": "src_kernel_context_kernelcontext_target_hz_handle",
-      "community": 105,
+      "community": 1,
       "norm_label": ".target_hz_handle()"
     },
     {
@@ -10508,7 +10598,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L206",
       "id": "src_kernel_context_testservice",
-      "community": 106,
+      "community": 1,
       "norm_label": "testservice"
     },
     {
@@ -10517,7 +10607,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L212",
       "id": "src_kernel_context_unregisteredservice",
-      "community": 106,
+      "community": 1,
       "norm_label": "unregisteredservice"
     },
     {
@@ -10526,7 +10616,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L215",
       "id": "src_kernel_context_make_context",
-      "community": 106,
+      "community": 1,
       "norm_label": "make_context()"
     },
     {
@@ -10535,7 +10625,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L220",
       "id": "src_kernel_context_register_then_get_returns_the_service",
-      "community": 106,
+      "community": 1,
       "norm_label": "register_then_get_returns_the_service()"
     },
     {
@@ -10544,7 +10634,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L232",
       "id": "src_kernel_context_get_unregistered_service_returns_service_not_found",
-      "community": 106,
+      "community": 1,
       "norm_label": "get_unregistered_service_returns_service_not_found()"
     },
     {
@@ -10553,7 +10643,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L246",
       "id": "src_kernel_context_register_overwrites_previous_service_of_same_type",
-      "community": 106,
+      "community": 1,
       "norm_label": "register_overwrites_previous_service_of_same_type()"
     },
     {
@@ -10562,7 +10652,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L256",
       "id": "src_kernel_context_event_bus_hands_back_the_same_shared_handle",
-      "community": 106,
+      "community": 1,
       "norm_label": "event_bus_hands_back_the_same_shared_handle()"
     },
     {
@@ -10571,7 +10661,7 @@
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L267",
       "id": "src_kernel_context_test_target_hz_and_handle_modifications",
-      "community": 106,
+      "community": 1,
       "norm_label": "test_target_hz_and_handle_modifications()"
     },
     {
@@ -10589,7 +10679,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L1",
       "id": "src_module",
-      "community": 103,
+      "community": 3,
       "norm_label": "module.rs"
     },
     {
@@ -10598,7 +10688,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L19",
       "id": "src_module_moduledependency",
-      "community": 103,
+      "community": 3,
       "norm_label": "moduledependency"
     },
     {
@@ -10607,7 +10697,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L27",
       "id": "theos_shared_src_module_rs_typeid",
-      "community": 103,
+      "community": 3,
       "norm_label": "typeid"
     },
     {
@@ -10616,7 +10706,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L32",
       "id": "versionreq",
-      "community": 103,
+      "community": 3,
       "norm_label": "versionreq"
     },
     {
@@ -10625,7 +10715,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L46",
       "id": "src_module_moduledependency_new",
-      "community": 103,
+      "community": 3,
       "norm_label": ".new()"
     },
     {
@@ -10634,7 +10724,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L46",
       "id": "theos_shared_src_module_rs_self",
-      "community": 103,
+      "community": 3,
       "norm_label": "self"
     },
     {
@@ -10643,7 +10733,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L55",
       "id": "src_module_moduledependency_any",
-      "community": 103,
+      "community": 3,
       "norm_label": ".any()"
     },
     {
@@ -10652,7 +10742,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L74",
       "id": "src_module_enginemodule",
-      "community": 103,
+      "community": 3,
       "norm_label": "enginemodule"
     },
     {
@@ -10661,7 +10751,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L74",
       "id": "theos_shared_src_module_rs_send",
-      "community": 103,
+      "community": 3,
       "norm_label": "send"
     },
     {
@@ -10670,7 +10760,7 @@
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L74",
       "id": "theos_shared_src_module_rs_sync",
-      "community": 103,
+      "community": 3,
       "norm_label": "sync"
     },
     {
@@ -13725,6 +13815,96 @@
       "norm_label": "acceptance criteria"
     },
     {
+      "label": "THEOS-177.md",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L1",
+      "id": "plans_theos_177",
+      "community": 103,
+      "norm_label": "theos-177.md"
+    },
+    {
+      "label": "THEOS-177 \u2014 [magic] B2 overdraw (channel beyond safe P/C\u1d62 \u2014 demonic speed)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L1",
+      "id": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "community": 103,
+      "norm_label": "theos-177 \u2014 [magic] b2 overdraw (channel beyond safe p/ci \u2014 demonic speed)"
+    },
+    {
+      "label": "Goal (one sentence)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L12",
+      "id": "plans_theos_177_goal_one_sentence",
+      "community": 103,
+      "norm_label": "goal (one sentence)"
+    },
+    {
+      "label": "Canon (E14 B2, landed 2026-06-25)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L17",
+      "id": "plans_theos_177_canon_e14_b2_landed_2026_06_25",
+      "community": 103,
+      "norm_label": "canon (e14 b2, landed 2026-06-25)"
+    },
+    {
+      "label": "Current code state",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L27",
+      "id": "plans_theos_177_current_code_state",
+      "community": 103,
+      "norm_label": "current code state"
+    },
+    {
+      "label": "Decision register \u2014 LOCKED (2026-06-25)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L33",
+      "id": "plans_theos_177_decision_register_locked_2026_06_25",
+      "community": 103,
+      "norm_label": "decision register \u2014 locked (2026-06-25)"
+    },
+    {
+      "label": "Proposed shape (scaffolding only)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L42",
+      "id": "plans_theos_177_proposed_shape_scaffolding_only",
+      "community": 103,
+      "norm_label": "proposed shape (scaffolding only)"
+    },
+    {
+      "label": "Test scenarios (names only)",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L52",
+      "id": "plans_theos_177_test_scenarios_names_only",
+      "community": 103,
+      "norm_label": "test scenarios (names only)"
+    },
+    {
+      "label": "Out of scope",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L59",
+      "id": "plans_theos_177_out_of_scope",
+      "community": 103,
+      "norm_label": "out of scope"
+    },
+    {
+      "label": "Acceptance criteria",
+      "file_type": "document",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L64",
+      "id": "plans_theos_177_acceptance_criteria",
+      "community": 103,
+      "norm_label": "acceptance criteria"
+    },
+    {
       "label": "THEOS-86.md",
       "file_type": "document",
       "source_file": "plans/THEOS-86.md",
@@ -14755,7 +14935,7 @@
       "file_type": "code",
       "source_file": "theos-math/benches/math_benches.rs",
       "source_location": "L1",
-      "community": 5,
+      "community": 104,
       "norm_label": "math_benches.rs",
       "id": "theos_math_benches_math_benches_rs"
     },
@@ -14845,7 +15025,7 @@
       "file_type": "code",
       "source_file": "theos-shared/src/kernel_context.rs",
       "source_location": "L1",
-      "community": 106,
+      "community": 1,
       "norm_label": "kernel_context.rs",
       "id": "theos_shared_src_kernel_context_rs"
     },
@@ -14899,7 +15079,7 @@
       "file_type": "code",
       "source_file": "theos-shared/src/module.rs",
       "source_location": "L1",
-      "community": 103,
+      "community": 3,
       "norm_label": "module.rs",
       "id": "theos_shared_src_module_rs"
     },
@@ -14917,7 +15097,7 @@
       "file_type": "code",
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L1",
-      "community": 104,
+      "community": 1,
       "norm_label": "event_bus.rs",
       "id": "theos_shared_src_event_bus_rs"
     },
@@ -14926,7 +15106,7 @@
       "file_type": "code",
       "source_file": "theos-shared/src/event_bus.rs",
       "source_location": "L185",
-      "community": 104,
+      "community": 1,
       "norm_label": "eventbussetup",
       "id": "src_event_bus_eventbussetup"
     },
@@ -15944,7 +16124,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 87,
+      "community": 17,
       "norm_label": "quat * vec3 (rodrigues rotation)",
       "id": "src_quat_quat_mul_vec3"
     },
@@ -15957,7 +16137,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 87,
       "norm_label": "mat4 * vec4",
       "id": "src_mat_mat4_mul_vec4"
     },
@@ -15970,7 +16150,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 87,
+      "community": 17,
       "norm_label": "mat3 * vec3",
       "id": "src_mat_mat3_mul_vec3"
     },
@@ -15996,7 +16176,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 103,
+      "community": 1,
       "norm_label": "theos-shared lib (public api)",
       "id": "src_lib_shared"
     },
@@ -16009,7 +16189,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 103,
+      "community": 1,
       "norm_label": "theos-shared prelude",
       "id": "src_prelude_prelude"
     },
@@ -16048,7 +16228,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 5,
+      "community": 87,
       "norm_label": "glam interoperability bridge pattern",
       "id": "concept_glam_interop"
     },
@@ -16061,7 +16241,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 17,
+      "community": 87,
       "norm_label": "mint interoperability bridge pattern",
       "id": "concept_mint_interop"
     },
@@ -16074,7 +16254,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 103,
+      "community": 3,
       "norm_label": "engine module three-phase lifecycle (init, tick, shutdown)",
       "id": "concept_module_lifecycle"
     },
@@ -16087,7 +16267,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 104,
+      "community": 1,
       "norm_label": "eventbus split into dyn-compatible core + generic ergonomic extension",
       "id": "concept_eventbus_split_traits"
     },
@@ -16100,7 +16280,7 @@
       "captured_at": null,
       "author": null,
       "contributor": null,
-      "community": 105,
+      "community": 1,
       "norm_label": "kernelcontext is a concrete struct (not a trait) for type-safe service access",
       "id": "concept_kernelcontext_concrete_struct"
     },
@@ -32888,6 +33068,16 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L256",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_caster",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
       "source_location": "L115",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -32928,6 +33118,66 @@
       "relation": "contains",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L309",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_overdraw_past_capacity_snaps_the_anchor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L265",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_overdraw_shortens_cast_vs_safe_floor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L323",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_overdraw_snaps_multiple_anchors",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L295",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_overdraw_within_capacity_does_not_snap",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L36",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_overdrawoutcome",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L282",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_safe_factor_one_matches_throughput_floor",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
       "source_location": "L159",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -32953,6 +33203,16 @@
       "confidence_score": 1.0,
       "source": "graph_cast",
       "target": "graph_cast_two_node"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L353",
+      "weight": 1.0,
+      "source": "graph_cast",
+      "target": "graph_cast_zero_channel_power_cannot_overdraw",
+      "confidence_score": 1.0
     },
     {
       "relation": "contains",
@@ -32998,6 +33258,83 @@
       "target": "graph_cast_cannotchannel"
     },
     {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L89",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "graph_cast_tensiongraph_overdraw_cast_time",
+      "target": "graph_cast_cannotchannel",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L42",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "graph_cast_overdrawoutcome",
+      "target": "theos_magic_src_graph_cast_rs_chakra",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L42",
+      "weight": 1.0,
+      "context": "field",
+      "source": "graph_cast_overdrawoutcome",
+      "target": "theos_magic_src_graph_cast_rs_vec",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L89",
+      "weight": 1.0,
+      "context": "generic_arg",
+      "source": "graph_cast_tensiongraph_overdraw_cast_time",
+      "target": "graph_cast_overdrawoutcome",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "confidence_score": 1.0,
+      "source": "graph_cast_body",
+      "target": "theos_magic_src_graph_cast_rs_vec"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L87",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "confidence_score": 1.0,
+      "source": "graph_cast_spatial",
+      "target": "theos_magic_src_graph_cast_rs_vec"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L74",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "confidence_score": 1.0,
+      "source": "graph_cast_body",
+      "target": "theos_magic_src_graph_cast_rs_chakra"
+    },
+    {
       "relation": "method",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
@@ -33006,6 +33343,26 @@
       "confidence_score": 1.0,
       "source": "graph_cast_tensiongraph",
       "target": "graph_cast_tensiongraph_effective_cast_time"
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L46",
+      "weight": 1.0,
+      "source": "graph_cast_tensiongraph",
+      "target": "graph_cast_tensiongraph_min_channel_power",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "method",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L89",
+      "weight": 1.0,
+      "source": "graph_cast_tensiongraph",
+      "target": "graph_cast_tensiongraph_overdraw_cast_time",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -33017,6 +33374,83 @@
       "confidence_score": 1.0,
       "source": "graph_cast_two_node",
       "target": "graph_cast_tensiongraph"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L72",
+      "weight": 1.0,
+      "source": "graph_cast_tensiongraph_effective_cast_time",
+      "target": "graph_cast_tensiongraph_min_channel_power",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L46",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_cast_tensiongraph_min_channel_power",
+      "target": "theos_magic_src_graph_cast_rs_chakras",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L97",
+      "weight": 1.0,
+      "source": "graph_cast_tensiongraph_overdraw_cast_time",
+      "target": "graph_cast_tensiongraph_min_channel_power",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L256",
+      "weight": 1.0,
+      "context": "return_type",
+      "source": "graph_cast_caster",
+      "target": "theos_magic_src_graph_cast_rs_chakras",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L115",
+      "weight": 1.0,
+      "context": "return_type",
+      "confidence_score": 1.0,
+      "source": "graph_cast_caster_with_root_power",
+      "target": "theos_magic_src_graph_cast_rs_chakras"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L42",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "confidence_score": 1.0,
+      "source": "graph_cast_tensiongraph_effective_cast_time",
+      "target": "theos_magic_src_graph_cast_rs_chakras"
+    },
+    {
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L89",
+      "weight": 1.0,
+      "context": "parameter_type",
+      "source": "graph_cast_tensiongraph_overdraw_cast_time",
+      "target": "theos_magic_src_graph_cast_rs_chakras",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -33056,6 +33490,28 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L271",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_shortens_cast_vs_safe_floor",
+      "target": "graph_cast_tensiongraph_effective_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L288",
+      "weight": 1.0,
+      "source": "graph_cast_safe_factor_one_matches_throughput_floor",
+      "target": "graph_cast_tensiongraph_effective_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
       "source_location": "L163",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -33072,17 +33528,6 @@
       "confidence_score": 1.0,
       "source": "graph_cast_tensiongraph_effective_cast_time",
       "target": "envresistance"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L42",
-      "weight": 1.0,
-      "context": "parameter_type",
-      "confidence_score": 1.0,
-      "source": "graph_cast_tensiongraph_effective_cast_time",
-      "target": "theos_magic_src_graph_cast_rs_chakras"
     },
     {
       "relation": "references",
@@ -33121,12 +33566,12 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L115",
+      "source_location": "L89",
       "weight": 1.0,
-      "context": "return_type",
-      "confidence_score": 1.0,
-      "source": "graph_cast_caster_with_root_power",
-      "target": "theos_magic_src_graph_cast_rs_chakras"
+      "context": "parameter_type",
+      "source": "graph_cast_tensiongraph_overdraw_cast_time",
+      "target": "envresistance",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -33154,23 +33599,89 @@
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L74",
+      "source_location": "L89",
       "weight": 1.0,
       "context": "parameter_type",
-      "confidence_score": 1.0,
-      "source": "graph_cast_body",
-      "target": "theos_magic_src_graph_cast_rs_chakra"
+      "source": "graph_cast_tensiongraph_overdraw_cast_time",
+      "target": "theos_magic_src_graph_cast_rs_weavetuning",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L74",
+      "source_location": "L89",
       "weight": 1.0,
-      "context": "parameter_type",
-      "confidence_score": 1.0,
-      "source": "graph_cast_body",
-      "target": "theos_magic_src_graph_cast_rs_vec"
+      "context": "return_type",
+      "source": "graph_cast_tensiongraph_overdraw_cast_time",
+      "target": "theos_magic_src_graph_cast_rs_result",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L311",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_past_capacity_snaps_the_anchor",
+      "target": "graph_cast_tensiongraph_overdraw_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L272",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_shortens_cast_vs_safe_floor",
+      "target": "graph_cast_tensiongraph_overdraw_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L340",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_snaps_multiple_anchors",
+      "target": "graph_cast_tensiongraph_overdraw_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L297",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_within_capacity_does_not_snap",
+      "target": "graph_cast_tensiongraph_overdraw_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L289",
+      "weight": 1.0,
+      "source": "graph_cast_safe_factor_one_matches_throughput_floor",
+      "target": "graph_cast_tensiongraph_overdraw_cast_time",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L355",
+      "weight": 1.0,
+      "source": "graph_cast_zero_channel_power_cannot_overdraw",
+      "target": "graph_cast_tensiongraph_overdraw_cast_time",
+      "confidence_score": 1.0
     },
     {
       "relation": "references",
@@ -33199,6 +33710,17 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L327",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_snaps_multiple_anchors",
+      "target": "graph_cast_body",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
       "source_location": "L104",
       "weight": 1.0,
       "confidence_score": 1.0,
@@ -33215,17 +33737,6 @@
       "confidence_score": 1.0,
       "source": "graph_cast_spatial",
       "target": "theos_magic_src_graph_cast_rs_vec3"
-    },
-    {
-      "relation": "references",
-      "confidence": "EXTRACTED",
-      "source_file": "theos-magic/src/graph/cast.rs",
-      "source_location": "L87",
-      "weight": 1.0,
-      "context": "parameter_type",
-      "confidence_score": 1.0,
-      "source": "graph_cast_spatial",
-      "target": "theos_magic_src_graph_cast_rs_vec"
     },
     {
       "relation": "references",
@@ -33287,11 +33798,66 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L311",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_past_capacity_snaps_the_anchor",
+      "target": "graph_cast_two_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L267",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_shortens_cast_vs_safe_floor",
+      "target": "graph_cast_two_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L297",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_within_capacity_does_not_snap",
+      "target": "graph_cast_two_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L284",
+      "weight": 1.0,
+      "source": "graph_cast_safe_factor_one_matches_throughput_floor",
+      "target": "graph_cast_two_node",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
       "source_location": "L160",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "graph_cast_same_graph_two_casters_differ_only_in_effective_time",
       "target": "graph_cast_two_node"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L355",
+      "weight": 1.0,
+      "source": "graph_cast_zero_channel_power_cannot_overdraw",
+      "target": "graph_cast_two_node",
+      "confidence_score": 1.0
     },
     {
       "relation": "calls",
@@ -33386,11 +33952,77 @@
       "context": "call",
       "confidence": "EXTRACTED",
       "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L273",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_shortens_cast_vs_safe_floor",
+      "target": "graph_cast_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L290",
+      "weight": 1.0,
+      "source": "graph_cast_safe_factor_one_matches_throughput_floor",
+      "target": "graph_cast_approx",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
       "source_location": "L171",
       "weight": 1.0,
       "confidence_score": 1.0,
       "source": "graph_cast_same_graph_two_casters_differ_only_in_effective_time",
       "target": "graph_cast_approx"
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L313",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_past_capacity_snaps_the_anchor",
+      "target": "graph_cast_caster",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L268",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_shortens_cast_vs_safe_floor",
+      "target": "graph_cast_caster",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L299",
+      "weight": 1.0,
+      "source": "graph_cast_overdraw_within_capacity_does_not_snap",
+      "target": "graph_cast_caster",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "calls",
+      "context": "call",
+      "confidence": "EXTRACTED",
+      "source_file": "theos-magic/src/graph/cast.rs",
+      "source_location": "L285",
+      "weight": 1.0,
+      "source": "graph_cast_safe_factor_one_matches_throughput_floor",
+      "target": "graph_cast_caster",
+      "confidence_score": 1.0
     },
     {
       "relation": "imports_from",
@@ -34331,9 +34963,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L152",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_approx",
-      "confidence_score": 1.0
+      "target": "graph_gain_approx"
     },
     {
       "relation": "contains",
@@ -34341,9 +34973,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_body",
-      "confidence_score": 1.0
+      "target": "graph_gain_body"
     },
     {
       "relation": "contains",
@@ -34351,9 +34983,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L133",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_gain_differs_with_environment_on_same_graph",
-      "confidence_score": 1.0
+      "target": "graph_gain_gain_differs_with_environment_on_same_graph"
     },
     {
       "relation": "contains",
@@ -34361,9 +34993,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L113",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_gain_matches_manual_q_for_known_s_and_gamma",
-      "confidence_score": 1.0
+      "target": "graph_gain_gain_matches_manual_q_for_known_s_and_gamma"
     },
     {
       "relation": "contains",
@@ -34371,9 +35003,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L104",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_gain_near_one_for_well_damped_graph",
-      "confidence_score": 1.0
+      "target": "graph_gain_gain_near_one_for_well_damped_graph"
     },
     {
       "relation": "contains",
@@ -34381,9 +35013,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L122",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_gain_rises_as_stability_margin_thins",
-      "confidence_score": 1.0
+      "target": "graph_gain_gain_rises_as_stability_margin_thins"
     },
     {
       "relation": "contains",
@@ -34391,9 +35023,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L22",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_resonancerunaway",
-      "confidence_score": 1.0
+      "target": "graph_gain_resonancerunaway"
     },
     {
       "relation": "contains",
@@ -34401,9 +35033,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L146",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_runaway_when_stability_nonpositive",
-      "confidence_score": 1.0
+      "target": "graph_gain_runaway_when_stability_nonpositive"
     },
     {
       "relation": "contains",
@@ -34411,9 +35043,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L68",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_spatial",
-      "confidence_score": 1.0
+      "target": "graph_gain_spatial"
     },
     {
       "relation": "contains",
@@ -34421,9 +35053,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L96",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_tuning_with_theta0",
-      "confidence_score": 1.0
+      "target": "graph_gain_tuning_with_theta0"
     },
     {
       "relation": "contains",
@@ -34431,9 +35063,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L82",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "graph_gain_two_node",
-      "confidence_score": 1.0
+      "target": "graph_gain_two_node"
     },
     {
       "relation": "imports_from",
@@ -34442,9 +35074,9 @@
       "source_location": "L11",
       "weight": 1.0,
       "context": "import",
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "tensiongraph",
-      "confidence_score": 1.0
+      "target": "tensiongraph"
     },
     {
       "relation": "imports_from",
@@ -34453,9 +35085,9 @@
       "source_location": "L53",
       "weight": 1.0,
       "context": "import",
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "theos_magic_src_graph_gain_rs_vec3",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_vec3"
     },
     {
       "relation": "imports_from",
@@ -34464,9 +35096,9 @@
       "source_location": "L12",
       "weight": 1.0,
       "context": "import",
+      "confidence_score": 1.0,
       "source": "graph_gain",
-      "target": "theos_magic_src_graph_gain_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_weavetuning"
     },
     {
       "relation": "references",
@@ -34475,9 +35107,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "context": "generic_arg",
+      "confidence_score": 1.0,
       "source": "graph_gain_tensiongraph_resonance_gain",
-      "target": "graph_gain_resonancerunaway",
-      "confidence_score": 1.0
+      "target": "graph_gain_resonancerunaway"
     },
     {
       "relation": "method",
@@ -34485,9 +35117,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L32",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_tensiongraph",
-      "target": "graph_gain_tensiongraph_resonance_gain",
-      "confidence_score": 1.0
+      "target": "graph_gain_tensiongraph_resonance_gain"
     },
     {
       "relation": "references",
@@ -34496,9 +35128,9 @@
       "source_location": "L82",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_two_node",
-      "target": "graph_gain_tensiongraph",
-      "confidence_score": 1.0
+      "target": "graph_gain_tensiongraph"
     },
     {
       "relation": "calls",
@@ -34507,9 +35139,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L137",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_differs_with_environment_on_same_graph",
-      "target": "graph_gain_tensiongraph_resonance_gain",
-      "confidence_score": 1.0
+      "target": "graph_gain_tensiongraph_resonance_gain"
     },
     {
       "relation": "calls",
@@ -34518,9 +35150,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_matches_manual_q_for_known_s_and_gamma",
-      "target": "graph_gain_tensiongraph_resonance_gain",
-      "confidence_score": 1.0
+      "target": "graph_gain_tensiongraph_resonance_gain"
     },
     {
       "relation": "calls",
@@ -34529,9 +35161,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L106",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_near_one_for_well_damped_graph",
-      "target": "graph_gain_tensiongraph_resonance_gain",
-      "confidence_score": 1.0
+      "target": "graph_gain_tensiongraph_resonance_gain"
     },
     {
       "relation": "calls",
@@ -34540,9 +35172,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L125",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_rises_as_stability_margin_thins",
-      "target": "graph_gain_tensiongraph_resonance_gain",
-      "confidence_score": 1.0
+      "target": "graph_gain_tensiongraph_resonance_gain"
     },
     {
       "relation": "calls",
@@ -34551,9 +35183,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L148",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_runaway_when_stability_nonpositive",
-      "target": "graph_gain_tensiongraph_resonance_gain",
-      "confidence_score": 1.0
+      "target": "graph_gain_tensiongraph_resonance_gain"
     },
     {
       "relation": "references",
@@ -34562,9 +35194,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_tensiongraph_resonance_gain",
-      "target": "theos_magic_src_graph_gain_rs_result",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_result"
     },
     {
       "relation": "references",
@@ -34573,9 +35205,9 @@
       "source_location": "L32",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_tensiongraph_resonance_gain",
-      "target": "theos_magic_src_graph_gain_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_weavetuning"
     },
     {
       "relation": "references",
@@ -34584,9 +35216,9 @@
       "source_location": "L96",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_tuning_with_theta0",
-      "target": "theos_magic_src_graph_gain_rs_weavetuning",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_weavetuning"
     },
     {
       "relation": "references",
@@ -34595,9 +35227,9 @@
       "source_location": "L55",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_body",
-      "target": "theos_magic_src_graph_gain_rs_chakra",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_chakra"
     },
     {
       "relation": "references",
@@ -34606,9 +35238,9 @@
       "source_location": "L55",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_body",
-      "target": "theos_magic_src_graph_gain_rs_vec",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_vec"
     },
     {
       "relation": "references",
@@ -34617,9 +35249,9 @@
       "source_location": "L55",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_body",
-      "target": "theos_magic_src_graph_gain_rs_vec3",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_vec3"
     },
     {
       "relation": "references",
@@ -34628,9 +35260,9 @@
       "source_location": "L55",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_body",
-      "target": "theos_magic_src_graph_gain_rs_woventoken",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_woventoken"
     },
     {
       "relation": "calls",
@@ -34639,9 +35271,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L85",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_two_node",
-      "target": "graph_gain_body",
-      "confidence_score": 1.0
+      "target": "graph_gain_body"
     },
     {
       "relation": "references",
@@ -34650,9 +35282,9 @@
       "source_location": "L68",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_spatial",
-      "target": "theos_magic_src_graph_gain_rs_vec3",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_vec3"
     },
     {
       "relation": "references",
@@ -34661,9 +35293,9 @@
       "source_location": "L68",
       "weight": 1.0,
       "context": "parameter_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_spatial",
-      "target": "theos_magic_src_graph_gain_rs_vec",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_vec"
     },
     {
       "relation": "references",
@@ -34672,9 +35304,9 @@
       "source_location": "L68",
       "weight": 1.0,
       "context": "return_type",
+      "confidence_score": 1.0,
       "source": "graph_gain_spatial",
-      "target": "theos_magic_src_graph_gain_rs_woventoken",
-      "confidence_score": 1.0
+      "target": "theos_magic_src_graph_gain_rs_woventoken"
     },
     {
       "relation": "calls",
@@ -34683,9 +35315,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L86",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_two_node",
-      "target": "graph_gain_spatial",
-      "confidence_score": 1.0
+      "target": "graph_gain_spatial"
     },
     {
       "relation": "calls",
@@ -34694,9 +35326,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L134",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_differs_with_environment_on_same_graph",
-      "target": "graph_gain_two_node",
-      "confidence_score": 1.0
+      "target": "graph_gain_two_node"
     },
     {
       "relation": "calls",
@@ -34705,9 +35337,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L115",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_matches_manual_q_for_known_s_and_gamma",
-      "target": "graph_gain_two_node",
-      "confidence_score": 1.0
+      "target": "graph_gain_two_node"
     },
     {
       "relation": "calls",
@@ -34716,9 +35348,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L106",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_near_one_for_well_damped_graph",
-      "target": "graph_gain_two_node",
-      "confidence_score": 1.0
+      "target": "graph_gain_two_node"
     },
     {
       "relation": "calls",
@@ -34727,9 +35359,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L123",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_rises_as_stability_margin_thins",
-      "target": "graph_gain_two_node",
-      "confidence_score": 1.0
+      "target": "graph_gain_two_node"
     },
     {
       "relation": "calls",
@@ -34738,9 +35370,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L148",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_runaway_when_stability_nonpositive",
-      "target": "graph_gain_two_node",
-      "confidence_score": 1.0
+      "target": "graph_gain_two_node"
     },
     {
       "relation": "calls",
@@ -34749,9 +35381,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L135",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_differs_with_environment_on_same_graph",
-      "target": "graph_gain_tuning_with_theta0",
-      "confidence_score": 1.0
+      "target": "graph_gain_tuning_with_theta0"
     },
     {
       "relation": "calls",
@@ -34760,9 +35392,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L116",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_matches_manual_q_for_known_s_and_gamma",
-      "target": "graph_gain_tuning_with_theta0",
-      "confidence_score": 1.0
+      "target": "graph_gain_tuning_with_theta0"
     },
     {
       "relation": "calls",
@@ -34771,9 +35403,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L107",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_near_one_for_well_damped_graph",
-      "target": "graph_gain_tuning_with_theta0",
-      "confidence_score": 1.0
+      "target": "graph_gain_tuning_with_theta0"
     },
     {
       "relation": "calls",
@@ -34782,9 +35414,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L125",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_rises_as_stability_margin_thins",
-      "target": "graph_gain_tuning_with_theta0",
-      "confidence_score": 1.0
+      "target": "graph_gain_tuning_with_theta0"
     },
     {
       "relation": "calls",
@@ -34793,9 +35425,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L148",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_runaway_when_stability_nonpositive",
-      "target": "graph_gain_tuning_with_theta0",
-      "confidence_score": 1.0
+      "target": "graph_gain_tuning_with_theta0"
     },
     {
       "relation": "calls",
@@ -34804,9 +35436,9 @@
       "source_file": "theos-magic/src/graph/gain.rs",
       "source_location": "L142",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "graph_gain_gain_differs_with_environment_on_same_graph",
-      "target": "graph_gain_approx",
-      "confidence_score": 1.0
+      "target": "graph_gain_approx"
     },
     {
       "relation": "contains",
@@ -51869,9 +52501,9 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L1",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176",
-      "target": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "confidence_score": 1.0
+      "target": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3"
     },
     {
       "relation": "contains",
@@ -51879,9 +52511,9 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L59",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "target": "plans_theos_176_acceptance_criteria",
-      "confidence_score": 1.0
+      "target": "plans_theos_176_acceptance_criteria"
     },
     {
       "relation": "contains",
@@ -51889,9 +52521,9 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L17",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "target": "plans_theos_176_canon_e15_equations_of_the_weave",
-      "confidence_score": 1.0
+      "target": "plans_theos_176_canon_e15_equations_of_the_weave"
     },
     {
       "relation": "contains",
@@ -51899,9 +52531,9 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L27",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "target": "plans_theos_176_decision_register_locked_2026_06_25",
-      "confidence_score": 1.0
+      "target": "plans_theos_176_decision_register_locked_2026_06_25"
     },
     {
       "relation": "contains",
@@ -51909,9 +52541,9 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L12",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "target": "plans_theos_176_goal_one_sentence",
-      "confidence_score": 1.0
+      "target": "plans_theos_176_goal_one_sentence"
     },
     {
       "relation": "contains",
@@ -51919,9 +52551,9 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L55",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "target": "plans_theos_176_out_of_scope",
-      "confidence_score": 1.0
+      "target": "plans_theos_176_out_of_scope"
     },
     {
       "relation": "contains",
@@ -51929,9 +52561,9 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L36",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "target": "plans_theos_176_proposed_shape_scaffolding_only",
-      "confidence_score": 1.0
+      "target": "plans_theos_176_proposed_shape_scaffolding_only"
     },
     {
       "relation": "contains",
@@ -51939,8 +52571,98 @@
       "source_file": "plans/THEOS-176.md",
       "source_location": "L48",
       "weight": 1.0,
+      "confidence_score": 1.0,
       "source": "plans_theos_176_theos_176_magic_e15_resonance_gain_q_1_s\u03b3",
-      "target": "plans_theos_176_test_scenarios_names_only",
+      "target": "plans_theos_176_test_scenarios_names_only"
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L1",
+      "weight": 1.0,
+      "source": "plans_theos_177",
+      "target": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L64",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_acceptance_criteria",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L17",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_canon_e14_b2_landed_2026_06_25",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L27",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_current_code_state",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L33",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_decision_register_locked_2026_06_25",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L12",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_goal_one_sentence",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L59",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_out_of_scope",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L42",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_proposed_shape_scaffolding_only",
+      "confidence_score": 1.0
+    },
+    {
+      "relation": "contains",
+      "confidence": "EXTRACTED",
+      "source_file": "plans/THEOS-177.md",
+      "source_location": "L52",
+      "weight": 1.0,
+      "source": "plans_theos_177_theos_177_magic_b2_overdraw_channel_beyond_safe_p_ci_demonic_speed",
+      "target": "plans_theos_177_test_scenarios_names_only",
       "confidence_score": 1.0
     },
     {
@@ -54419,5 +55141,5 @@
       "source_file": ".github/workflows/release-packaging.yml"
     }
   ],
-  "built_at_commit": "352441c8f4592140738f8e0adfe265274ad7bf98"
+  "built_at_commit": "0a65c73a200a5cc10fe8ae8db6eea1f5156a0cf8"
 }
