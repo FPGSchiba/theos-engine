@@ -17,6 +17,7 @@ mod assembler;
 mod cast;
 mod csr;
 mod energy;
+mod gain;
 mod injection;
 mod phase;
 mod stability;
@@ -27,6 +28,7 @@ pub use assembler::GraphAssembler;
 pub use cast::CannotChannel;
 pub use csr::{CsrAdjacency, Edge};
 pub use energy::EnvResistance;
+pub use gain::ResonanceRunaway;
 pub use injection::{
     DEFAULT_INJECTION_ATTENUATION, injection_attenuation, kinematic_source_amplitude,
 };

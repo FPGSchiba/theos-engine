@@ -1,16 +1,16 @@
 # Graph Report - theos-engine  (2026-06-26)
 
 ## Corpus Check
-- 99 files · ~74,819 words
+- 101 files · ~76,233 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1794 nodes · 3507 edges · 102 communities (82 shown, 20 thin omitted)
+- 1823 nodes · 3560 edges · 108 communities (88 shown, 20 thin omitted)
 - Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 41 edges (avg confidence: 0.79)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ee9b4969`
+- Built from commit: `352441c8`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -111,6 +111,12 @@
 - [[_COMMUNITY_Community 99|Community 99]]
 - [[_COMMUNITY_Community 100|Community 100]]
 - [[_COMMUNITY_Community 101|Community 101]]
+- [[_COMMUNITY_Community 102|Community 102]]
+- [[_COMMUNITY_Community 103|Community 103]]
+- [[_COMMUNITY_Community 104|Community 104]]
+- [[_COMMUNITY_Community 105|Community 105]]
+- [[_COMMUNITY_Community 106|Community 106]]
+- [[_COMMUNITY_Community 107|Community 107]]
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 60 edges
@@ -169,31 +175,31 @@
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — workflows_check-lint_clippy_unsafe_policy_job, workflows_check-lint_forbid_unsafe_verification, workflows_check-lint_cargo_geiger [EXTRACTED 0.95]
 - **Release Artifact Production (Launcher, Game, Editor)** — workflows_release-packaging_theos_launcher_artifact, workflows_release-packaging_theos_game_artifact, workflows_release-packaging_theos_editor_artifact [EXTRACTED 1.00]
 
-## Communities (102 total, 20 thin omitted)
+## Communities (108 total, 20 thin omitted)
 
 ### Community 0 - "Community 0"
 Cohesion: 0.08
 Nodes (39): AtomicU32, Instant, Mutex, ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle() (+31 more)
 
 ### Community 1 - "Community 1"
-Cohesion: 0.09
-Nodes (41): EventBus split into dyn-compatible core + generic ergonomic extension, KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, ServiceLocator, ChannelHandle, Event, EventBus, EventBusExt (+33 more)
+Cohesion: 0.24
+Nodes (10): StubBus, Any, Box, ChannelHandle, EventBusResult, Option, Send, Sync (+2 more)
 
 ### Community 2 - "Community 2"
 Cohesion: 0.07
 Nodes (36): EventBusSetup, Receiver, Sender, BroadcastBusExt, BroadcastEventBus, ChannelHandle, CrossbeamEventBus, GameEvent (+28 more)
 
 ### Community 3 - "Community 3"
-Cohesion: 0.08
-Nodes (43): Engine Module three-phase lifecycle (init, tick, shutdown), ModuleResult, DependencyResolver, empty_module_list_returns_empty_order(), five_module_mixed_graph_satisfies_all_dependencies(), linear_chain_resolves_in_dependency_order(), missing_dependency_returns_dependency_missing_error(), module() (+35 more)
+Cohesion: 0.10
+Nodes (35): ModuleResult, DependencyResolver, empty_module_list_returns_empty_order(), five_module_mixed_graph_satisfies_all_dependencies(), linear_chain_resolves_in_dependency_order(), missing_dependency_returns_dependency_missing_error(), module(), module_with_deps() (+27 more)
 
 ### Community 4 - "Community 4"
 Cohesion: 0.06
 Nodes (68): BroadcastEventBus, CrossbeamEventBus, Default, KernelResult, calling_init_twice_returns_already_initialized(), CallLog, default_constructs_kernel_with_no_modules_and_uninitialised_flag(), event_bus_handle_returns_clone_of_kernel_bus() (+60 more)
 
 ### Community 5 - "Community 5"
-Cohesion: 0.12
-Nodes (31): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam::Mat3, glam::Mat4, Mat3, Mat4 (+23 more)
+Cohesion: 0.11
+Nodes (33): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_dot(), glam interoperability bridge pattern, theos-math lib (public API re-exports), glam::Mat3, glam::Mat4 (+25 more)
 
 ### Community 6 - "Community 6"
 Cohesion: 0.13
@@ -240,8 +246,8 @@ Cohesion: 0.17
 Nodes (17): Service Locator pattern for engine subsystem registry, RwLock, ServiceLocatorResult, get_nonexistent_service_returns_none(), register_and_get_service(), service_locator_is_cloneable_and_shares_registry(), ServiceLocator, TestService (+9 more)
 
 ### Community 17 - "Community 17"
-Cohesion: 0.09
-Nodes (20): AddAssign, glam interoperability bridge pattern, mint interoperability bridge pattern, Div, DivAssign, f32x4, theos-math lib (public API re-exports), Mat4 * Vec4 (+12 more)
+Cohesion: 0.12
+Nodes (9): mint interoperability bridge pattern, f32x4, Mat4 * Vec4, glam::Vec4, Vec4, wide::f32x4, Sub, Vector2 (+1 more)
 
 ### Community 19 - "Community 19"
 Cohesion: 0.16
@@ -416,8 +422,8 @@ Cohesion: 0.17
 Nodes (11): AC → file gap table, Chakra layer (`chakra.rs`), Coverage target, Deferred / out of scope, Graph layer (`graph/`), Locked decisions (design session 2026-06-13), Scaffolding contract, Seam ripple (`interface.rs`, `error.rs`) (+3 more)
 
 ### Community 87 - "Community 87"
-Cohesion: 0.16
-Nodes (13): Add, 16-byte SIMD alignment for GPU/SIMD compatibility, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32> (+5 more)
+Cohesion: 0.10
+Nodes (22): Add, AddAssign, 16-byte SIMD alignment for GPU/SIMD compatibility, Div, DivAssign, Mat3 * Vec3, Quat * Vec3 (Rodrigues rotation), f32 (+14 more)
 
 ### Community 88 - "Community 88"
 Cohesion: 0.22
@@ -475,25 +481,49 @@ Nodes (27): approx(), assemble(), body(), coherence_high_for_in_phase_frequency_
 Cohesion: 0.22
 Nodes (19): approx(), body(), CannotChannel, caster_with_root_power(), effective_cast_time_is_energy_time_when_throughput_bound(), effective_cast_time_is_settling_when_propagation_bound(), frozen_cast_time_unchanged_by_floor(), same_graph_two_casters_differ_only_in_effective_time() (+11 more)
 
+### Community 102 - "Community 102"
+Cohesion: 0.23
+Nodes (18): approx(), body(), gain_differs_with_environment_on_same_graph(), gain_matches_manual_q_for_known_s_and_gamma(), gain_near_one_for_well_damped_graph(), gain_rises_as_stability_margin_thins(), ResonanceRunaway, runaway_when_stability_nonpositive() (+10 more)
+
+### Community 103 - "Community 103"
+Cohesion: 0.23
+Nodes (10): Engine Module three-phase lifecycle (init, tick, shutdown), theos-shared lib (public API), EngineModule, ModuleDependency, theos-shared prelude, Self, Send, Sync (+2 more)
+
+### Community 104 - "Community 104"
+Cohesion: 0.27
+Nodes (11): EventBus split into dyn-compatible core + generic ergonomic extension, ChannelHandle, Event, EventBus, EventBusExt, EventBusSetup, T, Clone (+3 more)
+
+### Community 105 - "Community 105"
+Cohesion: 0.29
+Nodes (8): KernelContext is a concrete struct (not a trait) for type-safe service access, KernelContextResult, KernelContext, Arc, AtomicU32, EventBus, Self, T
+
+### Community 106 - "Community 106"
+Cohesion: 0.41
+Nodes (10): ServiceLocator, event_bus_hands_back_the_same_shared_handle(), get_unregistered_service_returns_service_not_found(), make_context(), register_overwrites_previous_service_of_same_type(), register_then_get_returns_the_service(), test_target_hz_and_handle_modifications(), TestService (+2 more)
+
+### Community 107 - "Community 107"
+Cohesion: 0.22
+Nodes (8): Acceptance criteria, Canon (E15, Equations of the Weave), Decision register — LOCKED (2026-06-25), Goal (one sentence), Out of scope, Proposed shape (scaffolding only), Test scenarios (names only), THEOS-176 — [magic] E15 resonance gain (Q = 1/Sᵞ)
+
 ## Knowledge Gaps
-- **406 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+401 more)
+- **415 isolated node(s):** `String`, `ModuleResult`, `Vec`, `Tag`, `Result` (+410 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **20 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `KeyCode` connect `Community 80` to `Community 23`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
 - **Why does `BroadcastEventBus` connect `Community 4` to `Community 80`?**
-  _High betweenness centrality (0.014) - this node is a cross-community bridge._
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
+- **Why does `KeyCode` connect `Community 80` to `Community 23`?**
+  _High betweenness centrality (0.012) - this node is a cross-community bridge._
 - **What connects `String`, `ModuleResult`, `Vec` to the rest of the system?**
-  _408 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _417 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `Community 0` be split into smaller, more focused modules?**
   _Cohesion score 0.07769423558897243 - nodes in this community are weakly interconnected._
-- **Should `Community 1` be split into smaller, more focused modules?**
-  _Cohesion score 0.08583959899749373 - nodes in this community are weakly interconnected._
 - **Should `Community 2` be split into smaller, more focused modules?**
   _Cohesion score 0.06693803708729082 - nodes in this community are weakly interconnected._
 - **Should `Community 3` be split into smaller, more focused modules?**
-  _Cohesion score 0.07756813417190776 - nodes in this community are weakly interconnected._
+  _Cohesion score 0.10452961672473868 - nodes in this community are weakly interconnected._
+- **Should `Community 4` be split into smaller, more focused modules?**
+  _Cohesion score 0.05515170670037927 - nodes in this community are weakly interconnected._

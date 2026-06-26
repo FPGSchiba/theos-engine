@@ -50,6 +50,11 @@ pub const DEFAULT_THETA_0: f32 = 1.0;
 /// Canon default `0.5`.
 pub const DEFAULT_S_MIN: f32 = 0.5;
 
+/// Default resonance-gain steepness `γ` (E15) — exponent in `Q = 1/Sᵞ`. `> 0`;
+/// larger γ ramps power harder as the stability margin thins.
+// TODO(THEOS-176): `2.0` is a placeholder — confirm the tuned value.
+pub const DEFAULT_GAMMA: f32 = 2.0;
+
 /// Engine-physics tuning for weave assembly — currently the E12 temporal-filter knobs.
 ///
 /// Distinct in kind from the caster/world *state* on [`crate::CompilerContext`]:
@@ -75,6 +80,8 @@ pub struct WeaveTuning {
     pub theta_0: f32,
     /// Stability threshold `S_min` (E7) — stable iff `S ≥ S_min`. Default `0.5`.
     pub s_min: f32,
+    /// Resonance-gain steepness `γ` (E15) — exponent in `Q = 1/Sᵞ`. `> 0`.
+    pub gamma: f32,
 }
 
 impl Default for WeaveTuning {
@@ -89,6 +96,7 @@ impl Default for WeaveTuning {
             sigma_f: DEFAULT_SIGMA_F,
             theta_0: DEFAULT_THETA_0,
             s_min: DEFAULT_S_MIN,
+            gamma: DEFAULT_GAMMA,
         }
     }
 }
