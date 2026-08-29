@@ -22,6 +22,7 @@ mod injection;
 mod phase;
 mod stability;
 mod transfer;
+mod upkeep;
 
 pub use arena::{Arena, NodeId};
 pub use assembler::GraphAssembler;
@@ -38,6 +39,7 @@ pub use transfer::{
     TemporalTransfer, band_pass_response, clamp_tau_seconds, filter_bank_response,
     sigma_from_duration,
 };
+pub use upkeep::{Upkeep, throughput_attenuation};
 
 use crate::Chakra;
 use glam::Vec3;

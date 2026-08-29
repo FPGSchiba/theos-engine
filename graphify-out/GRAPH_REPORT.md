@@ -1,16 +1,16 @@
 # Graph Report - theos-engine  (2026-08-29)
 
 ## Corpus Check
-- 122 files · ~79,794 words
+- 124 files · ~82,730 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 1649 nodes · 3056 edges · 119 communities (82 shown, 37 thin omitted)
-- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 31 edges (avg confidence: 0.83)
+- 1692 nodes · 3186 edges · 124 communities (87 shown, 37 thin omitted)
+- Extraction: 99% EXTRACTED · 1% INFERRED · 0% AMBIGUOUS · INFERRED: 33 edges (avg confidence: 0.83)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `69f01728`
+- Built from commit: `05d88a23`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
@@ -28,7 +28,7 @@
 - .new
 - CrossbeamEventBus
 - Release Packaging Job
-- plane.rs
+- upkeep.rs
 - EntityId
 - THEOS-86: Microkernel Core Bootstrap — Entry Point, Thread Pool & Kernel Initialization
 - ServiceLocator
@@ -69,7 +69,7 @@
 - THEOS-12: Initialization Phase — extract `Kernel::init()`
 - CloseToExitModule
 - theos-scripting/src/lib.rs
-- transfer.rs
+- WeaveTuning
 - NodeId
 - Test Coverage Improvement Plan — 2026-06-08
 - glam interoperability bridge pattern
@@ -90,7 +90,7 @@
 - Service Locator pattern for engine subsystem registry
 - Chakras
 - ElementField
-- key_translate.rs
+- window_event.rs
 - THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam
 - 16-byte SIMD alignment for GPU/SIMD compatibility
 - theos-ai
@@ -112,7 +112,7 @@
 - 🎯 Sprint Planning Summit — Goal
 - stability.rs
 - cast.rs
-- gain.rs
+- energy.rs
 - THEOS-177 — [magic] B2 overdraw (channel beyond safe P/Cᵢ — demonic speed)
 - math_benches.rs
 - theos-magic
@@ -128,18 +128,23 @@
 - Mat3 * Vec3
 - Mat4 * Vec4
 - Quat * Vec3 (Rodrigues rotation)
+- THEOS-180 — [magic] E16a/b upkeep rate + depth-attenuated throughput occupation
+- key_translate.rs
+- window_factory.rs
+- TheosAppHandler
+- WindowEventTranslator
 
 ## God Nodes (most connected - your core abstractions)
-1. `Vec3` - 86 edges
+1. `Vec3` - 89 edges
 2. `TheosKernel` - 38 edges
 3. `Vec4` - 38 edges
 4. `Vec2` - 34 edges
 5. `assemble()` - 32 edges
 6. `Chakras` - 31 edges
-7. `KernelContext` - 27 edges
-8. `ChakraState` - 24 edges
-9. `WovenToken` - 24 edges
-10. `EngineModule` - 21 edges
+7. `WovenToken` - 27 edges
+8. `KernelContext` - 27 edges
+9. `ChakraState` - 24 edges
+10. `WeaveTuning` - 23 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Type-Erased EventBus via ChannelHandle adapter` --semantically_similar_to--> `Service Locator encapsulated in KernelContext`  [INFERRED] [semantically similar]
@@ -154,21 +159,21 @@
   plans/THEOS-86.md → theos-core/src/kernel.rs
 
 ## Import Cycles
-- 1-file cycle: `theos-magic/src/graph/energy.rs -> theos-magic/src/graph/energy.rs`
+- None detected.
 
 ## Hyperedges (group relationships)
-- **Kernel Lifecycle: Register → DependencyResolver sort → init → fixed-step loop → shutdown** — theos_core_src_kernel_theoskernel, theos_core_src_dependency_resolver_dependencyresolver, concept_fixed_step_loop [EXTRACTED 1.00]
-- **Type-Erased EventBus: CrossbeamEventBus stores ChannelHandle<TypedChannel<E>> keyed by TypeId** — src_lib_crossbeameventbus, src_lib_channelhandle, theos_core_src_event_typedchannel_e [EXTRACTED 1.00]
-- **Cross-Module Service Discovery via KernelContext: ProviderModule registers, ConsumerModule retrieves** — theos_core_tests_kernel_integration_providermodule, theos_core_tests_kernel_integration_consumermodule, theos_core_tests_kernel_integration_greetingservice [EXTRACTED 1.00]
-- **CI Quality Gate Pipeline (Check, Lint, Test)** — github_workflows_check_lint_check_lint_workflow, github_workflows_test_test_workflow, github_workflows_check_lint_clippy_unsafe_policy_job [INFERRED 0.85]
 - **Unsafe Code Audit Triad (Clippy, Forbid, Geiger)** — github_workflows_check_lint_clippy_unsafe_policy_job, github_workflows_check_lint_forbid_unsafe_verification, github_workflows_check_lint_cargo_geiger [EXTRACTED 0.95]
+- **Cross-Module Service Discovery via KernelContext: ProviderModule registers, ConsumerModule retrieves** — theos_core_tests_kernel_integration_providermodule, theos_core_tests_kernel_integration_consumermodule, theos_core_tests_kernel_integration_greetingservice [EXTRACTED 1.00]
+- **Type-Erased EventBus: CrossbeamEventBus stores ChannelHandle<TypedChannel<E>> keyed by TypeId** — src_lib_crossbeameventbus, src_lib_channelhandle, theos_core_src_event_typedchannel_e [EXTRACTED 1.00]
+- **Kernel Lifecycle: Register → DependencyResolver sort → init → fixed-step loop → shutdown** — theos_core_src_kernel_theoskernel, theos_core_src_dependency_resolver_dependencyresolver, concept_fixed_step_loop [EXTRACTED 1.00]
 - **Release Artifact Production (Launcher, Game, Editor)** — github_workflows_release_packaging_theos_launcher_artifact, github_workflows_release_packaging_theos_game_artifact, github_workflows_release_packaging_theos_editor_artifact [EXTRACTED 1.00]
+- **CI Quality Gate Pipeline (Check, Lint, Test)** — github_workflows_check_lint_check_lint_workflow, github_workflows_test_test_workflow, github_workflows_check_lint_clippy_unsafe_policy_job [INFERRED 0.85]
 
-## Communities (119 total, 37 thin omitted)
+## Communities (124 total, 37 thin omitted)
 
 ### Community 0 - "kernel_integration.rs"
 Cohesion: 0.08
-Nodes (30): ConsumerModule (test), CountingModule<Tag> (test), CountingModule<Tag>, GreetingService (test), kernel_runs_init_tick_shutdown_lifecycle(), make_counting_module(), module_retrieves_service_registered_by_its_dependency(), ProviderModule (test) (+22 more)
+Nodes (30): ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle(), make_counting_module(), module_retrieves_service_registered_by_its_dependency(), ProviderModule (+22 more)
 
 ### Community 1 - ".sender_for_erased"
 Cohesion: 0.35
@@ -187,15 +192,15 @@ Cohesion: 0.20
 Nodes (8): event_bus_handle_returns_clone_of_kernel_bus(), Arc, AtomicU32, Default, Option, target_hz_handle_shares_state_with_target_hz(), TheosKernel, ThreadPool
 
 ### Community 5 - "mat.rs"
-Cohesion: 0.12
-Nodes (20): glam::Mat3, glam::Mat4, Mat3, Mat4, From, Mul, Output, Self (+12 more)
+Cohesion: 0.06
+Nodes (46): glam::Mat3, glam::Mat4, Mat3, Mat4, From, Mul, Output, Self (+38 more)
 
 ### Community 6 - "KernelError"
 Cohesion: 0.05
 Nodes (41): KernelError, module_error_converts_to_theos_error_wrapped(), ModuleError, Box, Display, Error, FmtResult, Formatter (+33 more)
 
 ### Community 7 - "quat.rs"
-Cohesion: 0.14
+Cohesion: 0.15
 Nodes (22): assert_quat_eq(), assert_vec3_eq(), Quat, rot90_z(), Mul, MulAssign, Output, Self (+14 more)
 
 ### Community 8 - "aabb.rs"
@@ -218,12 +223,12 @@ Nodes (8): Fixed-Step Game Loop (60 Hz sleep+spin hybrid), Service Locator encap
 Cohesion: 0.09
 Nodes (23): Cargo Plugins Workspace Dependency Updates (theos-plugin-deps), Cargo Workspace Dependency Updates (theos-engine-deps), Dependabot Configuration, GitHub Actions Dependency Updates, cargo-geiger Unsafe Audit Tool, Cargo Check Job, Check and Lint Workflow, Clippy and Unsafe Policy Job (+15 more)
 
-### Community 13 - "plane.rs"
-Cohesion: 0.14
-Nodes (26): assert_vec3_eq(), Plane, Option, Self, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none() (+18 more)
+### Community 13 - "upkeep.rs"
+Cohesion: 0.22
+Nodes (27): approx(), assemble(), body(), occ(), Option, Vec, same_construct_two_environments_differ_only_in_upkeep_rate(), spatial() (+19 more)
 
 ### Community 14 - "EntityId"
-Cohesion: 0.06
+Cohesion: 0.05
 Nodes (47): AtomicU64, EntityMap, AiBrain, PendingAiResponse, String, add(), it_works(), component_ids_lists_inserted_component_types() (+39 more)
 
 ### Community 15 - "THEOS-86: Microkernel Core Bootstrap — Entry Point, Thread Pool & Kernel Initialization"
@@ -252,7 +257,7 @@ Nodes (8): AC → file gap table (provisional — firms up as Q1–Q5 settle), C
 
 ### Community 21 - ".init"
 Cohesion: 0.17
-Nodes (11): bench_tick_dispatch (Criterion benchmark), NoOpModule (bench), NoOpModule<TAG>, register_n_modules(), Box, Criterion, Error, Result (+3 more)
+Nodes (11): bench_tick_dispatch(), NoOpModule, NoOpModule<TAG>, register_n_modules(), Box, Criterion, Error, Result (+3 more)
 
 ### Community 22 - "theos-engine"
 Cohesion: 0.12
@@ -338,9 +343,9 @@ Nodes (11): AC traceability, Changes, Confirmed decisions (vs. spec wording), Go
 Cohesion: 0.09
 Nodes (29): CloseToExitModule, make_initialised_close_module(), Arc, Box, Default, Error, Option, Receiver (+21 more)
 
-### Community 56 - "transfer.rs"
-Cohesion: 0.09
-Nodes (44): approx(), assemble(), body(), efficiency_matches_manual_eta_on_constructive_graph(), efficiency_on_zero_energy_graph_is_well_defined(), EnvResistance, full_transfer_graph_efficiency_near_one(), graph_energy_matches_manual_sum_over_edges() (+36 more)
+### Community 56 - "WeaveTuning"
+Cohesion: 0.10
+Nodes (39): approx(), gain_differs_with_environment_on_same_graph(), gain_matches_manual_q_for_known_s_and_gamma(), gain_near_one_for_well_damped_graph(), gain_rises_as_stability_margin_thins(), ResonanceRunaway, Result, runaway_when_stability_nonpositive() (+31 more)
 
 ### Community 57 - "NodeId"
 Cohesion: 0.08
@@ -359,8 +364,8 @@ Cohesion: 0.12
 Nodes (15): Acceptance-criteria traceability, Confirmed decisions (locked, see concept page), Frame timer (`theos-core::frame_timer`), FrameTimer — covered via existing kernel tests, Kernel — automated unit tests, Kernel (`theos-core`), Launcher (`theos-launcher`), Out of scope (deferred) (+7 more)
 
 ### Community 63 - "FrameTimer"
-Cohesion: 0.08
-Nodes (25): default_returns_first_frame_timer(), FrameTimer, Default, Instant, Option, Self, second_tick_returns_real_delta(), get_engine_version() (+17 more)
+Cohesion: 0.31
+Nodes (7): default_returns_first_frame_timer(), FrameTimer, Default, Instant, Option, Self, second_tick_returns_real_delta()
 
 ### Community 64 - "THEOS-16: Input Event Propagation"
 Cohesion: 0.15
@@ -394,17 +399,17 @@ Nodes (6): Chakras, ChakraState, named_accessors_reach_every_point(), Index, Ind
 Cohesion: 0.11
 Nodes (11): Attunement, CompilerContext, element_field_round_trips_through_json(), ElementField, ElementKind, Index, IndexMut, Item (+3 more)
 
-### Community 80 - "key_translate.rs"
-Cohesion: 0.12
-Nodes (14): PhysicalKey, KeyCode, NativeKeyCode, WindowEvent, assert_maps(), translate_keycode_maps_all_digits(), translate_keycode_maps_all_letters(), translate_keycode_maps_editing_keys() (+6 more)
+### Community 80 - "window_event.rs"
+Cohesion: 0.19
+Nodes (6): PhysicalKey, KeyCode, NativeKeyCode, WindowEvent, translate_native(), translate_physical_key()
 
 ### Community 81 - "THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam"
 Cohesion: 0.29
 Nodes (6): Acceptance-criteria gap table, Deferred, Locked decisions, Resolved decisions (chakra & element model), Test execution, THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam
 
 ### Community 84 - "assembler.rs"
-Cohesion: 0.06
-Nodes (58): CompilerError, String, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc() (+50 more)
+Cohesion: 0.05
+Nodes (64): CompilerError, String, approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc() (+56 more)
 
 ### Community 86 - "Locked decisions (design session 2026-06-13)"
 Cohesion: 0.17
@@ -451,12 +456,12 @@ Cohesion: 0.19
 Nodes (23): approx(), assemble(), body(), coherence_high_for_in_phase_frequency_matched_edge(), coherence_low_for_divergent_frequencies_via_sigma_f(), constructive_graph_is_stable(), cyclic_feedback_runaway_is_volatile(), div() (+15 more)
 
 ### Community 101 - "cast.rs"
-Cohesion: 0.22
-Nodes (22): approx(), body(), CannotChannel, caster(), caster_with_root_power(), effective_cast_time_is_energy_time_when_throughput_bound(), effective_cast_time_is_settling_when_propagation_bound(), frozen_cast_time_unchanged_by_floor() (+14 more)
+Cohesion: 0.26
+Nodes (19): approx(), CannotChannel, caster(), caster_with_root_power(), effective_cast_time_is_energy_time_when_throughput_bound(), effective_cast_time_is_settling_when_propagation_bound(), frozen_cast_time_unchanged_by_floor(), overdraw_past_capacity_snaps_the_anchor() (+11 more)
 
-### Community 102 - "gain.rs"
-Cohesion: 0.29
-Nodes (14): approx(), body(), gain_differs_with_environment_on_same_graph(), gain_matches_manual_q_for_known_s_and_gamma(), gain_near_one_for_well_damped_graph(), gain_rises_as_stability_margin_thins(), ResonanceRunaway, Result (+6 more)
+### Community 102 - "energy.rs"
+Cohesion: 0.26
+Nodes (16): approx(), assemble(), body(), efficiency_matches_manual_eta_on_constructive_graph(), efficiency_on_zero_energy_graph_is_well_defined(), EnvResistance, full_transfer_graph_efficiency_near_one(), graph_energy_matches_manual_sum_over_edges() (+8 more)
 
 ### Community 103 - "THEOS-177 — [magic] B2 overdraw (channel beyond safe P/Cᵢ — demonic speed)"
 Cohesion: 0.20
@@ -470,8 +475,28 @@ Nodes (5): bench_mat3_mul(), bench_mat4_mul(), bench_vec3_cross(), bench_vec3_do
 Cohesion: 0.22
 Nodes (8): Acceptance criteria, Canon (E15, Equations of the Weave), Decision register — LOCKED (2026-06-25), Goal (one sentence), Out of scope, Proposed shape (scaffolding only), Test scenarios (names only), THEOS-176 — [magic] E15 resonance gain (Q = 1/Sᵞ)
 
+### Community 119 - "THEOS-180 — [magic] E16a/b upkeep rate + depth-attenuated throughput occupation"
+Cohesion: 0.17
+Nodes (11): Acceptance criteria (from Jira), Canon (Equations of the Weave, E16a/b), Coverage note, Current code state (all inputs already exist), Decision register — LOCKED (2026-08-29, guided session), Goal (one sentence), Implementation notes (2026-08-29), Out of scope / deferred (+3 more)
+
+### Community 120 - "key_translate.rs"
+Cohesion: 0.26
+Nodes (8): assert_maps(), translate_keycode_maps_all_digits(), translate_keycode_maps_all_letters(), translate_keycode_maps_editing_keys(), translate_keycode_maps_function_keys(), translate_keycode_maps_modifier_keys(), translate_keycode_maps_navigation_keys(), WinitKeyCode
+
+### Community 121 - "window_factory.rs"
+Cohesion: 0.29
+Nodes (7): get_engine_version(), main(), create_default_window(), Arc, EventLoop, Window, WindowResult
+
+### Community 122 - "TheosAppHandler"
+Cohesion: 0.27
+Nodes (7): Arc, AtomicBool, EventLoop, EventLoopError, Result, Self, TheosAppHandler
+
+### Community 123 - "WindowEventTranslator"
+Cohesion: 0.43
+Nodes (4): Arc, Self, translator_constructs_with_event_bus_handle(), WindowEventTranslator
+
 ## Knowledge Gaps
-- **302 isolated node(s):** `theos-audio`, `theos-ai`, `theos-assets`, `TagA`, `TagB` (+297 more)
+- **312 isolated node(s):** `theos-audio`, `theos-ai`, `theos-assets`, `TagA`, `TagB` (+307 more)
   These have ≤1 connection - possible missing edges or undocumented components.
 - **37 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
@@ -479,13 +504,13 @@ Nodes (8): Acceptance criteria, Canon (E15, Equations of the Weave), Decision re
 _Questions this graph is uniquely positioned to answer:_
 
 - **Why does `EntityId` connect `EntityId` to `KernelError`, `ElementField`?**
-  _High betweenness centrality (0.278) - this node is a cross-community bridge._
-- **Why does `TheosKernel` connect `TheosKernel` to `EngineModule`, `kernel_integration.rs`, `theos-core/src/event.rs`, `dependency_resolver.rs`, `CallLog`, `.run`, `KernelError`, `kernel.rs`, `CrossbeamEventBus`, `TheosFormatter`, `.init`, `CloseToExitModule`, `FrameTimer`?**
-  _High betweenness centrality (0.234) - this node is a cross-community bridge._
+  _High betweenness centrality (0.286) - this node is a cross-community bridge._
+- **Why does `TheosKernel` connect `TheosKernel` to `EngineModule`, `kernel_integration.rs`, `theos-core/src/event.rs`, `dependency_resolver.rs`, `CallLog`, `.run`, `KernelError`, `kernel.rs`, `CrossbeamEventBus`, `TheosFormatter`, `.init`, `CloseToExitModule`, `TheosAppHandler`?**
+  _High betweenness centrality (0.224) - this node is a cross-community bridge._
 - **Why does `KernelError` connect `KernelError` to `TheosKernel`?**
-  _High betweenness centrality (0.222) - this node is a cross-community bridge._
+  _High betweenness centrality (0.214) - this node is a cross-community bridge._
 - **What connects `theos-audio`, `theos-ai`, `theos-assets` to the rest of the system?**
-  _302 weakly-connected nodes found - possible documentation gaps or missing edges._
+  _312 weakly-connected nodes found - possible documentation gaps or missing edges._
 - **Should `kernel_integration.rs` be split into smaller, more focused modules?**
   _Cohesion score 0.08048103607770583 - nodes in this community are weakly interconnected._
 - **Should `theos-core/src/event.rs` be split into smaller, more focused modules?**
