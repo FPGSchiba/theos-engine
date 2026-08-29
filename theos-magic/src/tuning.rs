@@ -2,8 +2,12 @@
 //!
 //! [`WeaveTuning`] is **engine-physics configuration**, distinct in kind from the
 //! caster/world *state* carried by [`crate::CompilerContext`]; it is carried as one
-//! named field there. For now it holds the E12 temporal-filter knobs (the band-pass
-//! width constant and the duration clamps); more tunables may join it over time.
+//! named field there. It collects the knobs the Equations of the Weave leave open —
+//! the E12 temporal-filter constants, the E9 energy floor, the E5–E7 stability
+//! coefficients, the E15 gain steepness, and the E16 maintained-construct constants;
+//! more tunables may join it over time.
+
+use serde::{Deserialize, Serialize};
 
 /// Default E12 bandwidth constant `k` in `σ = 1/(k·τ)`.
 ///
@@ -55,11 +59,34 @@ pub const DEFAULT_S_MIN: f32 = 0.5;
 // TODO(THEOS-176): `2.0` is a placeholder — confirm the tuned value.
 pub const DEFAULT_GAMMA: f32 = 2.0;
 
+/// Default E16a upkeep leak-rate `λ` — magnitude of the per-tick hold cost in
+/// `U = λ·(1/S)^μ·ρ_med·ρ_env·W`. Invariant: **`> 0`**.
+// TODO(THEOS-179): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_UPKEEP_LAMBDA: f32 = 1.0;
+
+/// Default E16a upkeep power-tax exponent `μ` — how much harder a thin-margin
+/// construct bleeds to hold. `≥ 0`, and **independent of the E15 reward exponent `γ`**;
+/// `1.0` starts it linear and below the [`DEFAULT_GAMMA`] of `2.0`.
+// TODO(THEOS-179): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_UPKEEP_MU: f32 = 1.0;
+
+/// Default E16b throughput depth-attenuation `α_p` in `Ξ_p(D) = exp(−α_p·D)` — how far
+/// a maintained construct's *load* spreads into the body. `> 0`, and **distinct from
+/// E11's amplitude constant `α`**; mirrors that constant's `0.15` per world length
+/// unit as a starting point.
+// TODO(THEOS-179): `0.15` mirrors E11 `α` — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_THROUGHPUT_ALPHA_P: f32 = 0.15;
+
+/// Default E16c recovery-rate constant `κ` — seconds of construction-transient
+/// recovery per unit cost, in `τ_p = κ·E_cost`. Invariant: **`> 0`**.
+// TODO(THEOS-179): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_RECOVERY_KAPPA: f32 = 1.0;
+
 /// Engine-physics tuning for weave assembly — currently the E12 temporal-filter knobs.
 ///
 /// Distinct in kind from the caster/world *state* on [`crate::CompilerContext`]:
 /// this is configuration, not a per-cast world snapshot.
-#[derive(Clone, Copy, Debug, PartialEq)]
+#[derive(Clone, Copy, Debug, PartialEq, Serialize, Deserialize)]
 pub struct WeaveTuning {
     /// Band-pass width constant `k` in `σ = 1/(k·τ)` (E12). Default `2π`.
     pub bandwidth_k: f32,
@@ -82,6 +109,22 @@ pub struct WeaveTuning {
     pub s_min: f32,
     /// Resonance-gain steepness `γ` (E15) — exponent in `Q = 1/Sᵞ`. `> 0`.
     pub gamma: f32,
+    /// E16a upkeep leak-rate `λ` in `U = λ·(1/S)^μ·ρ_med·ρ_env·W` — the magnitude of
+    /// holding a maintained construct taut for one tick. Invariant: `> 0`.
+    pub upkeep_lambda: f32,
+    /// E16a upkeep power-tax exponent `μ` — how much harder a thin-margin (Dark,
+    /// `S → S_min`) construct bleeds to hold. `≥ 0`; **independent of the E15 reward
+    /// exponent `γ`** (`μ = 0` margin-blind, `μ = γ` thirst-tracks-power, `μ > γ`
+    /// self-limiting).
+    pub upkeep_mu: f32,
+    /// E16b throughput depth-attenuation `α_p` in `Ξ_p(D) = exp(−α_p·D)` — how far a
+    /// maintained construct's *load* spreads into the body from the injection root.
+    /// `> 0`; **distinct from E11's amplitude constant `α`** (load reach ≠ effect reach).
+    pub throughput_alpha_p: f32,
+    /// E16c recovery-rate constant `κ` in `τ_p = κ·E_cost` — seconds of construction-
+    /// transient recovery per unit cost; a costlier construct recovers more slowly.
+    /// Invariant: `> 0`.
+    pub recovery_kappa: f32,
 }
 
 impl Default for WeaveTuning {
@@ -97,6 +140,10 @@ impl Default for WeaveTuning {
             theta_0: DEFAULT_THETA_0,
             s_min: DEFAULT_S_MIN,
             gamma: DEFAULT_GAMMA,
+            upkeep_lambda: DEFAULT_UPKEEP_LAMBDA,
+            upkeep_mu: DEFAULT_UPKEEP_MU,
+            throughput_alpha_p: DEFAULT_THROUGHPUT_ALPHA_P,
+            recovery_kappa: DEFAULT_RECOVERY_KAPPA,
         }
     }
 }
@@ -114,5 +161,62 @@ mod tests {
     fn default_tau_clamp_window_is_ordered() {
         let tuning = WeaveTuning::default();
         assert!(tuning.tau_min_s < tuning.tau_max_s);
+    }
+
+    #[test]
+    fn default_e16_constants_are_within_their_domains() {
+        let tuning = WeaveTuning::default();
+        assert!(tuning.upkeep_lambda > 0.0);
+        assert!(tuning.upkeep_mu >= 0.0);
+        assert!(tuning.throughput_alpha_p > 0.0);
+        assert!(tuning.recovery_kappa > 0.0);
+    }
+
+    #[test]
+    fn default_upkeep_power_tax_is_independent_of_e15_gain_steepness() {
+        let tuning = WeaveTuning {
+            upkeep_mu: 3.0,
+            gamma: 7.0,
+            ..WeaveTuning::default()
+        };
+        assert_eq!(tuning.upkeep_mu, 3.0);
+        assert_eq!(tuning.gamma, 7.0);
+        assert_eq!(WeaveTuning::default().upkeep_mu, DEFAULT_UPKEEP_MU);
+    }
+
+    #[test]
+    fn default_throughput_attenuation_is_independent_of_e11_amplitude_alpha() {
+        use crate::graph::DEFAULT_INJECTION_ATTENUATION;
+
+        let tuning = WeaveTuning {
+            throughput_alpha_p: DEFAULT_INJECTION_ATTENUATION + 1.0,
+            ..WeaveTuning::default()
+        };
+        assert_ne!(tuning.throughput_alpha_p, DEFAULT_INJECTION_ATTENUATION);
+        assert_eq!(
+            WeaveTuning::default().throughput_alpha_p,
+            DEFAULT_THROUGHPUT_ALPHA_P
+        );
+    }
+
+    #[test]
+    fn weave_tuning_round_trips_through_json() {
+        let tuning = WeaveTuning {
+            upkeep_lambda: 10.0,
+            e_base: 11.0,
+            stiffness: 12.0,
+            k_ref: 13.0,
+            sigma_f: 14.0,
+            theta_0: 15.0,
+            s_min: 16.0,
+            gamma: 17.0,
+            upkeep_mu: 18.0,
+            throughput_alpha_p: 19.0,
+            recovery_kappa: 20.0,
+            ..WeaveTuning::default()
+        };
+        let tuning_string = serde_json::to_string(&tuning).unwrap();
+        let tuning_json: WeaveTuning = serde_json::from_str(tuning_string.as_str()).unwrap();
+        assert_eq!(tuning_json, tuning);
     }
 }
