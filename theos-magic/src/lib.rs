@@ -37,16 +37,18 @@ pub use context::CompilerContext;
 pub use element::{ElementField, ElementKind};
 pub use error::CompilerError;
 pub use graph::{
-    Arena, CannotChannel, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION, DEFAULT_WAVE_SPEED, Edge,
-    EnvResistance, GraphAssembler, Node, NodeId, NodeKind, OverdrawOutcome, ResonanceRunaway,
-    Stability, TemporalTransfer, TensionGraph, Upkeep, band_pass_response, clamp_tau_seconds,
-    edge_coherence, edge_delay, edge_phase_shift, edge_tension, filter_bank_response,
-    injection_attenuation, kinematic_source_amplitude, sigma_from_duration, spectral_radius,
-    throughput_attenuation,
+    Arena, CannotChannel, ConstructId, CsrAdjacency, DEFAULT_INJECTION_ATTENUATION,
+    DEFAULT_WAVE_SPEED, Edge, EnvResistance, GraphAssembler, Node, NodeId, NodeKind,
+    OverdrawOutcome, ResonanceRunaway, Stability, TemporalTransfer, TensionGraph, ThroughputMeter,
+    Upkeep, band_pass_response, clamp_tau_seconds, edge_coherence, edge_delay, edge_phase_shift,
+    edge_tension, filter_bank_response, injection_attenuation, kinematic_source_amplitude,
+    recovery_tau, relax_excess, sigma_from_duration, spectral_radius, throughput_attenuation,
+    transient_spike,
 };
 pub use interface::MagicInterface;
 pub use token::{HarmonicToken, TokenId, WovenToken};
 pub use tuning::{
     DEFAULT_E_BASE, DEFAULT_K_REF, DEFAULT_S_MIN, DEFAULT_SIGMA_F, DEFAULT_STIFFNESS,
-    DEFAULT_THETA_0, DEFAULT_THROUGHPUT_ALPHA_P, WeaveTuning,
+    DEFAULT_THETA_0, DEFAULT_THROUGHPUT_ALPHA_P, DEFAULT_TRANSIENT_SPIKE_ALPHA,
+    DEFAULT_TRANSIENT_SPIKE_GAIN, WeaveTuning,
 };

@@ -22,6 +22,7 @@ mod injection;
 mod phase;
 mod stability;
 mod transfer;
+mod transient;
 mod upkeep;
 
 pub use arena::{Arena, NodeId};
@@ -39,6 +40,7 @@ pub use transfer::{
     TemporalTransfer, band_pass_response, clamp_tau_seconds, filter_bank_response,
     sigma_from_duration,
 };
+pub use transient::{ConstructId, ThroughputMeter, recovery_tau, relax_excess, transient_spike};
 pub use upkeep::{Upkeep, throughput_attenuation};
 
 use crate::Chakra;

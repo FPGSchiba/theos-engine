@@ -82,6 +82,28 @@ pub const DEFAULT_THROUGHPUT_ALPHA_P: f32 = 0.15;
 // TODO(THEOS-179): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
 pub const DEFAULT_RECOVERY_KAPPA: f32 = 1.0;
 
+/// Default E16c construction-transient gain `ζ` — the spike magnitude in
+/// `Δ = ζ·E_cost` a manifesting construct adds to a chakra's occupation above the
+/// steady floor, before depth attenuation (E16c, THEOS-181). Invariant: **`> 0`**.
+///
+/// The Equations of the Weave state the spike only as `Δ ∝ E_cost`; `ζ` is the
+/// proportionality constant this engine pins (canon writeback pending).
+// TODO(THEOS-179): `1.0` is a placeholder — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_TRANSIENT_SPIKE_GAIN: f32 = 1.0;
+
+/// Default E16c construction-transient depth-attenuation `α_Δ` in
+/// `Ξ_Δ(D) = exp(−α_Δ·D)` — how far the manifestation shock spreads into the body
+/// from the injection root.
+///
+/// `≥ 0`, and **independent of E16b's load constant `α_p`**
+/// ([`DEFAULT_THROUGHPUT_ALPHA_P`]) — the same independence discipline that keeps
+/// E11 `α` and E16b `α_p` apart: `α_Δ = 0` ⇒ the spike is flat across every anchor,
+/// `α_Δ = α_p` ⇒ it spreads exactly like the steady floor, `α_Δ > α_p` ⇒ the shock
+/// is more root-localized than the standing load. Mirrors `α_p`'s `0.15` as a
+/// starting point.
+// TODO(THEOS-179): `0.15` mirrors α_p — confirm the tuned value (a physics/balance call).
+pub const DEFAULT_TRANSIENT_SPIKE_ALPHA: f32 = 0.15;
+
 /// Engine-physics tuning for weave assembly — currently the E12 temporal-filter knobs.
 ///
 /// Distinct in kind from the caster/world *state* on [`crate::CompilerContext`]:
@@ -125,6 +147,15 @@ pub struct WeaveTuning {
     /// transient recovery per unit cost; a costlier construct recovers more slowly.
     /// Invariant: `> 0`.
     pub recovery_kappa: f32,
+    /// E16c construction-transient gain `ζ` in `Δ = ζ·E_cost` — the spike a
+    /// manifesting construct injects onto a chakra's occupation above the steady
+    /// floor, before depth attenuation. Invariant: `> 0`.
+    pub transient_spike_gain: f32,
+    /// E16c construction-transient depth-attenuation `α_Δ` in `Ξ_Δ(D) = exp(−α_Δ·D)`
+    /// — how far the manifestation shock spreads from the injection root. `≥ 0`;
+    /// **independent of E16b's load constant `α_p`** (`α_Δ = 0` ⇒ flat across every
+    /// anchor, `α_Δ = α_p` ⇒ spreads like the floor).
+    pub transient_spike_alpha: f32,
 }
 
 impl Default for WeaveTuning {
@@ -144,6 +175,8 @@ impl Default for WeaveTuning {
             upkeep_mu: DEFAULT_UPKEEP_MU,
             throughput_alpha_p: DEFAULT_THROUGHPUT_ALPHA_P,
             recovery_kappa: DEFAULT_RECOVERY_KAPPA,
+            transient_spike_gain: DEFAULT_TRANSIENT_SPIKE_GAIN,
+            transient_spike_alpha: DEFAULT_TRANSIENT_SPIKE_ALPHA,
         }
     }
 }
@@ -170,6 +203,27 @@ mod tests {
         assert!(tuning.upkeep_mu >= 0.0);
         assert!(tuning.throughput_alpha_p > 0.0);
         assert!(tuning.recovery_kappa > 0.0);
+        assert!(tuning.transient_spike_gain > 0.0);
+        assert!(tuning.transient_spike_alpha >= 0.0);
+    }
+
+    #[test]
+    fn default_transient_spike_alpha_is_independent_of_e16b_load_alpha() {
+        // α_Δ (spike spread) and α_p (steady-load spread) are separate knobs: moving
+        // one must not move the other, mirroring the E11 `α` / E16b `α_p` split.
+        let tuning = WeaveTuning {
+            transient_spike_alpha: DEFAULT_THROUGHPUT_ALPHA_P + 1.0,
+            ..WeaveTuning::default()
+        };
+        assert_ne!(tuning.transient_spike_alpha, tuning.throughput_alpha_p);
+        assert_eq!(
+            WeaveTuning::default().transient_spike_alpha,
+            DEFAULT_TRANSIENT_SPIKE_ALPHA
+        );
+        assert_eq!(
+            WeaveTuning::default().throughput_alpha_p,
+            DEFAULT_THROUGHPUT_ALPHA_P
+        );
     }
 
     #[test]
@@ -213,6 +267,8 @@ mod tests {
             upkeep_mu: 18.0,
             throughput_alpha_p: 19.0,
             recovery_kappa: 20.0,
+            transient_spike_gain: 21.0,
+            transient_spike_alpha: 22.0,
             ..WeaveTuning::default()
         };
         let tuning_string = serde_json::to_string(&tuning).unwrap();
