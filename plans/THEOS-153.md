@@ -261,6 +261,18 @@ rustdoc.
   breaks C5's own contract) and a band-partition debug palette. The user proposed an extensible
   element band-filter registry with an open upper bound. That replaces locked canon and has
   engine-wide consumers, so it was split into its own design story
-  ([element-band-registry-2026-10-18.md](element-band-registry-2026-10-18.md)); the exporter
+  ([THEOS-189](https://firephoenixgames.atlassian.net/browse/THEOS-189)); the exporter
   gains element labels as a follow-up once it lands.
+- Brainstorm (C5): the hue ramp maps log frequency over a **fixed 20 Hz–20 kHz reference range**
+  (canon's THEOS-171 range), clamping outside it. Clamped nodes are flagged in their label, and
+  every label shows the exact frequency. Same frequency ⇒ same colour across exports. The range is
+  one provisional constant that THEOS-189 replaces. Rejected: per-graph min/max normalization
+  (colours not comparable between runs) and hue wrapping (breaks monotonicity, canon §1). Added
+  test cases: a sub-20 Hz and a supra-20 kHz node each get the end colour and a clamped flag.
+- Brainstorm (C6): replaces "a single consistent non-zero code" with four exit codes: **0**
+  success (a Volatile verdict is a result, still 0), **1** input error (unreadable file, JSON,
+  shape, unknown field, out-of-domain value), **2** usage (clap), **3** compile error (the
+  assembler rejected the token stream). This lets sweep scripts tell a bad file from an invalid
+  weave. Added test case: a stream with no injection root exits 3. `export` writes DOT to
+  **stdout by default** with an optional `-o <path>` (overwrites), so it pipes into `dot`.
 
