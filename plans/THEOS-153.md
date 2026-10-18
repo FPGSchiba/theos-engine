@@ -66,7 +66,10 @@ a panic or a plausible-looking wrong answer.
   formats to test, and malformed input fails both shapes with a vague serde message, which
   undermines AC4).
 - **The overrides are a small debug-only shape, not serde on the real context types.** This keeps
-  THEOS-168 free to define the canonical format without inheriting a debug tool's choices.
+  the real context types from gaining a save format as a side effect. Note: Core UX: Spell
+  Appearance §9 says THEOS-155's sandbox and THEOS-168's token-stream save layer *extend* this
+  tool's JSON, so the `tokens` half of the envelope is the seed of the canonical format and should
+  be shaped with that in mind; only the context overrides are truly debug-only.
   Rejected: deriving serde on `CompilerContext`/`WeaveTuning`, which settles the save format early
   and as a side effect.
 - **All solve-time world state comes from the context, including ω. No `--entropy` flag.**
@@ -241,4 +244,23 @@ all `--workspace --all-features`), `theos-magic` region coverage ≥ 85%, and ev
 rustdoc.
 
 ## Deviations
+
+- Brainstorm (C2): tuning overrides are a debug-side mirror with every field optional and unknown
+  fields rejected. A serde key-set test against `WeaveTuning::default()` catches drift, and a second
+  test checks an empty mirror resolves to exactly the default. Rejected: making `WeaveTuning`
+  fill-from-default (exports silent-fallback semantics into THEOS-160's config loading), and
+  all-or-nothing reuse. Caster-state overrides (energy, chakras) left out for now.
+- Brainstorm (C3/C4/C6): the debug module returns structured view/result values and text
+  formatting is a separate layer. `parse` and `solve` also take an unstable `--json` output
+  (documented as no-stability-guarantee). C6 gains a contract: JSON output parses and carries the
+  same values as the text report. CLI tests compare S/η via JSON within a tolerance; text output
+  gets smoke checks only. `export` has no `--json` (DOT is already structured).
+- Brainstorm (C5): open question resolved. Node colour is a **continuous, monotonic function of
+  log frequency**; the label shows the frequency. No band/element names in the export. Rejected:
+  canon's five-band hues as-is (Water/Ice and Air share 190°–210°, so flat fills collide, which
+  breaks C5's own contract) and a band-partition debug palette. The user proposed an extensible
+  element band-filter registry with an open upper bound. That replaces locked canon and has
+  engine-wide consumers, so it was split into its own design story
+  ([element-band-registry-2026-10-18.md](element-band-registry-2026-10-18.md)); the exporter
+  gains element labels as a follow-up once it lands.
 
