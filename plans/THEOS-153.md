@@ -110,7 +110,7 @@ a panic or a plausible-looking wrong answer.
 
 ### C1 — Feature gate and binary target wiring
 
-status: pending
+status: done
 kind: chore
 
 **Responsibility.** Make `debug-tool` exist: the feature, the optional `clap` dependency (added to

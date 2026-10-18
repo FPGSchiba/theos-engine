@@ -25,6 +25,8 @@
 
 pub mod chakra;
 pub mod context;
+#[cfg(feature = "debug-tool")]
+pub mod debug;
 pub mod element;
 pub mod error;
 pub mod graph;

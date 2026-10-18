@@ -8,6 +8,16 @@ theos-shared = { workspace = true }
 glam = { workspace = true, features = ["serde"] }
 serde = { workspace = true }
 thiserror = { workspace = true }
+clap = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+
+[features]
+debug-tool = ["dep:clap", "dep:serde_json"]
+
+[[bin]]
+name = "theos-magic-debug"
+path = "src/bin/theos-magic-debug.rs"
+required-features = ["debug-tool"]
 
 [lints]
 workspace = true
