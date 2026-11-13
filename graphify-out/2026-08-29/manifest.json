@@ -1,0 +1,746 @@
+{
+  ".githooks/pre-commit": {
+    "mtime": 1785396862.0470462,
+    "seen": 1787993451.9724438,
+    "ast_hash": "fc97ee2fcd9001e9717989f99bdb5f06",
+    "semantic_hash": ""
+  },
+  "plugins/theos-audio/src/lib.rs": {
+    "mtime": 1785396862.0640652,
+    "seen": 1787993451.9724493,
+    "ast_hash": "80381954b30a65e80d588784b63bae31",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/components.rs": {
+    "mtime": 1785396862.0645628,
+    "seen": 1787993451.9724507,
+    "ast_hash": "a180ad971eeeeb1a5a3e6b970a64fac5",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/lib.rs": {
+    "mtime": 1785396862.0645628,
+    "seen": 1787993451.9724517,
+    "ast_hash": "db324c5c0265e267a609314a24441b9e",
+    "semantic_hash": ""
+  },
+  "theos-assets/src/lib.rs": {
+    "mtime": 1785396862.065062,
+    "seen": 1787993451.972453,
+    "ast_hash": "953c2f4af17bc95b8a7f4e6636da4c65",
+    "semantic_hash": ""
+  },
+  "theos-core/benches/event_bus.rs": {
+    "mtime": 1785396862.065062,
+    "seen": 1787993451.9724538,
+    "ast_hash": "56b1e0546e091bf16c6b67898e6366da",
+    "semantic_hash": ""
+  },
+  "theos-core/benches/event_bus_alloc.rs": {
+    "mtime": 1785396862.065062,
+    "seen": 1787993451.9724543,
+    "ast_hash": "1ad43fab1b3ad15f1b9c974295abfbbd",
+    "semantic_hash": ""
+  },
+  "theos-core/benches/frame_timing.rs": {
+    "mtime": 1785396862.065062,
+    "seen": 1787993451.972455,
+    "ast_hash": "4c3ceba3615983699d4247537c85a76a",
+    "semantic_hash": ""
+  },
+  "theos-core/src/dependency_resolver.rs": {
+    "mtime": 1785396862.0655632,
+    "seen": 1787993451.9724555,
+    "ast_hash": "cc3001be422df5103e7bd1905b494045",
+    "semantic_hash": ""
+  },
+  "theos-core/src/error.rs": {
+    "mtime": 1785396862.0655632,
+    "seen": 1787993451.972456,
+    "ast_hash": "2ac76d8dd000547e06bf6c4eaa706c8e",
+    "semantic_hash": ""
+  },
+  "theos-core/src/event.rs": {
+    "mtime": 1785396862.0660622,
+    "seen": 1787993451.9724567,
+    "ast_hash": "40ee767269885c0307e48ebf6bcb9922",
+    "semantic_hash": ""
+  },
+  "theos-core/src/frame_timer.rs": {
+    "mtime": 1785396862.0660622,
+    "seen": 1787993451.9724572,
+    "ast_hash": "9b7a2353f56b0020e83dc407285b0096",
+    "semantic_hash": ""
+  },
+  "theos-core/src/kernel.rs": {
+    "mtime": 1785396862.066562,
+    "seen": 1787993451.9724576,
+    "ast_hash": "77bf97de9809b091dc92698f67c50083",
+    "semantic_hash": ""
+  },
+  "theos-core/src/lib.rs": {
+    "mtime": 1785396862.066562,
+    "seen": 1787993451.9724586,
+    "ast_hash": "f4252062b629292a15256b8af43dd99c",
+    "semantic_hash": ""
+  },
+  "theos-core/src/logging.rs": {
+    "mtime": 1785396862.0670617,
+    "seen": 1787993451.972459,
+    "ast_hash": "94af06c7bf309c0656e7300c463c4d16",
+    "semantic_hash": ""
+  },
+  "theos-core/tests/kernel_integration.rs": {
+    "mtime": 1785396862.0670617,
+    "seen": 1787993451.9724596,
+    "ast_hash": "0e9326c4c95dbbeab5ddfa02f28738a9",
+    "semantic_hash": ""
+  },
+  "theos-ecs/src/lib.rs": {
+    "mtime": 1785396862.0675614,
+    "seen": 1787993451.9724605,
+    "ast_hash": "256d0db5b23b8a9fc4db6d4ef0620c9e",
+    "semantic_hash": ""
+  },
+  "theos-ecs/src/testkit.rs": {
+    "mtime": 1785396862.0675614,
+    "seen": 1787993451.972461,
+    "ast_hash": "34cb63b07621de182cdf8c850760542e",
+    "semantic_hash": ""
+  },
+  "theos-editor/src/main.rs": {
+    "mtime": 1785396862.0675614,
+    "seen": 1787993451.9724622,
+    "ast_hash": "e310766060c869385ec5db2823e7ad7b",
+    "semantic_hash": ""
+  },
+  "theos-game/src/main.rs": {
+    "mtime": 1785396862.0680616,
+    "seen": 1787993451.9724631,
+    "ast_hash": "e310766060c869385ec5db2823e7ad7b",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/app_handler.rs": {
+    "mtime": 1785396862.0680616,
+    "seen": 1787993451.9724636,
+    "ast_hash": "42b397800e1a3fffac03587bed4be834",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/close_to_exit.rs": {
+    "mtime": 1785396862.068562,
+    "seen": 1787993451.972464,
+    "ast_hash": "de94cb86087d488bb884429d9daab1ca",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/escape_to_quit.rs": {
+    "mtime": 1785396862.068562,
+    "seen": 1787993451.9724648,
+    "ast_hash": "b3a013fd273cfddd374e71a7ac752fe0",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/main.rs": {
+    "mtime": 1785396862.068562,
+    "seen": 1787993451.9724655,
+    "ast_hash": "94f2bbb08e77068458a4a63201626735",
+    "semantic_hash": ""
+  },
+  "theos-launcher/tests/lifecycle.rs": {
+    "mtime": 1785396862.068562,
+    "seen": 1787993451.972466,
+    "ast_hash": "2321592abec37980aa7460d0cc2515e0",
+    "semantic_hash": ""
+  },
+  "theos-launcher/tests/log_filtering.rs": {
+    "mtime": 1785396862.068562,
+    "seen": 1787993451.9724662,
+    "ast_hash": "6d4b11982d90b00694dea693acf161bf",
+    "semantic_hash": ""
+  },
+  "theos-launcher/tests/log_format.rs": {
+    "mtime": 1785396862.0690618,
+    "seen": 1787993451.972467,
+    "ast_hash": "95e963658a41b9e5656107c3085a4372",
+    "semantic_hash": ""
+  },
+  "theos-math/benches/math_benches.rs": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724808,
+    "ast_hash": "e3f5029e3058b6927184c46c8b0223a4",
+    "semantic_hash": ""
+  },
+  "theos-math/src/aabb.rs": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724813,
+    "ast_hash": "14b0da350af004bd91b2d35a2916dd2b",
+    "semantic_hash": ""
+  },
+  "theos-math/src/lib.rs": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724817,
+    "ast_hash": "f447cb260abceb693e36e9535986feef",
+    "semantic_hash": ""
+  },
+  "theos-math/src/mat.rs": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724822,
+    "ast_hash": "d4d03cb9ed55aca4cbb1f9e938baecf9",
+    "semantic_hash": ""
+  },
+  "theos-math/src/plane.rs": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724832,
+    "ast_hash": "a8dc4ecf3329a898e961ebba23cdf85b",
+    "semantic_hash": ""
+  },
+  "theos-math/src/quat.rs": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724836,
+    "ast_hash": "9ec3bbab107ad412d221b18001c3df0e",
+    "semantic_hash": ""
+  },
+  "theos-math/src/ray.rs": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724844,
+    "ast_hash": "879fd7b4143290087a449083d9f1fc22",
+    "semantic_hash": ""
+  },
+  "theos-math/src/vec.rs": {
+    "mtime": 1785396862.0730648,
+    "seen": 1787993451.9724848,
+    "ast_hash": "265626cadc2f96bb33d1b85e0a4668c4",
+    "semantic_hash": ""
+  },
+  "theos-physics/src/event.rs": {
+    "mtime": 1785396862.0730648,
+    "seen": 1787993451.9724858,
+    "ast_hash": "bdce12353336bdafc41620b883efe08f",
+    "semantic_hash": ""
+  },
+  "theos-physics/src/lib.rs": {
+    "mtime": 1785396862.0730648,
+    "seen": 1787993451.9724865,
+    "ast_hash": "ee74993facd08b6edf6eab517b02c277",
+    "semantic_hash": ""
+  },
+  "theos-plugin-api/src/lib.rs": {
+    "mtime": 1785396862.073568,
+    "seen": 1787993451.9724874,
+    "ast_hash": "80381954b30a65e80d588784b63bae31",
+    "semantic_hash": ""
+  },
+  "theos-plugin-loader/src/lib.rs": {
+    "mtime": 1785396862.073568,
+    "seen": 1787993451.9724882,
+    "ast_hash": "80381954b30a65e80d588784b63bae31",
+    "semantic_hash": ""
+  },
+  "theos-render/src/lib.rs": {
+    "mtime": 1785396862.0740674,
+    "seen": 1787993451.972489,
+    "ast_hash": "953c2f4af17bc95b8a7f4e6636da4c65",
+    "semantic_hash": ""
+  },
+  "theos-scripting/src/lib.rs": {
+    "mtime": 1785396862.0740674,
+    "seen": 1787993451.9724903,
+    "ast_hash": "953c2f4af17bc95b8a7f4e6636da4c65",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/error.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724908,
+    "ast_hash": "2c417f3ddaa290830ea7035a6aa7e00b",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/event_bus.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724915,
+    "ast_hash": "0e4e9ee4196f216f33be1a06037b5dca",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/kernel_context.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724917,
+    "ast_hash": "86adc90df4db24ba4f59805b8600dada",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/lib.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724922,
+    "ast_hash": "a0ab5fbfbacfc3a14f2f179a78880899",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/module.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724932,
+    "ast_hash": "4f21837f330412947a60ae14cac39ead",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/prelude.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724936,
+    "ast_hash": "94bd468ddd0a6ce65e738179fa981fba",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/service_locator.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724941,
+    "ast_hash": "380bcf8389547e76b2d335057c4b0550",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/shutdown_requester.rs": {
+    "mtime": 1785396862.0745673,
+    "seen": 1787993451.9724946,
+    "ast_hash": "a1d815152bfa287932f3619927994095",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/types.rs": {
+    "mtime": 1785396862.0755694,
+    "seen": 1787993451.972495,
+    "ast_hash": "fe85530d29c7f70926682c392ea7c158",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/window_event.rs": {
+    "mtime": 1785396862.0755694,
+    "seen": 1787993451.9724956,
+    "ast_hash": "96b60d98457b618fdd20d0dd5c67a95c",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/world_access.rs": {
+    "mtime": 1785396862.0755694,
+    "seen": 1787993451.9724958,
+    "ast_hash": "b122bcf5c48b1d2847e69e2db88e6859",
+    "semantic_hash": ""
+  },
+  "theos-window/src/error.rs": {
+    "mtime": 1785396862.0760727,
+    "seen": 1787993451.972497,
+    "ast_hash": "acc1634d68b23429e1c7d3bcd0afcec4",
+    "semantic_hash": ""
+  },
+  "theos-window/src/event_translator.rs": {
+    "mtime": 1785396862.0760727,
+    "seen": 1787993451.9724975,
+    "ast_hash": "e89255175020e9b3a02377333323a397",
+    "semantic_hash": ""
+  },
+  "theos-window/src/key_translate.rs": {
+    "mtime": 1785396862.0765722,
+    "seen": 1787993451.972498,
+    "ast_hash": "a1cbd81fe39978fa740b63566d64c022",
+    "semantic_hash": ""
+  },
+  "theos-window/src/lib.rs": {
+    "mtime": 1785396862.0765722,
+    "seen": 1787993451.9724984,
+    "ast_hash": "447c22eb6855983703bdd5635256505c",
+    "semantic_hash": ""
+  },
+  "theos-window/src/window_factory.rs": {
+    "mtime": 1785396862.0765722,
+    "seen": 1787993451.972499,
+    "ast_hash": "f37034ac8804ab6ba188a7425a8f801a",
+    "semantic_hash": ""
+  },
+  "theos-window/src/window_handle.rs": {
+    "mtime": 1785396862.0765722,
+    "seen": 1787993451.9724991,
+    "ast_hash": "903a14abcd08a61d68b7cd77d618c85d",
+    "semantic_hash": ""
+  },
+  "theos-window/src/window_module.rs": {
+    "mtime": 1785396862.0770724,
+    "seen": 1787993451.9724996,
+    "ast_hash": "59b7149b697691bf37eb016ce3baa63e",
+    "semantic_hash": ""
+  },
+  ".github/dependabot.yml": {
+    "mtime": 1785396862.047546,
+    "seen": 1787993451.9725003,
+    "ast_hash": "3f967ca81558162909ec192b615e6d0f",
+    "semantic_hash": ""
+  },
+  ".github/workflows/check-lint.yml": {
+    "mtime": 1785396862.047546,
+    "seen": 1787993451.972501,
+    "ast_hash": "5ab146dd998f7054ea04c0bf7c03089c",
+    "semantic_hash": ""
+  },
+  ".github/workflows/release-packaging.yml": {
+    "mtime": 1785396862.047546,
+    "seen": 1787993451.9725015,
+    "ast_hash": "fd8d91738e48baead0ec4d6dddaab47a",
+    "semantic_hash": ""
+  },
+  ".github/workflows/test.yml": {
+    "mtime": 1785396862.0480456,
+    "seen": 1787993451.9725025,
+    "ast_hash": "15b8065718e7414be04961d3a251bc4e",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1785396862.0480456,
+    "seen": 1787993451.9725027,
+    "ast_hash": "260b822c69fde326a711f625b7f00e1c",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1785396862.0490456,
+    "seen": 1787993451.9725032,
+    "ast_hash": "6b542f147d017eb2d8062cefa9c15353",
+    "semantic_hash": ""
+  },
+  "agents/mentor.md": {
+    "mtime": 1785396862.0495455,
+    "seen": 1787993451.972504,
+    "ast_hash": "75f0e60695efbe03a51593d6e49e97e0",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-12.md": {
+    "mtime": 1785396862.0605514,
+    "seen": 1787993451.9725049,
+    "ast_hash": "dfbf19ad538e1874da7f463b8972261b",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-147.md": {
+    "mtime": 1785396862.0605514,
+    "seen": 1787993451.9725053,
+    "ast_hash": "e4b16a2e398eb94d08fc6dfa0c4fefe3",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-15.md": {
+    "mtime": 1785396862.061052,
+    "seen": 1787993451.9725068,
+    "ast_hash": "21c9be15f8005a356d06a869960e130d",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-16.md": {
+    "mtime": 1785396862.062052,
+    "seen": 1787993451.97251,
+    "ast_hash": "c85b9e23949d796439c280a764978e78",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-17.md": {
+    "mtime": 1785396862.062052,
+    "seen": 1787993451.9725108,
+    "ast_hash": "ff4e607529e4513d73fb04dce63fd1e1",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-86.md": {
+    "mtime": 1785396862.0630574,
+    "seen": 1787993451.972513,
+    "ast_hash": "152277f1e5ed631e456074fbc39a716d",
+    "semantic_hash": ""
+  },
+  "plans/test-coverage-2026-06-08.md": {
+    "mtime": 1785396862.063562,
+    "seen": 1787993451.9725142,
+    "ast_hash": "021089dc944ea78c8bda3831b7d8ed10",
+    "semantic_hash": ""
+  },
+  "qodana.yaml": {
+    "mtime": 1785396862.0640652,
+    "seen": 1787993451.9725146,
+    "ast_hash": "8346400e25b3619dfba7b4a90da7a537",
+    "semantic_hash": ""
+  },
+  "theos-shared/README.md": {
+    "mtime": 1785396862.0740674,
+    "seen": 1787993451.972515,
+    "ast_hash": "85605a3c4b731c27009ededd6b7c7c1f",
+    "semantic_hash": ""
+  },
+  "theos-window/README.md": {
+    "mtime": 1785396862.0760727,
+    "seen": 1787993451.9725156,
+    "ast_hash": "f841b10a46275ee389acbd92ed5bc554",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/chakra.rs": {
+    "mtime": 1785396862.0690618,
+    "seen": 1787993451.9724681,
+    "ast_hash": "c069a99237bf6fd2174925e669328b8d",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/context.rs": {
+    "mtime": 1785396862.0690618,
+    "seen": 1787993451.972469,
+    "ast_hash": "102f5a9c07f1e90e13b6b2879b7cded9",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/element.rs": {
+    "mtime": 1785396862.069562,
+    "seen": 1787993451.9724696,
+    "ast_hash": "d21479a66dc78a6718cc671d88abaff4",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/error.rs": {
+    "mtime": 1785396862.069562,
+    "seen": 1787993451.97247,
+    "ast_hash": "e6a857eab1978fb2c0142370b73703e6",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/interface.rs": {
+    "mtime": 1785396862.0715618,
+    "seen": 1787993451.972478,
+    "ast_hash": "d773b5687128f62b87e8a910fe03b6f6",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/lib.rs": {
+    "mtime": 1787994794.5349202,
+    "seen": 1787997029.2147782,
+    "ast_hash": "12a4ee1afce7c990a41a4110fb04e1de",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-148.md": {
+    "mtime": 1785396862.061052,
+    "seen": 1787993451.9725058,
+    "ast_hash": "a5bae4152e75bbb19a5483f2c12d523b",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/arena.rs": {
+    "mtime": 1785396862.069562,
+    "seen": 1787993451.9724708,
+    "ast_hash": "639e9019ef629b2c18b1dd38c3b5bc1a",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/assembler.rs": {
+    "mtime": 1785396862.0700617,
+    "seen": 1787993451.9724715,
+    "ast_hash": "f714177e3bacff8334c743bc9f512963",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/csr.rs": {
+    "mtime": 1785396862.0700617,
+    "seen": 1787993451.9724734,
+    "ast_hash": "18f397b5743636584816e3d3c9f44647",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/mod.rs": {
+    "mtime": 1787994784.0986705,
+    "seen": 1787997029.214326,
+    "ast_hash": "7004c73a33a7cecdd034d7df91b1acf1",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/phase.rs": {
+    "mtime": 1785396862.0710611,
+    "seen": 1787993451.9724762,
+    "ast_hash": "6195a31a7aa15b4f0d3d5bcaae9f76db",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-149.md": {
+    "mtime": 1785396862.061052,
+    "seen": 1787993451.9725063,
+    "ast_hash": "d3aed2156c8eb42d4819a685969e71be",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/injection.rs": {
+    "mtime": 1785396862.070562,
+    "seen": 1787993451.972475,
+    "ast_hash": "1b4d63f42dc1e3ae479c681c8cf7c973",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-158.md": {
+    "mtime": 1785396862.062052,
+    "seen": 1787993451.972509,
+    "ast_hash": "bccf015bbbb12ad79701812dc4465173",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/transfer.rs": {
+    "mtime": 1785396862.0710611,
+    "seen": 1787993451.9724772,
+    "ast_hash": "8c1cca913f40bfe089a43257caf0da8b",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/tuning.rs": {
+    "mtime": 1787993319.876,
+    "seen": 1787993451.9724798,
+    "ast_hash": "bdaa0e7acc66c6ea841c420660039b12",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-157.md": {
+    "mtime": 1785396862.062052,
+    "seen": 1787993451.9725084,
+    "ast_hash": "ad52ca47bc43436f16ada7ddc6868416",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-156.md": {
+    "mtime": 1785396862.062052,
+    "seen": 1787993451.972508,
+    "ast_hash": "f0a4b414f5b7d8c9cce92cbfc05e6dc5",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/energy.rs": {
+    "mtime": 1785396862.070562,
+    "seen": 1787993451.972474,
+    "ast_hash": "6d2798a6093a02c4639d104cb4392851",
+    "semantic_hash": ""
+  },
+  "plans/SPRINT-PLANNING-GOAL.md": {
+    "mtime": 1785396862.0605514,
+    "seen": 1787993451.9725044,
+    "ast_hash": "e711a2ef09f201c8a1a4a053bd62116d",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-150.md": {
+    "mtime": 1785396862.0615518,
+    "seen": 1787993451.9725075,
+    "ast_hash": "e76ff028b04cc2ca82787cda3c795b3f",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-159.md": {
+    "mtime": 1785396862.062052,
+    "seen": 1787993451.9725094,
+    "ast_hash": "addf285533a9c38a25c35913bcb184c0",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-171.md": {
+    "mtime": 1785396862.062052,
+    "seen": 1787993451.972511,
+    "ast_hash": "a4b89ea62c8c82f20e269aaf6dd656eb",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-173.md": {
+    "mtime": 1785396862.0630574,
+    "seen": 1787993451.9725115,
+    "ast_hash": "e2b90567edce971e20e77b6bcd60cc0b",
+    "semantic_hash": ""
+  },
+  "plans/element-cosmology-2026-06-21.md": {
+    "mtime": 1785396862.063562,
+    "seen": 1787993451.9725134,
+    "ast_hash": "7bb8914c39457a30d05c6699190e5bad",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/stability.rs": {
+    "mtime": 1785396862.0710611,
+    "seen": 1787993451.9724767,
+    "ast_hash": "731943b352ef6d84c3194af79642136d",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/cast.rs": {
+    "mtime": 1785396862.0700617,
+    "seen": 1787993451.9724727,
+    "ast_hash": "45d79cf6736d9028dbfb2295396fb3b9",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/gain.rs": {
+    "mtime": 1785396862.070562,
+    "seen": 1787993451.9724746,
+    "ast_hash": "6f86c761cfeff50db2d747435b3ce616",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-176.md": {
+    "mtime": 1785396862.0630574,
+    "seen": 1787993451.972512,
+    "ast_hash": "93cea58cac1f9cecae6a14c1fa38f048",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-177.md": {
+    "mtime": 1785396862.0630574,
+    "seen": 1787993451.9725125,
+    "ast_hash": "d1425e03fd4f4c2fe98911f027ef3a4b",
+    "semantic_hash": ""
+  },
+  "plugins/theos-audio/Cargo.toml": {
+    "mtime": 1785396862.0640652,
+    "seen": 1787993451.972447,
+    "ast_hash": "7cac2d51c9fe7c5c72ed362311244535",
+    "semantic_hash": ""
+  },
+  "theos-ai/Cargo.toml": {
+    "mtime": 1785396862.0645628,
+    "seen": 1787993451.9724498,
+    "ast_hash": "80ca939834ec89070e1c1f8de4d774db",
+    "semantic_hash": ""
+  },
+  "theos-assets/Cargo.toml": {
+    "mtime": 1785396862.0645628,
+    "seen": 1787993451.9724526,
+    "ast_hash": "861eb7f5b26541ff8a99defefc3cdd81",
+    "semantic_hash": ""
+  },
+  "theos-ecs/Cargo.toml": {
+    "mtime": 1785396862.0670617,
+    "seen": 1787993451.97246,
+    "ast_hash": "40d0abbf011dd59ba77345475f293286",
+    "semantic_hash": ""
+  },
+  "theos-editor/Cargo.toml": {
+    "mtime": 1785396862.0675614,
+    "seen": 1787993451.9724615,
+    "ast_hash": "0bc5c697fca1a424f9b0dfe7348868f7",
+    "semantic_hash": ""
+  },
+  "theos-game/Cargo.toml": {
+    "mtime": 1785396862.0675614,
+    "seen": 1787993451.9724627,
+    "ast_hash": "ce27d7cd3981608efeae6da1d77cb388",
+    "semantic_hash": ""
+  },
+  "theos-magic/Cargo.toml": {
+    "mtime": 1785396862.0690618,
+    "seen": 1787993451.9724674,
+    "ast_hash": "203d1451731500a7df46162b3afe8a5c",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/token.rs": {
+    "mtime": 1785396862.0715618,
+    "seen": 1787993451.9724789,
+    "ast_hash": "66e922041e2dbf3d66363089d8de375a",
+    "semantic_hash": ""
+  },
+  "theos-math/Cargo.toml": {
+    "mtime": 1785396862.0720618,
+    "seen": 1787993451.9724803,
+    "ast_hash": "b0bad46a3ba0a7db664801094f632ab3",
+    "semantic_hash": ""
+  },
+  "theos-physics/Cargo.toml": {
+    "mtime": 1785396862.0730648,
+    "seen": 1787993451.9724853,
+    "ast_hash": "5e73977d544ed42785e5aec95723e07d",
+    "semantic_hash": ""
+  },
+  "theos-plugin-api/Cargo.toml": {
+    "mtime": 1785396862.073568,
+    "seen": 1787993451.972487,
+    "ast_hash": "a51a5f1f7e91e3c166525c6b56f82340",
+    "semantic_hash": ""
+  },
+  "theos-plugin-loader/Cargo.toml": {
+    "mtime": 1785396862.073568,
+    "seen": 1787993451.9724877,
+    "ast_hash": "d24f94b64d1f491c69b9594d400ab1a0",
+    "semantic_hash": ""
+  },
+  "theos-render/Cargo.toml": {
+    "mtime": 1785396862.073568,
+    "seen": 1787993451.9724886,
+    "ast_hash": "7a982cb30c63e100c36f8fd94d3f5c7d",
+    "semantic_hash": ""
+  },
+  "theos-scripting/Cargo.toml": {
+    "mtime": 1785396862.0740674,
+    "seen": 1787993451.9724898,
+    "ast_hash": "6d3805dc0238d447dd218272ffadea3c",
+    "semantic_hash": ""
+  },
+  "theos-window/Cargo.toml": {
+    "mtime": 1785396862.0760727,
+    "seen": 1787993451.9724963,
+    "ast_hash": "477b8c1c4235c97fd75127bf78d1bfbc",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/upkeep.rs": {
+    "mtime": 1787996703.8637605,
+    "seen": 1787997029.2146883,
+    "ast_hash": "22df1b8dff01f5fe0cdf2c091807defa",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-180.md": {
+    "mtime": 1787996787.5746126,
+    "seen": 1787997029.2197318,
+    "ast_hash": "c912516b4109ed2234a6462ecf4f1512",
+    "semantic_hash": ""
+  }
+}
