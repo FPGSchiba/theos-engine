@@ -21,8 +21,9 @@ pub struct Checks {
     pub leak: bool,
     /// No `forbid` id is in the context.
     pub forbidden: bool,
-    /// The forbidden words (global and per scenario) found in the reply.
-    pub words: Vec<String>,
+    /// The forbidden words (global and per scenario) found in the reply;
+    /// `None` when there is no reply to look in.
+    pub words: Option<Vec<String>>,
     /// The reply is grounded in the right records.
     pub grounding: bool,
     /// Finished within the deadline.
@@ -85,7 +86,8 @@ fn grounded(scenario: &Scenario, cites: &[RecordId]) -> bool {
 /// Scores one response against its scenario.
 ///
 /// A response whose reply is an error (unfinished or unparsable) fails
-/// grounding and has no words to find.
+/// grounding; it has no text, so the word check does not apply (`words` is
+/// `None`).
 pub fn check(
     scenario: &Scenario,
     global_words: &[String],
@@ -120,11 +122,11 @@ pub fn check(
                 .map(String::as_str)
                 .collect();
             (
-                forbidden_words(&list, &reply.text),
+                Some(forbidden_words(&list, &reply.text)),
                 grounded(scenario, &reply.sources),
             )
         }
-        Err(_) => (Vec::new(), false),
+        Err(_) => (None, false),
     };
 
     Checks {
@@ -187,6 +189,7 @@ mod tests {
                 answer_tokens: 5,
                 retrieval: Duration::ZERO,
                 time_to_first_token: Some(Duration::from_millis(100)),
+                time_to_first_answer_token: Some(Duration::from_millis(100)),
                 tokens_per_second: 50.0,
                 total: Duration::from_millis(500),
                 vram_peak_bytes: None,
@@ -330,7 +333,14 @@ mod tests {
         r.reply = Err(ReplyError::EmptyReply);
         let c = run(&s, LoreScope::None, &r);
         assert!(!c.grounding);
-        assert!(c.words.is_empty());
+        assert_eq!(c.words, None, "no reply: words are not applicable");
+    }
+
+    #[test]
+    fn a_reply_without_forbidden_words_has_an_empty_words_list() {
+        let s = scenario(Behaviour::Answer);
+        let c = run(&s, LoreScope::None, &response(&["B-1"], &["B-1"], "fine"));
+        assert_eq!(c.words, Some(vec![]));
     }
 
     #[test]

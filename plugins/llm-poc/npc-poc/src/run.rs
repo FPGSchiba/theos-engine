@@ -18,7 +18,7 @@ use theos_ai_llama::{
     models_dir, DxgiProbe, LlamaEmbedder, LlamaGenerator, LlamaRuntime, ModelEntry, ModelsFile,
 };
 
-use crate::report::{self, RunHeader};
+use crate::report::{self, RunHeader, WarmUp};
 use crate::scenarios::{load_scenarios, load_visible, Behaviour, Scenarios, VisibleEntry};
 use crate::score::{check, Checks};
 
@@ -69,11 +69,58 @@ fn scopes(top_k: usize) -> [LoreScope; 3] {
 pub struct RunOutcome {
     /// Every request answered or failed before the run ended.
     pub rows: Vec<Row>,
+    /// The unrecorded request sent before measuring; `None` when the run ended
+    /// before it could be sent.
+    pub warm_up: Option<WarmUp>,
     /// Why the run ended early: a missing `visible.json` entry or a dead worker.
     pub fatal: Option<anyhow::Error>,
 }
 
+/// The file each finished row is appended to, one JSON object per line.
+const ROWS_FILE: &str = "rows.jsonl";
+
+/// Sends one unrecorded request so the first measured one is not cold: thinking
+/// off, the first scenario's speaker and question, scope `Retrieved`.
+fn warm_up(
+    worker: &mut NpcWorker,
+    scenarios: &Scenarios,
+    deadline: Duration,
+) -> anyhow::Result<Option<WarmUp>> {
+    let Some(first) = scenarios.scenario.first() else {
+        return Ok(None);
+    };
+    worker
+        .submit(NpcRequest {
+            speaker: RecordId::new(first.npc.as_str()),
+            question: first.question.clone(),
+            scope: LoreScope::Retrieved {
+                top_k: scenarios.top_k,
+            },
+            thinking: Thinking::Off,
+            deadline,
+        })
+        .map_err(|_| anyhow!("the NPC worker stopped"))?;
+    let (_, outcome) = worker
+        .wait()
+        .ok_or_else(|| anyhow!("the NPC worker stopped"))?;
+    Ok(Some(match outcome {
+        Ok(r) => WarmUp {
+            total: r.metrics.total,
+            stop: report::stop_label(r.metrics.stop).to_owned(),
+        },
+        // The measured requests will show whether the worker is still usable.
+        Err(e) => WarmUp {
+            total: Duration::ZERO,
+            stop: format!("failed: {e}"),
+        },
+    }))
+}
+
 /// Runs thinking `[Off, On]` x scenarios x scopes, one request at a time.
+///
+/// One unrecorded warm-up request goes first (see [`WarmUp`]). Every finished
+/// row is appended to `<results_dir>/rows.jsonl` and flushed at once, so a
+/// native abort of the process loses at most the request in flight.
 ///
 /// A request the driver fails outright (backend or embedder error) becomes a
 /// failed row carrying the error text; the run goes on. Only a scenario naming a
@@ -85,16 +132,31 @@ pub fn run_model(
     scenarios: &Scenarios,
     visible: &BTreeMap<String, VisibleEntry>,
     deadline: Duration,
+    results_dir: &Path,
 ) -> RunOutcome {
     let total = 2 * scenarios.scenario.len() * 3;
     let mut rows = Vec::with_capacity(total);
-    let fatal = run_requests(
-        worker, model, scenarios, visible, deadline, total, &mut rows,
-    )
+    let mut warmed = None;
+    let fatal = (|| {
+        std::fs::create_dir_all(results_dir)
+            .with_context(|| format!("creating {}", results_dir.display()))?;
+        let path = results_dir.join(ROWS_FILE);
+        let mut sink =
+            std::fs::File::create(&path).with_context(|| format!("creating {}", path.display()))?;
+        warmed = warm_up(worker, scenarios, deadline)?;
+        run_requests(
+            worker, model, scenarios, visible, deadline, total, &mut rows, &mut sink,
+        )
+    })()
     .err();
-    RunOutcome { rows, fatal }
+    RunOutcome {
+        rows,
+        warm_up: warmed,
+        fatal,
+    }
 }
 
+#[allow(clippy::too_many_arguments)]
 fn run_requests(
     worker: &mut NpcWorker,
     model: &str,
@@ -103,6 +165,7 @@ fn run_requests(
     deadline: Duration,
     total: usize,
     rows: &mut Vec<Row>,
+    sink: &mut dyn std::io::Write,
 ) -> anyhow::Result<()> {
     for thinking in [Thinking::Off, Thinking::On] {
         for scenario in &scenarios.scenario {
@@ -176,6 +239,12 @@ fn run_requests(
                         );
                         row.reply_error = Some(e.to_string());
                     }
+                }
+                // A failed write must not lose the row: the final tables still have it.
+                if let Err(e) =
+                    writeln!(sink, "{}", report::row_json(&row)).and_then(|()| sink.flush())
+                {
+                    eprintln!("warning: could not append the row to {ROWS_FILE}: {e}");
                 }
                 rows.push(row);
             }
@@ -395,8 +464,26 @@ pub fn run_cli(
             &speakers,
             persona_bodies,
         )?;
-        let RunOutcome { rows, fatal } =
-            run_model(&mut worker, &entry.name, &scenarios, &golden, deadline);
+        let suffix = if persona_bodies {
+            ""
+        } else {
+            "-no-persona-bodies"
+        };
+        let out = Path::new(env!("CARGO_MANIFEST_DIR"))
+            .join("../results")
+            .join(format!("{started}-{}{suffix}", slug(&entry.name)));
+        let RunOutcome {
+            rows,
+            warm_up,
+            fatal,
+        } = run_model(
+            &mut worker,
+            &entry.name,
+            &scenarios,
+            &golden,
+            deadline,
+            &out,
+        );
         drop(worker);
 
         let header = RunHeader {
@@ -412,15 +499,8 @@ pub fn run_cli(
             } else {
                 "none".to_owned()
             },
+            warm_up,
         };
-        let suffix = if persona_bodies {
-            ""
-        } else {
-            "-no-persona-bodies"
-        };
-        let out = Path::new(env!("CARGO_MANIFEST_DIR"))
-            .join("../results")
-            .join(format!("{started}-{}{suffix}", slug(&entry.name)));
         report::write(&out, &header, &rows)?;
         println!("{}", report::summary_table(&rows));
         println!("results: {}", out.display());
@@ -463,6 +543,29 @@ mod tests {
     use super::*;
     use theos_ai::testkit::{FakeClock, FakeEmbedder, FakeProbe, Script, ScriptedBackend};
     use theos_ai::{HolderKind, Lens, LoreKind, PersonaLayer, Phase, Piece};
+
+    /// A results directory under the temp dir, removed on drop.
+    struct Scratch(PathBuf);
+
+    impl Scratch {
+        fn new(tag: &str) -> Scratch {
+            Scratch(std::env::temp_dir().join(format!("npc-poc-run-{tag}-{}", std::process::id())))
+        }
+    }
+
+    impl Drop for Scratch {
+        fn drop(&mut self) {
+            let _ = std::fs::remove_dir_all(&self.0);
+        }
+    }
+
+    fn jsonl(dir: &Scratch) -> Vec<serde_json::Value> {
+        std::fs::read_to_string(dir.0.join("rows.jsonl"))
+            .unwrap()
+            .lines()
+            .map(|l| serde_json::from_str(l).unwrap())
+            .collect()
+    }
 
     fn belief(id: &str, held_by: &str) -> LoreRecord {
         LoreRecord {
@@ -529,7 +632,7 @@ mod tests {
         let mut worker = NpcWorker::spawn(|| {
             let clock = FakeClock::new();
             let backend = ScriptedBackend::new(clock.clone());
-            for _ in 0..18 {
+            for _ in 0..19 {
                 backend.push(Script {
                     prompt_tokens: 12,
                     prefill: Duration::from_millis(20),
@@ -552,12 +655,14 @@ mod tests {
         })
         .unwrap();
 
+        let dir = Scratch::new("model");
         let run = run_model(
             &mut worker,
             "fake",
             &scenarios,
             &golden,
             Duration::from_secs(3),
+            &dir.0,
         );
         assert!(run.fatal.is_none());
         let rows = run.rows;
@@ -570,7 +675,10 @@ mod tests {
         assert_eq!(rows[0].scenario_id, "s1");
         assert_eq!(rows[0].scope, LoreScope::None);
         assert_eq!(rows[2].scope, LoreScope::Retrieved { top_k: 2 });
-        assert_eq!(rows[0].checks.as_ref().unwrap().words, ["node"]);
+        assert_eq!(
+            rows[0].checks.as_ref().unwrap().words,
+            Some(vec!["node".to_owned()])
+        );
         assert_eq!(rows[0].reply_text, "a NODE hums");
         assert!(
             rows[6..9].iter().all(|r| r.hand_read),
@@ -600,7 +708,7 @@ mod tests {
         let mut worker = NpcWorker::spawn(|| {
             let clock = FakeClock::new();
             let backend = ScriptedBackend::new(clock.clone());
-            for _ in 0..6 {
+            for _ in 0..7 {
                 backend.push(Script {
                     prompt_tokens: 1,
                     prefill: Duration::ZERO,
@@ -622,12 +730,14 @@ mod tests {
             })
         })
         .unwrap();
+        let dir = Scratch::new("defects");
         let rows = run_model(
             &mut worker,
             "fake",
             &scenarios,
             &golden,
             Duration::from_secs(3),
+            &dir.0,
         )
         .rows;
         let found = defects(&rows);
@@ -665,7 +775,7 @@ mod tests {
         NpcWorker::spawn(move || {
             let clock = FakeClock::new();
             let inner = ScriptedBackend::new(clock.clone());
-            for _ in 0..6 {
+            for _ in 0..7 {
                 inner.push(Script {
                     prompt_tokens: 1,
                     prefill: Duration::ZERO,
@@ -715,13 +825,16 @@ mod tests {
     #[test]
     fn a_failing_request_becomes_a_failed_row_and_the_run_continues() {
         let (scenarios, golden) = one_scenario();
-        let mut worker = flaky_worker(3, false);
+        // Call 1 is the warm-up; call 4 is the third measured request.
+        let mut worker = flaky_worker(4, false);
+        let dir = Scratch::new("failing");
         let run = run_model(
             &mut worker,
             "fake",
             &scenarios,
             &golden,
             Duration::from_secs(3),
+            &dir.0,
         );
         assert!(run.fatal.is_none());
         assert_eq!(run.rows.len(), 6);
@@ -739,13 +852,15 @@ mod tests {
     #[test]
     fn a_worker_that_dies_mid_run_returns_the_rows_so_far_and_a_fatal_error() {
         let (scenarios, golden) = one_scenario();
-        let mut worker = flaky_worker(4, true);
+        let mut worker = flaky_worker(5, true);
+        let dir = Scratch::new("dies");
         let run = run_model(
             &mut worker,
             "fake",
             &scenarios,
             &golden,
             Duration::from_secs(3),
+            &dir.0,
         );
         assert!(run.fatal.is_some());
         assert_eq!(
@@ -754,6 +869,143 @@ mod tests {
             "three answered, one lost with the worker"
         );
         assert!(run.rows[3].reply_error.is_some());
+    }
+
+    #[test]
+    fn every_finished_row_is_on_disk_in_rows_jsonl() {
+        let (scenarios, golden) = one_scenario();
+        let mut worker = flaky_worker(99, false);
+        let dir = Scratch::new("jsonl");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden,
+            Duration::from_secs(3),
+            &dir.0,
+        );
+        assert!(run.fatal.is_none());
+        let lines = jsonl(&dir);
+        assert_eq!(lines.len(), run.rows.len());
+        assert_eq!(lines.len(), 6);
+        assert_eq!(lines[0]["scenario"], "s1");
+        assert_eq!(lines[0]["thinking"], "off");
+        assert_eq!(lines[3]["thinking"], "on");
+        assert_eq!(lines[5]["scope"], "retrieved(top 1)");
+        assert_eq!(lines[0]["reply_text"], "x");
+    }
+
+    #[test]
+    fn rows_finished_before_a_worker_dies_are_already_on_disk() {
+        let (scenarios, golden) = one_scenario();
+        let mut worker = flaky_worker(5, true);
+        let dir = Scratch::new("partial");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden,
+            Duration::from_secs(3),
+            &dir.0,
+        );
+        assert!(run.fatal.is_some());
+        let lines = jsonl(&dir);
+        assert_eq!(lines.len(), run.rows.len());
+        assert_eq!(lines.len(), 4);
+        assert!(lines[3]["reply_error"].is_string(), "the lost row too");
+    }
+
+    #[test]
+    fn the_results_dir_is_created_before_the_first_request() {
+        let (scenarios, golden) = one_scenario();
+        let mut worker = flaky_worker(99, false);
+        let dir = Scratch::new("nested");
+        let nested = dir.0.join("a/b");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden,
+            Duration::from_secs(3),
+            &nested,
+        );
+        assert!(run.fatal.is_none());
+        assert!(nested.join("rows.jsonl").is_file());
+    }
+
+    #[test]
+    fn warm_up_is_not_a_row_and_its_time_reaches_the_outcome() {
+        let (scenarios, golden) = one_scenario();
+        let mut worker = NpcWorker::spawn(|| {
+            let clock = FakeClock::new();
+            let backend = ScriptedBackend::new(clock.clone());
+            // The warm-up is the first request the backend sees.
+            backend.push(Script {
+                prompt_tokens: 1,
+                prefill: Duration::from_millis(70),
+                per_token: Duration::from_millis(7),
+                pieces: vec![Piece {
+                    text: r#"{"sources":[],"reply":"warmup"}"#.into(),
+                    phase: Phase::Answer,
+                }],
+            });
+            for _ in 0..6 {
+                backend.push(Script {
+                    prompt_tokens: 1,
+                    prefill: Duration::ZERO,
+                    per_token: Duration::ZERO,
+                    pieces: vec![Piece {
+                        text: r#"{"sources":[],"reply":"x"}"#.into(),
+                        phase: Phase::Answer,
+                    }],
+                });
+            }
+            Npc::new(NpcParts {
+                backend: Box::new(backend),
+                embedder: Box::new(FakeEmbedder::default()),
+                corpus: Corpus::new(vec![belief("B-1", "n")]).unwrap(),
+                speakers: vec![speaker("n")],
+                options: ContextOptions::default(),
+                clock: Box::new(clock),
+                probe: Box::new(NoProbe),
+            })
+        })
+        .unwrap();
+        let dir = Scratch::new("warm");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden,
+            Duration::from_secs(3),
+            &dir.0,
+        );
+        assert!(run.fatal.is_none());
+        assert_eq!(run.rows.len(), 6);
+        assert!(run.rows.iter().all(|r| r.reply_text == "x"));
+        assert_eq!(jsonl(&dir).len(), 6, "the warm-up is not persisted either");
+        let warm = run.warm_up.unwrap();
+        assert_eq!(warm.total, Duration::from_millis(77));
+        assert_eq!(warm.stop, "finished");
+    }
+
+    #[test]
+    fn a_failing_warm_up_is_reported_and_the_run_goes_on() {
+        let (scenarios, golden) = one_scenario();
+        let mut worker = flaky_worker(1, false);
+        let dir = Scratch::new("warmfail");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden,
+            Duration::from_secs(3),
+            &dir.0,
+        );
+        assert!(run.fatal.is_none());
+        assert_eq!(run.rows.len(), 6);
+        let warm = run.warm_up.unwrap();
+        assert!(warm.stop.contains("boom"), "{}", warm.stop);
     }
 
     #[test]
