@@ -128,6 +128,15 @@ mod tests {
     }
 
     #[test]
+    fn visible_excludes_a_rejected_belief_listed_in_unaware_of() {
+        let (c, mut s) = mini();
+        s.lens.unaware_of.push(RecordId::new("B-4"));
+        let v = visible(&c, &s);
+        assert!(!ids(&v.rejected).contains(&"B-4"));
+        assert!(!ids(&v.held).contains(&"B-4"));
+    }
+
+    #[test]
     fn visible_with_empty_corpus_has_only_persona() {
         let (_, s) = mini();
         let c = Corpus::new(Vec::new()).unwrap();
