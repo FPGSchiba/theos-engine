@@ -28,13 +28,13 @@ const NODE_ORDER: [&str; 9] = [
 ];
 
 const TICK_RULES: &str = "How a tick runs:
-- The tree is ticked every 0.5 s while it runs. Each tick evaluates the root once; a node returns success, failure or running.
+- The tree is ticked every 0.5 s, from the moment it is installed until the scenario's duration is over. Each tick evaluates the root once; a node returns success, failure or running.
 - Sequence runs its children in order: a failure stops it with failure, a running child stops it with running, and when all succeed it succeeds. Selector is the mirror image: a success stops it with success, and when all fail it fails.
 - A Sequence or Selector that returned running resumes at that child on the next tick; the children before it are not run again until the composite finishes. A tree with no Wait finishes every tick, so it starts again from the root each tick and reacts at once.
 - Parallel ticks every child each tick. With policy \"all\" it fails on any failure and succeeds when all succeed; with \"one\" it succeeds on any success and fails when all fail. Otherwise it is running.
 - Condition succeeds when its check is true. Action applies its effect and succeeds: SetComponentValue sets a field, TriggerEvent fires the event.
 - Wait is running until its seconds have passed since it started, then succeeds.
-- Decorator_Invert swaps success and failure. Decorator_Timeout fails, and resets its child, when the child is still running after its seconds. Decorator_Repeat runs its child count times (at most 10).
+- Decorator_Invert swaps success and failure. Decorator_Timeout fails, and resets its child, when the child is still running after its seconds. Decorator_Repeat runs its child count times (at most 10), within the same tick if the child finishes at once.
 - health_below is strict: your health is below the threshold. entity_in_range is false for an entity that is gone. allies_in_range counts entities of kind ally, never you. time_since_install_over is true once that many seconds have passed since the tree was installed.";
 
 /// One entity line of the situation: `- handle: kind, 12 m`, plus `, called "name"` when named.
@@ -107,27 +107,34 @@ fn push_persona(out: &mut String, speaker: &Speaker, bodies: bool) {
     push_lens_line(out, "You speak to:", lens.speaks_to.as_ref());
 }
 
-/// The lore block: exactly the given ids that are in the corpus, rejected ones apart.
-fn push_lore(out: &mut String, fixture: &Fixture, scenario: &BtScenario, lore_ids: &[RecordId]) {
-    let rejected: &[String] = fixture
-        .visible
-        .get(&scenario.actor)
-        .map_or(&[], |e| e.rejected.as_slice());
-    let is_rejected = |id: &RecordId| rejected.iter().any(|r| r == id.as_str());
+/// The lore block: only the given ids that the actor holds or rejects (by
+/// `visible.json`) and the corpus has, as the dialogue assembler re-filters.
+/// Returns the ids actually rendered, in render order (held, then rejected).
+fn push_lore(
+    out: &mut String,
+    fixture: &Fixture,
+    scenario: &BtScenario,
+    lore_ids: &[RecordId],
+) -> Vec<RecordId> {
+    let empty = Vec::new();
+    let entry = fixture.visible.get(&scenario.actor);
+    let held = entry.map_or(&empty, |e| &e.held);
+    let rejected = entry.map_or(&empty, |e| &e.rejected);
+    let listed = |list: &[String], id: &RecordId| list.iter().any(|r| r == id.as_str());
     let mut seen: Vec<&RecordId> = Vec::new();
     for id in lore_ids {
-        if !seen.contains(&id) {
+        if !seen.contains(&id) && fixture.corpus.get(id).is_some() {
             seen.push(id);
         }
     }
+    let mut rendered = Vec::new();
 
     out.push_str("\nWhat you know:\n");
-    let mut any = false;
-    for id in seen.iter().filter(|id| !is_rejected(id)) {
+    for id in seen.iter().filter(|id| listed(held, id)) {
         let Some(r) = fixture.corpus.get(id) else {
             continue;
         };
-        any = true;
+        rendered.push(r.id.clone());
         let _ = writeln!(out, "[{}] {}", r.id, r.title);
         if !r.body.is_empty() {
             let _ = writeln!(out, "{}", r.body);
@@ -136,11 +143,14 @@ fn push_lore(out: &mut String, fixture: &Fixture, scenario: &BtScenario, lore_id
             let _ = writeln!(out, "> {line}");
         }
     }
-    if !any {
+    if rendered.is_empty() {
         out.push_str("Nothing beyond the ways of your people.\n");
     }
     let mut header = false;
-    for id in seen.iter().filter(|id| is_rejected(id)) {
+    for id in seen
+        .iter()
+        .filter(|id| listed(rejected, id) && !listed(held, id))
+    {
         let Some(r) = fixture.corpus.get(id) else {
             continue;
         };
@@ -148,8 +158,11 @@ fn push_lore(out: &mut String, fixture: &Fixture, scenario: &BtScenario, lore_id
             out.push_str("What you reject:\n");
             header = true;
         }
+        rendered.push(r.id.clone());
+        // Rejected records render as id and title only, by design (as in dialogue).
         let _ = writeln!(out, "[{}] {}", r.id, r.title);
     }
+    rendered
 }
 
 fn num(v: &Value) -> String {
@@ -383,18 +396,37 @@ fn push_examples(out: &mut String, fixture: &Fixture) {
     }
 }
 
-/// Renders the prompt of `scenario` with exactly the lore `lore_ids`.
+/// A rendered prompt and what it was built from.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct RenderedPrompt {
+    /// The system and user parts.
+    pub prompt: Prompt,
+    /// The lore ids actually rendered, in render order; empty for enemies.
+    pub lore_ids: Vec<RecordId>,
+    /// The actor part of the system text (persona layers, or the enemy record).
+    pub actor_block: String,
+    /// The lore part of the system text; empty for enemies.
+    pub lore_block: String,
+    /// The situation part of the system text.
+    pub situation: String,
+}
+
+/// Renders the prompt of `scenario` with the lore `lore_ids` the actor may see.
 ///
 /// NPC actors (speakers of lore-poc) get their persona layers and the lore block;
-/// enemies get their design record and no lore block, whatever `lore_ids` holds.
-/// `persona_bodies` switches the persona layer bodies on or off, as in dialogue.
+/// only ids in the actor's held or rejected set (from `visible.json`) are rendered
+/// and the rest are dropped. Enemies get their design record and no lore block,
+/// whatever `lore_ids` holds. `persona_bodies` switches the persona layer bodies
+/// on or off, as in dialogue.
 pub fn render(
     fixture: &Fixture,
     scenario: &BtScenario,
     lore_ids: &[RecordId],
     persona_bodies: bool,
-) -> Prompt {
-    let mut s = String::new();
+) -> RenderedPrompt {
+    let mut actor_block = String::new();
+    let mut lore_block = String::new();
+    let mut rendered = Vec::new();
     let is_npc = scenario.is_npc(&fixture.visible);
     if is_npc {
         match fixture
@@ -402,34 +434,49 @@ pub fn render(
             .iter()
             .find(|sp| sp.id.as_str() == scenario.actor)
         {
-            Some(speaker) => push_persona(&mut s, speaker, persona_bodies),
+            Some(speaker) => push_persona(&mut actor_block, speaker, persona_bodies),
             None => {
-                let _ = writeln!(s, "You are {}.", scenario.actor);
+                let _ = writeln!(actor_block, "You are {}.", scenario.actor);
             }
         }
-        push_lore(&mut s, fixture, scenario, lore_ids);
+        rendered = push_lore(&mut lore_block, fixture, scenario, lore_ids);
     } else if let Some(rec) = fixture.enemies.get(&scenario.actor) {
-        let _ = writeln!(s, "You are a {}, a creature of this world.", rec.title);
         let _ = writeln!(
-            s,
+            actor_block,
+            "You are a {}, a creature of this world.",
+            rec.title
+        );
+        let _ = writeln!(
+            actor_block,
             "Your design record, which is how you behave:\n{}",
             rec.body
         );
     } else {
-        let _ = writeln!(s, "You are {}.", scenario.actor);
+        let _ = writeln!(actor_block, "You are {}.", scenario.actor);
     }
+    let has_reject = lore_block.contains("What you reject:");
 
+    let mut situation = String::new();
+    push_situation(&mut situation, scenario);
+
+    let mut s = String::new();
+    s.push_str(&actor_block);
+    s.push_str(&lore_block);
     s.push_str("\nTask: the user turn holds a request. Write a behaviour tree, a small program your body runs every half second, that does what the request asks in the situation below.\n");
     s.push_str("- Use only the entity handles, flags, components, conditions, commands and events listed here. Invent none.\n");
     s.push_str("- If the request asks for something this vocabulary cannot do, do the nearest thing it can.\n");
     if is_npc {
-        s.push_str("- You know only what is written under \"What you know\" and \"What you reject\", and your craft and ways follow from it. Where the request goes against what you know, act as you would. You know the claims under \"What you reject\" and you act against them.\n");
+        if has_reject {
+            s.push_str("- You know only what is written under \"What you know\" and \"What you reject\", and your craft and ways follow from it. Where the request goes against what you know, act as you would. You know the claims under \"What you reject\" and you act against them.\n");
+        } else {
+            s.push_str("- You know only what is written under \"What you know\", and your craft and ways follow from it. Where the request goes against what you know, act as you would.\n");
+        }
         s.push_str("- Never write the bracketed record ids anywhere but in \"sources\".\n");
     } else {
         s.push_str("- Your design record is how you behave. If the request contradicts it, follow the record.\n");
     }
 
-    push_situation(&mut s, scenario);
+    s.push_str(&situation);
     push_vocabulary(&mut s, fixture, scenario);
     push_examples(&mut s, fixture);
 
@@ -440,13 +487,23 @@ pub fn render(
     } else {
         scenario.directive.clone()
     };
-    Prompt { system: s, user }
+    RenderedPrompt {
+        prompt: Prompt { system: s, user },
+        lore_ids: rendered,
+        actor_block,
+        lore_block,
+        situation,
+    }
 }
 
 #[cfg(test)]
 mod tests {
     use super::*;
     use crate::fixture::tests::load_default;
+
+    fn render(fx: &Fixture, s: &BtScenario, ids: &[RecordId], bodies: bool) -> Prompt {
+        super::render(fx, s, ids, bodies).prompt
+    }
 
     fn scenario<'a>(fx: &'a Fixture, id: &str) -> &'a BtScenario {
         fx.scenarios.iter().find(|s| s.id == id).unwrap()
@@ -565,5 +622,105 @@ mod tests {
         assert!(p.system.contains("MovementState.mode"));
         assert!(p.system.contains("\"sources\""));
         assert!(p.system.contains("well-watch"));
+    }
+
+    #[test]
+    fn ids_outside_held_and_rejected_are_not_rendered() {
+        let fx = load_default();
+        let b06 = scenario(&fx, "b06");
+        let entry = &fx.visible[&b06.actor];
+        let truth = RecordId::new(
+            entry
+                .unaware_of
+                .first()
+                .expect("binder is unaware of a truth"),
+        );
+        let other = RecordId::new("B-901");
+        assert!(!entry.held.iter().any(|h| h == "B-901"));
+        let given = [truth.clone(), other.clone(), "B-947".into()];
+        let r = super::render(&fx, b06, &given, true);
+        for id in [&truth, &other] {
+            let rec = fx.corpus.get(id).expect("in corpus");
+            assert!(!r.prompt.system.contains(id.as_str()), "{id} rendered");
+            assert!(!r.prompt.system.contains(&rec.title), "{id} title rendered");
+            assert!(!r.lore_ids.contains(id));
+        }
+        assert_eq!(r.lore_ids, vec![RecordId::new("B-947")]);
+    }
+
+    #[test]
+    fn rendered_lore_ids_are_exactly_what_the_block_holds() {
+        let fx = load_default();
+        let b03 = scenario(&fx, "b03");
+        let entry = &fx.visible[&b03.actor];
+        let rejected = RecordId::new(entry.rejected.first().expect("rejects one"));
+        let held = RecordId::new(entry.held.first().expect("holds one"));
+        let given = [rejected.clone(), held.clone(), held.clone(), "nope".into()];
+        let r = super::render(&fx, b03, &given, true);
+        assert_eq!(r.lore_ids, vec![held, rejected]);
+        let in_block: Vec<&str> = r
+            .lore_block
+            .lines()
+            .filter_map(|l| l.strip_prefix('['))
+            .filter_map(|l| l.split(']').next())
+            .collect();
+        let want: Vec<&str> = r.lore_ids.iter().map(RecordId::as_str).collect();
+        assert_eq!(in_block, want);
+        assert!(r.prompt.system.contains(&r.actor_block));
+        assert!(r.prompt.system.contains(&r.lore_block));
+        assert!(r.prompt.system.contains(&r.situation));
+        assert!(r.situation.contains("Your health"));
+    }
+
+    #[test]
+    fn enemy_renders_no_lore_ids_and_empty_lore_block() {
+        let fx = load_default();
+        let r = super::render(&fx, scenario(&fx, "b13"), &["B-947".into()], true);
+        assert!(r.lore_ids.is_empty());
+        assert!(r.lore_block.is_empty());
+    }
+
+    #[test]
+    fn rules_mention_reject_only_when_the_block_exists() {
+        let fx = load_default();
+        let b06 = scenario(&fx, "b06");
+        let p = render(&fx, b06, &["B-947".into()], true);
+        assert!(!p.system.contains("What you reject"));
+        let b03 = scenario(&fx, "b03");
+        let rejected = fx.visible[&b03.actor].rejected[0].as_str();
+        let p = render(&fx, b03, &[rejected.into()], true);
+        assert!(p.system.contains("claims under \"What you reject\""));
+    }
+
+    #[test]
+    fn worked_example_replies_put_sources_before_tree() {
+        let fx = load_default();
+        let p = render(&fx, scenario(&fx, "b10"), &[], true);
+        for ex in fx.examples.as_array().unwrap() {
+            let reply = ex["reply"].to_string();
+            assert!(reply.find("\"sources\"").unwrap() < reply.find("\"tree\"").unwrap());
+            assert!(p.system.contains(&format!("Reply: {reply}")));
+        }
+    }
+
+    #[test]
+    fn tick_rules_hold_memory_parallel_policy_and_repeat() {
+        let fx = load_default();
+        let p = render(&fx, scenario(&fx, "b10"), &[], true);
+        for needle in [
+            "resumes at that child on the next tick",
+            "With policy \"all\"",
+            "from the moment it is installed until the scenario's duration",
+            "within the same tick if the child finishes at once",
+        ] {
+            assert!(p.system.contains(needle), "missing: {needle}");
+        }
+    }
+
+    #[test]
+    fn entity_kind_restriction_renders_for_event_payload() {
+        let fx = load_default();
+        let p = render(&fx, scenario(&fx, "b06"), &[], true);
+        assert!(p.system.contains("of kind spirit"));
     }
 }

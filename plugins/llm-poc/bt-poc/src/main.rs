@@ -9,7 +9,7 @@ mod prompt;
 
 use std::path::PathBuf;
 
-use anyhow::{anyhow, Context};
+use anyhow::anyhow;
 use clap::{Parser, Subcommand};
 use theos_ai::RecordId;
 
@@ -62,19 +62,17 @@ fn main() -> anyhow::Result<()> {
                 .find(|s| s.id == scenario)
                 .ok_or_else(|| anyhow!("no scenario `{scenario}`"))?;
             let ids: Vec<RecordId> = if ids.len() == 1 && ids[0] == "all" {
-                let e = fx
-                    .visible
-                    .get(&s.actor)
-                    .with_context(|| format!("`{}` has no lore", s.actor))?;
-                e.held
-                    .iter()
-                    .chain(&e.rejected)
-                    .map(RecordId::new)
-                    .collect()
+                fx.visible.get(&s.actor).map_or_else(Vec::new, |e| {
+                    e.held
+                        .iter()
+                        .chain(&e.rejected)
+                        .map(RecordId::new)
+                        .collect()
+                })
             } else {
                 ids.iter().map(RecordId::new).collect()
             };
-            let p = prompt::render(&fx, s, &ids, true);
+            let p = prompt::render(&fx, s, &ids, true).prompt;
             println!("=== system ===\n{}\n=== user ===\n{}", p.system, p.user);
         }
     }
