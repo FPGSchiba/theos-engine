@@ -501,4 +501,14 @@ Then (controller, per the owner's process): whole-branch review by a fresh revie
 
 ## Spike results
 
-_(filled in by Task 1)_
+Run 2026-11-13 on the RTX 5080 (16 GB, driver 610.88), CUDA 13.5, `llama-cpp-2` 0.1.161, release build (CUDA arch 120, first build 4 min 05 s). Models from `D:\Projects\theos-engine\models\`.
+
+| Check | Result |
+|---|---|
+| Qwen3.5-4B Q4_K_M load | 1.4 s; `n_params` = 4 205 751 296 (4.21 B, incl. the 0.64 B tied embedding table); `size` = 2 729 969 664 bytes |
+| Unconstrained, thinking off | prompt 34 tokens, time to first token 0.065 s, 167.7 tok/s; the `<think>\n\n</think>\n\n` prefix kept the model from thinking |
+| JSON schema via llguidance | time to first token 0.025 s, 162.1 tok/s; `sources` precedes `reply`: **true**; parses as JSON: **true** (llguidance allows whitespace between JSON tokens) |
+| Qwen3-Embedding-0.6B Q8_0 | dimension 1024; L2 norm 113.5 before normalising |
+| DXGI `CurrentUsage` | 0 MiB before load → 2828 MiB after the generator → 3830 MiB after the embedder: **DXGI sees CUDA allocations**, no NVML fallback needed |
+
+Note for the owner: llama.cpp counts the "4B" model at 4.21 B parameters, just above the PoC's "4B or less" limit.
