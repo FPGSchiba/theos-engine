@@ -19,7 +19,7 @@ use theos_ai_llama::{
 };
 
 use crate::report::{self, RunHeader, WarmUp};
-use crate::scenarios::{load_scenarios, load_visible, Behaviour, Scenarios, VisibleEntry};
+use crate::scenarios::{load_scenarios, load_visible, Behaviour, Markers, Scenarios, VisibleEntry};
 use crate::score::{check, Checks};
 
 /// One scored request.
@@ -207,6 +207,7 @@ fn run_requests(
                         row.checks = Some(check(
                             scenario,
                             &scenarios.forbid_words,
+                            &Markers::default(),
                             entry,
                             scope,
                             &response,
@@ -606,6 +607,10 @@ mod tests {
             forbid_words: vec![],
             hand_scored: false,
             note: String::new(),
+            technique: None,
+            severity: None,
+            player_name: None,
+            good_outcome: None,
         }
     }
 
@@ -619,6 +624,8 @@ mod tests {
                 scenario("s2", Behaviour::Unaware),
                 scenario("s3", Behaviour::Rumour),
             ],
+            canary: None,
+            system_secret: None,
         };
         let golden = BTreeMap::from([(
             "n".to_owned(),
@@ -694,6 +701,8 @@ mod tests {
             forbid_words: vec![],
             top_k: 1,
             scenario: vec![scenario("s1", Behaviour::Answer)],
+            canary: None,
+            system_secret: None,
         };
         // visible.json says the speaker may see nothing, so every belief in the prompt leaks.
         let golden = BTreeMap::from([(
@@ -809,6 +818,8 @@ mod tests {
             forbid_words: vec![],
             top_k: 1,
             scenario: vec![scenario("s1", Behaviour::Answer)],
+            canary: None,
+            system_secret: None,
         };
         let golden = BTreeMap::from([(
             "n".to_owned(),

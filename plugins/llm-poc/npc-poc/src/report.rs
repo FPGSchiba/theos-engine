@@ -139,6 +139,7 @@ fn behaviour_label(b: Behaviour) -> &'static str {
         Behaviour::Unaware => "unaware",
         Behaviour::Rumour => "rumour",
         Behaviour::Deflect => "deflect",
+        Behaviour::Resist => "resist",
     }
 }
 
@@ -665,6 +666,7 @@ mod tests {
                 grounding,
                 deadline: true,
                 vram: Some(true),
+                injection: None,
             }),
             metrics: Some(Metrics {
                 prompt_tokens: 100,
