@@ -17,7 +17,7 @@ use theos_ai_llama::{
 };
 
 /// Longest generation a test waits for before giving up.
-const MAX_PIECES: usize = 2000;
+const MAX_PIECES: usize = 4000;
 
 fn gpu() -> MutexGuard<'static, ()> {
     static GPU: Mutex<()> = Mutex::new(());
@@ -86,6 +86,46 @@ const B947: &str = "Old Grandfather Ember is an ancestor-spirit of the forge-cla
                     lends gladly, but he lends little. Apprentices learn on him because his \
                     Quarrel is gentle and he rarely turns.";
 
+/// One finished generation: the pieces' text by phase.
+struct Run {
+    thinking_pieces: usize,
+    /// Thinking pieces seen before the first Answer piece.
+    thinking_before_answer: usize,
+    answer: String,
+}
+
+/// Runs `request` to end of generation, failing the test past `MAX_PIECES` pieces.
+fn run_to_end(generator: &mut LlamaGenerator, request: &GenerationRequest<'_>) -> Run {
+    let mut decoder = generator.begin(request).expect("begin");
+    assert!(decoder.prompt_tokens() > 0);
+    let mut run = Run {
+        thinking_pieces: 0,
+        thinking_before_answer: 0,
+        answer: String::new(),
+    };
+    let mut answering = false;
+    for _ in 0..MAX_PIECES {
+        match decoder.next().expect("next") {
+            Some(piece) if piece.phase == Phase::Answer => {
+                if !answering {
+                    answering = true;
+                    run.thinking_before_answer = run.thinking_pieces;
+                }
+                run.answer.push_str(&piece.text);
+            }
+            Some(_) => {
+                assert!(!answering, "a Thinking piece came after an Answer piece");
+                run.thinking_pieces += 1;
+            }
+            None => return run,
+        }
+    }
+    panic!(
+        "no end of generation after {MAX_PIECES} pieces ({} thinking), answer so far: {}",
+        run.thinking_pieces, run.answer
+    );
+}
+
 #[test]
 fn generator_reply_parses_with_theos_ai_parse_reply() {
     let _gpu = gpu();
@@ -97,28 +137,19 @@ fn generator_reply_parses_with_theos_ai_parse_reply() {
         schema: &schema,
         thinking: Thinking::Off,
     };
-    let mut decoder = generator.begin(&request).expect("begin");
-    assert!(decoder.prompt_tokens() > 0);
-    let mut raw = String::new();
-    let mut finished = false;
-    for _ in 0..MAX_PIECES {
-        match decoder.next().expect("next") {
-            Some(piece) => {
-                assert_eq!(piece.phase, Phase::Answer, "thinking off emits only answer");
-                raw.push_str(&piece.text);
-            }
-            None => {
-                finished = true;
-                break;
-            }
-        }
-    }
+    let first = run_to_end(&mut generator, &request);
+    assert_eq!(first.thinking_pieces, 0, "thinking off emits only answer");
+    let reply = parse_reply(&first.answer, &ids)
+        .unwrap_or_else(|e| panic!("{e:?} from raw output {:?}", first.answer));
     assert!(
-        finished,
-        "no end of generation after {MAX_PIECES} pieces: {raw}"
+        !reply.text.trim().is_empty(),
+        "empty reply text in {:?}",
+        first.answer
     );
-    let reply = parse_reply(&raw, &ids);
-    assert!(reply.is_ok(), "{reply:?} from raw output {raw:?}");
+    // Seeded sampler plus the KV clear in `begin`: a second run on the same
+    // generator must reproduce the first exactly.
+    let second = run_to_end(&mut generator, &request);
+    assert_eq!(first.answer, second.answer, "second run differs from first");
 }
 
 #[test]
@@ -132,24 +163,14 @@ fn generator_emits_thinking_pieces_then_answer_when_thinking_on() {
         schema: &schema,
         thinking: Thinking::On,
     };
-    let mut decoder = generator.begin(&request).expect("begin");
-    let mut thinking = 0;
-    let mut answered = false;
-    for _ in 0..MAX_PIECES {
-        match decoder.next().expect("next") {
-            Some(piece) if piece.phase == Phase::Answer => {
-                answered = true;
-                break;
-            }
-            Some(_) => thinking += 1,
-            None => break,
-        }
-    }
+    let run = run_to_end(&mut generator, &request);
     assert!(
-        answered,
-        "no answer piece within {MAX_PIECES} pieces ({thinking} thinking)"
+        run.thinking_before_answer > 0,
+        "the answer came without any thinking piece"
     );
-    assert!(thinking > 0, "the answer came without any thinking piece");
+    let reply = parse_reply(&run.answer, &ids)
+        .unwrap_or_else(|e| panic!("{e:?} from raw answer {:?}", run.answer));
+    assert!(!reply.text.trim().is_empty(), "empty reply text");
 }
 
 #[test]
