@@ -90,7 +90,6 @@ fn generate(
         if n == 0 {
             ttft = start.elapsed().as_secs_f64();
         }
-        sampler.accept(tok);
         if vocab.is_eog(tok) {
             break;
         }
@@ -119,7 +118,7 @@ fn generate(
 fn main() -> Res<()> {
     let models: PathBuf = std::env::var_os("THEOS_MODELS_DIR")
         .map(PathBuf::from)
-        .unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../models"));
+        .unwrap_or_else(|| PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../models"));
     let backend = LlamaBackend::init()?;
 
     // 1. DXGI before any load.
@@ -164,7 +163,9 @@ fn main() -> Res<()> {
     let grammar = llguidance::api::TopLevelGrammar::from_json_schema(schema);
     let parser = factory.create_parser(grammar)?;
     let matcher = llguidance::Matcher::new(Ok(parser));
-    let mut guided: LlamaSampler = matcher.into();
+    let guided: LlamaSampler = matcher.into();
+    // The llguidance sampler only masks logits; chain a selector after it.
+    let mut guided = LlamaSampler::chain_simple([guided, LlamaSampler::greedy()]);
     let gprompt = "<|im_start|>system\nAnswer as JSON with the records you cite in \"sources\" and your answer in \"reply\". Records: [B-946] the forge; [B-945] the mine.<|im_end|>\n\
                    <|im_start|>user\nWhere does the ore come from?<|im_end|>\n\
                    <|im_start|>assistant\n<think>\n\n</think>\n\n";
