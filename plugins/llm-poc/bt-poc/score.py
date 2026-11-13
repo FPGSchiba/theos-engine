@@ -34,8 +34,13 @@ def main():
         s["actor_has_lore"] = s["actor"] in visible
 
     envelope = json.loads(Path(args.envelope).read_text(encoding="utf-8"))
-    res = check.score(envelope, scenarios[args.scenario], vocab, visible)
-    res.pop("timeline")
+    scenario = scenarios[args.scenario]  # an unknown id is a real error (nonzero exit)
+    try:
+        res = check.score(envelope, scenario, vocab, visible)
+        res.pop("timeline")
+    except Exception as e:  # check.py crashing on an odd tree is a result, not an error
+        res = {"gate": "fail", "gate_rule": "crash", "gate_message": f"{type(e).__name__}: {e}",
+               "nodes": None, "depth": None, "checks": [], "behaviour": None, "grounding": None}
     print(json.dumps(res))
     return 0
 

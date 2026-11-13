@@ -2,9 +2,13 @@
 //! checks only the harness can make (against the actual prompt).
 
 use std::collections::BTreeSet;
+use std::ffi::OsString;
+use std::io::Read;
 use std::path::Path;
-use std::process::Command;
+use std::process::{Command, Output, Stdio};
 use std::sync::atomic::{AtomicU32, Ordering};
+use std::sync::OnceLock;
+use std::time::{Duration, Instant};
 
 use anyhow::{anyhow, bail, Context};
 use serde::Deserialize;
@@ -18,6 +22,7 @@ use crate::fixture::VisibleEntry;
 pub struct PyScore {
     pub gate_pass: bool,
     pub gate_rule: Option<String>,
+    pub gate_message: Option<String>,
     pub nodes: Option<u32>,
     pub depth: Option<u32>,
     pub checks: Vec<bool>,
@@ -29,6 +34,7 @@ pub struct PyScore {
 struct Raw {
     gate: String,
     gate_rule: Option<String>,
+    gate_message: Option<String>,
     nodes: Option<u32>,
     depth: Option<u32>,
     #[serde(default)]
@@ -38,6 +44,107 @@ struct Raw {
 }
 
 static COUNTER: AtomicU32 = AtomicU32::new(0);
+
+/// How long one `score.py` run may take before it is killed.
+const SCORE_TIMEOUT: Duration = Duration::from_secs(30);
+
+/// A Python 3.11+ interpreter: the program and the arguments that precede the script.
+#[derive(Clone, Debug)]
+struct Python {
+    program: String,
+    pre: Vec<String>,
+}
+
+fn clip(bytes: &[u8]) -> String {
+    let s = String::from_utf8_lossy(bytes);
+    s.trim().chars().take(500).collect()
+}
+
+/// Picks the interpreter: `BT_POC_PYTHON` if given, else the first of `python`, `py -3`
+/// that runs and is Python 3.11+ (a Windows Store `python` stub spawns but fails).
+fn resolve_python(env: Option<String>) -> anyhow::Result<Python> {
+    let candidates = match env {
+        Some(p) => vec![Python {
+            program: p,
+            pre: vec![],
+        }],
+        None => vec![
+            Python {
+                program: "python".into(),
+                pre: vec![],
+            },
+            Python {
+                program: "py".into(),
+                pre: vec!["-3".into()],
+            },
+        ],
+    };
+    let probe = "import tomllib, sys; print(sys.version_info[:2] >= (3, 11))";
+    let mut tried = Vec::new();
+    for c in candidates {
+        let args: Vec<OsString> = ["-I", "-c", probe].iter().map(OsString::from).collect();
+        match run_python(&c, &args, Duration::from_secs(10)) {
+            Ok(o) if o.status.success() && clip(&o.stdout) == "True" => return Ok(c),
+            Ok(o) => tried.push(format!("{}: {}", c.program, clip(&o.stderr))),
+            Err(e) => tried.push(format!("{}: {e}", c.program)),
+        }
+    }
+    bail!(
+        "no usable Python 3.11+ found (set BT_POC_PYTHON to an interpreter); tried {}",
+        tried.join("; ")
+    )
+}
+
+fn python() -> anyhow::Result<&'static Python> {
+    static PY: OnceLock<Result<Python, String>> = OnceLock::new();
+    PY.get_or_init(|| {
+        resolve_python(std::env::var("BT_POC_PYTHON").ok()).map_err(|e| e.to_string())
+    })
+    .as_ref()
+    .map_err(|e| anyhow!("{e}"))
+}
+
+/// Runs `py` with `args`; kills it and errors when it outlives `timeout`.
+fn run_python(py: &Python, args: &[OsString], timeout: Duration) -> anyhow::Result<Output> {
+    let mut child = Command::new(&py.program)
+        .args(&py.pre)
+        .args(args)
+        .stdin(Stdio::null())
+        .stdout(Stdio::piped())
+        .stderr(Stdio::piped())
+        .spawn()
+        .with_context(|| format!("spawning `{}`", py.program))?;
+    fn drain(mut pipe: impl Read + Send + 'static) -> std::thread::JoinHandle<Vec<u8>> {
+        std::thread::spawn(move || {
+            let mut buf = Vec::new();
+            let _ = pipe.read_to_end(&mut buf);
+            buf
+        })
+    }
+    // invariant: stdout and stderr were requested as pipes above.
+    let out_t = drain(child.stdout.take().expect("piped stdout"));
+    let err_t = drain(child.stderr.take().expect("piped stderr"));
+    let deadline = Instant::now() + timeout;
+    let status = loop {
+        if let Some(status) = child.try_wait()? {
+            break status;
+        }
+        if Instant::now() >= deadline {
+            let _ = child.kill();
+            let _ = child.wait();
+            bail!(
+                "`{}` timed out after {timeout:?} and was killed",
+                py.program
+            );
+        }
+        std::thread::sleep(Duration::from_millis(10));
+    };
+    Ok(Output {
+        status,
+        stdout: out_t.join().unwrap_or_default(),
+        stderr: err_t.join().unwrap_or_default(),
+    })
+}
 
 /// Scores `envelope` for `scenario_id` by running `score.py` (isolated Python) over the
 /// fixture's `check.py`. `scenarios_file` may be any file of the scenarios.toml shape.
@@ -55,39 +162,34 @@ pub fn score_envelope(
     ));
     std::fs::write(&tmp, serde_json::to_vec(envelope)?)
         .with_context(|| format!("writing {}", tmp.display()))?;
-    let run = |program: &str, pre: &[&str]| {
-        Command::new(program)
-            .args(pre)
-            .arg("-I")
-            .arg("-B") // no __pycache__ inside the fixture
-            .arg(&script)
-            .arg("--fixture")
-            .arg(fixture_dir)
-            .arg("--scenarios")
-            .arg(scenarios_file)
-            .arg("--scenario")
-            .arg(scenario_id)
-            .arg(&tmp)
-            .output()
-    };
-    // `python` can be an unusable Windows Store stub; fall back to the `py` launcher.
-    let out = match std::env::var("BT_POC_PYTHON") {
-        Ok(p) => run(&p, &[]),
-        Err(_) => run("python", &[]).or_else(|_| run("py", &["-3"])),
-    };
+    let args: Vec<OsString> = vec![
+        "-I".into(),
+        "-B".into(), // no __pycache__ inside the fixture
+        script.into(),
+        "--fixture".into(),
+        fixture_dir.into(),
+        "--scenarios".into(),
+        scenarios_file.into(),
+        "--scenario".into(),
+        scenario_id.into(),
+        tmp.clone().into(),
+    ];
+    let out = python().and_then(|py| run_python(py, &args, SCORE_TIMEOUT));
     let _ = std::fs::remove_file(&tmp);
-    let out = out.context("running python score.py")?;
+    let out = out.context("running score.py")?;
     if !out.status.success() {
-        bail!(
-            "score.py failed: {}",
-            String::from_utf8_lossy(&out.stderr).trim()
-        );
+        bail!("score.py failed: {}", clip(&out.stderr));
     }
-    let raw: Raw = serde_json::from_slice(&out.stdout)
-        .map_err(|e| anyhow!("score.py printed unparsable output: {e}"))?;
+    let raw: Raw = serde_json::from_slice(&out.stdout).map_err(|e| {
+        anyhow!(
+            "score.py printed unparsable output ({e}): {}",
+            clip(&out.stdout)
+        )
+    })?;
     Ok(PyScore {
         gate_pass: raw.gate == "pass",
         gate_rule: raw.gate_rule,
+        gate_message: raw.gate_message,
         nodes: raw.nodes,
         depth: raw.depth,
         checks: raw.checks,
@@ -282,5 +384,63 @@ mod tests {
         };
         assert!(!leak(&[RecordId::new("h1"), RecordId::new("r1")], &entry));
         assert!(leak(&[RecordId::new("h1"), RecordId::new("x9")], &entry));
+    }
+
+    #[test]
+    fn resolver_names_the_variable_for_a_bogus_interpreter() {
+        let err = resolve_python(Some("definitely-not-python-xyz".into())).unwrap_err();
+        let msg = err.to_string();
+        assert!(msg.contains("BT_POC_PYTHON"), "{msg}");
+        assert!(msg.contains("definitely-not-python-xyz"), "{msg}");
+    }
+
+    #[test]
+    fn resolver_finds_a_working_python_by_default() {
+        let py = resolve_python(None).unwrap();
+        assert!(!py.program.is_empty());
+    }
+
+    #[test]
+    fn a_hanging_python_is_killed_at_the_deadline() {
+        let py = resolve_python(None).unwrap();
+        let args: Vec<OsString> = ["-I", "-c", "import time; time.sleep(30)"]
+            .iter()
+            .map(OsString::from)
+            .collect();
+        let start = Instant::now();
+        let err = run_python(&py, &args, Duration::from_secs(1)).unwrap_err();
+        assert!(err.to_string().contains("timed out"), "{err}");
+        assert!(start.elapsed() < Duration::from_secs(10));
+    }
+
+    #[test]
+    fn check_py_crash_becomes_a_crash_gate_row() {
+        // `check` is a list: passes the shape check, then `list in dict` raises TypeError.
+        let envelope = json!({"sources": [], "tree": {"name": "n", "root":
+            {"type": "Condition", "check": ["x"], "params": {}}}});
+        let s = score_envelope(
+            &fixture_dir(),
+            &fixture_dir().join("scenarios.toml"),
+            "b01",
+            &envelope,
+        )
+        .unwrap();
+        assert!(!s.gate_pass);
+        assert_eq!(s.gate_rule.as_deref(), Some("crash"));
+        assert!(s.gate_message.unwrap().contains("TypeError"));
+        assert!(s.checks.is_empty() && s.behaviour.is_none());
+    }
+
+    #[test]
+    fn an_unknown_scenario_id_is_a_real_error() {
+        let r = reference("b01-good");
+        let err = score_envelope(
+            &fixture_dir(),
+            &fixture_dir().join("scenarios.toml"),
+            "nope",
+            &r["reply"],
+        )
+        .unwrap_err();
+        assert!(err.to_string().contains("score.py failed"), "{err}");
     }
 }
