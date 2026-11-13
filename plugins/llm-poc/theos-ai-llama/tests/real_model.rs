@@ -237,24 +237,51 @@ fn generator_closes_thinking_at_the_budget() {
     let mut generator = generator();
     let (prompt, ids) = (prompt(), ids());
     let schema = reply_schema(&ids);
+    // 8 pieces: the model cannot close its thinking naturally that fast, so
+    // the forced close must have fired.
+    let budget = 8;
     let request = GenerationRequest {
         prompt: &prompt,
         schema: Some(&schema),
         thinking: Thinking::On,
-        thinking_budget: Some(64),
+        thinking_budget: Some(budget),
     };
     let run = run_to_end(&mut generator, &request);
-    assert!(
-        run.thinking_pieces <= 64,
-        "{} thinking pieces",
-        run.thinking_pieces
+    assert_eq!(
+        run.thinking_pieces, budget as usize,
+        "the forced close did not fire at the budget"
     );
     assert!(
-        run.thinking_before_answer > 0,
-        "no thinking before the answer"
+        !run.answer.contains("</think>"),
+        "forced tokens leaked into the answer: {:?}",
+        run.answer
     );
     parse_reply(&run.answer, &ids)
         .unwrap_or_else(|e| panic!("{e:?} from raw answer {:?}", run.answer));
+}
+
+#[test]
+fn generator_without_schema_closes_thinking_at_the_budget() {
+    let _gpu = gpu();
+    let mut generator = generator();
+    let prompt = Prompt {
+        system: "Answer in one short sentence.".into(),
+        user: "What colour is a clear daytime sky?".into(),
+    };
+    let request = GenerationRequest {
+        prompt: &prompt,
+        schema: None,
+        thinking: Thinking::On,
+        thinking_budget: Some(8),
+    };
+    let run = run_to_end(&mut generator, &request);
+    assert_eq!(run.thinking_pieces, 8, "the forced close did not fire");
+    assert!(!run.answer.trim().is_empty(), "empty unconstrained answer");
+    assert!(
+        !run.answer.contains("</think>"),
+        "forced tokens leaked into the answer: {:?}",
+        run.answer
+    );
 }
 
 #[test]

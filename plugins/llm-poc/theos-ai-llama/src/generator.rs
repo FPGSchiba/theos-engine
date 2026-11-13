@@ -407,6 +407,7 @@ impl LlamaDecoder<'_> {
     }
 
     /// Whether the thinking budget is used up without a natural close.
+    /// `Some(0)` skips thinking entirely: the block is closed before the first token.
     fn budget_spent(&self) -> bool {
         self.phase == Phase::Thinking
             && self
@@ -627,18 +628,20 @@ mod tests {
         assert_eq!(m.profile.answer_sampling_on, None);
         assert_eq!(m.profile.n_ctx, None);
         let parsed = ModelsFile::parse(
-            "embedder = \"e.gguf\"
+            r#"
+embedder = "e.gguf"
+
 [[model]]
-name = \"m\"
-file = \"m.gguf\"
-             thinking_off_prefix = \"\"
-thinking_on_prefix = \"\"
+name = "m"
+file = "m.gguf"
+thinking_off_prefix = ""
+thinking_on_prefix = ""
 seed = 1
 n_ctx = 16384
-             sampling_off = { temperature = 0.7, top_p = 0.8, top_k = 20, presence_penalty = 0.0 }
-             sampling_on = { temperature = 1.0, top_p = 0.95, top_k = 20, presence_penalty = 0.0 }
-             answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_penalty = 0.0 }
-",
+sampling_off = { temperature = 0.7, top_p = 0.8, top_k = 20, presence_penalty = 0.0 }
+sampling_on = { temperature = 1.0, top_p = 0.95, top_k = 20, presence_penalty = 0.0 }
+answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_penalty = 0.0 }
+"#,
         )
         .unwrap();
         assert_eq!(parsed.models[0].profile.n_ctx, Some(16384));
