@@ -192,6 +192,42 @@ mod tests {
         }
     }
 
+    /// Embeds documents with vectors of differing length.
+    struct Ragged;
+
+    impl Embedder for Ragged {
+        fn embed(&mut self, inputs: &[EmbedInput<'_>]) -> Result<Vec<Vec<f32>>, EmbedError> {
+            Ok((0..inputs.len()).map(|i| vec![1.0; i + 1]).collect())
+        }
+    }
+
+    /// Answers documents normally but returns no vector for a query.
+    struct NoQueryAnswer;
+
+    impl Embedder for NoQueryAnswer {
+        fn embed(&mut self, inputs: &[EmbedInput<'_>]) -> Result<Vec<Vec<f32>>, EmbedError> {
+            match inputs {
+                [EmbedInput::Query(_)] => Ok(Vec::new()),
+                _ => Ok(inputs.iter().map(|_| vec![1.0, 0.0]).collect()),
+            }
+        }
+    }
+
+    /// Answers documents with 2 dimensions and queries with 3.
+    struct WrongQueryDims;
+
+    impl Embedder for WrongQueryDims {
+        fn embed(&mut self, inputs: &[EmbedInput<'_>]) -> Result<Vec<Vec<f32>>, EmbedError> {
+            Ok(inputs
+                .iter()
+                .map(|i| match i {
+                    EmbedInput::Query(_) => vec![1.0; 3],
+                    EmbedInput::Document(_) => vec![1.0; 2],
+                })
+                .collect())
+        }
+    }
+
     fn built() -> (Retriever, Speaker) {
         let (c, s) = mini();
         (
@@ -252,15 +288,20 @@ mod tests {
     fn select_retrieved_never_returns_invisible_belief_even_when_most_similar() {
         let (r, s) = built();
         let mut e = FakeEmbedder::default();
-        let scope = LoreScope::Retrieved { top_k: 10 };
+        let scope = LoreScope::Retrieved { top_k: 1 };
+        // B-3's exact title: it is the best match among all beliefs, so a
+        // rank-then-filter implementation would return nothing.
         let out = r.select(&s, "title B-3", scope, &mut e).unwrap();
-        assert!(!ids(&out).contains(&"B-3"));
-        assert_eq!(out.len(), 2);
+        assert_eq!(out.len(), 1);
+        assert!(matches!(ids(&out)[0], "B-1" | "B-4"));
     }
 
     #[test]
     fn select_retrieved_breaks_ties_by_id() {
-        let (c, s) = mini();
+        let (c, mut s) = mini();
+        // B-1 rejected and B-4 held: visible order (held, then rejected) is
+        // ["B-4", "B-1"], the reverse of id order.
+        s.lens.rejects = vec![RecordId::new("B-1")];
         let mut e = Scripted { nan_for: None };
         let r = Retriever::build(c, &mut e).unwrap();
         let scope = LoreScope::Retrieved { top_k: 2 };
@@ -296,5 +337,45 @@ mod tests {
         let scope = LoreScope::Retrieved { top_k: 0 };
         assert!(r.select(&s, "q", scope, &mut e).unwrap().is_empty());
         assert_eq!(e.calls(), 0);
+    }
+
+    #[test]
+    fn build_errors_when_embedder_returns_vectors_of_differing_dimensions() {
+        let (c, _) = mini();
+        let err = Retriever::build(c, &mut Ragged).unwrap_err();
+        assert!(matches!(
+            err,
+            EmbedError::DimensionMismatch { expected: 1, .. }
+        ));
+    }
+
+    #[test]
+    fn select_errors_when_embedder_returns_no_vector_for_the_question() {
+        let (c, s) = mini();
+        let r = Retriever::build(c, &mut NoQueryAnswer).unwrap();
+        let scope = LoreScope::Retrieved { top_k: 1 };
+        let err = r.select(&s, "q", scope, &mut NoQueryAnswer).unwrap_err();
+        assert_eq!(
+            err,
+            EmbedError::CountMismatch {
+                expected: 1,
+                got: 0
+            }
+        );
+    }
+
+    #[test]
+    fn select_errors_when_query_dimension_differs_from_document_dimension() {
+        let (c, s) = mini();
+        let r = Retriever::build(c, &mut WrongQueryDims).unwrap();
+        let scope = LoreScope::Retrieved { top_k: 1 };
+        let err = r.select(&s, "q", scope, &mut WrongQueryDims).unwrap_err();
+        assert_eq!(
+            err,
+            EmbedError::DimensionMismatch {
+                expected: 2,
+                got: 3
+            }
+        );
     }
 }
