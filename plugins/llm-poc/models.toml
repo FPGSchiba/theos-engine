@@ -1,0 +1,12 @@
+# Models for the NPC PoC harness. File names resolve against THEOS_MODELS_DIR
+# (default: <repo>/models). VRAM is read through DXGI (local segment, CurrentUsage).
+embedder = "Qwen3-Embedding-0.6B-Q8_0.gguf"
+
+[[model]]
+name = "Qwen3.5-4B Q4_K_M"
+file = "Qwen3.5-4B-Q4_K_M.gguf"
+thinking_off_prefix = "<think>\n\n</think>\n\n"
+thinking_on_prefix = "<think>\n"
+seed = 42
+sampling_off = { temperature = 0.7, top_p = 0.8, top_k = 20, presence_penalty = 1.5 }
+sampling_on = { temperature = 1.0, top_p = 0.95, top_k = 20, presence_penalty = 1.5 }

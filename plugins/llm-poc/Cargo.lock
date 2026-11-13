@@ -1083,8 +1083,12 @@ version = "0.1.0"
 dependencies = [
  "llama-cpp-2",
  "llguidance",
+ "serde",
  "serde_json",
+ "theos-ai",
+ "thiserror 1.0.69",
  "toktrie",
+ "toml 0.8.23",
  "windows",
 ]
 
