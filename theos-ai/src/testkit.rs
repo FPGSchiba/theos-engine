@@ -140,7 +140,20 @@ pub struct Script {
 #[derive(Default)]
 struct ScriptedState {
     scripts: VecDeque<Script>,
-    requests: Vec<(Prompt, Value, Thinking)>,
+    requests: Vec<ScriptedRequest>,
+}
+
+/// One request a [`ScriptedBackend`] received.
+#[derive(Clone, Debug)]
+pub struct ScriptedRequest {
+    /// The prompt.
+    pub prompt: Prompt,
+    /// The schema, if any.
+    pub schema: Option<Value>,
+    /// Whether thinking was enabled.
+    pub thinking: Thinking,
+    /// The thinking budget, if any.
+    pub thinking_budget: Option<u32>,
 }
 
 /// A backend that replays [`Script`]s and advances a [`FakeClock`] as it goes.
@@ -167,8 +180,8 @@ impl ScriptedBackend {
         lock(&self.state).scripts.push_back(script);
     }
 
-    /// Every request received so far, as `(prompt, schema, thinking)`.
-    pub fn requests(&self) -> Vec<(Prompt, Value, Thinking)> {
+    /// Every request received so far.
+    pub fn requests(&self) -> Vec<ScriptedRequest> {
         lock(&self.state).requests.clone()
     }
 
@@ -208,11 +221,12 @@ impl Backend for ScriptedBackend {
         request: &GenerationRequest<'_>,
     ) -> Result<Box<dyn Decoder + 'a>, BackendError> {
         let mut state = lock(&self.state);
-        state.requests.push((
-            request.prompt.clone(),
-            request.schema.clone(),
-            request.thinking,
-        ));
+        state.requests.push(ScriptedRequest {
+            prompt: request.prompt.clone(),
+            schema: request.schema.cloned(),
+            thinking: request.thinking,
+            thinking_budget: request.thinking_budget,
+        });
         let script = state
             .scripts
             .pop_front()

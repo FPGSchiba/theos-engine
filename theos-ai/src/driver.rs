@@ -4,11 +4,13 @@
 //! token by token under a deadline and a token cap, and returns the parsed
 //! reply together with the [`Metrics`] of the run.
 
-use std::time::Duration;
+use std::time::{Duration, Instant};
+
+use serde_json::Value;
 
 use crate::backend::{Backend, BackendError, GenerationRequest, Phase, Thinking};
 use crate::clock::Clock;
-use crate::context::{ContextOptions, assemble};
+use crate::context::{ContextOptions, Prompt, assemble};
 use crate::embed::{EmbedError, Embedder};
 use crate::lore::{Corpus, RecordId, Speaker};
 use crate::memory::MemoryProbe;
@@ -81,6 +83,36 @@ pub struct NpcRequest {
     pub thinking: Thinking,
     /// Time allowed from the start of the request until generation is cut off.
     pub deadline: Duration,
+}
+
+/// One prompt to run through the model as it stands, with no retrieval and no
+/// reply parsing.
+#[derive(Clone, Debug)]
+pub struct GenerateJob {
+    /// The prompt to complete.
+    pub prompt: Prompt,
+    /// JSON schema the output must satisfy; `None` leaves it unconstrained.
+    pub schema: Option<Value>,
+    /// Whether the model may think first.
+    pub thinking: Thinking,
+    /// The most thinking tokens before the backend must close the thinking
+    /// block itself; `None` is no limit.
+    pub thinking_budget: Option<u32>,
+    /// Time allowed from the start of the call until generation is cut off.
+    pub deadline: Duration,
+    /// Most answer-phase tokens to generate.
+    pub token_cap: u32,
+}
+
+/// The outcome of one [`Npc::generate`] call.
+#[derive(Clone, Debug, PartialEq)]
+pub struct GenerateResponse {
+    /// The answer-phase text exactly as generated.
+    pub raw: String,
+    /// The thinking-phase text exactly as generated.
+    pub thinking: String,
+    /// What the run measured; lore ids are empty and retrieval is zero.
+    pub metrics: Metrics,
 }
 
 /// The outcome of one [`Npc::answer`] call.
@@ -197,7 +229,7 @@ impl Npc {
     /// the backend fails (a full context window excepted).
     pub fn answer(&mut self, request: &NpcRequest) -> Result<NpcResponse, NpcError> {
         let t0 = self.clock.now();
-        let mut vram_peak = self.probe.vram_bytes();
+        let vram_start = self.probe.vram_bytes();
 
         let speaker = self
             .speakers
@@ -219,25 +251,126 @@ impl Npc {
             &self.options,
         );
 
+        let out = self.run_loop(
+            &ctx.prompt,
+            Some(&ctx.schema),
+            request.thinking,
+            None,
+            request.deadline,
+            ANSWER_TOKEN_CAP,
+            t0,
+            vram_start,
+        )?;
+
+        let reply = if out.stop == StopReason::Finished {
+            parse_reply(&out.raw, &ctx.lore_ids)
+        } else {
+            Err(ReplyError::Unfinished(out.stop))
+        };
+        let cited_ids = reply
+            .as_ref()
+            .map(|r| r.sources.clone())
+            .unwrap_or_default();
+
+        let mut metrics = out.metrics(retrieval);
+        metrics.context_ids = ctx.lore_ids;
+        metrics.cited_ids = cited_ids;
+        Ok(NpcResponse {
+            reply,
+            raw: out.raw,
+            thinking: out.thinking,
+            metrics,
+        })
+    }
+
+    /// Runs one prompt through the model with no retrieval and no parsing.
+    ///
+    /// Generation stops at the job's deadline or token cap; the response says
+    /// why in `metrics.stop`. `metrics.context_ids` and `cited_ids` are empty
+    /// and `metrics.retrieval` is zero.
+    ///
+    /// # Errors
+    ///
+    /// [`NpcError::Backend`] when the backend fails (a full context window
+    /// excepted).
+    pub fn generate(&mut self, job: &GenerateJob) -> Result<GenerateResponse, NpcError> {
+        let t0 = self.clock.now();
+        let vram_start = self.probe.vram_bytes();
+        let out = self.run_loop(
+            &job.prompt,
+            job.schema.as_ref(),
+            job.thinking,
+            job.thinking_budget,
+            job.deadline,
+            job.token_cap,
+            t0,
+            vram_start,
+        )?;
+        let metrics = out.metrics(Duration::ZERO);
+        Ok(GenerateResponse {
+            raw: out.raw,
+            thinking: out.thinking,
+            metrics,
+        })
+    }
+
+    /// Ranks the lore a speaker may be shown for `query`, as
+    /// [`Retriever::select`] does.
+    ///
+    /// # Errors
+    ///
+    /// [`NpcError::UnknownSpeaker`] for an unsupplied speaker and
+    /// [`NpcError::Embed`] when embedding the query fails.
+    pub fn select(
+        &mut self,
+        speaker: &RecordId,
+        query: &str,
+        scope: LoreScope,
+    ) -> Result<Vec<RecordId>, NpcError> {
+        let speaker = self
+            .speakers
+            .iter()
+            .find(|s| &s.id == speaker)
+            .ok_or_else(|| NpcError::UnknownSpeaker(speaker.clone()))?;
+        Ok(self
+            .retriever
+            .select(speaker, query, scope, self.embedder.as_mut())?)
+    }
+
+    /// Begins a generation and drives it token by token until it finishes, the
+    /// deadline passes or the answer-token cap is reached.
+    #[allow(clippy::too_many_arguments)]
+    fn run_loop(
+        &mut self,
+        prompt: &Prompt,
+        schema: Option<&Value>,
+        thinking: Thinking,
+        thinking_budget: Option<u32>,
+        deadline: Duration,
+        token_cap: u32,
+        t0: Instant,
+        mut vram_peak: Option<u64>,
+    ) -> Result<LoopOutcome, NpcError> {
         let mut decoder = self.backend.begin(&GenerationRequest {
-            prompt: &ctx.prompt,
-            schema: &ctx.schema,
-            thinking: request.thinking,
+            prompt,
+            schema,
+            thinking,
+            thinking_budget,
         })?;
         vram_peak = vram_peak.max(self.probe.vram_bytes());
 
         let mut raw = String::new();
-        let mut thinking = String::new();
+        let mut thinking_text = String::new();
         let mut thinking_tokens = 0_u32;
         let mut answer_tokens = 0_u32;
         let mut first_token = None;
         let mut first_answer_token = None;
         let mut last_token = None;
         let stop = loop {
-            if self.clock.now().duration_since(t0) >= request.deadline {
+            if self.clock.now().duration_since(t0) >= deadline {
                 break StopReason::Deadline;
             }
-            if answer_tokens >= ANSWER_TOKEN_CAP {
+            if answer_tokens >= token_cap {
                 break StopReason::TokenCap;
             }
             match decoder.next() {
@@ -251,7 +384,7 @@ impl Npc {
                     match piece.phase {
                         Phase::Thinking => {
                             thinking_tokens += 1;
-                            thinking.push_str(&piece.text);
+                            thinking_text.push_str(&piece.text);
                         }
                         Phase::Answer => {
                             answer_tokens += 1;
@@ -281,35 +414,54 @@ impl Npc {
             _ => 0.0,
         };
 
-        let reply = if stop == StopReason::Finished {
-            parse_reply(&raw, &ctx.lore_ids)
-        } else {
-            Err(ReplyError::Unfinished(stop))
-        };
-        let cited_ids = reply
-            .as_ref()
-            .map(|r| r.sources.clone())
-            .unwrap_or_default();
-
-        Ok(NpcResponse {
-            reply,
+        Ok(LoopOutcome {
             raw,
-            thinking,
-            metrics: Metrics {
-                prompt_tokens,
-                thinking_tokens,
-                answer_tokens,
-                retrieval,
-                time_to_first_token: first_token.map(|t| t.duration_since(t0)),
-                time_to_first_answer_token: first_answer_token.map(|t| t.duration_since(t0)),
-                tokens_per_second,
-                total,
-                vram_peak_bytes: vram_peak,
-                context_ids: ctx.lore_ids,
-                cited_ids,
-                stop,
-            },
+            thinking: thinking_text,
+            stop,
+            prompt_tokens,
+            thinking_tokens,
+            answer_tokens,
+            time_to_first_token: first_token.map(|t| t.duration_since(t0)),
+            time_to_first_answer_token: first_answer_token.map(|t| t.duration_since(t0)),
+            tokens_per_second,
+            total,
+            vram_peak_bytes: vram_peak,
         })
+    }
+}
+
+/// What [`Npc::run_loop`] produced.
+struct LoopOutcome {
+    raw: String,
+    thinking: String,
+    stop: StopReason,
+    prompt_tokens: u32,
+    thinking_tokens: u32,
+    answer_tokens: u32,
+    time_to_first_token: Option<Duration>,
+    time_to_first_answer_token: Option<Duration>,
+    tokens_per_second: f32,
+    total: Duration,
+    vram_peak_bytes: Option<u64>,
+}
+
+impl LoopOutcome {
+    /// The run's metrics, with no lore ids; the caller fills those in.
+    fn metrics(&self, retrieval: Duration) -> Metrics {
+        Metrics {
+            prompt_tokens: self.prompt_tokens,
+            thinking_tokens: self.thinking_tokens,
+            answer_tokens: self.answer_tokens,
+            retrieval,
+            time_to_first_token: self.time_to_first_token,
+            time_to_first_answer_token: self.time_to_first_answer_token,
+            tokens_per_second: self.tokens_per_second,
+            total: self.total,
+            vram_peak_bytes: self.vram_peak_bytes,
+            context_ids: Vec::new(),
+            cited_ids: Vec::new(),
+            stop: self.stop,
+        }
     }
 }
 
@@ -317,6 +469,7 @@ impl Npc {
 mod tests {
     use super::*;
     use crate::backend::Piece;
+    use crate::context::Prompt;
     use crate::test_support::mini;
     use crate::testkit::{FakeClock, FakeEmbedder, FakeProbe, Script, ScriptedBackend};
 
@@ -436,9 +589,10 @@ mod tests {
         let resp = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
         let requests = r.backend.requests();
         assert_eq!(requests.len(), 1);
-        let (prompt, schema, thinking) = &requests[0];
-        assert_eq!(*thinking, Thinking::On);
-        assert_eq!(prompt.user, "who?");
+        let sent = &requests[0];
+        assert_eq!(sent.thinking, Thinking::On);
+        assert_eq!(sent.prompt.user, "who?");
+        let schema = sent.schema.as_ref().unwrap();
         let listed = schema["properties"]["sources"]["items"]["enum"]
             .as_array()
             .unwrap();
@@ -663,6 +817,124 @@ mod tests {
         assert!(matches!(resp.reply, Err(ReplyError::Malformed(_))));
         assert_eq!(resp.metrics.stop, StopReason::Finished);
         assert!(resp.metrics.cited_ids.is_empty());
+    }
+
+    fn job(pieces: Vec<Piece>) -> (Rig, GenerateJob) {
+        let r = rig(vec![script(MS, MS, pieces)]);
+        let job = GenerateJob {
+            prompt: Prompt {
+                system: "sys".into(),
+                user: "usr".into(),
+            },
+            schema: None,
+            thinking: Thinking::Off,
+            thinking_budget: None,
+            deadline: DEFAULT_DEADLINE,
+            token_cap: ANSWER_TOKEN_CAP,
+        };
+        (r, job)
+    }
+
+    #[test]
+    fn generate_runs_a_prompt_without_retrieval_or_parsing() {
+        let (mut r, j) = job(spelled("free text"));
+        let resp = r.npc.generate(&j).unwrap();
+        assert_eq!(resp.raw, "free text");
+        assert!(resp.metrics.context_ids.is_empty());
+        assert!(resp.metrics.cited_ids.is_empty());
+        assert_eq!(resp.metrics.retrieval, Duration::ZERO);
+        assert_eq!(resp.metrics.stop, StopReason::Finished);
+        assert_eq!(resp.metrics.prompt_tokens, 42);
+    }
+
+    #[test]
+    fn generate_passes_none_schema_to_the_backend() {
+        let (mut r, j) = job(spelled("x"));
+        r.npc.generate(&j).unwrap();
+        let requests = r.backend.requests();
+        assert_eq!(requests[0].schema, None);
+        assert_eq!(requests[0].prompt.system, "sys");
+    }
+
+    #[test]
+    fn generate_passes_the_thinking_budget_to_the_backend() {
+        let (mut r, mut j) = job(spelled("x"));
+        j.thinking = Thinking::On;
+        j.thinking_budget = Some(77);
+        j.schema = Some(serde_json::json!({"type": "string"}));
+        r.npc.generate(&j).unwrap();
+        let requests = r.backend.requests();
+        assert_eq!(requests[0].thinking_budget, Some(77));
+        assert_eq!(requests[0].thinking, Thinking::On);
+        assert_eq!(
+            requests[0].schema,
+            Some(serde_json::json!({"type": "string"}))
+        );
+    }
+
+    #[test]
+    fn answer_passes_no_thinking_budget() {
+        let mut r = rig(vec![script(MS, MS, spelled(GOOD))]);
+        r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        assert_eq!(r.backend.requests()[0].thinking_budget, None);
+    }
+
+    #[test]
+    fn generate_honours_its_token_cap() {
+        let (mut r, mut j) = job(answer_pieces(30));
+        j.token_cap = 10;
+        let resp = r.npc.generate(&j).unwrap();
+        assert_eq!(resp.metrics.stop, StopReason::TokenCap);
+        assert_eq!(resp.metrics.answer_tokens, 10);
+    }
+
+    #[test]
+    fn generate_stops_at_the_deadline() {
+        let mut r = rig(vec![script(ms(100), ms(20), answer_pieces(400))]);
+        let j = GenerateJob {
+            prompt: Prompt {
+                system: String::new(),
+                user: String::new(),
+            },
+            schema: None,
+            thinking: Thinking::Off,
+            thinking_budget: None,
+            deadline: Duration::from_secs(3),
+            token_cap: 1000,
+        };
+        let resp = r.npc.generate(&j).unwrap();
+        assert_eq!(resp.metrics.stop, StopReason::Deadline);
+        assert_eq!(resp.metrics.answer_tokens, 145);
+        assert_eq!(resp.metrics.total, Duration::from_secs(3));
+    }
+
+    #[test]
+    fn select_returns_the_filtered_ranked_ids() {
+        let (corpus, speaker) = mini();
+        let retriever = Retriever::build(corpus, &mut FakeEmbedder::default()).unwrap();
+        let mut r = rig(vec![]);
+        for scope in [
+            LoreScope::None,
+            LoreScope::AllVisible,
+            LoreScope::Retrieved { top_k: 2 },
+        ] {
+            let expected = retriever
+                .select(&speaker, "who?", scope, &mut FakeEmbedder::default())
+                .unwrap();
+            let got = r.npc.select(&speaker.id, "who?", scope).unwrap();
+            assert_eq!(got, expected);
+        }
+    }
+
+    #[test]
+    fn select_rejects_an_unknown_speaker() {
+        let mut r = rig(vec![]);
+        assert_eq!(
+            r.npc
+                .select(&RecordId::new("ghost"), "who?", LoreScope::AllVisible)
+                .unwrap_err(),
+            NpcError::UnknownSpeaker(RecordId::new("ghost"))
+        );
     }
 
     #[test]

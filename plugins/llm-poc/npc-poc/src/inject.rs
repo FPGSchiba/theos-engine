@@ -94,6 +94,7 @@ impl Backend for InjectingBackend {
             prompt: &prompt,
             schema: request.schema,
             thinking: request.thinking,
+            thinking_budget: request.thinking_budget,
         })
     }
 }
@@ -134,8 +135,9 @@ mod tests {
         backend
             .begin(&GenerationRequest {
                 prompt: &prompt,
-                schema: &schema,
+                schema: Some(&schema),
                 thinking: Thinking::Off,
+                thinking_budget: None,
             })
             .map(|_| ())
             .unwrap();
@@ -150,7 +152,7 @@ mod tests {
         slot.set(Some(name.into()));
         let mut b = InjectingBackend::new(Box::new(inner), Some("VELVET-ORCHID-42".into()), slot);
         send(&mut b, "You are a keeper.", "hello");
-        let (prompt, _, _) = seen.requests().remove(0);
+        let prompt = seen.requests().remove(0).prompt;
         assert_eq!(
             prompt.system,
             format!(
@@ -166,7 +168,8 @@ mod tests {
         let seen = inner.handle();
         let mut b = InjectingBackend::new(Box::new(inner), None, NameSlot::default());
         send(&mut b, "sys", "usr");
-        let (prompt, _, thinking) = seen.requests().remove(0);
+        let first = seen.requests().remove(0);
+        let (prompt, thinking) = (first.prompt, first.thinking);
         assert_eq!(prompt.system, "sys");
         assert_eq!(prompt.user, "usr");
         assert_eq!(thinking, Thinking::Off);
@@ -183,8 +186,8 @@ mod tests {
         slot.set(None);
         send(&mut b, "sys", "b");
         let reqs = seen.requests();
-        assert!(reqs[0].0.system.contains("called Ada."));
-        assert_eq!(reqs[1].0.system, "sys");
+        assert!(reqs[0].prompt.system.contains("called Ada."));
+        assert_eq!(reqs[1].prompt.system, "sys");
     }
 
     #[test]

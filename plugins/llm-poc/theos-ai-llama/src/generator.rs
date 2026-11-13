@@ -274,7 +274,12 @@ impl Backend for LlamaGenerator {
         if n_prompt >= n_ctx {
             return Err(BackendError::ContextFull);
         }
-        let matcher = schema_matcher(&self.factory, request.schema)?;
+        // Placeholder: generation without a grammar lands in Task 3, and
+        // `request.thinking_budget` is likewise ignored until then.
+        let schema = request.schema.ok_or_else(|| {
+            BackendError::Failed("no-grammar generation lands in Task 3".into())
+        })?;
+        let matcher = schema_matcher(&self.factory, schema)?;
 
         self.mc.clear();
         self.batch.clear();

@@ -134,8 +134,9 @@ fn generator_reply_parses_with_theos_ai_parse_reply() {
     let schema = reply_schema(&ids);
     let request = GenerationRequest {
         prompt: &prompt,
-        schema: &schema,
+        schema: Some(&schema),
         thinking: Thinking::Off,
+        thinking_budget: None,
     };
     let first = run_to_end(&mut generator, &request);
     assert_eq!(first.thinking_pieces, 0, "thinking off emits only answer");
@@ -160,8 +161,9 @@ fn generator_emits_thinking_pieces_then_answer_when_thinking_on() {
     let schema = reply_schema(&ids);
     let request = GenerationRequest {
         prompt: &prompt,
-        schema: &schema,
+        schema: Some(&schema),
         thinking: Thinking::On,
+        thinking_budget: None,
     };
     let run = run_to_end(&mut generator, &request);
     assert!(

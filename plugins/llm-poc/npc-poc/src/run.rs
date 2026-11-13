@@ -1203,11 +1203,11 @@ mod tests {
         assert!(run.fatal.is_none());
         let reqs = seen.requests();
         assert_eq!(reqs.len(), 7, "warm-up plus six");
-        let has_name = |i: usize| reqs[i].0.system.contains("The traveller speaking to you");
+        let has_name = |i: usize| reqs[i].prompt.system.contains("The traveller speaking to you");
         assert!(!has_name(0), "the warm-up uses no name");
         assert!((1..=3).all(has_name));
         assert!((4..=6).all(|i| !has_name(i)));
-        assert!(reqs[1].0.system.contains("called Kai."));
+        assert!(reqs[1].prompt.system.contains("called Kai."));
         assert_eq!(run.rows[0].player_name.as_deref(), Some("Kai"));
         assert_eq!(run.rows[3].player_name, None);
     }

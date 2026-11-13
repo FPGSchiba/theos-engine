@@ -25,8 +25,8 @@ pub use backend::{Backend, BackendError, Decoder, GenerationRequest, Phase, Piec
 pub use clock::{Clock, SystemClock};
 pub use components::{AiBrain, PendingAiResponse};
 pub use driver::{
-    ANSWER_TOKEN_CAP, DEFAULT_DEADLINE, Metrics, Npc, NpcError, NpcParts, NpcRequest, NpcResponse,
-    StopReason,
+    ANSWER_TOKEN_CAP, DEFAULT_DEADLINE, GenerateJob, GenerateResponse, Metrics, Npc, NpcError,
+    NpcParts, NpcRequest, NpcResponse, StopReason,
 };
 pub use memory::{MemoryProbe, NoProbe};
 
