@@ -6,6 +6,9 @@
 //! thread by a factory closure, because backend contexts are not required to
 //! be `Send`.
 
+use std::panic::{AssertUnwindSafe, catch_unwind};
+use std::sync::Arc;
+use std::sync::atomic::{AtomicBool, Ordering};
 use std::sync::mpsc::{self, Receiver, Sender};
 use std::thread::JoinHandle;
 
@@ -34,12 +37,15 @@ pub type Completed = (Ticket, Result<NpcResponse, NpcError>);
 /// Owns a worker thread running an [`Npc`].
 ///
 /// Requests are served one at a time, in submit order. Dropping the worker
-/// closes the request channel and joins the thread; a request already running
-/// finishes first.
+/// sets a stop flag, closes the request channel and joins the thread: a request
+/// already running finishes, queued ones are discarded unanswered. If a request
+/// panics, its ticket is answered with [`NpcError::WorkerLost`] and the worker
+/// stops, so later submits fail with [`WorkerGone`].
 pub struct NpcWorker {
     requests: Option<Sender<(Ticket, NpcRequest)>>,
     responses: Receiver<Completed>,
     handle: Option<JoinHandle<()>>,
+    stopping: Arc<AtomicBool>,
     next_ticket: u64,
 }
 
@@ -62,6 +68,8 @@ impl NpcWorker {
         let (request_tx, request_rx) = mpsc::channel::<(Ticket, NpcRequest)>();
         let (response_tx, response_rx) = mpsc::channel::<Completed>();
         let (ready_tx, ready_rx) = mpsc::channel::<Result<(), NpcError>>();
+        let stopping = Arc::new(AtomicBool::new(false));
+        let worker_stopping = Arc::clone(&stopping);
 
         let handle = std::thread::spawn(move || {
             let mut npc = match factory() {
@@ -78,9 +86,21 @@ impl NpcWorker {
                 }
             };
             while let Ok((ticket, request)) = request_rx.recv() {
-                let outcome = npc.answer(&request);
-                if response_tx.send((ticket, outcome)).is_err() {
+                if worker_stopping.load(Ordering::SeqCst) {
                     return;
+                }
+                match catch_unwind(AssertUnwindSafe(|| npc.answer(&request))) {
+                    Ok(outcome) => {
+                        if response_tx.send((ticket, outcome)).is_err() {
+                            return;
+                        }
+                    }
+                    Err(_) => {
+                        // The Npc's state is no longer trustworthy: answer
+                        // this ticket, then stop serving.
+                        let _ = response_tx.send((ticket, Err(NpcError::WorkerLost)));
+                        return;
+                    }
                 }
             }
         });
@@ -90,6 +110,7 @@ impl NpcWorker {
                 requests: Some(request_tx),
                 responses: response_rx,
                 handle: Some(handle),
+                stopping,
                 next_ticket: 0,
             }),
             Ok(Err(e)) => {
@@ -132,6 +153,8 @@ impl NpcWorker {
 
 impl Drop for NpcWorker {
     fn drop(&mut self) {
+        // Queued requests are discarded; only one already running finishes.
+        self.stopping.store(true, Ordering::SeqCst);
         // Closing the request channel ends the worker's receive loop.
         self.requests = None;
         if let Some(handle) = self.handle.take() {
@@ -150,6 +173,7 @@ mod tests {
     use crate::retrieval::LoreScope;
     use crate::test_support::mini;
     use crate::testkit::{FakeClock, FakeEmbedder, FakeProbe, Script, ScriptedBackend};
+    use std::sync::Arc;
     use std::time::{Duration, Instant};
 
     const GOOD: &str = r#"{"sources":["B-1"],"reply":"Aye."}"#;
@@ -290,28 +314,72 @@ mod tests {
         assert!(found.1.is_ok());
     }
 
-    #[test]
-    fn wait_returns_none_when_worker_thread_died() {
-        struct Exploding;
-        impl crate::backend::Backend for Exploding {
-            fn begin<'a>(
-                &'a mut self,
-                _request: &crate::backend::GenerationRequest<'_>,
-            ) -> Result<Box<dyn crate::backend::Decoder + 'a>, crate::backend::BackendError>
-            {
+    use crate::backend::{Backend, BackendError, Decoder, GenerationRequest};
+    use std::sync::atomic::{AtomicUsize, Ordering};
+
+    /// Counts `begin` calls; panics or fails slowly depending on `explode`.
+    struct CountingBackend {
+        calls: Arc<AtomicUsize>,
+        explode: bool,
+    }
+
+    impl Backend for CountingBackend {
+        fn begin<'a>(
+            &'a mut self,
+            _request: &GenerationRequest<'_>,
+        ) -> Result<Box<dyn Decoder + 'a>, BackendError> {
+            self.calls.fetch_add(1, Ordering::SeqCst);
+            if self.explode {
                 panic!("backend exploded");
             }
+            std::thread::sleep(Duration::from_millis(100));
+            Err(BackendError::Failed("slow".into()))
         }
-        let mut w = NpcWorker::spawn(|| {
+    }
+
+    fn counting_worker(calls: &Arc<AtomicUsize>, explode: bool) -> NpcWorker {
+        let calls = Arc::clone(calls);
+        NpcWorker::spawn(move || {
             let (_, speaker) = mini();
             let mut p = parts(0, vec![speaker]);
-            p.backend = Box::new(Exploding);
+            p.backend = Box::new(CountingBackend { calls, explode });
             Npc::new(p)
         })
-        .unwrap();
-        w.submit(request()).unwrap();
-        assert!(w.wait().is_none());
-        assert_eq!(w.submit(request()).err(), Some(WorkerGone));
+        .unwrap()
+    }
+
+    #[test]
+    fn panic_in_answer_answers_its_ticket_then_stops_the_worker() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let mut w = counting_worker(&calls, true);
+        let ticket = w.submit(request()).unwrap();
+        let (got, outcome) = w.wait().unwrap();
+        assert_eq!(got, ticket);
+        assert_eq!(outcome.err(), Some(NpcError::WorkerLost));
+        // The thread may still be unwinding; the next submit must fail soon.
+        let start = Instant::now();
+        loop {
+            if w.submit(request()).is_err() {
+                break;
+            }
+            assert!(
+                start.elapsed() < Duration::from_secs(2),
+                "worker never stopped"
+            );
+            std::thread::sleep(Duration::from_millis(5));
+        }
+        assert_eq!(calls.load(Ordering::SeqCst), 1);
+    }
+
+    #[test]
+    fn drop_discards_queued_requests() {
+        let calls = Arc::new(AtomicUsize::new(0));
+        let mut w = counting_worker(&calls, false);
+        for _ in 0..5 {
+            w.submit(request()).unwrap();
+        }
+        drop(w);
+        assert!(calls.load(Ordering::SeqCst) <= 1);
     }
 
     #[test]
