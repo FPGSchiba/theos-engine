@@ -6,3 +6,8 @@
 .claude/
 GOAL.md
 target/
+/models/
+*.gguf
+fixtures/**/.theos/cache/
+plugins/llm-poc/results/
+plugins/llm-poc/target/

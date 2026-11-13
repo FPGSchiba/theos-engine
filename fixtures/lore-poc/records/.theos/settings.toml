@@ -1,0 +1,4 @@
+# PoC fixture, not canon
+# Canon rule 5: inhabitants have never heard these words.
+[validate.inworld-vocab]
+words = ["node", "edge", "graph", "frequency"]
