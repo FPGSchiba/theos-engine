@@ -111,6 +111,9 @@ pub enum NpcError {
     /// The backend failed.
     #[error(transparent)]
     Backend(#[from] BackendError),
+    /// The worker thread ended before it finished starting up.
+    #[error("the NPC worker thread ended before it was ready")]
+    WorkerLost,
 }
 
 /// Everything an [`Npc`] is made of.

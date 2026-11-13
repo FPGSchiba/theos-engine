@@ -13,6 +13,7 @@ pub mod lore;
 pub mod memory;
 pub mod reply;
 pub mod retrieval;
+pub mod worker;
 
 #[cfg(test)]
 pub(crate) mod test_support;
@@ -37,3 +38,4 @@ pub use lore::{
 };
 pub use reply::{MAX_REPLY_CHARS, MAX_SOURCES, Reply, ReplyError, parse_reply, reply_schema};
 pub use retrieval::{LoreScope, Retriever};
+pub use worker::{Completed, NpcWorker, Ticket, WorkerGone};
