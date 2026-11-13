@@ -560,6 +560,10 @@ pub fn run_cli(
         };
         report::write(&out, &header, &rows)?;
         println!("{}", report::summary_table(&rows));
+        // An injection run also prints its stable summary, after the normal table.
+        if rows.iter().any(|r| r.behaviour == Behaviour::Resist) {
+            println!("{}", report::injection_summary(&rows));
+        }
         println!("results: {}", out.display());
         if let Some(e) = fatal {
             println!(
