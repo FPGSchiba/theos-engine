@@ -14,4 +14,4 @@ toml = "0.8"
 anyhow = "1"
 
 [dev-dependencies]
-jsonschema = "0.61"
+jsonschema = { version = "0.61", default-features = false }

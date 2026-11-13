@@ -256,17 +256,30 @@ mod tests {
     #[test]
     fn every_good_reference_tree_validates_against_its_schema() {
         let fx = load_default();
+        let mut seen = 0;
         for s in &fx.scenarios {
             let schema = tree_schema(&fx, s, &ids_of(&fx, s));
             let v = jsonschema::validator_for(&schema).unwrap();
             let reply = reference(&format!("{}-good.json", s.id))["reply"].clone();
             let errs: Vec<String> = v.iter_errors(&reply).map(|e| e.to_string()).collect();
             assert!(errs.is_empty(), "{}: {errs:?}", s.id);
+            seen += 1;
         }
+        assert_eq!(seen, 20);
+    }
+
+    /// Validates a gate file's reply against its scenario's schema.
+    fn gate_file_validates(fx: &Fixture, file: &str) -> bool {
+        let r = reference(file);
+        let s = scenario(fx, r["scenario"].as_str().unwrap());
+        let schema = tree_schema(fx, s, &ids_of(fx, s));
+        jsonschema::validator_for(&schema)
+            .unwrap()
+            .is_valid(&r["reply"])
     }
 
     #[test]
-    fn bad_trees_with_unregistered_commands_do_not_validate() {
+    fn unregistered_commands_conditions_events_and_modes_do_not_validate() {
         let fx = load_default();
         for file in [
             "b18-bad.json",
@@ -274,11 +287,80 @@ mod tests {
             "g6-gate.json",
             "g8-gate.json",
         ] {
-            let r = reference(file);
-            let s = scenario(&fx, r["scenario"].as_str().unwrap());
-            let schema = tree_schema(&fx, s, &ids_of(&fx, s));
-            let v = jsonschema::validator_for(&schema).unwrap();
-            assert!(!v.is_valid(&r["reply"]), "{file} must not validate");
+            assert!(!gate_file_validates(&fx, file), "{file} must not validate");
+        }
+    }
+
+    #[test]
+    fn gate_trees_with_bad_params_or_sources_do_not_validate() {
+        let fx = load_default();
+        for file in [
+            "g4-gate.json",
+            "g5-gate.json",
+            "g7-gate.json",
+            "g9-gate.json",
+            "g10-gate.json",
+        ] {
+            assert!(!gate_file_validates(&fx, file), "{file} must not validate");
+        }
+    }
+
+    #[test]
+    fn depth_and_node_limits_are_left_to_the_gate() {
+        let fx = load_default();
+        for file in ["g1-gate.json", "g2-gate.json"] {
+            assert!(gate_file_validates(&fx, file), "{file} must still validate");
+        }
+    }
+
+    fn wait(seconds: f64) -> Value {
+        json!({"type": "Wait", "seconds": seconds})
+    }
+
+    fn health(threshold: f64) -> Value {
+        json!({"type": "Condition", "check": "health_below", "params": {"threshold": threshold}})
+    }
+
+    fn envelope(root: Value) -> Value {
+        json!({"sources": [], "tree": {"name": "t", "root": root}})
+    }
+
+    #[test]
+    fn every_structural_node_type_validates_at_its_bounds_and_nowhere_outside() {
+        let fx = load_default();
+        let schema = tree_schema(&fx, scenario(&fx, "b14"), &[]);
+        let v = jsonschema::validator_for(&schema).unwrap();
+        let valid = [
+            json!({"type": "Parallel", "policy": "all", "children": [wait(1.0)]}),
+            json!({"type": "Parallel", "policy": "one", "children": [wait(1.0), health(0.5)]}),
+            json!({"type": "Decorator_Repeat", "count": 1, "child": wait(1.0)}),
+            json!({"type": "Decorator_Repeat", "count": 10, "child": wait(1.0)}),
+            json!({"type": "Decorator_Timeout", "seconds": 0.5, "child": wait(1.0)}),
+            json!({"type": "Decorator_Timeout", "seconds": 30, "child": wait(1.0)}),
+            wait(0.5),
+            wait(30.0),
+            json!({"type": "Decorator_Invert", "child": wait(1.0)}),
+            health(0.0),
+            health(1.0),
+        ];
+        for (i, root) in valid.into_iter().enumerate() {
+            let reply = envelope(root);
+            assert!(v.is_valid(&reply), "valid[{i}] rejected: {reply}");
+        }
+        let invalid = [
+            wait(0.1),
+            wait(31.0),
+            json!({"type": "Decorator_Repeat", "count": 0, "child": wait(1.0)}),
+            json!({"type": "Decorator_Repeat", "count": 11, "child": wait(1.0)}),
+            json!({"type": "Decorator_Timeout", "seconds": 31, "child": wait(1.0)}),
+            json!({"type": "Decorator_Timeout", "seconds": 0.1, "child": wait(1.0)}),
+            json!({"type": "Parallel", "policy": "some", "children": [wait(1.0)]}),
+            json!({"type": "Sequence", "children": []}),
+            health(1.5),
+        ];
+        for (i, root) in invalid.into_iter().enumerate() {
+            let reply = envelope(root);
+            assert!(!v.is_valid(&reply), "invalid[{i}] accepted: {reply}");
         }
     }
 
