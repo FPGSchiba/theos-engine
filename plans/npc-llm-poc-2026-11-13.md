@@ -28,8 +28,11 @@
 export PATH="/c/Program Files/CMake/bin:/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.5/bin:$PATH" \
   CUDA_PATH="C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.5" \
   LIBCLANG_PATH="C:\\Program Files\\LLVM\\bin" \
+  CudaToolkitDir="C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.5\\" \
   THEOS_MODELS_DIR="D:\\Projects\\theos-engine\\models"
 ```
+
+`CudaToolkitDir` (with the trailing backslash) is needed by CMake's Visual Studio generator; without it the configure step fails with "The CUDA Toolkit directory '' does not exist". After a failed configure, run `cargo clean -p llama-cpp-sys-2 --release` before retrying (CMake caches the failure).
 
 Work happens in the worktree `D:\Projects\theos-engine\.claude\worktrees\npc-llm-poc`; the models live in the main checkout, hence `THEOS_MODELS_DIR`.
 
