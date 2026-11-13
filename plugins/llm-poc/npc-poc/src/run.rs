@@ -41,13 +41,13 @@ pub struct Row {
     pub question: String,
     /// Why the scenario exists.
     pub note: String,
-    /// Every check's outcome.
-    pub checks: Checks,
-    /// What the driver measured.
-    pub metrics: Metrics,
+    /// Every check's outcome; `None` when the driver failed the request.
+    pub checks: Option<Checks>,
+    /// What the driver measured; `None` when the driver failed the request.
+    pub metrics: Option<Metrics>,
     /// The reply text; empty when there is no usable reply.
     pub reply_text: String,
-    /// Why there is no usable reply, when there is none.
+    /// Why there is no usable reply (unparsable output or a driver error), when there is none.
     pub reply_error: Option<String>,
     /// The raw model output.
     pub raw: String,
@@ -64,22 +64,46 @@ fn scopes(top_k: usize) -> [LoreScope; 3] {
     ]
 }
 
+/// What [`run_model`] collected.
+#[derive(Debug)]
+pub struct RunOutcome {
+    /// Every request answered or failed before the run ended.
+    pub rows: Vec<Row>,
+    /// Why the run ended early: a missing `visible.json` entry or a dead worker.
+    pub fatal: Option<anyhow::Error>,
+}
+
 /// Runs thinking `[Off, On]` x scenarios x scopes, one request at a time.
 ///
-/// # Errors
-///
-/// A scenario naming a speaker without a `visible.json` entry, a worker that
-/// stopped, or a request the driver failed outright (backend or embedder
-/// error, not an unusable reply, which is scored).
+/// A request the driver fails outright (backend or embedder error) becomes a
+/// failed row carrying the error text; the run goes on. Only a scenario naming a
+/// speaker without a `visible.json` entry, or a worker that stopped, ends the
+/// run early, and the rows collected so far are still returned.
 pub fn run_model(
     worker: &mut NpcWorker,
     model: &str,
     scenarios: &Scenarios,
     visible: &BTreeMap<String, VisibleEntry>,
     deadline: Duration,
-) -> anyhow::Result<Vec<Row>> {
+) -> RunOutcome {
     let total = 2 * scenarios.scenario.len() * 3;
     let mut rows = Vec::with_capacity(total);
+    let fatal = run_requests(
+        worker, model, scenarios, visible, deadline, total, &mut rows,
+    )
+    .err();
+    RunOutcome { rows, fatal }
+}
+
+fn run_requests(
+    worker: &mut NpcWorker,
+    model: &str,
+    scenarios: &Scenarios,
+    visible: &BTreeMap<String, VisibleEntry>,
+    deadline: Duration,
+    total: usize,
+    rows: &mut Vec<Row>,
+) -> anyhow::Result<()> {
     for thinking in [Thinking::Off, Thinking::On] {
         for scenario in &scenarios.scenario {
             let entry = visible
@@ -93,36 +117,7 @@ pub fn run_model(
                     thinking,
                     deadline,
                 };
-                worker
-                    .submit(request)
-                    .map_err(|_| anyhow!("the NPC worker stopped"))?;
-                let (_, outcome) = worker
-                    .wait()
-                    .ok_or_else(|| anyhow!("the NPC worker stopped"))?;
-                let response = outcome
-                    .with_context(|| format!("{} {:?} {:?}", scenario.id, thinking, scope))?;
-                let checks = check(
-                    scenario,
-                    &scenarios.forbid_words,
-                    entry,
-                    scope,
-                    &response,
-                    deadline,
-                );
-                let (reply_text, reply_error) = match &response.reply {
-                    Ok(reply) => (reply.text.clone(), None),
-                    Err(e) => (String::new(), Some(e.to_string())),
-                };
-                eprintln!(
-                    "[{}/{}] {} {:?} {:?}: {}",
-                    rows.len() + 1,
-                    total,
-                    scenario.id,
-                    thinking,
-                    scope,
-                    response.metrics.total.as_millis()
-                );
-                rows.push(Row {
+                let mut row = Row {
                     model: model.to_owned(),
                     thinking,
                     scope,
@@ -131,31 +126,77 @@ pub fn run_model(
                     behaviour: scenario.behaviour,
                     question: scenario.question.clone(),
                     note: scenario.note.clone(),
-                    checks,
-                    metrics: response.metrics,
-                    reply_text,
-                    reply_error,
-                    raw: response.raw,
+                    checks: None,
+                    metrics: None,
+                    reply_text: String::new(),
+                    reply_error: None,
+                    raw: String::new(),
                     hand_read: scenario.hand_scored || scenario.behaviour == Behaviour::Rumour,
-                });
+                };
+                worker
+                    .submit(request)
+                    .map_err(|_| anyhow!("the NPC worker stopped"))?;
+                let (_, outcome) = worker
+                    .wait()
+                    .ok_or_else(|| anyhow!("the NPC worker stopped"))?;
+                match outcome {
+                    Ok(response) => {
+                        row.checks = Some(check(
+                            scenario,
+                            &scenarios.forbid_words,
+                            entry,
+                            scope,
+                            &response,
+                            deadline,
+                        ));
+                        match &response.reply {
+                            Ok(reply) => row.reply_text = reply.text.clone(),
+                            Err(e) => row.reply_error = Some(e.to_string()),
+                        }
+                        eprintln!(
+                            "[{}/{}] {} {:?} {:?}: {} ms",
+                            rows.len() + 1,
+                            total,
+                            scenario.id,
+                            thinking,
+                            scope,
+                            response.metrics.total.as_millis()
+                        );
+                        row.metrics = Some(response.metrics);
+                        row.raw = response.raw;
+                    }
+                    Err(e) => {
+                        eprintln!(
+                            "[{}/{}] {} {:?} {:?}: FAILED {e}",
+                            rows.len() + 1,
+                            total,
+                            scenario.id,
+                            thinking,
+                            scope
+                        );
+                        row.reply_error = Some(e.to_string());
+                    }
+                }
+                rows.push(row);
             }
         }
     }
-    Ok(rows)
+    Ok(())
 }
 
 /// The rows whose leak or forbidden-record check failed: a defect of the engine,
-/// not a weakness of the model.
+/// not a weakness of the model. Failed requests have no known context and are not counted.
 pub fn defects(rows: &[Row]) -> Vec<String> {
     rows.iter()
-        .filter(|r| !r.checks.leak || !r.checks.forbidden)
-        .map(|r| {
+        .filter_map(|r| r.checks.as_ref().map(|c| (r, c)))
+        .filter(|(_, c)| !c.leak || !c.forbidden)
+        .map(|(r, c)| {
             format!(
                 "{} {:?} {:?}: {}",
                 r.scenario_id,
                 r.thinking,
                 r.scope,
-                match (r.checks.leak, r.checks.forbidden) {
+                match (c.leak, c.forbidden) {
                     (false, false) => "leak and forbidden record",
                     (false, true) => "leak",
                     _ => "forbidden record",
@@ -342,6 +383,7 @@ pub fn run_cli(
     let started = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
 
     let mut all_defects = Vec::new();
+    let mut fatals = Vec::new();
     for entry in &file.models {
         let model_path = dir.join(&entry.file);
         let (mut worker, info) = spawn_worker(
@@ -353,7 +395,8 @@ pub fn run_cli(
             &speakers,
             persona_bodies,
         )?;
-        let rows = run_model(&mut worker, &entry.name, &scenarios, &golden, deadline)?;
+        let RunOutcome { rows, fatal } =
+            run_model(&mut worker, &entry.name, &scenarios, &golden, deadline);
         drop(worker);
 
         let header = RunHeader {
@@ -381,6 +424,14 @@ pub fn run_cli(
         report::write(&out, &header, &rows)?;
         println!("{}", report::summary_table(&rows));
         println!("results: {}", out.display());
+        if let Some(e) = fatal {
+            println!(
+                "FATAL: {}: run ended early with {} rows: {e:#}",
+                entry.name,
+                rows.len()
+            );
+            fatals.push(format!("{}: {e:#}", entry.name));
+        }
         all_defects.extend(
             defects(&rows)
                 .into_iter()
@@ -397,6 +448,12 @@ pub fn run_cli(
             println!("DEFECT  {d}");
         }
         bail!("engine defect: leak or forbidden-record check failed");
+    }
+    if !fatals.is_empty() {
+        bail!(
+            "run ended early (partial results written): {}",
+            fatals.join("; ")
+        );
     }
     Ok(())
 }
@@ -495,14 +552,15 @@ mod tests {
         })
         .unwrap();
 
-        let rows = run_model(
+        let run = run_model(
             &mut worker,
             "fake",
             &scenarios,
             &golden,
             Duration::from_secs(3),
-        )
-        .unwrap();
+        );
+        assert!(run.fatal.is_none());
+        let rows = run.rows;
 
         assert_eq!(rows.len(), 18);
         assert_eq!(
@@ -512,7 +570,7 @@ mod tests {
         assert_eq!(rows[0].scenario_id, "s1");
         assert_eq!(rows[0].scope, LoreScope::None);
         assert_eq!(rows[2].scope, LoreScope::Retrieved { top_k: 2 });
-        assert_eq!(rows[0].checks.words, ["node"]);
+        assert_eq!(rows[0].checks.as_ref().unwrap().words, ["node"]);
         assert_eq!(rows[0].reply_text, "a NODE hums");
         assert!(
             rows[6..9].iter().all(|r| r.hand_read),
@@ -571,7 +629,7 @@ mod tests {
             &golden,
             Duration::from_secs(3),
         )
-        .unwrap();
+        .rows;
         let found = defects(&rows);
         assert_eq!(
             found.len(),
@@ -579,6 +637,123 @@ mod tests {
             "AllVisible and Retrieved, thinking off and on: {found:?}"
         );
         assert!(found[0].contains("leak"));
+    }
+
+    /// A backend that fails (or panics) on its `at`-th `begin`, and otherwise delegates.
+    struct Flaky {
+        inner: ScriptedBackend,
+        calls: usize,
+        at: usize,
+        panic: bool,
+    }
+
+    impl theos_ai::Backend for Flaky {
+        fn begin<'a>(
+            &'a mut self,
+            request: &theos_ai::GenerationRequest<'_>,
+        ) -> Result<Box<dyn theos_ai::Decoder + 'a>, BackendError> {
+            self.calls += 1;
+            if self.calls == self.at {
+                assert!(!self.panic, "scripted worker death");
+                return Err(BackendError::Failed("boom".into()));
+            }
+            self.inner.begin(request)
+        }
+    }
+
+    fn flaky_worker(at: usize, panic: bool) -> NpcWorker {
+        NpcWorker::spawn(move || {
+            let clock = FakeClock::new();
+            let inner = ScriptedBackend::new(clock.clone());
+            for _ in 0..6 {
+                inner.push(Script {
+                    prompt_tokens: 1,
+                    prefill: Duration::ZERO,
+                    per_token: Duration::ZERO,
+                    pieces: vec![Piece {
+                        text: r#"{"sources":[],"reply":"x"}"#.into(),
+                        phase: Phase::Answer,
+                    }],
+                });
+            }
+            Npc::new(NpcParts {
+                backend: Box::new(Flaky {
+                    inner,
+                    calls: 0,
+                    at,
+                    panic,
+                }),
+                embedder: Box::new(FakeEmbedder::default()),
+                corpus: Corpus::new(vec![belief("B-1", "n")]).unwrap(),
+                speakers: vec![speaker("n")],
+                options: ContextOptions::default(),
+                clock: Box::new(clock),
+                probe: Box::new(NoProbe),
+            })
+        })
+        .unwrap()
+    }
+
+    fn one_scenario() -> (Scenarios, BTreeMap<String, VisibleEntry>) {
+        let scenarios = Scenarios {
+            forbid_words: vec![],
+            top_k: 1,
+            scenario: vec![scenario("s1", Behaviour::Answer)],
+        };
+        let golden = BTreeMap::from([(
+            "n".to_owned(),
+            VisibleEntry {
+                persona: vec!["n".into()],
+                held: vec!["B-1".into()],
+                rejected: vec![],
+                unaware_of: vec![],
+            },
+        )]);
+        (scenarios, golden)
+    }
+
+    #[test]
+    fn a_failing_request_becomes_a_failed_row_and_the_run_continues() {
+        let (scenarios, golden) = one_scenario();
+        let mut worker = flaky_worker(3, false);
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden,
+            Duration::from_secs(3),
+        );
+        assert!(run.fatal.is_none());
+        assert_eq!(run.rows.len(), 6);
+        let failed = &run.rows[2];
+        assert!(failed.reply_error.as_deref().unwrap().contains("boom"));
+        assert!(failed.metrics.is_none() && failed.checks.is_none());
+        assert_eq!(
+            run.rows.iter().filter(|r| r.metrics.is_some()).count(),
+            5,
+            "every other request still has its measurements"
+        );
+        assert!(defects(&run.rows).is_empty(), "an error is not a leak");
+    }
+
+    #[test]
+    fn a_worker_that_dies_mid_run_returns_the_rows_so_far_and_a_fatal_error() {
+        let (scenarios, golden) = one_scenario();
+        let mut worker = flaky_worker(4, true);
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden,
+            Duration::from_secs(3),
+        );
+        assert!(run.fatal.is_some());
+        assert_eq!(
+            run.rows.len(),
+            4,
+            "three answered, one lost with the worker"
+        );
+        assert!(run.rows[3].reply_error.is_some());
     }
 
     #[test]

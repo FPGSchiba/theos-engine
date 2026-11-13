@@ -9,6 +9,7 @@ use theos_ai::{LoreScope, StopReason, Thinking};
 
 use crate::run::Row;
 use crate::scenarios::Behaviour;
+use crate::score::Checks;
 
 /// What one run was made of, for the top of `results.md`.
 #[derive(Clone, Debug)]
@@ -40,6 +41,8 @@ pub struct Summary {
     pub scope: LoreScope,
     /// Requests in this group.
     pub n: usize,
+    /// Requests the driver failed outright (no measurements, counted as failures).
+    pub errors: usize,
     /// Retrieval passes (only `Retrieved`).
     pub retrieval: Option<usize>,
     /// Leak-check passes.
@@ -147,38 +150,48 @@ pub fn summarize(rows: &[Row]) -> Vec<Summary> {
                 .iter()
                 .filter(|r| r.thinking == thinking && r.scope == scope)
                 .collect();
-            let count = |f: &dyn Fn(&Row) -> bool| group.iter().filter(|r| f(r)).count();
             let mut ttft: Vec<f64> = group
                 .iter()
-                .filter_map(|r| r.metrics.time_to_first_token.map(ms))
+                .filter_map(|r| r.metrics.as_ref()?.time_to_first_token.map(ms))
                 .collect();
-            let mut total: Vec<f64> = group.iter().map(|r| ms(r.metrics.total)).collect();
+            let mut total: Vec<f64> = group
+                .iter()
+                .filter_map(|r| r.metrics.as_ref().map(|m| ms(m.total)))
+                .collect();
+            // Fewer than two generated tokens leave nothing to measure a rate on.
             let mut tps: Vec<f64> = group
                 .iter()
-                .map(|r| f64::from(r.metrics.tokens_per_second))
+                .filter_map(|r| r.metrics.as_ref())
+                .filter(|m| m.thinking_tokens + m.answer_tokens >= 2)
+                .map(|m| f64::from(m.tokens_per_second))
                 .collect();
             let mut prompt: Vec<f64> = group
                 .iter()
-                .map(|r| f64::from(r.metrics.prompt_tokens))
+                .filter_map(|r| r.metrics.as_ref().map(|m| f64::from(m.prompt_tokens)))
                 .collect();
+            let passes = |f: &dyn Fn(&Checks) -> bool| {
+                group
+                    .iter()
+                    .filter(|r| r.checks.as_ref().is_some_and(f))
+                    .count()
+            };
             Summary {
                 thinking,
                 scope,
                 n: group.len(),
+                errors: group.iter().filter(|r| r.checks.is_none()).count(),
                 retrieval: match scope {
-                    LoreScope::Retrieved { .. } => {
-                        Some(count(&|r| r.checks.retrieval == Some(true)))
-                    }
+                    LoreScope::Retrieved { .. } => Some(passes(&|c| c.retrieval == Some(true))),
                     _ => None,
                 },
-                leak: count(&|r| r.checks.leak),
-                forbidden: count(&|r| r.checks.forbidden),
-                words: count(&|r| r.checks.words.is_empty()),
-                grounding: count(&|r| r.checks.grounding),
-                deadline: count(&|r| r.checks.deadline),
+                leak: passes(&|c| c.leak),
+                forbidden: passes(&|c| c.forbidden),
+                words: passes(&|c| c.words.is_empty()),
+                grounding: passes(&|c| c.grounding),
+                deadline: passes(&|c| c.deadline),
                 vram: (
-                    count(&|r| r.checks.vram == Some(true)),
-                    count(&|r| r.checks.vram.is_some()),
+                    passes(&|c| c.vram == Some(true)),
+                    passes(&|c| c.vram.is_some()),
                 ),
                 ttft_median: median(&mut ttft),
                 ttft_p95: p95(&mut ttft),
@@ -186,7 +199,10 @@ pub fn summarize(rows: &[Row]) -> Vec<Summary> {
                 total_p95: p95(&mut total),
                 tps_median: median(&mut tps),
                 prompt_median: median(&mut prompt),
-                vram_peak: group.iter().filter_map(|r| r.metrics.vram_peak_bytes).max(),
+                vram_peak: group
+                    .iter()
+                    .filter_map(|r| r.metrics.as_ref()?.vram_peak_bytes)
+                    .max(),
             }
         })
         .collect()
@@ -204,17 +220,18 @@ fn gib(bytes: u64) -> String {
 /// The summary as a markdown table.
 pub fn summary_table(rows: &[Row]) -> String {
     let mut out = String::from(
-        "| thinking | scope | n | retrieval | leak | forbidden | words | grounding | deadline | vram | ttft med/p95 ms | total med/p95 ms | tok/s med | prompt tok med | vram peak |\n\
-         |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
+        "| thinking | scope | n | errors | retrieval | leak | forbidden | words | grounding | deadline | vram | ttft med/p95 ms | total med/p95 ms | tok/s med | prompt tok med | vram peak |\n\
+         |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
     );
     for s in summarize(rows) {
         let _ =
             writeln!(
             out,
-            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {}/{} | {}/{} | {} | {} | {} |",
+            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {}/{} | {}/{} | {} | {} | {} |",
             thinking_label(s.thinking),
             scope_label(s.scope),
             s.n,
+            s.errors,
             s.retrieval.map_or_else(|| "n/a".to_owned(), |v| format!("{v}/{}", s.n)),
             format_args!("{}/{}", s.leak, s.n),
             format_args!("{}/{}", s.forbidden, s.n),
@@ -263,6 +280,9 @@ pub fn render_results(header: &RunHeader, rows: &[Row]) -> String {
     );
     let _ = writeln!(out, "- VRAM probe: {}", header.probe);
     out.push_str("\n## Summary\n\n");
+    out.push_str(
+        "Failed requests (errors) count as failures of every check that needs a reply and are left out of the timings. The tok/s median leaves out requests with fewer than 2 generated tokens: no rate was measured for them.\n\n",
+    );
     out.push_str(&summary_table(rows));
     out.push_str("\n## Requests\n\n");
     out.push_str(
@@ -270,32 +290,47 @@ pub fn render_results(header: &RunHeader, rows: &[Row]) -> String {
          |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
     );
     for r in rows {
-        let c = &r.checks;
-        let words = if c.words.is_empty() {
-            "pass".to_owned()
-        } else {
-            format!("FAIL ({})", c.words.join(", "))
+        let c = r.checks.as_ref();
+        let words = match c {
+            None => "n/a".to_owned(),
+            Some(c) if c.words.is_empty() => "pass".to_owned(),
+            Some(c) => format!("FAIL ({})", c.words.join(", ")),
+        };
+        let na = || "n/a".to_owned();
+        let stop = match (&r.metrics, &r.reply_error, c) {
+            (_, Some(e), None) => format!("ERROR: {e}"),
+            (Some(m), _, _) => stop_label(m.stop).to_owned(),
+            _ => na(),
         };
         let _ = writeln!(
             out,
-            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {:.0} | {:.1} | {} | {} | {} |",
+            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
             r.scenario_id,
             r.npc,
             behaviour_label(r.behaviour),
             thinking_label(r.thinking),
             scope_label(r.scope),
-            mark_opt(c.retrieval),
-            mark(c.leak),
-            mark(c.forbidden),
+            c.map_or_else(na, |c| mark_opt(c.retrieval).to_owned()),
+            c.map_or_else(na, |c| mark(c.leak).to_owned()),
+            c.map_or_else(na, |c| mark(c.forbidden).to_owned()),
             words,
-            if r.reply_error.is_some() { "FAIL (no reply)" } else { mark(c.grounding) },
-            mark(c.deadline),
-            mark_opt(c.vram),
-            r.metrics.time_to_first_token.map_or_else(|| "n/a".to_owned(), |d| format!("{:.0}", ms(d))),
-            ms(r.metrics.total),
-            r.metrics.tokens_per_second,
-            r.metrics.prompt_tokens,
-            stop_label(r.metrics.stop),
+            match c {
+                None => "FAIL".to_owned(),
+                Some(_) if r.reply_error.is_some() => "FAIL (no reply)".to_owned(),
+                Some(c) => mark(c.grounding).to_owned(),
+            },
+            mark(c.is_some_and(|c| c.deadline)),
+            c.map_or_else(na, |c| mark_opt(c.vram).to_owned()),
+            r.metrics
+                .as_ref()
+                .and_then(|m| m.time_to_first_token)
+                .map_or_else(na, |d| format!("{:.0}", ms(d))),
+            r.metrics.as_ref().map_or_else(na, |m| format!("{:.0}", ms(m.total))),
+            r.metrics
+                .as_ref()
+                .map_or_else(na, |m| format!("{:.1}", m.tokens_per_second)),
+            r.metrics.as_ref().map_or_else(na, |m| m.prompt_tokens.to_string()),
+            stop,
             if r.hand_read { "yes" } else { "" },
         );
     }
@@ -348,8 +383,10 @@ pub fn render_csv(rows: &[Row]) -> anyhow::Result<String> {
         "raw",
     ])?;
     for r in rows {
-        let c = &r.checks;
-        let m = &r.metrics;
+        let c = r.checks.as_ref();
+        let m = r.metrics.as_ref();
+        let na = || "n/a".to_owned();
+        let num = |f: &dyn Fn(&theos_ai::Metrics) -> String| m.map(f).unwrap_or_default();
         w.write_record([
             r.model.clone(),
             thinking_label(r.thinking).to_owned(),
@@ -358,26 +395,28 @@ pub fn render_csv(rows: &[Row]) -> anyhow::Result<String> {
             r.npc.clone(),
             behaviour_label(r.behaviour).to_owned(),
             r.hand_read.to_string(),
-            mark_opt(c.retrieval).to_owned(),
-            mark(c.leak).to_owned(),
-            mark(c.forbidden).to_owned(),
-            c.words.join(";"),
-            mark(c.grounding).to_owned(),
-            mark(c.deadline).to_owned(),
-            mark_opt(c.vram).to_owned(),
-            m.prompt_tokens.to_string(),
-            m.thinking_tokens.to_string(),
-            m.answer_tokens.to_string(),
-            format!("{:.1}", ms(m.retrieval)),
-            m.time_to_first_token
-                .map(|d| format!("{:.1}", ms(d)))
-                .unwrap_or_default(),
-            format!("{:.2}", m.tokens_per_second),
-            format!("{:.1}", ms(m.total)),
-            m.vram_peak_bytes.map(|b| b.to_string()).unwrap_or_default(),
-            stop_label(m.stop).to_owned(),
-            join_ids(&m.context_ids),
-            join_ids(&m.cited_ids),
+            c.map_or_else(na, |c| mark_opt(c.retrieval).to_owned()),
+            c.map_or_else(na, |c| mark(c.leak).to_owned()),
+            c.map_or_else(na, |c| mark(c.forbidden).to_owned()),
+            c.map(|c| c.words.join(";")).unwrap_or_default(),
+            mark(c.is_some_and(|c| c.grounding)).to_owned(),
+            mark(c.is_some_and(|c| c.deadline)).to_owned(),
+            c.map_or_else(na, |c| mark_opt(c.vram).to_owned()),
+            num(&|m| m.prompt_tokens.to_string()),
+            num(&|m| m.thinking_tokens.to_string()),
+            num(&|m| m.answer_tokens.to_string()),
+            num(&|m| format!("{:.1}", ms(m.retrieval))),
+            num(&|m| {
+                m.time_to_first_token
+                    .map(|d| format!("{:.1}", ms(d)))
+                    .unwrap_or_default()
+            }),
+            num(&|m| format!("{:.2}", m.tokens_per_second)),
+            num(&|m| format!("{:.1}", ms(m.total))),
+            num(&|m| m.vram_peak_bytes.map(|b| b.to_string()).unwrap_or_default()),
+            num(&|m| stop_label(m.stop).to_owned()),
+            num(&|m| join_ids(&m.context_ids)),
+            num(&|m| join_ids(&m.cited_ids)),
             r.reply_error.clone().unwrap_or_default(),
             r.question.clone(),
             r.reply_text.clone(),
@@ -434,7 +473,11 @@ pub fn render_answers(rows: &[Row]) -> String {
                     }
                 }
             }
-            let cites = join_ids(&r.metrics.cited_ids);
+            let cites = r
+                .metrics
+                .as_ref()
+                .map(|m| join_ids(&m.cited_ids))
+                .unwrap_or_default();
             let _ = writeln!(
                 out,
                 "\nCites: {}",
@@ -444,8 +487,8 @@ pub fn render_answers(rows: &[Row]) -> String {
                     cites.replace(';', ", ")
                 }
             );
-            if !r.checks.words.is_empty() {
-                let _ = writeln!(out, "Forbidden words: {}", r.checks.words.join(", "));
+            if let Some(c) = r.checks.as_ref().filter(|c| !c.words.is_empty()) {
+                let _ = writeln!(out, "Forbidden words: {}", c.words.join(", "));
             }
         }
     }
@@ -487,7 +530,7 @@ mod tests {
             behaviour: Behaviour::Answer,
             question: "what, \"exactly\"?".into(),
             note: "a note".into(),
-            checks: Checks {
+            checks: Some(Checks {
                 retrieval: matches!(scope, LoreScope::Retrieved { .. }).then_some(true),
                 leak: true,
                 forbidden: true,
@@ -495,8 +538,8 @@ mod tests {
                 grounding,
                 deadline: true,
                 vram: Some(true),
-            },
-            metrics: Metrics {
+            }),
+            metrics: Some(Metrics {
                 prompt_tokens: 100,
                 thinking_tokens: 0,
                 answer_tokens: 20,
@@ -508,11 +551,71 @@ mod tests {
                 context_ids: vec![RecordId::new("B-1")],
                 cited_ids: vec![RecordId::new("B-1")],
                 stop: StopReason::Finished,
-            },
+            }),
             reply_text: "Well, it is so,\nbelieve me.".into(),
             reply_error: None,
             raw: "{\"raw\":1}".into(),
             hand_read: false,
+        }
+    }
+
+    fn failed_row(scope: LoreScope) -> Row {
+        let mut r = row(Thinking::Off, scope, true, 100);
+        r.checks = None;
+        r.metrics = None;
+        r.reply_text.clear();
+        r.raw.clear();
+        r.reply_error = Some("backend failed: boom".into());
+        r
+    }
+
+    #[test]
+    fn tok_s_median_ignores_rows_with_fewer_than_two_generated_tokens() {
+        let mut slow = row(Thinking::Off, LoreScope::None, true, 100);
+        slow.metrics.as_mut().unwrap().tokens_per_second = 10.0;
+        let mut unmeasured = row(Thinking::Off, LoreScope::None, true, 100);
+        {
+            let m = unmeasured.metrics.as_mut().unwrap();
+            m.tokens_per_second = 0.0;
+            m.thinking_tokens = 0;
+            m.answer_tokens = 1;
+        }
+        let fast = row(Thinking::Off, LoreScope::None, true, 100);
+        let s = summarize(&[slow, unmeasured, fast]);
+        // 10 and 40 only; the unmeasured 0.0 would drag the median down to 10.
+        assert_eq!(s[0].tps_median, Some(25.0));
+        let md = render_results(&header(), &[row(Thinking::Off, LoreScope::None, true, 1)]);
+        assert!(md.contains("fewer than 2 generated tokens"));
+    }
+
+    #[test]
+    fn failed_rows_show_their_error_in_every_table_and_count_as_failures() {
+        let rows = [
+            row(Thinking::Off, LoreScope::None, true, 100),
+            failed_row(LoreScope::None),
+        ];
+        let s = summarize(&rows);
+        assert_eq!(
+            (s[0].n, s[0].grounding, s[0].deadline, s[0].errors),
+            (2, 1, 1, 1)
+        );
+        assert_eq!(s[0].leak, 1, "an unknown context is not a pass");
+        assert_eq!(s[0].total_median, Some(100.0));
+        assert!(render_results(&header(), &rows).contains("ERROR: backend failed: boom"));
+        assert!(render_csv(&rows).unwrap().contains("backend failed: boom"));
+        assert!(render_answers(&rows).contains("_No reply: backend failed: boom_"));
+    }
+
+    fn header() -> RunHeader {
+        RunHeader {
+            model: "Fake 4B".into(),
+            file_bytes: 2_500_000_000,
+            n_params: 4_000_000_000,
+            gpu: "Test GPU".into(),
+            deadline: Duration::from_secs(3),
+            seed: 42,
+            persona_bodies: true,
+            probe: "DXGI".into(),
         }
     }
 
