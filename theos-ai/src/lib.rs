@@ -1,20 +1,16 @@
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
+//! AI layer: lore records and the speaker-rule knowledge filter.
 
 pub mod components;
-
-pub use components::{AiBrain, PendingAiResponse};
-
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod knowledge;
+pub mod lore;
 
 #[cfg(test)]
-mod tests {
-    use super::*;
+pub(crate) mod test_support;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+pub use components::{AiBrain, PendingAiResponse};
+pub use knowledge::{Visible, visible};
+pub use lore::{
+    Corpus, CorpusError, HolderKind, Lens, LoreKind, LoreRecord, PersonaLayer, RecordId, Speaker,
+};

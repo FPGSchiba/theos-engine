@@ -5,6 +5,12 @@ edition = "2024"
 
 [dependencies]
 theos-shared = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true, features = ["preserve_order"] }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+toml = { workspace = true }
 
 [lints]
 workspace = true
