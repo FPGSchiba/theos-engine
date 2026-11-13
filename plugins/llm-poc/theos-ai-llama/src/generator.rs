@@ -210,6 +210,15 @@ impl LlamaGenerator {
         self.mc.model().n_params()
     }
 
+    /// Asks llguidance to compile `schema` into a matcher, without generating anything.
+    ///
+    /// # Errors
+    ///
+    /// [`BackendError::Failed`] when llguidance rejects the schema.
+    pub fn compile_schema(&self, schema: &Value) -> Result<(), BackendError> {
+        schema_matcher(&self.factory, schema).map(|_| ())
+    }
+
     /// The profile the generator was loaded with.
     pub fn profile(&self) -> &ModelProfile {
         &self.profile

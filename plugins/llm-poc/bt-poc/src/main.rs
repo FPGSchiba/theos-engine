@@ -4,8 +4,12 @@
 //! (meant for the game binaries) does not apply to.
 #![allow(clippy::disallowed_macros)]
 
+#[allow(dead_code)] // consumed by the run tasks that follow
+mod extract;
 mod fixture;
 mod prompt;
+#[allow(dead_code)] // consumed by the run tasks that follow
+mod schema;
 
 use std::path::PathBuf;
 
