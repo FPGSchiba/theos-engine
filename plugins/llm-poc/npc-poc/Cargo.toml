@@ -1,0 +1,14 @@
+[package]
+name = "npc-poc"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+theos-ai = { path = "../../../theos-ai", features = ["testkit"] }
+theos-content = { git = "https://github.com/FPGSchiba/theos-editor", rev = "0a6f480676596120c7c62b72a84d0d0807948830" }
+clap = { version = "4", features = ["derive"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+toml = "0.8"
+anyhow = "1"
