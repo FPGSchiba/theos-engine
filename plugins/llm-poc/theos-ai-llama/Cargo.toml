@@ -1,0 +1,14 @@
+[package]
+name = "theos-ai-llama"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+llama-cpp-2 = { version = "=0.1.161", features = ["cuda", "llguidance"] }
+llguidance = "1.7.5"
+toktrie = "1.7.5"
+serde_json = "1"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = ["Win32_Graphics_Dxgi", "Win32_Graphics_Dxgi_Common", "Win32_Foundation"] }

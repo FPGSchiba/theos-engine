@@ -1,0 +1,3 @@
+[workspace]
+members = ["theos-ai-llama"]
+resolver = "2"

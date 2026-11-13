@@ -1,0 +1,6 @@
+[net]
+git-fetch-with-cli = true
+
+[env]
+# RTX 5080 (Blackwell, compute 12.0); also keeps the CUDA build short.
+CMAKE_CUDA_ARCHITECTURES = "120"
