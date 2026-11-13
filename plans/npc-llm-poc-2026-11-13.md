@@ -25,7 +25,7 @@
 **Build environment for `plugins/llm-poc/`** (this session's shell predates the CUDA/CMake installs; new terminals already have them). Prefix cargo commands in bash with:
 
 ```bash
-export PATH="/c/Program Files/CMake/bin:/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.5/bin:$PATH" \
+export PATH="/c/Program Files/CMake/bin:/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.5/bin:/c/Program Files/NVIDIA GPU Computing Toolkit/CUDA/v13.5/bin/x64:$PATH" \
   CUDA_PATH="C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.5" \
   LIBCLANG_PATH="C:\\Program Files\\LLVM\\bin" \
   CudaToolkitDir="C:\\Program Files\\NVIDIA GPU Computing Toolkit\\CUDA\\v13.5\\" \
