@@ -10,6 +10,8 @@ mod fixture;
 mod prompt;
 #[allow(dead_code)] // consumed by the run tasks that follow
 mod schema;
+#[allow(dead_code)] // consumed by the run tasks that follow
+mod score;
 
 use std::path::PathBuf;
 
