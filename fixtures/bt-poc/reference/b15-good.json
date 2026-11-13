@@ -1,0 +1,42 @@
+{
+ "scenario": "b15",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "hold-not-chase",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "player"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "bridge"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Hold"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

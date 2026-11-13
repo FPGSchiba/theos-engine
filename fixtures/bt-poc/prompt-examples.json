@@ -1,0 +1,247 @@
+[
+ {
+  "actor": "a well watchman (example only, not in any scenario)",
+  "situation": {
+   "entities": [
+    {
+     "handle": "player",
+     "kind": "player",
+     "distance": 20.0
+    },
+    {
+     "handle": "well",
+     "kind": "place",
+     "distance": 1.0
+    },
+    {
+     "handle": "tower",
+     "kind": "place",
+     "distance": 30.0
+    }
+   ],
+   "health": 1.0,
+   "flags": []
+  },
+  "directive": "Guard the well. Fight the player if they come within 6 m. If you are badly hurt, run to the tower.",
+  "reply": {
+   "sources": [],
+   "tree": {
+    "name": "well-watch",
+    "root": {
+     "type": "Selector",
+     "children": [
+      {
+       "type": "Sequence",
+       "children": [
+        {
+         "type": "Condition",
+         "check": "health_below",
+         "params": {
+          "threshold": 0.25
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Destination",
+          "field": "entity",
+          "value": "tower"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "MovementState",
+          "field": "mode",
+          "value": "Flee"
+         }
+        }
+       ]
+      },
+      {
+       "type": "Sequence",
+       "children": [
+        {
+         "type": "Condition",
+         "check": "entity_in_range",
+         "params": {
+          "target_entity": "player",
+          "radius": 6
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Target",
+          "field": "entity",
+          "value": "player"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Attack",
+          "field": "style",
+          "value": "Melee"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "MovementState",
+          "field": "mode",
+          "value": "Charge"
+         }
+        }
+       ]
+      },
+      {
+       "type": "Sequence",
+       "children": [
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Destination",
+          "field": "entity",
+          "value": "well"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "MovementState",
+          "field": "mode",
+          "value": "Hold"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Attack",
+          "field": "style",
+          "value": "None"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  }
+ },
+ {
+  "actor": "a marsh wolf (example only, not in any scenario)",
+  "situation": {
+   "entities": [
+    {
+     "handle": "player",
+     "kind": "player",
+     "distance": 25.0
+    },
+    {
+     "handle": "thicket",
+     "kind": "cover",
+     "distance": 5.0
+    },
+    {
+     "handle": "wolf-2",
+     "kind": "ally",
+     "distance": 9.0
+    },
+    {
+     "handle": "wolf-3",
+     "kind": "ally",
+     "distance": 40.0
+    }
+   ],
+   "health": 1.0,
+   "flags": []
+  },
+  "directive": "Wait in the thicket until two pack-mates are close, then circle the player and bite at range.",
+  "reply": {
+   "sources": [],
+   "tree": {
+    "name": "wolf-circle",
+    "root": {
+     "type": "Selector",
+     "children": [
+      {
+       "type": "Sequence",
+       "children": [
+        {
+         "type": "Decorator_Invert",
+         "child": {
+          "type": "Condition",
+          "check": "allies_in_range",
+          "params": {
+           "radius": 20,
+           "at_least": 2
+          }
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Destination",
+          "field": "entity",
+          "value": "thicket"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "MovementState",
+          "field": "mode",
+          "value": "TakeCover"
+         }
+        }
+       ]
+      },
+      {
+       "type": "Sequence",
+       "children": [
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Target",
+          "field": "entity",
+          "value": "player"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "Attack",
+          "field": "style",
+          "value": "Melee"
+         }
+        },
+        {
+         "type": "Action",
+         "command": "SetComponentValue",
+         "params": {
+          "component": "MovementState",
+          "field": "mode",
+          "value": "Kite"
+         }
+        }
+       ]
+      }
+     ]
+    }
+   }
+  }
+ }
+]

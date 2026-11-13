@@ -1,0 +1,81 @@
+{
+ "scenario": "b14",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "captain-chases",
+   "root": {
+    "type": "Selector",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "flag_set",
+        "params": {
+         "flag_name": "player_visible"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "TriggerEvent",
+        "params": {
+         "event_name": "CallAllies",
+         "payload": {}
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Target",
+         "field": "entity",
+         "value": "player"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Advance"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "bridge"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Hold"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  2,
+  3,
+  4
+ ]
+}

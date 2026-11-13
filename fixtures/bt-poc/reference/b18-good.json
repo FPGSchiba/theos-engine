@@ -1,0 +1,42 @@
+{
+ "scenario": "b18",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "smash-instead",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "player"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Charge"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Attack",
+       "field": "style",
+       "value": "Melee"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

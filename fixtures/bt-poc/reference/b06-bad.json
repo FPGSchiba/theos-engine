@@ -1,0 +1,38 @@
+{
+ "scenario": "b06",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "lesson-on-vareth",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "vareth"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "BindSpirit",
+       "payload": {
+        "spirit": "vareth"
+       }
+      }
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  0,
+  1
+ ]
+}

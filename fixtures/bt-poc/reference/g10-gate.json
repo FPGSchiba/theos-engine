@@ -1,0 +1,26 @@
+{
+ "scenario": "b01",
+ "expect": "gate:sources",
+ "why": "cites a truth, which is never in a speaker's prompt",
+ "reply": {
+  "sources": [
+   "T-922"
+  ],
+  "tree": {
+   "name": "cites-a-truth",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "CarveRune",
+       "payload": {}
+      }
+     }
+    ]
+   }
+  }
+ }
+}

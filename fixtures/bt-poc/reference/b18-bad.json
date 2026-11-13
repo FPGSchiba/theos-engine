@@ -1,0 +1,31 @@
+{
+ "scenario": "b18",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "cast-fireball",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "player"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "CastFireball",
+      "params": {
+       "target": "player"
+      }
+     }
+    ]
+   }
+  }
+ },
+ "expect": "gate:registered-commands"
+}

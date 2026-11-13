@@ -1,0 +1,99 @@
+{
+ "scenario": "b13",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "pack-with-retreat",
+   "root": {
+    "type": "Selector",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "health_below",
+        "params": {
+         "threshold": 0.4
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "reeds"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Flee"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "allies_in_range",
+        "params": {
+         "radius": 15,
+         "at_least": 3
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Target",
+         "field": "entity",
+         "value": "player"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Charge"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "reeds"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Hold"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,30 @@
+{
+ "scenario": "b11",
+ "expect": "gate:registered-conditions",
+ "why": "is_night is not a registered condition",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "unknown-check",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Condition",
+      "check": "is_night",
+      "params": {}
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Hold"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

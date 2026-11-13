@@ -1,0 +1,119 @@
+{
+ "scenario": "b14",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "bridge-captain",
+   "root": {
+    "type": "Selector",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Decorator_Invert",
+        "child": {
+         "type": "Condition",
+         "check": "allies_in_range",
+         "params": {
+          "radius": 20,
+          "at_least": 2
+         }
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "gate"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Regroup"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "flag_set",
+        "params": {
+         "flag_name": "player_visible"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "TriggerEvent",
+        "params": {
+         "event_name": "CallAllies",
+         "payload": {}
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Target",
+         "field": "entity",
+         "value": "player"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "bridge"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Hold"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "bridge"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Hold"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

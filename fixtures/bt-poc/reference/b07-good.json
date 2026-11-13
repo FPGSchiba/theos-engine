@@ -1,0 +1,70 @@
+{
+ "scenario": "b07",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-929"
+  ],
+  "tree": {
+   "name": "strike-from-yang",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "bandit"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Charge"
+      }
+     },
+     {
+      "type": "Selector",
+      "children": [
+       {
+        "type": "Sequence",
+        "children": [
+         {
+          "type": "Condition",
+          "check": "flag_set",
+          "params": {
+           "flag_name": "at_ebb"
+          }
+         },
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "Attack",
+           "field": "style",
+           "value": "Melee"
+          }
+         }
+        ]
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Attack",
+         "field": "style",
+         "value": "Heavy"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

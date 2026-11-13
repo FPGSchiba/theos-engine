@@ -1,0 +1,26 @@
+{
+ "scenario": "b06",
+ "expect": "gate:params",
+ "why": "the apprentice is not a spirit",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "bind-a-person",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "BindSpirit",
+       "payload": {
+        "spirit": "apprentice"
+       }
+      }
+     }
+    ]
+   }
+  }
+ }
+}

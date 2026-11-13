@@ -1,0 +1,32 @@
+{
+ "scenario": "b11",
+ "expect": "gate:params",
+ "why": "flag_set names a flag the situation does not have",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "unknown-flag",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Condition",
+      "check": "flag_set",
+      "params": {
+       "flag_name": "enraged"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Attack",
+       "field": "style",
+       "value": "Heavy"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

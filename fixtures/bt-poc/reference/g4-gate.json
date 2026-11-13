@@ -1,0 +1,32 @@
+{
+ "scenario": "b11",
+ "expect": "gate:params",
+ "why": "threshold 1.5 is outside 0..1",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "bad-range",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Condition",
+      "check": "health_below",
+      "params": {
+       "threshold": 1.5
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Attack",
+       "field": "style",
+       "value": "Heavy"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

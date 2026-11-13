@@ -1,0 +1,83 @@
+{
+ "scenario": "b10",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "ridge-archer",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "player"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Attack",
+       "field": "style",
+       "value": "Ranged"
+      }
+     },
+     {
+      "type": "Selector",
+      "children": [
+       {
+        "type": "Sequence",
+        "children": [
+         {
+          "type": "Condition",
+          "check": "entity_in_range",
+          "params": {
+           "target_entity": "player",
+           "radius": 8
+          }
+         },
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "MovementState",
+           "field": "mode",
+           "value": "Kite"
+          }
+         }
+        ]
+       },
+       {
+        "type": "Sequence",
+        "children": [
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "Destination",
+           "field": "entity",
+           "value": "ridge"
+          }
+         },
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "MovementState",
+           "field": "mode",
+           "value": "Hold"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

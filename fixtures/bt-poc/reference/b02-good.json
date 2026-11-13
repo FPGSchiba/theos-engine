@@ -1,0 +1,42 @@
+{
+ "scenario": "b02",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-919"
+  ],
+  "tree": {
+   "name": "wake-hedge",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "gate-glyph"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "BreathTest",
+       "payload": {}
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "WakeGlyph",
+       "payload": {}
+      }
+     }
+    ]
+   }
+  }
+ }
+}

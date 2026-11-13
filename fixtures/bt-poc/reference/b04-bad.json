@@ -1,0 +1,38 @@
+{
+ "scenario": "b04",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "sever-first",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "Chant",
+       "payload": {
+        "chant": "Severing Sa"
+       }
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "Chant",
+       "payload": {
+        "chant": "Ground-Ohm"
+       }
+      }
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  0
+ ]
+}

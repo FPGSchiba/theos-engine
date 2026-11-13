@@ -1,0 +1,42 @@
+{
+ "scenario": "b17",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "shoot-not-charge",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "player"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Attack",
+       "field": "style",
+       "value": "Ranged"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Kite"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

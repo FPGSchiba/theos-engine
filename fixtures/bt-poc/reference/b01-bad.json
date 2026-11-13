@@ -1,0 +1,44 @@
+{
+ "scenario": "b01",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "carve-always",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "workshop-door"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Hold"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "CarveRune",
+       "payload": {}
+      }
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  1
+ ]
+}

@@ -1,0 +1,25 @@
+{
+ "scenario": "b10",
+ "expect": "gate:params",
+ "why": "Sprint is not a movement mode",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "bad-enum",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Sprint"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

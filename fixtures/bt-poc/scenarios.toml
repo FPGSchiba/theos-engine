@@ -1,0 +1,870 @@
+# Scenarios of the bt-poc fixture. README.md explains every field and check.
+# PoC fixture, synthetic, not canon.
+
+# Seconds between two ticks of the tree.
+tick_seconds = 0.5
+
+# Generation budget per priority, from the AI Latency Budget page (140181505).
+budget_seconds = { WorldEvent = 30.0, CombatTactical = 8.0 }
+
+[[scenario]]
+id = "b01"
+actor = "fx-hedge-scribe"
+tags = ["lore"]
+priority = "WorldEvent"
+duration = 7.0
+directive = "Keep the ward-glyphs on the workshop door fresh: carve one whenever you can. Raiders have been seen on the road."
+lore_expect = ["B-918"]
+also_ok = ["B-917", "B-914", "B-916"]
+rejects = []
+note = "The Scribes carve only when calm. The directive says carve whenever you can; only the lore says not while threatened."
+trace = [
+  { "at" = 2.0, "distances" = { "raider" = 12.0 }, "set_flags" = ["threatened"] },
+  { "at" = 4.5, "distances" = { "raider" = 70.0 }, "clear_flags" = ["threatened"] },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "workshop-door", "kind" = "place", "distance" = 2.0 },
+  { "handle" = "cellar", "kind" = "cover", "distance" = 8.0 },
+  { "handle" = "raider", "kind" = "foe", "distance" = 60.0 },
+]
+
+[scenario.flags]
+"threatened" = "an armed stranger is close and means you harm"
+
+[[scenario.check]]
+kind = "event"
+to = 1.5
+event = "CarveRune"
+why = "carves while calm"
+
+[[scenario.check]]
+kind = "no_event"
+from = 2.0
+to = 4.0
+event = "CarveRune"
+why = "never carves while threatened"
+
+[[scenario.check]]
+kind = "event"
+from = 4.5
+event = "CarveRune"
+why = "carves again once calm"
+
+[[scenario]]
+id = "b02"
+actor = "fx-hedge-scribe"
+tags = ["lore"]
+priority = "WorldEvent"
+duration = 3.0
+directive = "The ward-glyph on the north gate is carved. Wake it before nightfall."
+lore_expect = ["B-919"]
+also_ok = ["B-914"]
+rejects = []
+note = "The same directive as b03. Hedge-Scribes swear by the Breath-Test."
+trace = []
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "gate-glyph", "kind" = "place", "distance" = 3.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "order"
+order = ["BreathTest", "WakeGlyph"]
+why = "tests the glyph by breath before waking it"
+
+[[scenario]]
+id = "b03"
+actor = "fx-academy-scribe"
+tags = ["lore"]
+priority = "WorldEvent"
+duration = 3.0
+directive = "The ward-glyph on the north gate is carved. Wake it before nightfall."
+lore_expect = ["B-920"]
+also_ok = ["B-914"]
+rejects = ["B-919"]
+note = "Same directive as b02, another faction, another tree. The speaker rejects B-919."
+trace = []
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "gate-glyph", "kind" = "place", "distance" = 3.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "order"
+order = ["MeasureCord", "WakeGlyph"]
+why = "measures the spacing before waking"
+
+[[scenario.check]]
+kind = "no_event"
+event = "BreathTest"
+why = "does not do the Breath-Test, which the academies call superstition"
+
+[[scenario]]
+id = "b04"
+actor = "fx-cantor"
+tags = ["lore"]
+priority = "WorldEvent"
+duration = 3.0
+directive = "The ward on the north wall is failing, thirty metres from you. Sing the working that mends it."
+lore_expect = ["B-936", "B-937", "B-938"]
+also_ok = ["B-935", "B-934"]
+rejects = []
+note = "Needs three records. The wall is far, which is what Kharrian's Stride is for."
+trace = []
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "north-wall", "kind" = "place", "distance" = 30.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "order"
+order = ["Chant:Ground-Ohm", "Chant:Kharrian's Stride", "Chant:Severing Sa"]
+why = "opens with the Ground-Ohm, carries it with Kharrian's Stride, ends with the Severing Sa"
+
+[[scenario]]
+id = "b05"
+actor = "fx-cantor"
+tags = ["lore", "robustness"]
+priority = "WorldEvent"
+duration = 6.0
+directive = "Keep the drone going around the abbey until dawn. Repeat the Ground-Ohm over and over, without pause."
+lore_expect = ["B-940"]
+also_ok = ["B-936", "B-935", "B-939"]
+rejects = []
+note = "The directive asks for what the songbooks forbid. The lore wins; the Cantor sings, rests and sings again."
+trace = []
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "abbey", "kind" = "place", "distance" = 0.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "structure"
+event = "Chant"
+rule = "no-repeat-over-event"
+why = "no chant inside a repeat: no song is sung in a closed loop"
+
+[[scenario.check]]
+kind = "event"
+to = 1.0
+event = "Chant:Ground-Ohm"
+why = "still sings the Ground-Ohm"
+
+[[scenario]]
+id = "b06"
+actor = "fx-binder"
+tags = ["lore"]
+priority = "WorldEvent"
+duration = 3.0
+directive = "Show the new apprentice how a pact is made. Three Listeners are within reach: Grandfather Ember at the forge, Vareth the Long Cold up on the pass, and Skerrin on the cliffs."
+lore_expect = ["B-947"]
+also_ok = ["B-946", "B-945", "B-951", "B-943"]
+rejects = []
+note = "Apprentices learn on Ember; the question does not say so."
+trace = []
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "apprentice", "kind" = "ally", "distance" = 2.0 },
+  { "handle" = "grandfather-ember", "kind" = "spirit", "distance" = 10.0, "name" = "Old Grandfather Ember" },
+  { "handle" = "vareth", "kind" = "spirit", "distance" = 400.0, "name" = "Vareth the Long Cold" },
+  { "handle" = "skerrin", "kind" = "spirit", "distance" = 120.0, "name" = "Skerrin, the Gull-Throat" },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "event"
+event = "BindSpirit:grandfather-ember"
+why = "teaches on Grandfather Ember"
+
+[[scenario.check]]
+kind = "no_event"
+event = "BindSpirit:vareth"
+why = "does not try Vareth with an apprentice"
+
+[[scenario]]
+id = "b07"
+actor = "fx-sect-elder"
+tags = ["lore"]
+priority = "CombatTactical"
+duration = 5.0
+directive = "A bandit is threatening the gate. Drive him off, and finish him with your strongest blow."
+lore_expect = ["B-929"]
+also_ok = ["B-930", "B-931", "B-926"]
+rejects = []
+note = "The ebb flag is a fixture simplification of the Yin-Yang balance, which is planned for M2+."
+trace = [
+  { "at" = 1.5, "set_flags" = ["at_ebb"] },
+  { "at" = 3.5, "clear_flags" = ["at_ebb"] },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "bandit", "kind" = "foe", "distance" = 4.0 },
+  { "handle" = "gate", "kind" = "place", "distance" = 6.0 },
+]
+
+[scenario.flags]
+"at_ebb" = "your breath is at full ebb; you have just spent it"
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Target.entity" = "bandit" }
+why = "goes for the bandit"
+
+[[scenario.check]]
+kind = "never"
+from = 1.5
+to = 3.0
+state = { "Attack.style" = "Heavy" }
+why = "no great blow from a gate at full ebb"
+
+[[scenario.check]]
+kind = "state"
+from = 3.5
+state = { "Attack.style" = "Heavy" }
+why = "the strongest blow once the breath turns"
+
+[[scenario]]
+id = "b08"
+actor = "fx-plate-reader"
+tags = ["lore"]
+priority = "WorldEvent"
+duration = 5.0
+directive = "You have a while before the patrol comes back. Do what your people came to this ruin for, and do not be caught."
+lore_expect = ["B-908"]
+also_ok = ["B-910", "B-911"]
+rejects = []
+note = "A vague directive. ReadPlate is this actor's only event, so the test is mostly the patrol branch."
+trace = [
+  { "at" = 3.0, "distances" = { "patrol" = 25.0 }, "set_flags" = ["patrol_near"] },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "plate-a", "kind" = "plate", "distance" = 5.0 },
+  { "handle" = "plate-b", "kind" = "plate", "distance" = 22.0 },
+  { "handle" = "cellar-stair", "kind" = "cover", "distance" = 10.0 },
+  { "handle" = "patrol", "kind" = "foe", "distance" = 200.0 },
+]
+
+[scenario.flags]
+"patrol_near" = "the patrol is back and close"
+
+[[scenario.check]]
+kind = "event"
+to = 2.5
+event = "ReadPlate"
+why = "reads a plate while it can"
+
+[[scenario.check]]
+kind = "state"
+from = 3.0
+to = 4.0
+state = { "MovementState.mode" = ["TakeCover", "Flee"] }
+why = "hides when the patrol is back"
+
+[[scenario.check]]
+kind = "no_event"
+from = 3.5
+event = "ReadPlate"
+why = "stops reading once the patrol is near"
+
+[[scenario]]
+id = "b09"
+actor = "fx-shrine-keeper"
+tags = ["lore-irrelevant"]
+priority = "CombatTactical"
+duration = 4.0
+directive = "If raiders come to the village, ring the bell and lead the children into the shrine."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "Her people's beliefs do not bear on this. A good answer cites nothing."
+trace = [
+  { "at" = 1.5, "distances" = { "raiders" = 30.0 }, "set_flags" = ["raiders_near"] },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "children", "kind" = "ally", "distance" = 5.0 },
+  { "handle" = "bell", "kind" = "place", "distance" = 3.0 },
+  { "handle" = "shrine", "kind" = "place", "distance" = 20.0 },
+  { "handle" = "raiders", "kind" = "foe", "distance" = 150.0 },
+]
+
+[scenario.flags]
+"raiders_near" = "raiders are in the village"
+
+[[scenario.check]]
+kind = "no_event"
+to = 1.0
+event = "RingBell"
+why = "no bell before the raiders come"
+
+[[scenario.check]]
+kind = "event"
+from = 1.5
+to = 2.0
+event = "RingBell"
+why = "rings the bell when they come"
+
+[[scenario.check]]
+kind = "state"
+from = 1.5
+to = 2.5
+state = { "Destination.entity" = "shrine", "MovementState.mode" = ["Advance", "Regroup", "Flee", "TakeCover"] }
+why = "heads for the shrine"
+
+[[scenario]]
+id = "b10"
+actor = "fx-thorn-archer"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 5.0
+directive = "Hold the ridge and shoot the player."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "Follows the record: keep the distance, never melee."
+trace = [
+  { "at" = 2.0, "distances" = { "player" = 6.0 } },
+  { "at" = 4.0, "distances" = { "player" = 15.0 } },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 25.0 },
+  { "handle" = "ridge", "kind" = "place", "distance" = 0.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Target.entity" = "player", "Attack.style" = "Ranged" }
+why = "shoots the player"
+
+[[scenario.check]]
+kind = "state"
+from = 2.0
+to = 3.0
+state = { "MovementState.mode" = ["Kite", "Flee"] }
+why = "backs away when the player closes"
+
+[[scenario.check]]
+kind = "never"
+state = { "Attack.style" = "Melee" }
+why = "never fights hand to hand"
+
+[[scenario.check]]
+kind = "state"
+from = 4.0
+state = { "MovementState.mode" = "Hold" }
+why = "holds the ridge again"
+
+[[scenario]]
+id = "b11"
+actor = "fx-stone-brute"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 5.0
+directive = "Smash the player."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "Health 0.45 at 1.5 s catches a sloppy threshold such as one half."
+trace = [
+  { "at" = 1.5, "health" = 0.45 },
+  { "at" = 3.0, "health" = 0.25 },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 12.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Target.entity" = "player", "MovementState.mode" = "Charge" }
+why = "charges the player"
+
+[[scenario.check]]
+kind = "never"
+state = { "MovementState.mode" = "Flee" }
+why = "never retreats"
+
+[[scenario.check]]
+kind = "never"
+to = 2.5
+state = { "Attack.style" = "Heavy" }
+why = "no heavy blows while above a third"
+
+[[scenario.check]]
+kind = "state"
+from = 3.0
+to = 3.5
+state = { "Attack.style" = "Heavy" }
+why = "heavy blows below a third"
+
+[[scenario]]
+id = "b12"
+actor = "fx-reed-lurker"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 5.0
+directive = "Hunt the player across the marsh."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "Three others of its kind within 15 m; at 1.5 s only two are. Allies do not count the actor itself."
+trace = [
+  { "at" = 1.5, "distances" = { "lurker-3" = 10.0 } },
+  { "at" = 2.5, "distances" = { "lurker-4" = 12.0 } },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 20.0 },
+  { "handle" = "reeds", "kind" = "cover", "distance" = 3.0 },
+  { "handle" = "lurker-2", "kind" = "ally", "distance" = 8.0 },
+  { "handle" = "lurker-3", "kind" = "ally", "distance" = 60.0 },
+  { "handle" = "lurker-4", "kind" = "ally", "distance" = 70.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Destination.entity" = "reeds" }
+why = "hangs back in the reeds while alone"
+
+[[scenario.check]]
+kind = "never"
+to = 2.0
+state = { "MovementState.mode" = "Charge" }
+why = "does not rush alone"
+
+[[scenario.check]]
+kind = "state"
+from = 2.5
+to = 3.5
+state = { "MovementState.mode" = "Charge", "Target.entity" = "player" }
+why = "rushes when the pack is there"
+
+[[scenario]]
+id = "b13"
+actor = "fx-reed-lurker"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 4.0
+directive = "Harry the player at the ford with your pack."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "'Badly hurt' has no number in the record; 0.7 is not badly hurt, 0.2 is."
+trace = [
+  { "at" = 1.0, "health" = 0.7 },
+  { "at" = 2.0, "health" = 0.2 },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 6.0 },
+  { "handle" = "reeds", "kind" = "cover", "distance" = 15.0 },
+  { "handle" = "lurker-2", "kind" = "ally", "distance" = 5.0 },
+  { "handle" = "lurker-3", "kind" = "ally", "distance" = 6.0 },
+  { "handle" = "lurker-4", "kind" = "ally", "distance" = 7.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "state"
+to = 0.5
+state = { "MovementState.mode" = "Charge" }
+why = "rushes with the pack"
+
+[[scenario.check]]
+kind = "never"
+to = 1.5
+state = { "MovementState.mode" = ["Flee", "TakeCover"] }
+why = "a scratch is not badly hurt"
+
+[[scenario.check]]
+kind = "state"
+from = 2.0
+to = 2.5
+state = { "MovementState.mode" = ["Flee", "TakeCover"], "Destination.entity" = "reeds" }
+why = "slinks back to the reeds when badly hurt"
+
+[[scenario]]
+id = "b14"
+actor = "fx-warden-captain"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 5.0
+directive = "Defend the bridge."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "Four rules from the record in one tree."
+trace = [
+  { "at" = 1.0, "distances" = { "player" = 30.0 }, "set_flags" = ["player_visible"] },
+  { "at" = 3.0, "remove" = ["warden-1"] },
+  { "at" = 3.5, "remove" = ["warden-2"] },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 50.0 },
+  { "handle" = "bridge", "kind" = "place", "distance" = 0.0 },
+  { "handle" = "gate", "kind" = "place", "distance" = 40.0 },
+  { "handle" = "warden-1", "kind" = "ally", "distance" = 4.0 },
+  { "handle" = "warden-2", "kind" = "ally", "distance" = 5.0 },
+  { "handle" = "warden-3", "kind" = "ally", "distance" = 6.0 },
+]
+
+[scenario.flags]
+"player_visible" = "you can see the player"
+
+[[scenario.check]]
+kind = "no_event"
+to = 0.5
+event = "CallAllies"
+why = "no call before it sees the player"
+
+[[scenario.check]]
+kind = "event"
+from = 1.0
+to = 1.5
+event = "CallAllies"
+why = "calls the squad on sight"
+
+[[scenario.check]]
+kind = "state"
+from = 1.0
+to = 2.5
+state = { "Destination.entity" = "bridge", "MovementState.mode" = "Hold" }
+why = "holds the bridge"
+
+[[scenario.check]]
+kind = "never"
+state = { "MovementState.mode" = ["Advance", "Charge", "Follow"] }
+why = "does not chase"
+
+[[scenario.check]]
+kind = "state"
+from = 3.5
+to = 4.5
+state = { "Destination.entity" = "gate", "MovementState.mode" = "Regroup" }
+why = "falls back to the gate when the squad is down to one"
+
+[[scenario]]
+id = "b15"
+actor = "fx-warden-captain"
+tags = ["robustness"]
+priority = "CombatTactical"
+duration = 4.0
+directive = "The player is running away. Do not let them escape."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "The directive contradicts the design record. The record wins."
+trace = [
+  { "at" = 1.5, "distances" = { "player" = 35.0 } },
+  { "at" = 3.0, "distances" = { "player" = 60.0 } },
+]
+
+[scenario.world]
+health = 1.0
+flags = ["player_visible"]
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 10.0 },
+  { "handle" = "bridge", "kind" = "place", "distance" = 0.0 },
+  { "handle" = "gate", "kind" = "place", "distance" = 40.0 },
+  { "handle" = "warden-1", "kind" = "ally", "distance" = 4.0 },
+  { "handle" = "warden-2", "kind" = "ally", "distance" = 5.0 },
+  { "handle" = "warden-3", "kind" = "ally", "distance" = 6.0 },
+]
+
+[scenario.flags]
+"player_visible" = "you can see the player"
+
+[[scenario.check]]
+kind = "never"
+state = { "MovementState.mode" = ["Advance", "Charge", "Follow"] }
+why = "does not chase beyond the bridge, whatever the order"
+
+[[scenario.check]]
+kind = "state"
+from = 1.5
+to = 3.0
+state = { "Destination.entity" = "bridge", "MovementState.mode" = "Hold" }
+why = "holds the bridge"
+
+[[scenario]]
+id = "b16"
+actor = "fx-thorn-archer"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 4.0
+directive = "Pin the player down from the ridge."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "The out-of-arrows rule is the last line of the record."
+trace = [
+  { "at" = 2.0, "set_flags" = ["out_of_arrows"] },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 20.0 },
+  { "handle" = "ridge", "kind" = "place", "distance" = 0.0 },
+  { "handle" = "captain", "kind" = "ally", "distance" = 30.0 },
+]
+
+[scenario.flags]
+"out_of_arrows" = "your quiver is empty"
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Target.entity" = "player", "Attack.style" = "Ranged" }
+why = "shoots the player"
+
+[[scenario.check]]
+kind = "state"
+from = 2.0
+to = 3.0
+state = { "Destination.entity" = "captain", "MovementState.mode" = ["Regroup", "Flee", "Follow"] }
+why = "falls back to the captain when out of arrows"
+
+[[scenario.check]]
+kind = "never"
+state = { "Attack.style" = "Melee" }
+why = "never fights hand to hand"
+
+[[scenario]]
+id = "b17"
+actor = "fx-thorn-archer"
+tags = ["robustness"]
+priority = "CombatTactical"
+duration = 3.0
+directive = "Charge the player and cut them down."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "The directive contradicts the design record. The record wins."
+trace = []
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 15.0 },
+  { "handle" = "ridge", "kind" = "place", "distance" = 0.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "never"
+state = { "Attack.style" = "Melee" }
+why = "never fights hand to hand, whatever the order"
+
+[[scenario.check]]
+kind = "never"
+state = { "MovementState.mode" = "Charge" }
+why = "does not charge"
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Target.entity" = "player", "Attack.style" = "Ranged" }
+why = "shoots instead"
+
+[[scenario]]
+id = "b18"
+actor = "fx-stone-brute"
+tags = ["robustness"]
+priority = "CombatTactical"
+duration = 3.0
+directive = "Cast a fireball at the player."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "No cast exists. With the grammar on, an invented command cannot be written; with it off, the gate catches it."
+trace = []
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 10.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Target.entity" = "player", "Attack.style" = ["Melee", "Heavy"] }
+why = "attacks the player with what it has"
+
+[[scenario.check]]
+kind = "never"
+state = { "MovementState.mode" = "Flee" }
+why = "never retreats"
+
+[[scenario]]
+id = "b19"
+actor = "fx-reed-lurker"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 6.5
+directive = "Lie in wait in the reeds by the path. Rush the player once they are within 10 m. If they have not come within 4 seconds, creep up to the old wall instead and wait there."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "Needs a timer: time_since_install_over."
+trace = [
+  { "at" = 5.0, "distances" = { "player" = 8.0 } },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 30.0 },
+  { "handle" = "reeds", "kind" = "cover", "distance" = 0.0 },
+  { "handle" = "old-wall", "kind" = "cover", "distance" = 25.0 },
+  { "handle" = "lurker-2", "kind" = "ally", "distance" = 5.0 },
+  { "handle" = "lurker-3", "kind" = "ally", "distance" = 6.0 },
+  { "handle" = "lurker-4", "kind" = "ally", "distance" = 7.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "state"
+to = 1.0
+state = { "Destination.entity" = "reeds", "MovementState.mode" = ["Hold", "TakeCover"] }
+why = "waits in the reeds"
+
+[[scenario.check]]
+kind = "never"
+to = 4.5
+state = { "MovementState.mode" = "Charge" }
+why = "no rush before the player is close"
+
+[[scenario.check]]
+kind = "state"
+from = 4.0
+to = 4.5
+state = { "Destination.entity" = "old-wall" }
+why = "moves to the old wall after 4 s"
+
+[[scenario.check]]
+kind = "state"
+from = 5.0
+to = 6.0
+state = { "MovementState.mode" = "Charge", "Target.entity" = "player" }
+why = "rushes when the player is within 10 m"
+
+[[scenario]]
+id = "b20"
+actor = "fx-thorn-archer"
+tags = ["combat"]
+priority = "CombatTactical"
+duration = 4.0
+directive = "No orders. You are on watch at the ridge."
+lore_expect = []
+also_ok = []
+rejects = []
+note = "No directive: the tree comes from the record alone."
+trace = [
+  { "at" = 1.5, "distances" = { "player" = 25.0 } },
+  { "at" = 3.0, "distances" = { "player" = 7.0 } },
+]
+
+[scenario.world]
+health = 1.0
+flags = []
+entities = [
+  { "handle" = "player", "kind" = "player", "distance" = 40.0 },
+  { "handle" = "ridge", "kind" = "place", "distance" = 0.0 },
+]
+
+[scenario.flags]
+
+[[scenario.check]]
+kind = "state"
+from = 1.5
+to = 2.5
+state = { "Target.entity" = "player", "Attack.style" = "Ranged" }
+why = "shoots the player once in range"
+
+[[scenario.check]]
+kind = "state"
+from = 3.0
+to = 3.5
+state = { "MovementState.mode" = ["Kite", "Flee"] }
+why = "backs away when the player closes"
+
+[[scenario.check]]
+kind = "never"
+state = { "Attack.style" = "Melee" }
+why = "never fights hand to hand"

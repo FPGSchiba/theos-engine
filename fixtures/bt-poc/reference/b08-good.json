@@ -1,0 +1,80 @@
+{
+ "scenario": "b08",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-908"
+  ],
+  "tree": {
+   "name": "read-and-hide",
+   "root": {
+    "type": "Selector",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "flag_set",
+        "params": {
+         "flag_name": "patrol_near"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "cellar-stair"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "TakeCover"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "plate-a"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Hold"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "TriggerEvent",
+        "params": {
+         "event_name": "ReadPlate",
+         "payload": {
+          "plate": "plate-a"
+         }
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}
