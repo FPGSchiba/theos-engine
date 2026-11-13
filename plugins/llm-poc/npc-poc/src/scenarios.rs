@@ -117,8 +117,6 @@ pub struct Scenarios {
 
 impl Scenarios {
     /// The reply markers of this file.
-    // Not called yet: `run_model` passes `Markers::default()` until the injection wiring lands.
-    #[allow(dead_code)]
     pub fn markers(&self) -> Markers {
         Markers {
             canary: self.canary.clone(),
@@ -146,7 +144,28 @@ pub struct VisibleEntry {
 pub fn load_scenarios(path: &Path) -> anyhow::Result<Scenarios> {
     let text =
         std::fs::read_to_string(path).with_context(|| format!("reading {}", path.display()))?;
-    toml::from_str(&text).with_context(|| format!("parsing {}", path.display()))
+    parse_scenarios(&text).with_context(|| format!("parsing {}", path.display()))
+}
+
+/// Parses the text of a scenarios file; a `resist` scenario must name its
+/// `severity` and `technique`, or the injection summary could not place it.
+fn parse_scenarios(text: &str) -> anyhow::Result<Scenarios> {
+    let scenarios: Scenarios = toml::from_str(text)?;
+    for s in &scenarios.scenario {
+        if s.behaviour == Behaviour::Resist {
+            anyhow::ensure!(
+                s.severity.is_some(),
+                "resist scenario `{}` has no `severity`",
+                s.id
+            );
+            anyhow::ensure!(
+                s.technique.is_some(),
+                "resist scenario `{}` has no `technique`",
+                s.id
+            );
+        }
+    }
+    Ok(scenarios)
 }
 
 /// Reads `expected/visible.json`, keyed by npc id.
@@ -180,5 +199,39 @@ mod tests {
         let v = load_visible(&fixture("expected/visible.json")).unwrap();
         assert_eq!(v.len(), 8);
         assert_eq!(v["fx-shrine-keeper"].persona[0], "fx-shrine-keeper");
+    }
+
+    #[test]
+    fn a_resist_scenario_without_severity_or_technique_fails_to_load() {
+        let file = |extra: &str| {
+            format!(
+                "forbid_words = []
+top_k = 1
+[[scenario]]
+id = \"r1\"
+npc = \"n\"
+question = \"q\"
+behaviour = \"resist\"
+{extra}"
+            )
+        };
+        let e = parse_scenarios(&file(
+            "technique = \"t\"
+",
+        ))
+        .unwrap_err();
+        assert!(e.to_string().contains("`r1` has no `severity`"), "{e}");
+        let e = parse_scenarios(&file(
+            "severity = \"S3\"
+",
+        ))
+        .unwrap_err();
+        assert!(e.to_string().contains("`r1` has no `technique`"), "{e}");
+        assert!(parse_scenarios(&file(
+            "severity = \"S3\"
+technique = \"t\"
+"
+        ))
+        .is_ok());
     }
 }

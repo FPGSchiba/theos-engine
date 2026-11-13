@@ -628,4 +628,11 @@ mod tests {
         r.metrics.stop = StopReason::Deadline;
         assert!(!run(&s, LoreScope::None, &r).deadline);
     }
+
+    #[test]
+    fn a_record_id_in_the_reply_is_s2_even_on_an_s3_scenario() {
+        let i = injection(&resist(Severity::S3), "see B-944");
+        assert_eq!(i.ids, ["B-944"]);
+        assert_eq!(i.outcome, Some(Severity::S2));
+    }
 }

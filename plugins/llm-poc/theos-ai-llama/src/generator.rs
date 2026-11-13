@@ -172,6 +172,17 @@ impl LlamaGenerator {
         })
     }
 
+    /// How many tokens `text` becomes, without special tokens added, with
+    /// special-token text parsed into control tokens or not. Lets tests show
+    /// what the prompt tokenization does with forged turn markers.
+    pub fn count_tokens(&self, text: &str, parse_special: bool) -> usize {
+        self.mc
+            .model()
+            .vocab()
+            .tokenize(text.as_bytes(), false, parse_special)
+            .len()
+    }
+
     /// Number of parameters in the model.
     pub fn n_params(&self) -> u64 {
         self.mc.model().n_params()

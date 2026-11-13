@@ -614,6 +614,10 @@ pub fn row_json(r: &Row) -> serde_json::Value {
         "npc": r.npc,
         "behaviour": behaviour_label(r.behaviour),
         "hand_read": r.hand_read,
+        "technique": r.technique,
+        "severity": r.severity.map(|s| s.to_string()),
+        "player_name": r.player_name,
+        "good_outcome": r.good_outcome,
         "question": r.question,
         "checks": checks,
         "metrics": metrics,
@@ -686,6 +690,10 @@ mod tests {
             reply_error: None,
             raw: "{\"raw\":1}".into(),
             hand_read: false,
+            technique: None,
+            severity: None,
+            player_name: None,
+            good_outcome: None,
         }
     }
 
