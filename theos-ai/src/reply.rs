@@ -4,6 +4,7 @@
 use serde::Deserialize;
 use serde_json::{Map, Value, json};
 
+use crate::driver::StopReason;
 use crate::lore::RecordId;
 
 /// Most lore records a single reply may cite.
@@ -22,6 +23,7 @@ pub struct Reply {
 
 /// Why a raw model output could not be turned into a [`Reply`].
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
+#[non_exhaustive]
 pub enum ReplyError {
     /// The output is not valid JSON or does not match the reply shape.
     #[error("malformed reply: {0}")]
@@ -32,6 +34,9 @@ pub enum ReplyError {
     /// The reply text is empty or only whitespace.
     #[error("reply text is empty")]
     EmptyReply,
+    /// Generation stopped before the model finished, so there is nothing to parse.
+    #[error("generation did not finish: {0:?}")]
+    Unfinished(StopReason),
 }
 
 /// Wire shape of a reply; rejects keys the schema does not define.

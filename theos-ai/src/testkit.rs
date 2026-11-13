@@ -1,6 +1,21 @@
 //! Test-support helpers for code that depends on `theos-ai`.
 
+use std::collections::VecDeque;
+use std::sync::{Arc, Mutex, MutexGuard, PoisonError};
+use std::time::{Duration, Instant};
+
+use serde_json::Value;
+
+use crate::backend::{Backend, BackendError, Decoder, GenerationRequest, Piece, Thinking};
+use crate::clock::Clock;
+use crate::context::Prompt;
 use crate::embed::{EmbedError, EmbedInput, Embedder};
+use crate::memory::MemoryProbe;
+
+/// Locks `m`, recovering the data if a panicking test poisoned the mutex.
+fn lock<T>(m: &Mutex<T>) -> MutexGuard<'_, T> {
+    m.lock().unwrap_or_else(PoisonError::into_inner)
+}
 
 /// Default dimensionality of a [`FakeEmbedder`].
 const DEFAULT_DIMS: usize = 64;
@@ -69,6 +84,172 @@ impl Embedder for FakeEmbedder {
                 EmbedInput::Query(t) | EmbedInput::Document(t) => self.embed_text(t),
             })
             .collect())
+    }
+}
+
+/// A manually advanced clock.
+///
+/// Clones share one offset, so a [`ScriptedBackend`] and the code under test
+/// see the same time.
+#[derive(Clone, Debug)]
+pub struct FakeClock {
+    base: Instant,
+    offset: Arc<Mutex<Duration>>,
+}
+
+impl FakeClock {
+    /// Creates a clock reading "now" that only moves when advanced.
+    pub fn new() -> Self {
+        Self {
+            base: Instant::now(),
+            offset: Arc::new(Mutex::new(Duration::ZERO)),
+        }
+    }
+
+    /// Moves the clock, and every clone of it, forward by `by`.
+    pub fn advance(&self, by: Duration) {
+        *lock(&self.offset) += by;
+    }
+}
+
+impl Default for FakeClock {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
+impl Clock for FakeClock {
+    fn now(&self) -> Instant {
+        self.base + *lock(&self.offset)
+    }
+}
+
+/// One scripted generation for a [`ScriptedBackend`].
+#[derive(Clone, Debug)]
+pub struct Script {
+    /// Prompt tokens the decoder reports.
+    pub prompt_tokens: u32,
+    /// Clock time consumed by [`Backend::begin`].
+    pub prefill: Duration,
+    /// Clock time consumed by each token.
+    pub per_token: Duration,
+    /// The tokens to emit, in order.
+    pub pieces: Vec<Piece>,
+}
+
+#[derive(Default)]
+struct ScriptedState {
+    scripts: VecDeque<Script>,
+    requests: Vec<(Prompt, Value, Thinking)>,
+}
+
+/// A backend that replays [`Script`]s and advances a [`FakeClock`] as it goes.
+///
+/// State is shared with any [`ScriptedBackend::handle`], so
+/// [`ScriptedBackend::requests`] stays readable after the backend has moved
+/// into an `Npc`.
+pub struct ScriptedBackend {
+    clock: FakeClock,
+    state: Arc<Mutex<ScriptedState>>,
+}
+
+impl ScriptedBackend {
+    /// Creates a backend with no scripts that advances `clock`.
+    pub fn new(clock: FakeClock) -> Self {
+        Self {
+            clock,
+            state: Arc::new(Mutex::new(ScriptedState::default())),
+        }
+    }
+
+    /// Queues a script; each [`Backend::begin`] consumes the oldest one.
+    pub fn push(&self, script: Script) {
+        lock(&self.state).scripts.push_back(script);
+    }
+
+    /// Every request received so far, as `(prompt, schema, thinking)`.
+    pub fn requests(&self) -> Vec<(Prompt, Value, Thinking)> {
+        lock(&self.state).requests.clone()
+    }
+
+    /// A handle onto the same state, for reading `requests` after a move.
+    pub fn handle(&self) -> ScriptedBackend {
+        Self {
+            clock: self.clock.clone(),
+            state: Arc::clone(&self.state),
+        }
+    }
+}
+
+struct ScriptedDecoder {
+    clock: FakeClock,
+    prompt_tokens: u32,
+    per_token: Duration,
+    pieces: VecDeque<Piece>,
+}
+
+impl Decoder for ScriptedDecoder {
+    fn prompt_tokens(&self) -> u32 {
+        self.prompt_tokens
+    }
+
+    fn next(&mut self) -> Result<Option<Piece>, BackendError> {
+        let Some(piece) = self.pieces.pop_front() else {
+            return Ok(None);
+        };
+        self.clock.advance(self.per_token);
+        Ok(Some(piece))
+    }
+}
+
+impl Backend for ScriptedBackend {
+    fn begin<'a>(
+        &'a mut self,
+        request: &GenerationRequest<'_>,
+    ) -> Result<Box<dyn Decoder + 'a>, BackendError> {
+        let mut state = lock(&self.state);
+        state.requests.push((
+            request.prompt.clone(),
+            request.schema.clone(),
+            request.thinking,
+        ));
+        let script = state
+            .scripts
+            .pop_front()
+            .ok_or_else(|| BackendError::Failed("no script".into()))?;
+        self.clock.advance(script.prefill);
+        Ok(Box::new(ScriptedDecoder {
+            clock: self.clock.clone(),
+            prompt_tokens: script.prompt_tokens,
+            per_token: script.per_token,
+            pieces: script.pieces.into(),
+        }))
+    }
+}
+
+/// A memory probe replaying fixed samples, then repeating the last one.
+pub struct FakeProbe {
+    samples: Mutex<VecDeque<u64>>,
+    last: Mutex<Option<u64>>,
+}
+
+impl FakeProbe {
+    /// Creates a probe returning `samples` in turn; with none it reports `None`.
+    pub fn new(samples: Vec<u64>) -> Self {
+        Self {
+            samples: Mutex::new(samples.into()),
+            last: Mutex::new(None),
+        }
+    }
+}
+
+impl MemoryProbe for FakeProbe {
+    fn vram_bytes(&self) -> Option<u64> {
+        let mut last = lock(&self.last);
+        if let Some(next) = lock(&self.samples).pop_front() {
+            *last = Some(next);
+        }
+        *last
     }
 }
 
