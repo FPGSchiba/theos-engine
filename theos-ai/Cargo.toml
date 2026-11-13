@@ -4,7 +4,7 @@ version = "0.1.0"
 edition = "2024"
 
 [features]
-# Test-support helpers; Task 5 fills this in.
+# Test-support helpers such as `FakeEmbedder`.
 testkit = []
 
 [dependencies]
