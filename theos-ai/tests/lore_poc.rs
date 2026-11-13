@@ -212,6 +212,11 @@ fn no_forbidden_record_reaches_any_prompt() {
                             rec.id
                         );
                         assert!(
+                            !contains_bare_id(&ctx.prompt.system, rec.id.as_str()),
+                            "{label}: bare id of {} in prompt",
+                            rec.id
+                        );
+                        assert!(
                             !ctx.prompt.system.contains(&rec.title),
                             "{label}: title of {} in prompt",
                             rec.id
@@ -223,4 +228,27 @@ fn no_forbidden_record_reaches_any_prompt() {
         }
     }
     assert_eq!(checked, 32 * 3 * 2 * 2);
+}
+
+/// Whether `id` occurs in `text` outside a longer id: not adjacent to an
+/// alphanumeric character or `-`.
+fn contains_bare_id(text: &str, id: &str) -> bool {
+    let joins = |c: char| c.is_alphanumeric() || c == '-';
+    text.match_indices(id).any(|(at, _)| {
+        let before = text[..at].chars().next_back();
+        let after = text[at + id.len()..].chars().next();
+        !before.is_some_and(joins) && !after.is_some_and(joins)
+    })
+}
+
+#[test]
+fn bare_id_scan_finds_ids_only_outside_longer_ids() {
+    assert!(contains_bare_id("see B-1.", "B-1"));
+    assert!(contains_bare_id("[B-1]", "B-1"));
+    assert!(contains_bare_id("B-1", "B-1"));
+    assert!(!contains_bare_id("see B-12", "B-1"));
+    assert!(!contains_bare_id("see XB-1", "B-1"));
+    assert!(!contains_bare_id("see B-1-x", "B-1"));
+    assert!(contains_bare_id("B-12 and B-1 here", "B-1"));
+    assert!(!contains_bare_id("nothing", "B-1"));
 }

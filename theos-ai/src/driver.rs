@@ -49,6 +49,10 @@ pub struct Metrics {
     pub retrieval: Duration,
     /// Time from the start of the request to the first token, if any token came.
     pub time_to_first_token: Option<Duration>,
+    /// Time from the start of the request to the first answer-phase token, if
+    /// any came. With thinking on this is what a player perceives as the reply
+    /// starting.
+    pub time_to_first_answer_token: Option<Duration>,
     /// Generation speed between the first and last token; `0.0` when it cannot
     /// be measured (fewer than two tokens, or no time between them).
     pub tokens_per_second: f32,
@@ -227,6 +231,7 @@ impl Npc {
         let mut thinking_tokens = 0_u32;
         let mut answer_tokens = 0_u32;
         let mut first_token = None;
+        let mut first_answer_token = None;
         let mut last_token = None;
         let stop = loop {
             if self.clock.now().duration_since(t0) >= request.deadline {
@@ -250,6 +255,7 @@ impl Npc {
                         }
                         Phase::Answer => {
                             answer_tokens += 1;
+                            first_answer_token.get_or_insert(at);
                             raw.push_str(&piece.text);
                         }
                     }
@@ -295,6 +301,7 @@ impl Npc {
                 answer_tokens,
                 retrieval,
                 time_to_first_token: first_token.map(|t| t.duration_since(t0)),
+                time_to_first_answer_token: first_answer_token.map(|t| t.duration_since(t0)),
                 tokens_per_second,
                 total,
                 vram_peak_bytes: vram_peak,
@@ -449,6 +456,25 @@ mod tests {
         assert_eq!(m.total, ms(310));
         assert_eq!(m.tokens_per_second, 100.0);
         assert_eq!(m.answer_tokens, 11);
+    }
+
+    #[test]
+    fn time_to_first_answer_token_skips_the_thinking_phase() {
+        let mut pieces: Vec<Piece> = (0..5).map(|_| piece("hm ", Phase::Thinking)).collect();
+        pieces.extend(answer_pieces(3));
+        let mut r = rig(vec![script(ms(200), ms(10), pieces)]);
+        let m = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap().metrics;
+        assert_eq!(m.time_to_first_token, Some(ms(210)));
+        assert_eq!(m.time_to_first_answer_token, Some(ms(260)));
+    }
+
+    #[test]
+    fn time_to_first_answer_token_is_none_when_only_thinking_came() {
+        let pieces: Vec<Piece> = (0..5).map(|_| piece("hm ", Phase::Thinking)).collect();
+        let mut r = rig(vec![script(ms(200), ms(10), pieces)]);
+        let m = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap().metrics;
+        assert!(m.time_to_first_token.is_some());
+        assert_eq!(m.time_to_first_answer_token, None);
     }
 
     #[test]
