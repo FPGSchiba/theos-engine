@@ -5,9 +5,10 @@
 #![allow(clippy::disallowed_macros)]
 
 mod convert;
-// Consumed by the `run` command in a later task.
-#[allow(dead_code)]
+mod report;
+mod run;
 mod scenarios;
+mod score;
 
 use std::path::PathBuf;
 
@@ -31,8 +32,18 @@ enum Command {
         #[arg(long)]
         fixture: Option<PathBuf>,
     },
-    /// Run the scenarios against the model (not yet implemented).
-    Run,
+    /// Run the scenarios against every model of `models.toml` and write the results tables.
+    Run {
+        /// Models file; defaults to `plugins/llm-poc/models.toml`.
+        #[arg(long)]
+        models: Option<PathBuf>,
+        /// Per-request deadline in milliseconds.
+        #[arg(long, default_value_t = 3000)]
+        deadline_ms: u64,
+        /// Leave the persona bodies out of the prompt.
+        #[arg(long)]
+        no_persona_bodies: bool,
+    },
 }
 
 /// The corpus snapshot the `theos-ai` gate test reads.
@@ -68,7 +79,16 @@ fn main() -> anyhow::Result<()> {
             let out = export(&fixture)?;
             println!("wrote {}", out.display());
         }
-        Command::Run => println!("not yet"),
+        Command::Run {
+            models,
+            deadline_ms,
+            no_persona_bodies,
+        } => run::run_cli(
+            &default_fixture(),
+            models,
+            std::time::Duration::from_millis(deadline_ms),
+            !no_persona_bodies,
+        )?,
     }
     Ok(())
 }
