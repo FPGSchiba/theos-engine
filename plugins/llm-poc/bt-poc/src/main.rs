@@ -6,6 +6,7 @@
 
 mod extract;
 mod fixture;
+mod hash;
 mod inject;
 mod prompt;
 mod report;

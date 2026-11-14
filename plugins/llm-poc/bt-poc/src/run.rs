@@ -562,6 +562,18 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
         let header = RunHeader {
             model: entry.name.clone(),
             model_file: Some(entry.file.clone()),
+            scenarios_sha: Some(crate::hash::file_sha256(
+                &run.cfg.fixture_dir.join("scenarios.toml"),
+            )?),
+            vocabulary_sha: Some(crate::hash::file_sha256(
+                &run.cfg.fixture_dir.join("vocabulary.json"),
+            )?),
+            injections_sha: if run.cfg.scenarios_file == run.cfg.fixture_dir.join("scenarios.toml")
+            {
+                None
+            } else {
+                Some(crate::hash::file_sha256(&run.cfg.scenarios_file)?)
+            },
             n_params,
             gpu: gpu.clone(),
             deadline_policy: match run.cfg.deadline {
