@@ -96,7 +96,9 @@ pub struct GenerateJob {
     /// Whether the model may think first.
     pub thinking: Thinking,
     /// The most thinking tokens before the backend must close the thinking
-    /// block itself; `None` is no limit.
+    /// block itself; `None` is no limit. theos-ai only passes the value on and
+    /// does not enforce it: the backend must (the scripted test backend
+    /// ignores it).
     pub thinking_budget: Option<u32>,
     /// Time allowed from the start of the call until generation is cut off.
     pub deadline: Duration,
@@ -923,6 +925,29 @@ mod tests {
                 .unwrap();
             let got = r.npc.select(&speaker.id, "who?", scope).unwrap();
             assert_eq!(got, expected);
+        }
+    }
+
+    #[test]
+    fn select_never_returns_a_record_hidden_from_the_speaker_for_any_scope() {
+        // B-3 is held only by `other`, B-2 is a belief the speaker is unaware of.
+        let (_, speaker) = mini();
+        let mut r = rig(vec![]);
+        for scope in [
+            LoreScope::None,
+            LoreScope::AllVisible,
+            LoreScope::Retrieved { top_k: 10 },
+            LoreScope::Retrieved { top_k: 1 },
+        ] {
+            for question in ["who?", "title B-3", "title B-2"] {
+                let got = r.npc.select(&speaker.id, question, scope).unwrap();
+                for hidden in ["B-3", "B-2"] {
+                    assert!(
+                        !got.contains(&RecordId::new(hidden)),
+                        "{hidden} leaked under {scope:?} for {question:?}: {got:?}"
+                    );
+                }
+            }
         }
     }
 

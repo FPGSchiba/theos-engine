@@ -46,7 +46,9 @@ pub struct GenerationRequest<'a> {
     /// Whether thinking is enabled.
     pub thinking: Thinking,
     /// The most thinking tokens before the backend must close the thinking
-    /// block itself; `None` is no limit. Ignored with thinking off.
+    /// block itself; `None` is no limit. Ignored with thinking off. theos-ai
+    /// does not enforce the budget: the backend must (`ScriptedBackend`
+    /// ignores it).
     pub thinking_budget: Option<u32>,
 }
 
