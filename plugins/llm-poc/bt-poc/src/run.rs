@@ -123,9 +123,9 @@ pub struct Row {
     /// What `score.py` made of the reply; `None` when it could not run.
     pub py: Option<PyScore>,
     /// Every cited source was in the prompt.
-    pub sources_ok: bool,
+    pub sources_ok: Option<bool>,
     /// No lore record in the prompt was hidden from the actor.
-    pub leak_ok: bool,
+    pub leak_ok: Option<bool>,
     /// The tree name copies the prompt.
     pub name_overlap: bool,
     /// The priority's budget, seconds.
@@ -246,8 +246,8 @@ fn run_one(
         npc: is_npc,
         envelope_ok: false,
         py: None,
-        sources_ok: false,
-        leak_ok: true,
+        sources_ok: None,
+        leak_ok: None,
         name_overlap: false,
         budget_seconds,
         budget_ok: false,
@@ -276,7 +276,7 @@ fn run_one(
     let rp: RenderedPrompt = prompt::render(fx, s, &selected, cfg.persona_bodies);
     row.lore_ids = rp.lore_ids.iter().map(|i| i.as_str().to_owned()).collect();
     if let Some(entry) = fx.visible.get(&s.actor) {
-        row.leak_ok = !score::leak(&rp.lore_ids, entry);
+        row.leak_ok = Some(!score::leak(&rp.lore_ids, entry));
     }
     let job = GenerateJob {
         prompt: rp.prompt.clone(),
@@ -323,7 +323,7 @@ fn run_one(
         return (row, Some(unparsed));
     };
     row.envelope_ok = true;
-    row.sources_ok = score::sources_in_prompt(&envelope, &rp.lore_ids);
+    row.sources_ok = Some(score::sources_in_prompt(&envelope, &rp.lore_ids));
     row.name_overlap = envelope
         .pointer("/tree/name")
         .and_then(Value::as_str)
@@ -394,8 +394,13 @@ pub fn run_all(
                     let (row, tree) = run_one(npc, fx, cfg, s, grammar, thinking, scope, budget);
                     if let Some(tree) = tree {
                         let path = out.join("trees").join(format!("{}.json", row.key()));
-                        std::fs::write(&path, serde_json::to_vec_pretty(&tree)?)
-                            .with_context(|| format!("writing {}", path.display()))?;
+                        // A tree that cannot be saved must not lose the rows: warn and go on.
+                        let saved = serde_json::to_vec_pretty(&tree)
+                            .map_err(anyhow::Error::from)
+                            .and_then(|b| std::fs::write(&path, b).map_err(Into::into));
+                        if let Err(e) = saved {
+                            eprintln!("warning: could not write {}: {e}", path.display());
+                        }
                     }
                     writeln!(rows_file, "{}", row.to_json()).context("writing rows.jsonl")?;
                     rows_file.flush().context("flushing rows.jsonl")?;
@@ -700,7 +705,7 @@ mod tests {
         let b06: Vec<&Row> = rows.iter().filter(|r| r.scenario_id == "b06").collect();
         assert!(b06[0].lore_ids.is_empty(), "scope none holds no lore");
         assert!(!b06[1].lore_ids.is_empty(), "all-visible holds lore");
-        assert!(b06[1].leak_ok && b06[1].npc);
+        assert!(b06[1].leak_ok == Some(true) && b06[1].npc);
         let lines = std::fs::read_to_string(dir.0.join("rows.jsonl")).unwrap();
         assert_eq!(lines.lines().count(), 8);
         let trees = std::fs::read_dir(dir.0.join("trees")).unwrap().count();
@@ -728,7 +733,7 @@ mod tests {
             r.error.is_none(),
             "a shape failure is a score, not an error"
         );
-        assert!(!r.sources_ok);
+        assert_eq!(r.sources_ok, None);
         assert_eq!(backend.requests()[0].schema, None, "no grammar was sent");
     }
 
@@ -741,7 +746,7 @@ mod tests {
         let rows = run(&mut npc, &c, &dir);
         assert!(backend.requests()[0].schema.is_some());
         let r = &rows[0];
-        assert!(r.envelope_ok && r.sources_ok && !r.name_overlap);
+        assert!(r.envelope_ok && r.sources_ok == Some(true) && !r.name_overlap);
         let py = r.py.as_ref().unwrap();
         assert!(py.gate_pass);
         assert_eq!(py.behaviour, Some(true));
@@ -885,6 +890,11 @@ mod tests {
         // b01 is an NPC: 3 scopes x 2 thinking; b10: 2. Four scripts: the rest error out.
         let reqs = backend.requests();
         assert_eq!(rows.len(), 8);
+        assert_eq!(
+            reqs.len(),
+            rows.len(),
+            "every row is checked against its request"
+        );
         let fx = load_default();
         for (req, row) in reqs.iter().zip(&rows) {
             let s = fx
@@ -904,6 +914,56 @@ mod tests {
                 assert_eq!(req.thinking_budget, None);
             }
         }
+    }
+
+    #[test]
+    fn a_grammar_on_reply_cut_by_the_token_cap_is_a_shape_row_that_counts_as_cut_off() {
+        let clock = FakeClock::new();
+        let backend = ScriptedBackend::new(clock.clone());
+        backend.push(Script {
+            prompt_tokens: 100,
+            prefill: Duration::from_millis(50),
+            per_token: Duration::from_millis(1),
+            pieces: (0..TOKEN_CAP as usize + 64)
+                .map(|_| Piece {
+                    text: "{".into(),
+                    phase: Phase::Answer,
+                })
+                .collect(),
+        });
+        let mut npc = npc_with(Box::new(backend), clock);
+        let mut c = cfg(&["b10"]);
+        c.grammar = GrammarModes::On;
+        let dir = Scratch::new("cap");
+        let rows = run(&mut npc, &c, &dir);
+        let r = &rows[0];
+        assert_eq!(r.metrics.as_ref().unwrap().stop, StopReason::TokenCap);
+        assert_eq!(r.py.as_ref().unwrap().gate_rule.as_deref(), Some("shape"));
+        assert!(r.error.as_deref().unwrap().contains("TokenCap"));
+        assert!(!r.budget_ok);
+        let s = &report::summary_rows(&rows)[0];
+        assert_eq!(s.cells[1], "shape (cut off) x1");
+    }
+
+    #[test]
+    fn a_failed_tree_write_warns_and_the_run_goes_on() {
+        let (mut npc, _) = rig(2, &reference_reply("b10-good"), Duration::from_millis(50));
+        let dir = Scratch::new("treefail");
+        // A directory where the first tree file belongs: writing it fails.
+        std::fs::create_dir_all(dir.0.join("trees/b10-grammar-on-thinking-off-none.json")).unwrap();
+        let rows = run(&mut npc, &cfg(&["b10"]), &dir);
+        assert_eq!(rows.len(), 2);
+        assert!(dir
+            .0
+            .join("trees/b10-grammar-off-thinking-off-none.json")
+            .is_file());
+        assert_eq!(
+            std::fs::read_to_string(dir.0.join("rows.jsonl"))
+                .unwrap()
+                .lines()
+                .count(),
+            2
+        );
     }
 
     #[test]

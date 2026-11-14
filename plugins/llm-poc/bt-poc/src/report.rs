@@ -51,7 +51,7 @@ pub struct SummaryRow {
     pub cells: Vec<String>,
 }
 
-const SUMMARY_COLUMNS: [&str; 19] = [
+const SUMMARY_COLUMNS: [&str; 20] = [
     "grammar",
     "thinking",
     "scope",
@@ -61,7 +61,7 @@ const SUMMARY_COLUMNS: [&str; 19] = [
     "behaviour pass",
     "checks passed %",
     "grounding (NPC)",
-    "leak (NPC)",
+    "leak-free (NPC)",
     "budget pass",
     "total med/p95 ms",
     "ttft med ms",
@@ -70,6 +70,7 @@ const SUMMARY_COLUMNS: [&str; 19] = [
     "prompt tok med",
     "output tok med",
     "vram peak",
+    "cut off",
     "errors",
 ];
 
@@ -79,6 +80,17 @@ fn on_off(b: bool) -> &'static str {
     } else {
         "off"
     }
+}
+
+/// The generation stopped before the model finished (deadline, token cap, full context).
+fn is_cut_off(r: &Row) -> bool {
+    r.metrics
+        .as_ref()
+        .is_some_and(|m| m.stop != theos_ai::StopReason::Finished)
+}
+
+fn opt_yes(b: Option<bool>) -> &'static str {
+    b.map_or("n/a", yes)
 }
 
 fn yes(b: bool) -> &'static str {
@@ -105,7 +117,12 @@ fn med_p95(mut v: Vec<f64>) -> Option<(f64, f64)> {
     v.sort_by(f64::total_cmp);
     let n = v.len();
     let rank = (n as f64 * 0.95).ceil() as usize;
-    Some((v[(n - 1) / 2], v[rank.clamp(1, n) - 1]))
+    let med = if n % 2 == 1 {
+        v[n / 2]
+    } else {
+        (v[n / 2 - 1] + v[n / 2]) / 2.0
+    };
+    Some((med, v[rank.clamp(1, n) - 1]))
 }
 
 fn med(v: Vec<f64>) -> Option<f64> {
@@ -143,18 +160,22 @@ fn summarise(rs: &[&Row]) -> SummaryRow {
         .iter()
         .filter(|r| r.py.as_ref().is_some_and(|p| p.gate_pass))
         .count();
-    let mut rules: BTreeMap<&str, usize> = BTreeMap::new();
-    for p in rs
-        .iter()
-        .filter_map(|r| r.py.as_ref())
-        .filter(|p| !p.gate_pass)
-    {
-        *rules
-            .entry(p.gate_rule.as_deref().unwrap_or("?"))
-            .or_default() += 1;
+    let mut rules: BTreeMap<String, usize> = BTreeMap::new();
+    for r in rs {
+        let Some(p) = r.py.as_ref().filter(|p| !p.gate_pass) else {
+            continue;
+        };
+        let rule = p.gate_rule.as_deref().unwrap_or("?");
+        let label = if is_cut_off(r) && rule == "shape" {
+            "shape (cut off)".to_owned()
+        } else {
+            rule.to_owned()
+        };
+        *rules.entry(label).or_default() += 1;
     }
+    let cut_off = rs.iter().filter(|r| is_cut_off(r)).count();
     let mut rules: Vec<_> = rules.into_iter().collect();
-    rules.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(b.0)));
+    rules.sort_by(|a, b| b.1.cmp(&a.1).then(a.0.cmp(&b.0)));
     let top = if rules.is_empty() {
         "-".to_owned()
     } else {
@@ -184,18 +205,23 @@ fn summarise(rs: &[&Row]) -> SummaryRow {
         format!("{:.0}%", 100.0 * passed as f64 / total as f64)
     };
     let npc: Vec<_> = rs.iter().filter(|r| r.npc).collect();
-    let (grounding, leak) = if npc.is_empty() {
-        ("-".to_owned(), "-".to_owned())
+    let grounding = if npc.is_empty() {
+        "-".to_owned()
     } else {
         let grounded = npc
             .iter()
             .filter(|r| r.py.as_ref().is_some_and(|p| p.grounding == Some(true)))
             .count();
-        let leaks = npc.iter().filter(|r| !r.leak_ok).count();
-        // Both count the requests that passed, so higher is better (a leak-free request passes).
-        (
-            frac(grounded, npc.len()),
-            frac(npc.len() - leaks, npc.len()),
+        frac(grounded, npc.len())
+    };
+    // Rows without a prompt (leak_ok None) are left out of the denominator.
+    let leak_known: Vec<bool> = npc.iter().filter_map(|r| r.leak_ok).collect();
+    let leak = if leak_known.is_empty() {
+        "-".to_owned()
+    } else {
+        frac(
+            leak_known.iter().filter(|ok| **ok).count(),
+            leak_known.len(),
         )
     };
     let budget = rs.iter().filter(|r| r.budget_ok).count();
@@ -242,6 +268,7 @@ fn summarise(rs: &[&Row]) -> SummaryRow {
         num(med(m(|x| f64::from(x.prompt_tokens)))),
         num(med(m(|x| f64::from(x.answer_tokens)))),
         vram,
+        cut_off.to_string(),
         errors.to_string(),
     ];
     SummaryRow {
@@ -308,8 +335,8 @@ pub fn request_table(rows: &[Row]) -> String {
             on_off(r.thinking),
             r.scope,
             r.lore_ids.len(),
-            yes(r.sources_ok),
-            yes(r.leak_ok),
+            opt_yes(r.sources_ok),
+            opt_yes(r.leak_ok),
             yes(r.name_overlap),
             yes(r.budget_ok),
             r.error.as_deref().unwrap_or("").replace('|', "/"),
@@ -360,8 +387,8 @@ pub fn csv(rows: &[Row]) -> String {
             opt(p.map(|p| p.checks.len())),
             opt(p.and_then(|p| p.behaviour)),
             opt(p.and_then(|p| p.grounding)),
-            r.sources_ok.to_string(),
-            r.leak_ok.to_string(),
+            opt(r.sources_ok),
+            opt(r.leak_ok),
             r.name_overlap.to_string(),
             r.budget_seconds.to_string(),
             r.budget_ok.to_string(),
@@ -397,7 +424,12 @@ pub fn header_block(h: &RunHeader) -> String {
          - Model: {}\n- Parameters: {:.2} B\n- GPU: {}\n- Deadline: {}\n- Seed: {}\n\
          - Sampling: {}\n- Thinking budgets: {}\n- n_ctx: {}\n- VRAM probe: {}\n- Persona bodies: {}\n\n\
          Output tok is the tree (answer-phase) tokens; thinking tokens are in results.csv. \
-         Rates count every request of the cell, an errored one as a failure.\n\n",
+         Counting: rates count every request of the cell; an errored or cut-off request is a failure.\n\
+         `cut off` counts requests whose generation stopped before the model finished (deadline, token cap or full context); \
+         they are also in `errors`, and their gate `shape` failure is shown as `shape (cut off)` in `top gate rules`.\n\
+         `leak-free (NPC)` is the number of NPC requests whose prompt held only records visible to the actor, out of the NPC requests that had a prompt (higher is better); \
+         requests that failed before a prompt existed are n/a and left out. `sources ok` is n/a when no JSON object was parsed.\n\
+         Medians are true medians (mean of the two middle values for an even count).\n\n",
         h.model,
         h.n_params as f64 / 1e9,
         h.gpu,
@@ -455,8 +487,8 @@ mod tests {
                 behaviour: Some(false),
                 grounding: Some(true),
             }),
-            sources_ok: true,
-            leak_ok: true,
+            sources_ok: Some(true),
+            leak_ok: Some(true),
             name_overlap: false,
             budget_seconds: 30.0,
             budget_ok: true,
@@ -506,7 +538,86 @@ mod tests {
     #[test]
     fn percentile_is_nearest_rank() {
         let v: Vec<f64> = (1..=20).map(f64::from).collect();
-        assert_eq!(med_p95(v), Some((10.0, 19.0)));
+        assert_eq!(med_p95(v), Some((10.5, 19.0)), "even n: mean of middles");
+        assert_eq!(med_p95(vec![1.0, 5.0, 9.0]), Some((5.0, 9.0)));
         assert_eq!(med_p95(vec![]), None);
+    }
+
+    fn metrics(stop: theos_ai::StopReason) -> Metrics {
+        Metrics {
+            prompt_tokens: 1,
+            thinking_tokens: 0,
+            answer_tokens: 1,
+            retrieval: Duration::ZERO,
+            time_to_first_token: None,
+            time_to_first_answer_token: None,
+            tokens_per_second: 0.0,
+            total: Duration::from_millis(10),
+            vram_peak_bytes: None,
+            context_ids: vec![],
+            cited_ids: vec![],
+            stop,
+        }
+    }
+
+    fn shape_row(stop: theos_ai::StopReason) -> Row {
+        let mut r = row(true, false, "none", false);
+        r.metrics = Some(metrics(stop));
+        r
+    }
+
+    #[test]
+    fn cut_off_rows_are_counted_apart_and_labelled_in_top_gate_rules() {
+        let rows = vec![
+            shape_row(theos_ai::StopReason::TokenCap),
+            shape_row(theos_ai::StopReason::Finished),
+        ];
+        let s = &summary_rows(&rows)[0];
+        assert_eq!(s.cells[1], "shape x1, shape (cut off) x1");
+        let table = summary_table(&rows);
+        let head = table.lines().next().unwrap();
+        assert!(head.contains("| cut off |"));
+        let cols: Vec<&str> = head.split('|').map(str::trim).collect();
+        let at = cols.iter().position(|c| *c == "cut off").unwrap();
+        let line: Vec<&str> = table
+            .lines()
+            .nth(2)
+            .unwrap()
+            .split('|')
+            .map(str::trim)
+            .collect();
+        assert_eq!(line[at], "1");
+    }
+
+    #[test]
+    fn leak_free_excludes_rows_without_a_prompt() {
+        let mut none = row(true, false, "none", true);
+        none.leak_ok = None;
+        let mut leaky = row(true, false, "none", true);
+        leaky.leak_ok = Some(false);
+        let ok = row(true, false, "none", true);
+        let rows = vec![none, leaky, ok];
+        assert!(summary_table(&rows).contains("leak-free (NPC)"));
+        assert!(!summary_table(&rows).contains("| leak (NPC)"));
+        let s = &summary_rows(&rows)[0];
+        assert_eq!(s.cells[5], "1/2");
+        assert!(request_table(&rows).contains("| n/a |"));
+        assert!(header_block(&test_header()).contains("leak-free"));
+        assert!(header_block(&test_header()).contains("cut off"));
+    }
+
+    fn test_header() -> RunHeader {
+        RunHeader {
+            model: "m".into(),
+            n_params: 1,
+            gpu: "g".into(),
+            deadline_policy: "d".into(),
+            seed: 1,
+            sampling: "s".into(),
+            n_ctx: 1,
+            probe: "p".into(),
+            thinking_budgets: "t".into(),
+            persona_bodies: true,
+        }
     }
 }
