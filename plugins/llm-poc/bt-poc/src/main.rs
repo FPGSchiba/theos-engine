@@ -77,6 +77,15 @@ enum Command {
         #[arg(long)]
         baseline: Option<PathBuf>,
     },
+    /// Re-render `results.md` and `results.csv` of a recorded run from its `rows.jsonl`, without a
+    /// model. Pass `--scenarios` of the run (for an injection run, `injections.toml`).
+    Report {
+        /// The results directory of the run.
+        dir: PathBuf,
+        /// Results directory of a clean run; injected rows are judged against its `rows.jsonl`.
+        #[arg(long)]
+        baseline: Option<PathBuf>,
+    },
     /// Print the rendered prompt of one scenario.
     Prompt {
         /// Scenario id, e.g. `b06`.
@@ -132,6 +141,13 @@ fn main() -> anyhow::Result<()> {
                     baseline,
                 },
             )?;
+        }
+        Command::Report { dir, baseline } => {
+            let injection = report::rerender(&dir, baseline.as_deref(), &fx.scenarios)?;
+            if let Some(t) = injection {
+                println!("{t}");
+            }
+            println!("results: {}", dir.display());
         }
         Command::Prompt { scenario, ids } => {
             let s = fx
