@@ -144,7 +144,7 @@ fn main() -> anyhow::Result<()> {
             )?;
         }
         Command::Report { dir, baseline } => {
-            let injection = report::rerender(&dir, baseline.as_deref(), &fx.scenarios)?;
+            let injection = report::rerender(&dir, baseline.as_deref(), &scenarios, &fx.scenarios)?;
             if let Some(t) = injection {
                 println!("{t}");
             }

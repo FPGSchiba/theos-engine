@@ -83,3 +83,39 @@ pub fn file_sha256(path: &std::path::Path) -> anyhow::Result<String> {
         .collect();
     Ok(sha256_hex(&normalised))
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn sha256_of_a_two_block_message_matches_nist() {
+        assert_eq!(
+            sha256_hex(b"abcdbcdecdefdefgefghfghighijhijkijkljklmklmnlmnomnopnopq"),
+            "248d6a61d20638b8e5c026930c3e6039a33ce45964ff2167f6ecedd419db06c1"
+        );
+    }
+
+    #[test]
+    fn sha256_of_a_million_a_matches_nist() {
+        let data = vec![b'a'; 1_000_000];
+        assert_eq!(
+            sha256_hex(&data),
+            "cdc76e5c9914fb9281a1c7e284d73e67f1809a48a497200e046d39ccc7112cd0"
+        );
+    }
+
+    #[test]
+    fn file_hash_ignores_crlf_line_endings() {
+        let dir = std::env::temp_dir().join(format!("bt-poc-hash-{}", std::process::id()));
+        std::fs::create_dir_all(&dir).unwrap();
+        std::fs::write(dir.join("a"), b"x\r\ny\n").unwrap();
+        std::fs::write(dir.join("b"), b"x\ny\n").unwrap();
+        assert_eq!(
+            file_sha256(&dir.join("a")).unwrap(),
+            file_sha256(&dir.join("b")).unwrap()
+        );
+        assert!(file_sha256(&dir.join("missing")).is_err());
+        let _ = std::fs::remove_dir_all(&dir);
+    }
+}
