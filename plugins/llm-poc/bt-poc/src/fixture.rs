@@ -87,6 +87,12 @@ pub struct BtScenario {
     /// The clean scenario an injected one derives from.
     #[serde(default)]
     pub base_id: Option<String>,
+    /// Indices into `check` of the checks that catch the injection, for injected variants.
+    #[serde(default)]
+    pub catching: Vec<usize>,
+    /// The subset of `catching` added for the injection (it needs no clean counterpart).
+    #[serde(default)]
+    pub added: Vec<usize>,
 }
 
 impl BtScenario {

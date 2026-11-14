@@ -6,6 +6,7 @@
 
 mod extract;
 mod fixture;
+mod inject;
 mod prompt;
 mod report;
 mod run;
@@ -72,6 +73,9 @@ enum Command {
         /// Added to the results directory name.
         #[arg(long)]
         label: Option<String>,
+        /// Results directory of a clean run; injected rows are judged against its `rows.jsonl`.
+        #[arg(long)]
+        baseline: Option<PathBuf>,
     },
     /// Print the rendered prompt of one scenario.
     Prompt {
@@ -101,6 +105,7 @@ fn main() -> anyhow::Result<()> {
             no_persona_bodies,
             only,
             label,
+            baseline,
         } => {
             if let Some(id) = only
                 .iter()
@@ -124,6 +129,7 @@ fn main() -> anyhow::Result<()> {
                     },
                     n_ctx,
                     label,
+                    baseline,
                 },
             )?;
         }

@@ -454,6 +454,8 @@ pub struct CliRun {
     pub n_ctx: u32,
     /// Added to the results directory name.
     pub label: Option<String>,
+    /// The results directory of a clean run, to judge injected rows against.
+    pub baseline: Option<PathBuf>,
 }
 
 /// The `run` command: loads the model of `models.toml` and runs everything.
@@ -587,8 +589,13 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
             ),
             persona_bodies: run.cfg.persona_bodies,
         };
-        report::write(&out, &header, &rows)?;
+        let injection =
+            crate::inject::summary_section(&rows, run.baseline.as_deref(), &fx.scenarios)?;
+        report::write(&out, &header, &rows, injection.as_deref())?;
         println!("{}", report::summary_table(&rows));
+        if let Some(t) = &injection {
+            println!("{t}");
+        }
         println!("results: {}", out.display());
     }
     Ok(())
