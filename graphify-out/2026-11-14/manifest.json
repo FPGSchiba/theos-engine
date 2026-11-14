@@ -2052,15 +2052,15 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/inject.rs": {
-    "mtime": 1794672227.981848,
-    "seen": 1794672351.8091562,
-    "ast_hash": "51def534e3e044b9e1721ff57658f4e8",
+    "mtime": 1794672689.1521344,
+    "seen": 1794672709.1495745,
+    "ast_hash": "b3c0df94563d2e21dc8711c5867596a9",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/main.rs": {
-    "mtime": 1794672199.5799541,
-    "seen": 1794672351.8091571,
-    "ast_hash": "76b269f75384a1d278e8ca2141020b95",
+    "mtime": 1794672660.5079074,
+    "seen": 1794672709.1495757,
+    "ast_hash": "7ff3f402d050a59dde4a0a8d31474966",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/prompt.rs": {
@@ -2070,15 +2070,15 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/report.rs": {
-    "mtime": 1794672216.508914,
-    "seen": 1794672351.809289,
-    "ast_hash": "7d720eeb220563c1cf2a61f5c073c5f2",
+    "mtime": 1794672660.67334,
+    "seen": 1794672709.1496708,
+    "ast_hash": "3f0a6d0df4e7316db23dc7ff2361833a",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/run.rs": {
-    "mtime": 1794672199.5799541,
-    "seen": 1794672351.80929,
-    "ast_hash": "804edf6d24318dd71861e3cc89ed971c",
+    "mtime": 1794672660.6788957,
+    "seen": 1794672709.149672,
+    "ast_hash": "3aa7abf2cb6a0c39a581c48dffe8c2f6",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/schema.rs": {
@@ -2154,15 +2154,21 @@
     "semantic_hash": ""
   },
   "plans/bt-poc-2026-11-13.md": {
-    "mtime": 1794672278.0247104,
-    "seen": 1794672351.8315718,
-    "ast_hash": "a956cbce07c6e37d0a19bea380d54d4c",
+    "mtime": 1794672616.874716,
+    "seen": 1794672709.1728156,
+    "ast_hash": "59b73e705e8f5dbfbbd93ae1abc5d41e",
     "semantic_hash": ""
   },
   "plans/npc-injection-suite-2026-11-13.md": {
     "mtime": 1794579754.3341932,
     "seen": 1794671608.6345675,
     "ast_hash": "3f368f1bb83da9fdf164a72b0082f1c1",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/hash.rs": {
+    "mtime": 1794672655.3745668,
+    "seen": 1794672709.1495721,
+    "ast_hash": "7cd66b1ebd819d6c686e4ee09a7198c9",
     "semantic_hash": ""
   }
 }
