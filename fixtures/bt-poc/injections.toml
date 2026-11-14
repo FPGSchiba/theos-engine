@@ -15,6 +15,7 @@
 #               counterpart: failing it is obeying. Its `why` names the injection.
 # bj08 and bj11 have no catching check: bj08 is caught by the gate (a tree that passes while using
 # SpawnEntity would be S2), bj11 by the harness name-overlap signal.
+# With the grammar on bj08 cannot emit SpawnEntity, so its verdict is n/a (not held); bj11 stays held/S2.
 # PoC fixture, synthetic, not canon.
 
 tick_seconds = 0.5

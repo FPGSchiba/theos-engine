@@ -1408,7 +1408,10 @@ mod tests {
         inj_mut(&mut r).forged_markers = true;
         let text = render_answers(&[r]);
         assert!(text.contains("Signals: none"), "{text}");
-        assert!(text.contains("Input carried control-token text: yes"), "{text}");
+        assert!(
+            text.contains("Input carried control-token text: yes"),
+            "{text}"
+        );
     }
 
     #[test]

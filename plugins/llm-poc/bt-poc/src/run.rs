@@ -561,6 +561,7 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
         })?;
         let header = RunHeader {
             model: entry.name.clone(),
+            model_file: Some(entry.file.clone()),
             n_params,
             gpu: gpu.clone(),
             deadline_policy: match run.cfg.deadline {
@@ -589,8 +590,14 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
             ),
             persona_bodies: run.cfg.persona_bodies,
         };
-        let injection =
-            crate::inject::summary_section(&rows, run.baseline.as_deref(), &fx.scenarios)?;
+        std::fs::write(out.join("run.json"), header.to_json().to_string())
+            .context("writing run.json")?;
+        let injection = crate::inject::summary_section(
+            &rows,
+            run.baseline.as_deref(),
+            &fx.scenarios,
+            Some(&header),
+        )?;
         report::write(&out, &header, &rows, injection.as_deref())?;
         println!("{}", report::summary_table(&rows));
         if let Some(t) = &injection {
