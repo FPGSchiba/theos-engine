@@ -786,9 +786,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/report.rs": {
-    "mtime": 1794579546.2206974,
-    "seen": 1794671608.6085558,
-    "ast_hash": "fda31e6c29c5e84c68b75fa9198477d2",
+    "mtime": 1794672203.0627713,
+    "seen": 1794672351.8098354,
+    "ast_hash": "9b593484972dbe7e19a6489a5c8f6785",
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/run.rs": {
@@ -852,9 +852,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/backend.rs": {
-    "mtime": 1794581589.983999,
-    "seen": 1794671608.6092672,
-    "ast_hash": "25a333e97eefca7a49f05d31c881b1c3",
+    "mtime": 1794672001.1453476,
+    "seen": 1794672351.8109393,
+    "ast_hash": "5bad51dd934856fa09f7152fb5499326",
     "semantic_hash": ""
   },
   "theos-ai/src/clock.rs": {
@@ -870,9 +870,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/driver.rs": {
-    "mtime": 1794581589.9855106,
-    "seen": 1794671608.6095269,
-    "ast_hash": "d5e74425c845eef5335d45f197573a12",
+    "mtime": 1794672001.1453476,
+    "seen": 1794672351.8111835,
+    "ast_hash": "ce91d525e122653c988f301160bc2189",
     "semantic_hash": ""
   },
   "theos-ai/src/embed.rs": {
@@ -2052,15 +2052,15 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/inject.rs": {
-    "mtime": 1794665650.7524958,
-    "seen": 1794671608.608336,
-    "ast_hash": "80aa478ea47dfd08f9817262a8b7a056",
+    "mtime": 1794672227.981848,
+    "seen": 1794672351.8091562,
+    "ast_hash": "51def534e3e044b9e1721ff57658f4e8",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/main.rs": {
-    "mtime": 1794665621.2291186,
-    "seen": 1794671608.6083367,
-    "ast_hash": "77c072f52db26e7cb634a7e3ea716f70",
+    "mtime": 1794672199.5799541,
+    "seen": 1794672351.8091571,
+    "ast_hash": "76b269f75384a1d278e8ca2141020b95",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/prompt.rs": {
@@ -2070,15 +2070,15 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/report.rs": {
-    "mtime": 1794665613.8367646,
-    "seen": 1794671608.6083379,
-    "ast_hash": "0ac1df6e64f1a70e313cfa2628ea08df",
+    "mtime": 1794672216.508914,
+    "seen": 1794672351.809289,
+    "ast_hash": "7d720eeb220563c1cf2a61f5c073c5f2",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/run.rs": {
-    "mtime": 1794665621.1196125,
-    "seen": 1794671608.6083384,
-    "ast_hash": "0b2a5f355246dcf94c91dd8a688db341",
+    "mtime": 1794672199.5799541,
+    "seen": 1794672351.80929,
+    "ast_hash": "804edf6d24318dd71861e3cc89ed971c",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/schema.rs": {
@@ -2154,9 +2154,9 @@
     "semantic_hash": ""
   },
   "plans/bt-poc-2026-11-13.md": {
-    "mtime": 1794671553.4707718,
-    "seen": 1794671608.634479,
-    "ast_hash": "af05d86bf7f9a27faf11755ae0f009a5",
+    "mtime": 1794672278.0247104,
+    "seen": 1794672351.8315718,
+    "ast_hash": "a956cbce07c6e37d0a19bea380d54d4c",
     "semantic_hash": ""
   },
   "plans/npc-injection-suite-2026-11-13.md": {
