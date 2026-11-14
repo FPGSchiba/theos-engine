@@ -268,6 +268,18 @@ pub fn find_clean<'a>(baseline: &'a [Row], injected: &Row) -> Option<&'a Row> {
     })
 }
 
+/// Per row of `rows`: whether it was judged against a clean row that was retrieved a different
+/// lore set (compared as sets), so the verdict does not isolate the injection. A row with no
+/// clean row is not flagged.
+pub fn lore_differs(rows: &[Row], baseline: &[Row]) -> Vec<bool> {
+    fn set(r: &Row) -> std::collections::BTreeSet<&String> {
+        r.lore_ids.iter().collect()
+    }
+    rows.iter()
+        .map(|r| find_clean(baseline, r).is_some_and(|c| set(c) != set(r)))
+        .collect()
+}
+
 /// One verdict per row of `rows`, in order.
 ///
 /// # Errors
@@ -343,7 +355,8 @@ pub fn summary_section(
         eprintln!("WARNING: {n}");
     }
     let v = verdicts(rows, &baseline, scenarios)?;
-    let mut out = report::injection_summary(rows, &v, &notes);
+    let flags = lore_differs(rows, &baseline);
+    let mut out = report::injection_summary(rows, &v, &flags, &notes);
     if baseline_dir.is_none() {
         out.push_str(
             "\nNo `--baseline` was given: every judgement that needs a clean row is `no baseline`.\n",
@@ -851,6 +864,7 @@ mod tests {
             scenarios_sha: Some("s1".into()),
             vocabulary_sha: Some("v1".into()),
             injections_sha: Some("i1".into()),
+            retrieval_query: Some("injected directive".into()),
             n_params: 4_000_000_000,
             gpu: "g".into(),
             deadline_policy: "d".into(),
@@ -1174,5 +1188,50 @@ mod tests {
         for d in [dir, old, wrong, ok] {
             let _ = std::fs::remove_dir_all(d);
         }
+    }
+
+    fn with_lore(mut r: Row, ids: &[&str]) -> Row {
+        r.lore_ids = ids.iter().map(|s| (*s).to_owned()).collect();
+        r
+    }
+
+    #[test]
+    fn lore_differs_flags_an_injected_row_with_another_lore_set_than_its_clean_row() {
+        let clean_row = with_lore(clean(&[true]), &["B-1", "B-2", "B-3"]);
+        let same_reordered = with_lore(row(&[true]), &["B-3", "B-1", "B-2"]);
+        let other = with_lore(row(&[true]), &["B-1", "B-2", "B-9"]);
+        let rows = [same_reordered, other.clone()];
+        assert_eq!(
+            lore_differs(&rows, std::slice::from_ref(&clean_row)),
+            [false, true]
+        );
+        // No clean row: nothing to compare with, not flagged.
+        assert_eq!(lore_differs(&rows, &[]), [false, false]);
+        // A different scope has no clean row either.
+        let mut elsewhere = other;
+        elsewhere.scope = "retrieved".into();
+        assert_eq!(lore_differs(&[elsewhere], &[clean_row]), [false]);
+    }
+
+    #[test]
+    fn summary_section_counts_lore_differs_from_recorded_rows() {
+        let fx = injections();
+        let dir = scratch("lore-differs");
+        let c = with_lore(clean(&[true; 5]), &["B-1"]);
+        write_run(&dir, &header("m", 8192), &[c]);
+        let inj = with_lore(injected_bj01(), &["B-2"]);
+        let text = summary_section(&[inj], Some(&dir), &fx.scenarios, None)
+            .unwrap()
+            .unwrap();
+        assert!(
+            text.contains("| override | off | on | none | 1 |"),
+            "{text}"
+        );
+        let line = text
+            .lines()
+            .find(|l| l.starts_with("| S3 | off | on | none"))
+            .unwrap();
+        assert!(line.trim_end().ends_with("| 1 |"), "{line}");
+        let _ = std::fs::remove_dir_all(&dir);
     }
 }

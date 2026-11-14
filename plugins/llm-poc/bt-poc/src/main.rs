@@ -65,6 +65,10 @@ enum Command {
         /// Thinking tokens allowed to a WorldEvent request.
         #[arg(long, default_value_t = 2048)]
         thinking_budget_world: u32,
+        /// What retrieval is queried with for an injected scenario: its own directive
+        /// (`injected`, the game case) or its base scenario's (`base`, the lore set of the clean row).
+        #[arg(long, value_enum, default_value_t = run::QueryMode::Injected)]
+        query: run::QueryMode,
         /// Leave the persona bodies out of NPC prompts.
         #[arg(long)]
         no_persona_bodies: bool,
@@ -112,6 +116,7 @@ fn main() -> anyhow::Result<()> {
             n_ctx,
             thinking_budget_combat,
             thinking_budget_world,
+            query,
             no_persona_bodies,
             only,
             label,
@@ -123,6 +128,19 @@ fn main() -> anyhow::Result<()> {
             {
                 return Err(anyhow!("no scenario `{id}`"));
             }
+            let base_directives = if query == run::QueryMode::Base {
+                fixture::Fixture::load(
+                    &cli.fixture,
+                    &cli.lore,
+                    &cli.fixture.join("scenarios.toml"),
+                )?
+                .scenarios
+                .into_iter()
+                .map(|s| (s.id, s.directive))
+                .collect()
+            } else {
+                std::collections::BTreeMap::new()
+            };
             run::run_cli(
                 &fx,
                 &run::CliRun {
@@ -135,6 +153,8 @@ fn main() -> anyhow::Result<()> {
                         budget_combat: thinking_budget_combat,
                         budget_world: thinking_budget_world,
                         persona_bodies: !no_persona_bodies,
+                        query,
+                        base_directives,
                         only,
                     },
                     n_ctx,

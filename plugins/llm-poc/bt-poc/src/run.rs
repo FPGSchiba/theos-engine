@@ -3,6 +3,7 @@
 //! A request that fails in any way (generation error, a full context, a missed deadline, a
 //! `score.py` crash) is still a row: nothing but a write to the results folder ends a run.
 
+use std::collections::BTreeMap;
 use std::fs::File;
 use std::io::Write as _;
 use std::path::{Path, PathBuf};
@@ -29,6 +30,27 @@ pub const TOP_K: usize = 5;
 const NAME_OVERLAP_WORDS: usize = 8;
 /// Said to the NPC (and used as the retrieval query) when a scenario has no directive.
 const DEFAULT_DIRECTIVE: &str = "Act on your record and the situation.";
+
+/// What retrieval is queried with for an injected scenario.
+#[derive(Clone, Copy, Debug, Default, PartialEq, Eq, ValueEnum)]
+pub enum QueryMode {
+    /// The scenario's own directive, injection included (the realistic game case).
+    #[default]
+    Injected,
+    /// The directive of its base scenario, so the lore set matches the clean row. The prompt
+    /// still holds the injection.
+    Base,
+}
+
+impl QueryMode {
+    /// How the results header words the choice.
+    pub fn label(self) -> &'static str {
+        match self {
+            QueryMode::Injected => "injected directive",
+            QueryMode::Base => "base directive",
+        }
+    }
+}
 
 /// Which grammar conditions a run covers.
 #[derive(Clone, Copy, Debug, Default, PartialEq, Eq, ValueEnum)]
@@ -93,6 +115,10 @@ pub struct RunConfig {
     pub budget_world: u32,
     /// Whether persona bodies go into NPC prompts.
     pub persona_bodies: bool,
+    /// What retrieval is queried with for an injected scenario.
+    pub query: QueryMode,
+    /// The directive of every base scenario by id (read when `query` is `Base`).
+    pub base_directives: BTreeMap<String, String>,
     /// Scenario ids to run; empty runs all.
     pub only: Vec<String>,
 }
@@ -257,10 +283,23 @@ fn run_one(
         severity: s.severity.clone(),
         injected_in: s.injected_in.clone(),
     };
-    let directive = if s.directive.trim().is_empty() {
+    let mut query_directive = s.directive.as_str();
+    if let (QueryMode::Base, Some(base)) = (cfg.query, &s.base_id) {
+        match cfg.base_directives.get(base) {
+            Some(d) => query_directive = d.as_str(),
+            None => {
+                row.error = Some(format!(
+                    "--query base: base scenario `{base}` of {} is not in scenarios.toml",
+                    s.id
+                ));
+                return (row, None);
+            }
+        }
+    }
+    let directive = if query_directive.trim().is_empty() {
         DEFAULT_DIRECTIVE
     } else {
-        s.directive.as_str()
+        query_directive
     };
     let selected = if is_npc {
         match npc.select(&RecordId::new(&s.actor), directive, scope) {
@@ -568,6 +607,7 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
             vocabulary_sha: Some(crate::hash::file_sha256(
                 &run.cfg.fixture_dir.join("vocabulary.json"),
             )?),
+            retrieval_query: Some(run.cfg.query.label().to_owned()),
             injections_sha: if run.cfg.scenarios_file == run.cfg.fixture_dir.join("scenarios.toml")
             {
                 None
@@ -645,6 +685,8 @@ mod tests {
             budget_combat: 512,
             budget_world: 2048,
             persona_bodies: true,
+            query: QueryMode::Injected,
+            base_directives: BTreeMap::new(),
             only: only.iter().map(|s| (*s).to_owned()).collect(),
         }
     }
@@ -1022,5 +1064,104 @@ mod tests {
     #[test]
     fn slug_lowercases_and_joins_with_single_dashes() {
         assert_eq!(slug("Qwen3.5-4B Q4_K_M"), "qwen3-5-4b-q4-k-m");
+    }
+
+    #[test]
+    fn query_base_pins_an_injected_rows_retrieval_to_its_base_directive() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../fixtures");
+        let inj = Fixture::load(
+            &root.join("bt-poc"),
+            &root.join("lore-poc"),
+            &root.join("bt-poc/injections.toml"),
+        )
+        .unwrap();
+        let base_fx = load_default();
+        let base_directives: BTreeMap<String, String> = base_fx
+            .scenarios
+            .iter()
+            .map(|s| (s.id.clone(), s.directive.clone()))
+            .collect();
+        let retrieved = |rows: &[Row]| -> Vec<String> {
+            rows.iter()
+                .find(|r| r.scope == "retrieved")
+                .unwrap()
+                .lore_ids
+                .clone()
+        };
+        let run_inj = |query: QueryMode| {
+            let (mut npc, _) = rig(3, "no tree", Duration::from_millis(5));
+            let mut c = cfg(&["bj12"]);
+            c.grammar = GrammarModes::Off;
+            c.query = query;
+            c.base_directives = base_directives.clone();
+            let dir = Scratch::new(&format!("query-{query:?}"));
+            run_all(&mut npc, &inj, &c, &dir.0, &mut |_| {}).unwrap()
+        };
+        let (mut npc, _) = rig(3, "no tree", Duration::from_millis(5));
+        let mut c = cfg(&["b02"]);
+        c.grammar = GrammarModes::Off;
+        let clean = run_all(
+            &mut npc,
+            &base_fx,
+            &c,
+            &Scratch::new("query-clean").0,
+            &mut |_| {},
+        )
+        .unwrap();
+
+        let pinned = run_inj(QueryMode::Base);
+        assert_eq!(
+            retrieved(&pinned),
+            retrieved(&clean),
+            "base query: same lore as the clean row"
+        );
+        // The injection text is still in the prompt: only the retrieval query changed.
+        let free = run_inj(QueryMode::Injected);
+        let injected_directive =
+            &inj.scenarios[inj.scenarios.iter().position(|s| s.id == "bj12").unwrap()].directive;
+        let (mut npc, _) = rig(0, "", Duration::ZERO);
+        let want: Vec<String> = npc
+            .select(
+                &RecordId::new("fx-hedge-scribe"),
+                injected_directive,
+                LoreScope::Retrieved { top_k: TOP_K },
+            )
+            .unwrap()
+            .iter()
+            .map(|i| i.as_str().to_owned())
+            .collect();
+        let mut got = retrieved(&free);
+        let mut want_sorted = want;
+        got.sort();
+        want_sorted.sort();
+        assert_eq!(
+            got, want_sorted,
+            "injected query: retrieval uses the directive with the injection"
+        );
+    }
+
+    #[test]
+    fn query_base_without_the_base_scenario_is_an_error_row() {
+        let root = Path::new(env!("CARGO_MANIFEST_DIR")).join("../../../fixtures");
+        let inj = Fixture::load(
+            &root.join("bt-poc"),
+            &root.join("lore-poc"),
+            &root.join("bt-poc/injections.toml"),
+        )
+        .unwrap();
+        let (mut npc, _) = rig(3, "x", Duration::from_millis(5));
+        let mut c = cfg(&["bj12"]);
+        c.query = QueryMode::Base;
+        let rows = run_all(
+            &mut npc,
+            &inj,
+            &c,
+            &Scratch::new("query-missing").0,
+            &mut |_| {},
+        )
+        .unwrap();
+        assert!(rows
+            .iter()
+            .all(|r| r.npc && r.error.as_deref().is_some_and(|e| e.contains("b02"))));
     }
 }
