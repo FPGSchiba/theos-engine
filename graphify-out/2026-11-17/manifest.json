@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/lib.rs": {
-    "mtime": 1794934052.321506,
-    "seen": 1794934107.7213445,
-    "ast_hash": "91af6ce9e4fe1c3eae0c594e271cef41",
+    "mtime": 1794934521.2208421,
+    "seen": 1794934703.0911708,
+    "ast_hash": "a34a9955bd9e7e4072e05f3c15ea12f3",
     "semantic_hash": ""
   },
   "theos-assets/src/lib.rs": {
@@ -876,9 +876,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/embed.rs": {
-    "mtime": 1794557715.7086744,
-    "seen": 1794560768.4898334,
-    "ast_hash": "150298a86e4e977ef811c00c9d3fe5a0",
+    "mtime": 1794934683.622806,
+    "seen": 1794934703.0910861,
+    "ast_hash": "1c8a405088795e48ed1c8f5a4136b48d",
     "semantic_hash": ""
   },
   "theos-ai/src/knowledge.rs": {
@@ -2195,10 +2195,16 @@
     "ast_hash": "8727e482376b0c354559cc568fa613ca",
     "semantic_hash": ""
   },
-  "theos-ai/src/moderation.rs": {
-    "mtime": 1794934052.2828836,
-    "seen": 1794934107.7215118,
-    "ast_hash": "00274bbde3a72f4de40d7156896b8fa4",
+  "theos-ai/src/moderation/knn.rs": {
+    "mtime": 1794934622.582196,
+    "seen": 1794934703.0913258,
+    "ast_hash": "f4f4732d43f0c49929b600e2e3f4ce8b",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/moderation/mod.rs": {
+    "mtime": 1794934521.07908,
+    "seen": 1794934703.0913267,
+    "ast_hash": "96bc29b9cbe43ccd86db7d85917d9eea",
     "semantic_hash": ""
   }
 }
