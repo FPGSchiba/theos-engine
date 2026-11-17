@@ -960,6 +960,7 @@ mod tests {
             thinking_tokens: 0,
             answer_tokens: 1,
             retrieval: Duration::ZERO,
+            moderation: Duration::ZERO,
             time_to_first_token: None,
             time_to_first_answer_token: None,
             tokens_per_second: 0.0,

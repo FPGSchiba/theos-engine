@@ -960,6 +960,7 @@ mod tests {
                 thinking_tokens: 0,
                 answer_tokens: 20,
                 retrieval: Duration::from_millis(5),
+                moderation: Duration::ZERO,
                 time_to_first_token: Some(Duration::from_millis(total_ms / 2)),
                 time_to_first_answer_token: Some(Duration::from_millis(total_ms / 2 + 5)),
                 tokens_per_second: 40.0,
