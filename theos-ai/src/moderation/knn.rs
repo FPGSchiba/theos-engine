@@ -40,9 +40,19 @@ pub struct Nearest {
 pub struct KnnEvidence {
     /// The verdict.
     pub verdict: ModerationVerdict,
-    /// The deciding piece: the whole text or a sentence of at least
-    /// [`MIN_PIECE_WORDS`] words (see [`moderation_pieces`]).
+    /// The reported piece: the whole text or a sentence of at least
+    /// [`MIN_PIECE_WORDS`] words (see [`moderation_pieces`]). For a block, the
+    /// deciding piece (highest banned score among blocking candidates). For an
+    /// allow, the piece and category nearest to the line (largest `distance`).
     pub piece: String,
+    /// Distance of the reported piece and category to the blocking line:
+    /// `min(best_c - min_similarity, best_c - best_a - margin)`, where `best_c`
+    /// is the best banned score of that category and `best_a` the best allowed
+    /// score (`-inf` without allowed examples). `>= 0` iff the text is
+    /// blocked. Negative values are misses: the closer to zero, the nearer.
+    /// `f32::NEG_INFINITY` when there is nothing to measure (empty text, or no
+    /// banned examples).
+    pub distance: f32,
     /// Nearest banned example of that piece.
     pub nearest_banned: Option<Nearest>,
     /// Nearest allowed example of that piece.
@@ -56,6 +66,11 @@ pub struct KnnEvidence {
 /// piece is embedded, and a piece blocks when it is close to a banned example
 /// and clearly closer to it than to any allowed example. Take the maximum over
 /// pieces, so one banned sentence in a long message still blocks.
+///
+/// A (piece, category) pair has a distance `d` to the line, see
+/// [`KnnEvidence::distance`]; a text blocks iff some pair has `d >= 0`.
+/// [`KnnModerator::evaluate`] reports the deciding pair for a block and the
+/// nearest miss for an allow.
 pub struct KnnModerator {
     embedder: Box<dyn Embedder>,
     banned: Vec<(ModerationCategory, Vec<Example>)>,
@@ -82,6 +97,14 @@ fn best<'a>(examples: &'a [Example], piece: &[f32]) -> Option<(&'a Example, f32)
         }
     }
     top
+}
+
+/// Distance of a (piece, category) to the blocking line:
+/// `min(best_c - min_similarity, best_c - best_a - margin)`. Non-negative iff
+/// the pair blocks. `best_a` is `-inf` without allowed examples, which makes
+/// the margin term `+inf`.
+fn distance_to_line(t: SourceThreshold, best_c: f32, best_a: f32) -> f32 {
+    (best_c - t.min_similarity).min(best_c - best_a - t.margin)
 }
 
 fn nearest(category: Option<ModerationCategory>, hit: Option<(&Example, f32)>) -> Option<Nearest> {
@@ -156,20 +179,46 @@ fn embed_documents<T: AsRef<str>>(
     if out.iter().flatten().any(|x| !x.is_finite()) {
         return Err(EmbedError::Backend("embedder returned non-finite values".into()).into());
     }
+    // A zero vector has no direction: cosine would score it 0 against everything.
+    if out.iter().any(|v| v.iter().all(|x| *x == 0.0)) {
+        return Err(EmbedError::Backend("embedder returned a zero vector".into()).into());
+    }
     Ok(out)
+}
+
+/// Rejects thresholds that are not finite or lie outside `0.0..=1.0`.
+fn validate_thresholds(t: &KnnThresholds) -> Result<(), ModerationError> {
+    let fields = [
+        ("player.min_similarity", t.player.min_similarity),
+        ("player.margin", t.player.margin),
+        ("reply.min_similarity", t.reply.min_similarity),
+        ("reply.margin", t.reply.margin),
+    ];
+    for (name, value) in fields {
+        if !(0.0..=1.0).contains(&value) {
+            return Err(ModerationError::Failed(format!(
+                "threshold {name} must be within 0.0..=1.0, got {value}"
+            )));
+        }
+    }
+    Ok(())
 }
 
 impl KnnModerator {
     /// Builds a moderator, embedding every example once.
     ///
     /// # Errors
-    /// Fails when the embedder fails or returns malformed output.
+    /// Fails when a threshold (`min_similarity` or `margin`, either source) is
+    /// not finite or outside `0.0..=1.0`, or when the embedder fails or
+    /// returns malformed output (wrong count, mixed or zero dimensions,
+    /// non-finite values, zero vectors).
     pub fn new(
         mut embedder: Box<dyn Embedder>,
         banned: Vec<(ModerationCategory, Vec<String>)>,
         allowed: Vec<String>,
         thresholds: KnnThresholds,
     ) -> Result<KnnModerator, ModerationError> {
+        validate_thresholds(&thresholds)?;
         let texts: Vec<&str> = banned
             .iter()
             .flat_map(|(_, list)| list.iter())
@@ -221,6 +270,7 @@ impl KnnModerator {
             return Ok(KnnEvidence {
                 verdict: ModerationVerdict::Allow,
                 piece: String::new(),
+                distance: f32::NEG_INFINITY,
                 nearest_banned: None,
                 nearest_allowed: None,
             });
@@ -240,31 +290,34 @@ impl KnnModerator {
             ModerationSource::ModelReply => self.thresholds.reply,
         };
 
-        // The candidate with the highest best_c, and the highest best_c overall.
-        let mut blocking: Option<(usize, usize, f32)> = None;
-        let mut closest: Option<(usize, usize, f32)> = None;
+        // Two (piece, category) picks, each `(piece, category, best_c, d)`:
+        // the blocking candidate with the highest best_c, and the candidate
+        // with the largest distance d to the line (the nearest miss).
+        let mut blocking: Option<(usize, usize, f32, f32)> = None;
+        let mut nearest_miss: Option<(usize, usize, f32, f32)> = None;
         for (p, vector) in vectors.iter().enumerate() {
             let best_a = best(&self.allowed, vector).map_or(f32::NEG_INFINITY, |(_, s)| s);
             for (c, (_, examples)) in self.banned.iter().enumerate() {
                 let Some((_, best_c)) = best(examples, vector) else {
                     continue;
                 };
-                if closest.is_none_or(|(_, _, s)| best_c > s) {
-                    closest = Some((p, c, best_c));
+                let d = distance_to_line(t, best_c, best_a);
+                if nearest_miss.is_none_or(|(_, _, _, s)| d > s) {
+                    nearest_miss = Some((p, c, best_c, d));
                 }
-                let candidate = best_c >= t.min_similarity && best_c - best_a >= t.margin;
-                if candidate && blocking.is_none_or(|(_, _, s)| best_c > s) {
-                    blocking = Some((p, c, best_c));
+                if d >= 0.0 && blocking.is_none_or(|(_, _, s, _)| best_c > s) {
+                    blocking = Some((p, c, best_c, d));
                 }
             }
         }
 
-        let decided = blocking.or(closest);
-        let Some((p, c, _)) = decided else {
+        let decided = blocking.or(nearest_miss);
+        let Some((p, c, _, distance)) = decided else {
             // No banned examples at all: nothing can block.
             return Ok(KnnEvidence {
                 verdict: ModerationVerdict::Allow,
                 piece: pieces[0].to_owned(),
+                distance: f32::NEG_INFINITY,
                 nearest_banned: None,
                 nearest_allowed: nearest(None, best(&self.allowed, &vectors[0])),
             });
@@ -278,6 +331,7 @@ impl KnnModerator {
         Ok(KnnEvidence {
             verdict,
             piece: pieces[p].to_owned(),
+            distance,
             nearest_banned: nearest(Some(category.clone()), best(examples, &vectors[p])),
             nearest_allowed: nearest(None, best(&self.allowed, &vectors[p])),
         })
@@ -695,5 +749,147 @@ mod tests {
         assert_eq!(e.piece, "anything");
         assert_eq!(e.nearest_banned, None);
         assert_eq!(e.nearest_allowed, None);
+    }
+
+    /// Maps known texts to fixed vectors; everything else is a unit default.
+    struct Lookup(Vec<(&'static str, Vec<f32>)>);
+
+    impl Embedder for Lookup {
+        fn embed(&mut self, inputs: &[EmbedInput<'_>]) -> Result<Vec<Vec<f32>>, EmbedError> {
+            Ok(inputs
+                .iter()
+                .map(|i| {
+                    let (EmbedInput::Query(t) | EmbedInput::Document(t)) = i;
+                    self.0
+                        .iter()
+                        .find(|(k, _)| k == t)
+                        .map_or_else(|| vec![0.0, 0.0, 1.0], |(_, v)| v.clone())
+                })
+                .collect())
+        }
+    }
+
+    fn lookup_moderator(t: KnnThresholds) -> KnnModerator {
+        let embedder = Lookup(vec![
+            ("banned ex", vec![1.0, 0.0, 0.0]),
+            ("allowed ex", vec![0.8, 0.6, 0.0]),
+            ("near allowed piece", vec![1.0, 0.1, 0.0]),
+            ("far from allowed piece", vec![0.7, -0.7, 0.0]),
+        ]);
+        KnnModerator::new(
+            Box::new(embedder),
+            vec![(ModerationCategory::Hate, vec!["banned ex".to_owned()])],
+            vec!["allowed ex".to_owned()],
+            t,
+        )
+        .unwrap()
+    }
+
+    const TWO_PIECES: &str = "near allowed piece. far from allowed piece";
+
+    #[test]
+    fn allow_evidence_picks_the_piece_nearest_the_line_not_the_highest_banned_score() {
+        // "near allowed piece" has the higher banned score (0.995) but sits
+        // close to an allowed example, so its margin term is -0.16.
+        // "far from allowed piece" scores only 0.71 but is far from the allowed
+        // list: its distance (-0.09, min_similarity term) is the larger one.
+        let mut m = lookup_moderator(same(0.8, 0.3));
+        let e = m.evaluate(PLAYER, TWO_PIECES).unwrap();
+        assert_eq!(e.verdict, ModerationVerdict::Allow);
+        assert_eq!(e.piece, "far from allowed piece");
+        assert!((e.distance - (-0.093)).abs() < 0.01, "{}", e.distance);
+        let b = e.nearest_banned.unwrap();
+        assert!((b.similarity - 0.707).abs() < 0.01);
+        assert_eq!(e.nearest_allowed.unwrap().example, "allowed ex");
+    }
+
+    #[test]
+    fn distance_is_non_negative_exactly_when_blocked() {
+        for (min, margin) in [(0.5, 0.3), (0.8, 0.3), (0.5, 0.0), (0.99, 0.0), (0.0, 1.0)] {
+            let mut m = lookup_moderator(same(min, margin));
+            let e = m.evaluate(PLAYER, TWO_PIECES).unwrap();
+            assert_eq!(
+                e.distance >= 0.0,
+                matches!(e.verdict, ModerationVerdict::Block(_)),
+                "min {min} margin {margin}: {e:?}"
+            );
+        }
+    }
+
+    #[test]
+    fn block_evidence_reports_the_distance_of_the_deciding_piece() {
+        let mut m = lookup_moderator(same(0.5, 0.3));
+        let e = m.evaluate(PLAYER, "far from allowed piece").unwrap();
+        assert_eq!(
+            e.verdict,
+            ModerationVerdict::Block(ModerationCategory::Hate)
+        );
+        // min(0.707 - 0.5, 0.707 - 0.141 - 0.3) = 0.207
+        assert!((e.distance - 0.207).abs() < 0.01, "{}", e.distance);
+    }
+
+    #[test]
+    fn distance_without_allowed_examples_is_the_similarity_term() {
+        let mut m = moderator(&[], same(0.6, 0.1));
+        let e = m.evaluate(PLAYER, "how to hurt myself badly").unwrap();
+        assert!((e.distance - 0.4).abs() < 1e-3, "{}", e.distance);
+    }
+
+    #[test]
+    fn distance_without_banned_examples_is_negative_infinity() {
+        let mut m = KnnModerator::new(
+            Box::new(FakeEmbedder::new(64)),
+            Vec::new(),
+            Vec::new(),
+            same(0.6, 0.1),
+        )
+        .unwrap();
+        let e = m.evaluate(PLAYER, "anything").unwrap();
+        assert_eq!(e.distance, f32::NEG_INFINITY);
+        assert_eq!(m.evaluate(PLAYER, " ").unwrap().distance, f32::NEG_INFINITY);
+    }
+
+    #[test]
+    fn new_rejects_thresholds_that_are_not_finite_or_not_in_zero_to_one() {
+        let t = |player, reply| KnnThresholds { player, reply };
+        let bad = [
+            ("player.min_similarity", t(th(f32::NAN, 0.1), th(0.5, 0.1))),
+            ("player.margin", t(th(0.5, -0.1), th(0.5, 0.1))),
+            ("reply.min_similarity", t(th(0.5, 0.1), th(1.5, 0.1))),
+            ("reply.margin", t(th(0.5, 0.1), th(0.5, f32::INFINITY))),
+        ];
+        for (field, thresholds) in bad {
+            let r = KnnModerator::new(
+                Box::new(FakeEmbedder::new(8)),
+                banned(),
+                Vec::new(),
+                thresholds,
+            );
+            let Err(ModerationError::Failed(msg)) = r else {
+                panic!("{field}: expected a threshold error");
+            };
+            assert!(msg.contains(field), "{msg}");
+        }
+        let edge = KnnModerator::new(
+            Box::new(FakeEmbedder::new(8)),
+            banned(),
+            Vec::new(),
+            same(0.0, 1.0),
+        );
+        assert!(edge.is_ok());
+    }
+
+    #[test]
+    fn new_rejects_zero_vectors() {
+        let r = KnnModerator::new(
+            Box::new(Canned(vec![vec![0.0, 0.0], vec![1.0, 0.0]])),
+            banned(),
+            Vec::new(),
+            same(0.6, 0.1),
+        );
+        assert!(matches!(
+            r,
+            Err(ModerationError::Embed(EmbedError::Backend(_)))
+        ));
     }
 }

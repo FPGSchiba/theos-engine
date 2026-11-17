@@ -64,7 +64,10 @@ pub struct Metrics {
     /// Generation speed between the first and last token; `0.0` when it cannot
     /// be measured (fewer than two tokens, or no time between them).
     pub tokens_per_second: f32,
-    /// Time from the start of the request to its end.
+    /// Time from the start of the request to its end. For
+    /// [`Npc::answer`] this includes the reply moderation check, which is not
+    /// bounded by the deadline: only generation is cut off at the deadline, so
+    /// a slow reply check can make `total` exceed it.
     pub total: Duration,
     /// Highest video-memory sample taken, if the probe reported any.
     pub vram_peak_bytes: Option<u64>,
@@ -120,8 +123,14 @@ pub struct GenerateJob {
 #[derive(Clone, Debug, PartialEq)]
 pub struct GenerateResponse {
     /// The answer-phase text exactly as generated.
+    ///
+    /// Unmoderated: [`Npc::generate`] checks the prompt's untrusted segments,
+    /// never the output. Never show it to a player and never store it in
+    /// memory.
     pub raw: String,
     /// The thinking-phase text exactly as generated.
+    ///
+    /// Unmoderated. Never show it to a player and never store it in memory.
     pub thinking: String,
     /// What the run measured; lore ids are empty and retrieval is zero.
     pub metrics: Metrics,
@@ -130,11 +139,17 @@ pub struct GenerateResponse {
 /// The outcome of one [`Npc::answer`] call.
 #[derive(Clone, Debug, PartialEq)]
 pub struct NpcResponse {
-    /// The parsed reply, or why the output could not be used.
+    /// The parsed reply, or why the output could not be used. A parsed reply's
+    /// `text` has passed moderation; its other fields have not been checked.
     pub reply: Result<Reply, ReplyError>,
     /// The answer-phase text exactly as generated.
+    ///
+    /// Unmoderated: only `reply.text` is checked, and only when the reply
+    /// parsed. Never show it to a player and never store it in memory.
     pub raw: String,
     /// The thinking-phase text exactly as generated.
+    ///
+    /// Unmoderated. Never show it to a player and never store it in memory.
     pub thinking: String,
     /// What the run measured.
     pub metrics: Metrics,
@@ -290,9 +305,15 @@ impl Npc {
     ///
     /// The question and then the player name are moderated before retrieval; a
     /// block or a moderator failure ends the call before the backend is used.
-    /// A reply that parses is moderated before it is returned. A malformed or
-    /// unfinished reply and the thinking text are not moderated: no reply text
-    /// is returned for them.
+    /// A reply that parses is moderated before it is returned: only
+    /// `reply.text` is checked. When a reply is blocked, or the moderator
+    /// fails, the call returns an error that carries no reply text. A
+    /// malformed or unfinished reply, `raw` and the thinking text are not
+    /// moderated, and they are returned in the response: see
+    /// [`NpcResponse::raw`].
+    ///
+    /// The reply check is not bounded by the deadline (only generation is), and
+    /// `metrics.total` includes it.
     ///
     /// Callers must not show streamed text before moderation has passed, and no
     /// memory system may store an exchange that ended in a moderation error.
@@ -370,6 +391,8 @@ impl Npc {
 
         let mut metrics = out.metrics(retrieval);
         metrics.moderation = moderation;
+        // The reply check is part of the request: end `total` after it.
+        metrics.total = self.clock.now().duration_since(t0);
         metrics.context_ids = ctx.lore_ids;
         metrics.cited_ids = cited_ids;
         Ok(NpcResponse {
@@ -1269,6 +1292,20 @@ mod tests {
         let b = with.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
         assert_eq!(a, b);
         assert_eq!(a.metrics.moderation, Duration::ZERO);
+    }
+
+    #[test]
+    fn total_includes_the_reply_moderation_time() {
+        let mut plain = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let base = plain.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        let mut r = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let (mut m, _) = TestMod::new();
+        m.clock = Some((r.clock.clone(), ms(7)));
+        r.npc = r.npc.with_moderator(Box::new(m));
+        let resp = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        // One input check and one reply check, both inside the total.
+        assert_eq!(resp.metrics.moderation, ms(14));
+        assert_eq!(resp.metrics.total, base.metrics.total + ms(14));
     }
 
     #[test]

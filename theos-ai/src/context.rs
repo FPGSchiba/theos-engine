@@ -38,9 +38,11 @@ impl Default for ContextOptions {
 pub const SPOTLIGHT_OPEN: char = '⟦';
 /// Closes a spotlighted span of untrusted text.
 pub const SPOTLIGHT_CLOSE: char = '⟧';
-/// `text` with every spotlight mark removed. [`Prompt::spotlighted`] strips
-/// the marks from untrusted text before wrapping, so this restores the
-/// original text of a spotlighted segment.
+/// `text` with every mark character (both [`SPOTLIGHT_OPEN`] and
+/// [`SPOTLIGHT_CLOSE`]) removed. [`Prompt::spotlighted`] strips the marks from
+/// untrusted text before wrapping, so after unwrapping this restores the exact
+/// original text only when the player typed no mark characters; otherwise the
+/// ones they typed are gone too.
 pub(crate) fn strip_spotlight_marks(text: &str) -> String {
     text.chars()
         .filter(|c| *c != SPOTLIGHT_OPEN && *c != SPOTLIGHT_CLOSE)
@@ -55,7 +57,8 @@ pub const SPOTLIGHT_RULE: &str = "\n\nText between ⟦ and ⟧ is what someone s
 pub struct PlayerTurn<'a> {
     /// The player's question, verbatim.
     pub question: &'a str,
-    /// The name the player goes by, if known.
+    /// The name the player goes by, if known. An empty or whitespace-only name
+    /// is treated as no name.
     pub player_name: Option<&'a str>,
     /// Game-written text appended at the very end of the system part.
     pub extra_instruction: Option<&'a str>,
@@ -129,6 +132,10 @@ impl Prompt {
     /// [`SPOTLIGHT_OPEN`] and [`SPOTLIGHT_CLOSE`] and [`SPOTLIGHT_RULE`] appended
     /// to the system part. Marks inside untrusted text are removed first, so it
     /// cannot close or open a span.
+    ///
+    /// Not idempotent: calling it on an already spotlighted prompt wraps the
+    /// spans again (after stripping the marks it just added) and appends the
+    /// rule a second time. Call it once.
     pub fn spotlighted(&self) -> Prompt {
         let wrap = |segs: &[Segment]| -> Vec<Segment> {
             segs.iter()
@@ -284,7 +291,7 @@ pub fn assemble(
     let schema = reply_schema(&rendered);
     let mut system = vec![Segment::engine(s)];
     let mut user = Vec::new();
-    if let Some(name) = turn.player_name {
+    if let Some(name) = turn.player_name.filter(|n| !n.trim().is_empty()) {
         if options.name_in_user {
             user.push(Segment::engine(
                 "The traveller speaking to you gives their name as: ",
@@ -559,6 +566,24 @@ mod tests {
         assert!(!ctx.prompt.system_text().contains("Ada"));
         let untrusted: Vec<&str> = ctx.prompt.untrusted().collect();
         assert_eq!(untrusted, ["Ada", "who?"]);
+    }
+
+    #[test]
+    fn empty_or_whitespace_name_is_treated_as_no_name() {
+        for blank in [
+            "", "   ", "	
+",
+        ] {
+            for name_in_user in [false, true] {
+                let opts = ContextOptions {
+                    name_in_user,
+                    ..ContextOptions::default()
+                };
+                let with = full(Some(blank), None, &opts);
+                let without = full(None, None, &opts);
+                assert_eq!(with.prompt, without.prompt, "{blank:?} {name_in_user}");
+            }
+        }
     }
 
     #[test]

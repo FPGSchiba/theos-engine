@@ -1,5 +1,12 @@
 //! Content moderation: the categories a game can react to, the trait a game
 //! implements, and a pipeline that runs several moderators in order.
+//!
+//! # Input length
+//!
+//! A moderator embeds the whole text, so a text beyond its embedder's input
+//! limit makes the check fail (`LlamaEmbedder`: 1024 tokens). The driver treats
+//! that as a block (`NpcError::ModerationFailed`, fail closed). A game should
+//! cap player input length well below that limit.
 
 use crate::embed::EmbedError;
 
@@ -42,6 +49,11 @@ impl ModerationCategory {
     }
 
     /// The category for an id; an unknown id becomes [`ModerationCategory::Custom`].
+    ///
+    /// This is the canonical constructor for ids (configuration, tables). A
+    /// [`ModerationCategory::Custom`] built directly with a built-in id such as
+    /// `"hate"` is not equal to [`ModerationCategory::Hate`]; go through
+    /// `from_id` to get the built-in.
     pub fn from_id(id: &str) -> Self {
         match id {
             "self-harm" => Self::SelfHarm,
@@ -56,6 +68,7 @@ impl ModerationCategory {
 
 /// Where the checked text came from.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ModerationSource {
     /// A message typed by the player.
     PlayerMessage,
@@ -65,6 +78,7 @@ pub enum ModerationSource {
 
 /// The outcome of checking one text.
 #[derive(Clone, Debug, PartialEq, Eq)]
+#[non_exhaustive]
 pub enum ModerationVerdict {
     /// The text may pass.
     Allow,
@@ -93,7 +107,10 @@ pub trait ContentModerator {
     ///
     /// # Errors
     /// Returns a [`ModerationError`] when no verdict can be reached; callers
-    /// must treat that as a block (fail closed).
+    /// must treat that as a block (fail closed). The error must not contain the
+    /// checked text: it reaches the caller unchanged through
+    /// `NpcError::ModerationFailed`, and a blocked reply's text must never
+    /// leave the driver.
     fn check(
         &mut self,
         source: ModerationSource,
@@ -196,6 +213,16 @@ mod tests {
         let custom = ModerationCategory::from_id("spoilers");
         assert_eq!(custom, ModerationCategory::Custom("spoilers".to_owned()));
         assert_eq!(custom.id(), "spoilers");
+    }
+
+    #[test]
+    fn custom_with_a_built_in_id_is_not_the_built_in() {
+        let custom = ModerationCategory::Custom("hate".to_owned());
+        assert_ne!(custom, ModerationCategory::Hate);
+        assert_eq!(
+            ModerationCategory::from_id(custom.id()),
+            ModerationCategory::Hate
+        );
     }
 
     #[test]
