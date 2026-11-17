@@ -828,9 +828,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/src/generator.rs": {
-    "mtime": 1794933555.065283,
-    "seen": 1794933674.7560618,
-    "ast_hash": "daeadad8b5cd26a24919018fb5e6ecb4",
+    "mtime": 1794935034.8767407,
+    "seen": 1794935133.0017455,
+    "ast_hash": "32b16c73f22e7463a8c01299f14f7da3",
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/src/lib.rs": {
@@ -846,9 +846,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/tests/real_model.rs": {
-    "mtime": 1794933543.5683854,
-    "seen": 1794933674.756242,
-    "ast_hash": "76adf6eb992f06d18be7f6fd47772977",
+    "mtime": 1794935003.3953261,
+    "seen": 1794935133.0018997,
+    "ast_hash": "db8a39954118b47bb0dfbe79142e09d3",
     "semantic_hash": ""
   },
   "theos-ai/src/backend.rs": {
