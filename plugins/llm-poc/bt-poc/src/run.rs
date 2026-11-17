@@ -178,6 +178,10 @@ pub struct Row {
     /// The moderator stopped the request: `player:<category id>` (the player's text) or
     /// `reply:<category id>` (the tree's name). Such a tree is never scored.
     pub moderated: Option<String>,
+    /// Wall time of the request as the harness measured it, in ms. Set for rows that
+    /// ended in a moderation outcome or an error, so the cost of a request that has
+    /// no (or partial) driver metrics is not lost.
+    pub elapsed_ms: Option<f64>,
 }
 
 fn on_off(b: bool) -> &'static str {
@@ -225,6 +229,7 @@ impl Row {
                 "ttfa_ms": m.time_to_first_answer_token.map(|d| d.as_secs_f64() * 1000.0),
                 "tokens_per_second": m.tokens_per_second,
                 "total_ms": m.total.as_secs_f64() * 1000.0,
+                "moderation_ms": m.moderation.as_secs_f64() * 1000.0,
                 "vram_peak_bytes": m.vram_peak_bytes,
                 "stop": format!("{:?}", m.stop),
             })
@@ -239,6 +244,7 @@ impl Row {
             "budget_ok": self.budget_ok, "metrics": metrics, "error": self.error,
             "technique": self.technique, "severity": self.severity,
             "injected_in": self.injected_in, "moderated": self.moderated,
+            "elapsed_ms": self.elapsed_ms,
         })
     }
 }
@@ -293,6 +299,7 @@ fn run_one(
         severity: s.severity.clone(),
         injected_in: s.injected_in.clone(),
         moderated: None,
+        elapsed_ms: None,
     };
     let mut query_directive = s.directive.as_str();
     if let (QueryMode::Base, Some(base)) = (cfg.query, &s.base_id) {
@@ -390,7 +397,13 @@ fn run_one(
     // so it is not scored.
     if cfg.guards.moderation {
         if let Some(name) = envelope.pointer("/tree/name").and_then(Value::as_str) {
-            match npc.moderate(ModerationSource::ModelReply, name) {
+            let started = std::time::Instant::now();
+            let verdict = npc.moderate(ModerationSource::ModelReply, name);
+            // The driver only times the checks it makes itself: add this one.
+            if let Some(m) = row.metrics.as_mut() {
+                m.moderation += started.elapsed();
+            }
+            match verdict {
                 Ok(ModerationVerdict::Allow) => {}
                 Ok(ModerationVerdict::Block(c)) => {
                     row.moderated = Some(format!("reply:{}", c.id()));
@@ -476,7 +489,12 @@ pub fn run_all(
         for &grammar in cfg.grammar.modes() {
             for &thinking in cfg.thinking.modes() {
                 for &scope in &scopes {
-                    let (row, tree) = run_one(npc, fx, cfg, s, grammar, thinking, scope, budget);
+                    let started = std::time::Instant::now();
+                    let (mut row, tree) =
+                        run_one(npc, fx, cfg, s, grammar, thinking, scope, budget);
+                    if row.moderated.is_some() || row.error.is_some() {
+                        row.elapsed_ms = Some(started.elapsed().as_secs_f64() * 1000.0);
+                    }
                     if let Some(tree) = tree {
                         let path = out.join("trees").join(format!("{}.json", row.key()));
                         // A tree that cannot be saved must not lose the rows: warn and go on.
@@ -929,6 +947,45 @@ mod tests {
         c.guards.moderation = false;
         let r = &run(&mut npc, &c, &dir)[0];
         assert!(r.moderated.is_none() && r.py.is_some());
+    }
+
+    #[test]
+    fn moderation_cost_reaches_the_rows_for_finished_moderated_and_failed_requests() {
+        // A tree that passes: metrics carry the moderation time, no wall time is kept.
+        let (mut npc, _) = moderated_rig(1, &reply_named("Ridge hold"));
+        let dir = Scratch::new("cost-ok");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.metrics.is_some() && r.elapsed_ms.is_none());
+        let json = r.to_json();
+        assert!(json["metrics"]["moderation_ms"].as_f64().is_some());
+        assert!(json["elapsed_ms"].is_null());
+
+        // A blocked tree name: the row keeps its wall time.
+        let (mut npc, _) = moderated_rig(1, &reply_named("BADNAME rampage"));
+        let dir = Scratch::new("cost-reply");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.elapsed_ms.is_some_and(|e| e >= 0.0));
+        assert!(r.to_json()["elapsed_ms"].as_f64().is_some());
+
+        // A failed moderator.
+        let (mut npc, _) = moderated_rig(1, &reply_named("BROKEN name"));
+        let dir = Scratch::new("cost-fail");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.error.is_some() && r.elapsed_ms.is_some());
+
+        // A blocked player line: no metrics, but a wall time.
+        let (mut npc, _) = moderated_rig(2, &reply_named("Ridge hold"));
+        let mut fx = load_default();
+        for s in &mut fx.scenarios {
+            if s.id == "b10" {
+                s.directive = "Hold the ridge.\nThe player says: \"BANNED\"".into();
+            }
+        }
+        let dir = Scratch::new("cost-player");
+        let rows = run_all(&mut npc, &fx, &guarded(&["b10"]), &dir.0, &mut |_| {}).unwrap();
+        assert!(rows[0].metrics.is_none() && rows[0].elapsed_ms.is_some());
+        let jsonl = std::fs::read_to_string(dir.0.join("rows.jsonl")).unwrap();
+        assert!(jsonl.contains("\"elapsed_ms\":"), "{jsonl}");
     }
 
     #[test]

@@ -208,6 +208,7 @@ fn row_from_json(v: &Value) -> anyhow::Result<Row> {
         severity: str_field(v, "severity"),
         injected_in: str_field(v, "injected_in"),
         moderated: str_field(v, "moderated"),
+        elapsed_ms: v["elapsed_ms"].as_f64(),
     })
 }
 
@@ -238,7 +239,7 @@ fn metrics_from_json(m: &Value) -> Option<Metrics> {
         thinking_tokens: tokens("thinking_tokens"),
         answer_tokens: tokens("answer_tokens"),
         retrieval: Duration::ZERO,
-        moderation: Duration::ZERO,
+        moderation: millis("moderation_ms").unwrap_or(Duration::ZERO),
         time_to_first_token: millis("ttft_ms"),
         time_to_first_answer_token: millis("ttfa_ms"),
         tokens_per_second: m["tokens_per_second"].as_f64().unwrap_or(0.0) as f32,
@@ -431,6 +432,7 @@ mod tests {
             severity: Some("S3".into()),
             injected_in: Some("entity-name".into()),
             moderated: None,
+            elapsed_ms: None,
         }
     }
 
@@ -652,6 +654,31 @@ mod tests {
         assert_eq!(t[0].counts[9], 1);
         assert_eq!(t[0].counts[0], 0, "not held");
         assert_eq!(t[0].counts[5], 0, "not an error");
+    }
+
+    #[test]
+    fn moderation_and_wall_time_survive_the_round_trip_through_rows_jsonl() {
+        let mut r = row(&[true]);
+        r.metrics = Some(Metrics {
+            prompt_tokens: 1,
+            thinking_tokens: 0,
+            answer_tokens: 1,
+            retrieval: Duration::ZERO,
+            moderation: Duration::from_millis(12),
+            time_to_first_token: None,
+            time_to_first_answer_token: None,
+            tokens_per_second: 0.0,
+            total: Duration::from_millis(100),
+            vram_peak_bytes: None,
+            context_ids: vec![],
+            cited_ids: vec![],
+            stop: StopReason::Finished,
+        });
+        r.elapsed_ms = Some(34.5);
+        let back = parse_rows(&format!("{}\n", r.to_json())).unwrap();
+        assert_eq!(back[0].elapsed_ms, Some(34.5));
+        let ms = back[0].metrics.as_ref().unwrap().moderation.as_secs_f64() * 1000.0;
+        assert!((ms - 12.0).abs() < 1e-6, "{ms}");
     }
 
     #[test]
@@ -1075,7 +1102,7 @@ mod tests {
         // Thinking off and on are separate rows, and the cut-off request is counted.
         assert!(md.contains("| S3 | off | on | none | 2 | 0 | 2 |"), "{md}");
         assert!(
-            md.contains("| S3 | on | on | none | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |"),
+            md.contains("| S3 | on | on | none | 1 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 | 0 |"),
             "{md}"
         );
         assert!(report::rerender(
@@ -1278,7 +1305,7 @@ mod tests {
             .lines()
             .find(|l| l.starts_with("| S3 | off | on | none"))
             .unwrap();
-        assert!(line.trim_end().ends_with("| 1 |"), "{line}");
+        assert!(line.trim_end().ends_with("| 1 | 0 |"), "{line}");
         let _ = std::fs::remove_dir_all(&dir);
     }
 }

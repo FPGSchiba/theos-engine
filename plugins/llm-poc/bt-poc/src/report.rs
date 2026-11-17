@@ -623,7 +623,7 @@ pub fn injection_summary(
          bj06's catching window is the base's 2.0-4.0 s (the design said 4.5).\n\n\
          Single sample: each cell is one sample at the run's sampling settings, judged against one clean sample; an 'obeyed' of 1/3 can be sampling noise.\n\n\
          ### By severity\n\n\
-         | severity | thinking | grammar | scope | scenarios | held | obeyed | inconclusive | gate stop | malformed | S2 | n/a | moderated | errors | no baseline | lore differs |\n\
+         | severity | thinking | grammar | scope | scenarios | held | obeyed | inconclusive | gate stop | malformed | S2 | n/a | errors | no baseline | lore differs | moderated |\n\
          |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
     );
     for t in by_severity(rows, verdicts, lore_differs) {
@@ -643,15 +643,15 @@ pub fn injection_summary(
             c[7],
             c[4],
             c[8],
-            c[9],
             c[5],
             c[6],
-            t.lore_differs
+            t.lore_differs,
+            c[9]
         );
     }
     out.push_str(
         "\n### By technique\n\n\
-         | technique | thinking | grammar | scope | n | held | S2 | S3 | inconclusive | gate stop | malformed | n/a | moderated | errors | no baseline | lore differs | total med ms |\n\
+         | technique | thinking | grammar | scope | n | held | S2 | S3 | inconclusive | gate stop | malformed | n/a | errors | no baseline | lore differs | total med ms | moderated |\n\
          |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
     );
     for t in by_technique(rows, verdicts, lore_differs) {
@@ -671,11 +671,11 @@ pub fn injection_summary(
             c[3],
             c[7],
             c[8],
-            c[9],
             c[5],
             c[6],
             t.lore_differs,
-            num(t.total_med_ms)
+            num(t.total_med_ms),
+            c[9]
         );
     }
     out
@@ -684,7 +684,7 @@ pub fn injection_summary(
 /// The per-request table as Markdown.
 pub fn request_table(rows: &[Row]) -> String {
     let mut out = String::from(
-        "| scenario | actor | prio | grammar | thinking | scope | lore | gate | behaviour | checks | grounding | sources | leak ok | name overlap | budget | total ms | out tok | moderated | error |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
+        "| scenario | actor | prio | grammar | thinking | scope | lore | gate | behaviour | checks | grounding | sources | leak ok | name overlap | budget | total ms | out tok | moderated | error | moderation ms | elapsed ms |\n|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
     );
     for r in rows {
         let (gate, behaviour, checks, grounding) = match &r.py {
@@ -707,9 +707,14 @@ pub fn request_table(rows: &[Row]) -> String {
         let (total, tokens) = r.metrics.as_ref().map_or(("-".into(), "-".into()), |m| {
             (format!("{:.0}", ms(m.total)), m.answer_tokens.to_string())
         });
+        let moderation = r
+            .metrics
+            .as_ref()
+            .map_or("-".to_owned(), |m| format!("{:.1}", ms(m.moderation)));
+        let elapsed = r.elapsed_ms.map_or("-".to_owned(), |e| format!("{e:.1}"));
         let _ = writeln!(
             out,
-            "| {} | {} | {} | {} | {} | {} | {} | {gate} | {behaviour} | {checks} | {grounding} | {} | {} | {} | {} | {total} | {tokens} | {} | {} |",
+            "| {} | {} | {} | {} | {} | {} | {} | {gate} | {behaviour} | {checks} | {grounding} | {} | {} | {} | {} | {total} | {tokens} | {} | {} | {moderation} | {elapsed} |",
             r.scenario_id,
             r.actor,
             r.priority,
@@ -736,7 +741,7 @@ fn csv_field(s: &str) -> String {
     }
 }
 
-const CSV_HEADER: &str = "scenario_id,base_id,actor,priority,grammar,thinking,scope,npc,lore_ids,envelope_ok,gate_pass,gate_rule,gate_message,nodes,depth,checks_passed,checks_total,behaviour,grounding,sources_ok,leak_ok,name_overlap,budget_seconds,budget_ok,prompt_tokens,thinking_tokens,answer_tokens,ttft_ms,ttfa_ms,tokens_per_second,total_ms,vram_peak_bytes,stop,error,technique,severity,injected_in,moderated";
+const CSV_HEADER: &str = "scenario_id,base_id,actor,priority,grammar,thinking,scope,npc,lore_ids,envelope_ok,gate_pass,gate_rule,gate_message,nodes,depth,checks_passed,checks_total,behaviour,grounding,sources_ok,leak_ok,name_overlap,budget_seconds,budget_ok,prompt_tokens,thinking_tokens,answer_tokens,ttft_ms,ttfa_ms,tokens_per_second,total_ms,vram_peak_bytes,stop,error,technique,severity,injected_in,moderated,moderation_ms,elapsed_ms";
 
 fn opt<T: ToString>(v: Option<T>) -> String {
     v.map(|v| v.to_string()).unwrap_or_default()
@@ -793,6 +798,8 @@ pub fn csv(rows: &[Row]) -> String {
             opt(r.severity.clone()),
             opt(r.injected_in.clone()),
             opt(r.moderated.clone()),
+            m.map(|m| msf(m.moderation)).unwrap_or_default(),
+            r.elapsed_ms.map(|e| format!("{e:.1}")).unwrap_or_default(),
         ];
         let line: Vec<String> = fields.iter().map(|f| csv_field(f)).collect();
         out.push_str(&line.join(","));
@@ -957,6 +964,7 @@ mod tests {
             severity: None,
             injected_in: None,
             moderated: None,
+            elapsed_ms: None,
         }
     }
 
@@ -993,6 +1001,76 @@ mod tests {
         let text = csv(&[r]);
         assert_eq!(text.lines().count(), 2);
         assert!(text.contains("\"a, \"\"b\"\"\""));
+    }
+
+    #[test]
+    fn csv_and_request_table_append_moderation_ms_and_elapsed_ms() {
+        let mut ok = row(true, false, "none", true);
+        let mut m = metrics(theos_ai::StopReason::Finished);
+        m.moderation = Duration::from_millis(12);
+        ok.metrics = Some(m);
+        let mut stopped = row(true, false, "none", true);
+        stopped.moderated = Some("player:hate".into());
+        stopped.elapsed_ms = Some(34.5);
+        let rows = [ok, stopped];
+
+        assert!(CSV_HEADER.ends_with(",moderated,moderation_ms,elapsed_ms"));
+        let text = csv(&rows);
+        let lines: Vec<&str> = text.lines().collect();
+        assert!(lines[1].ends_with(",12.0,"), "{}", lines[1]);
+        assert!(lines[2].ends_with(",player:hate,,34.5"), "{}", lines[2]);
+        let width = CSV_HEADER.split(',').count();
+        assert_eq!(lines[1].split(',').count(), width);
+
+        let table = request_table(&rows);
+        let mut it = table.lines();
+        let head: Vec<&str> = it.next().unwrap().split('|').map(str::trim).collect();
+        assert_eq!(
+            head[head.len() - 3..head.len() - 1],
+            ["moderation ms", "elapsed ms"]
+        );
+        let sep = it.next().unwrap();
+        assert_eq!(sep.matches("---").count(), head.len() - 2);
+        let first: Vec<&str> = it.next().unwrap().split('|').map(str::trim).collect();
+        assert_eq!(first[first.len() - 3..first.len() - 1], ["12.0", "-"]);
+        let second: Vec<&str> = it.next().unwrap().split('|').map(str::trim).collect();
+        assert_eq!(second[second.len() - 3..second.len() - 1], ["-", "34.5"]);
+    }
+
+    #[test]
+    fn injection_summary_keeps_its_v1_column_positions_and_appends_moderated() {
+        let rows = [row(true, false, "none", true)];
+        let md = injection_summary(&rows, &[Verdict::Held], &[false], &[]);
+        let header = |title: &str| -> Vec<String> {
+            md.lines()
+                .skip_while(|l| !l.starts_with(title))
+                .nth(2)
+                .unwrap()
+                .split('|')
+                .map(|c| c.trim().to_owned())
+                .filter(|c| !c.is_empty())
+                .collect()
+        };
+        let sev = header("### By severity");
+        assert_eq!(sev.last().map(String::as_str), Some("moderated"));
+        assert_eq!(
+            sev[sev.len() - 4..sev.len() - 1],
+            ["errors", "no baseline", "lore differs"]
+        );
+        let tech = header("### By technique");
+        assert_eq!(tech.last().map(String::as_str), Some("moderated"));
+        assert_eq!(tech[tech.len() - 2], "total med ms");
+        // Cells follow the header: the moderated count is the last cell.
+        let line = md
+            .lines()
+            .find(|l| l.starts_with("| - | off | on |"))
+            .unwrap();
+        let cells: Vec<&str> = line
+            .split('|')
+            .map(str::trim)
+            .filter(|c| !c.is_empty())
+            .collect();
+        assert_eq!(cells.len(), sev.len());
     }
 
     #[test]
@@ -1104,10 +1182,10 @@ mod tests {
         let md = injection_summary(&rows, &verdicts, &no_flags(&rows), &[]);
         assert!(md.contains("Injection summary v1 (trees)"));
         assert!(md.contains(
-            "| severity | thinking | grammar | scope | scenarios | held | obeyed | inconclusive | gate stop | malformed | S2 | n/a | moderated | errors | no baseline | lore differs |"
+            "| severity | thinking | grammar | scope | scenarios | held | obeyed | inconclusive | gate stop | malformed | S2 | n/a | errors | no baseline | lore differs | moderated |"
         ));
         assert!(md.contains(
-            "| technique | thinking | grammar | scope | n | held | S2 | S3 | inconclusive | gate stop | malformed | n/a | moderated | errors | no baseline | lore differs | total med ms |"
+            "| technique | thinking | grammar | scope | n | held | S2 | S3 | inconclusive | gate stop | malformed | n/a | errors | no baseline | lore differs | total med ms | moderated |"
         ));
         // header + rule + rows, for both tables.
         let table_lines = md.lines().filter(|l| l.starts_with('|')).count();
@@ -1133,7 +1211,7 @@ mod tests {
         let md = injection_summary(&rows, &verdicts, &no_flags(&rows), &[]);
         assert!(
             md.contains(
-                "| override | off | on | none | 10 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 550 |"
+                "| override | off | on | none | 10 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 1 | 0 | 550 | 1 |"
             ),
             "{md}"
         );
@@ -1416,7 +1494,7 @@ mod tests {
         let md = injection_summary(&rows, &verdicts, &flags, &[]);
         assert!(
             md.contains(
-                "| S3 | off | on | retrieved | 2 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 |"
+                "| S3 | off | on | retrieved | 2 | 2 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 0 | 1 | 0 |"
             ),
             "{md}"
         );
