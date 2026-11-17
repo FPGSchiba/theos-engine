@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/lib.rs": {
-    "mtime": 1794933511.070424,
-    "seen": 1794933674.7568839,
-    "ast_hash": "a67c759f473d86af37cbbee1d8cc3a60",
+    "mtime": 1794933838.5526383,
+    "seen": 1794933936.0904005,
+    "ast_hash": "23acf008669ea4e1f69aae88b8de7a9c",
     "semantic_hash": ""
   },
   "theos-assets/src/lib.rs": {
@@ -792,9 +792,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/run.rs": {
-    "mtime": 1794933562.2743824,
-    "seen": 1794933674.7555845,
-    "ast_hash": "484cc3b164bcd907f2af0759f5185c4b",
+    "mtime": 1794933853.40919,
+    "seen": 1794933936.0889637,
+    "ast_hash": "fec18bdba009b0b89fdcd3c31d734655",
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/scenarios.rs": {
@@ -864,15 +864,15 @@
     "semantic_hash": ""
   },
   "theos-ai/src/context.rs": {
-    "mtime": 1794933566.7317502,
-    "seen": 1794933674.7567139,
-    "ast_hash": "824a5355565be2b3b9f62b3ab48f7f4c",
+    "mtime": 1794933856.5009027,
+    "seen": 1794933936.0902464,
+    "ast_hash": "2514eabe06d19bfb48149739add780a2",
     "semantic_hash": ""
   },
   "theos-ai/src/driver.rs": {
-    "mtime": 1794933523.8289518,
-    "seen": 1794933674.7567148,
-    "ast_hash": "c79a113684960025c13a5f38959af567",
+    "mtime": 1794933864.5621824,
+    "seen": 1794933936.0902476,
+    "ast_hash": "5b92d0b6d69529ce0ceddaa3860c5639",
     "semantic_hash": ""
   },
   "theos-ai/src/embed.rs": {
@@ -924,15 +924,15 @@
     "semantic_hash": ""
   },
   "theos-ai/src/worker.rs": {
-    "mtime": 1794558714.3877347,
-    "seen": 1794560768.4898384,
-    "ast_hash": "75b34c0c507a05b2c3e8e332cf072f8a",
+    "mtime": 1794933853.1836307,
+    "seen": 1794933936.090865,
+    "ast_hash": "e9da3618a99fb72cbded7c3ce1f85186",
     "semantic_hash": ""
   },
   "theos-ai/tests/lore_poc.rs": {
-    "mtime": 1794933533.5460439,
-    "seen": 1794933674.7574165,
-    "ast_hash": "252512f49b252a94f7de969da0f870f2",
+    "mtime": 1794933853.2355952,
+    "seen": 1794933936.0908656,
+    "ast_hash": "7cf64d6013ba3e978ed4ce0ddcaa0df4",
     "semantic_hash": ""
   },
   "docs/superpowers/specs/2026-11-13-npc-llm-poc-design.md": {
@@ -2076,9 +2076,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/run.rs": {
-    "mtime": 1794689593.2343686,
-    "seen": 1794689643.4875255,
-    "ast_hash": "73130a0bd11d2ed7c99ba30bec9f12e5",
+    "mtime": 1794933853.2822287,
+    "seen": 1794933936.0882275,
+    "ast_hash": "d230a3062ac63b043733f521e1926d6d",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/schema.rs": {
