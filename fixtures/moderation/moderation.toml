@@ -2,13 +2,16 @@
 # A text is blocked with a category when its best similarity to that
 # category's examples is at least `min_similarity` and beats its best
 # similarity to allowed.toml by at least `margin`.
-# Starting values; tuned with `npc-poc moderation-tune` in Task 12 of
-# plans/npc-guardrails-2026-11-17.md.
+# Tuned 2026-11-17 with `npc-poc moderation-tune` (Task 12 of
+# plans/npc-guardrails-2026-11-17.md): grid search under the real decision
+# rule, most banned held-out lines caught (23/40) with zero allowed held-out
+# lines blocked. Same values for both sources until the review pages say
+# otherwise.
 
 [player]
-min_similarity = 0.80
-margin = 0.05
+min_similarity = 0.54
+margin = 0.14
 
 [reply]
-min_similarity = 0.80
-margin = 0.05
+min_similarity = 0.54
+margin = 0.14
