@@ -31,15 +31,16 @@ pub use driver::{
 };
 pub use memory::{MemoryProbe, NoProbe};
 pub use moderation::{
-    AllowAll, ContentModerator, ModerationCategory, ModerationError, ModerationPipeline,
-    ModerationSource, ModerationVerdict,
+    AllowAll, ContentModerator, KnnEvidence, KnnModerator, KnnThresholds, ModerationCategory,
+    ModerationError, ModerationPipeline, ModerationSource, ModerationVerdict, Nearest,
+    SourceThreshold,
 };
 
 pub use context::{
     Context, ContextOptions, PlayerTurn, Prompt, SPOTLIGHT_CLOSE, SPOTLIGHT_OPEN, SPOTLIGHT_RULE,
     Segment, Trust, assemble,
 };
-pub use embed::{EmbedError, EmbedInput, Embedder, cosine};
+pub use embed::{EmbedError, EmbedInput, Embedder, SharedEmbedder, cosine};
 pub use knowledge::{Visible, visible};
 pub use lore::{
     Corpus, CorpusError, HolderKind, Lens, LoreKind, LoreRecord, PersonaLayer, RecordId, Speaker,

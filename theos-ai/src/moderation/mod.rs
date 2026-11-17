@@ -3,6 +3,10 @@
 
 use crate::embed::EmbedError;
 
+mod knn;
+
+pub use knn::{KnnEvidence, KnnModerator, KnnThresholds, Nearest, SourceThreshold};
+
 /// A kind of content a game can react to.
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 #[non_exhaustive]
