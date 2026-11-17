@@ -400,6 +400,11 @@ fn run_one(
                     row.error = Some(format!("moderating the tree name: {e}"));
                     return (row, None);
                 }
+                // A verdict this harness does not know: fail closed.
+                Ok(_) => {
+                    row.error = Some("moderating the tree name: unknown verdict".to_owned());
+                    return (row, None);
+                }
             }
         }
     }

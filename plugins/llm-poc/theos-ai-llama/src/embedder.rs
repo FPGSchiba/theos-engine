@@ -25,6 +25,10 @@ const EMBED_CTX: u32 = 1024;
 const END_OF_TEXT: &str = "<|endoftext|>";
 
 /// A llama.cpp embedding model with all layers on the GPU.
+///
+/// A text longer than the input limit (1024 tokens) makes the embedding fail.
+/// Used for moderation that means `ModerationFailed` (fail closed), so a game
+/// should cap player input length well below the limit.
 pub struct LlamaEmbedder {
     mc: ModelContext,
     batch: LlamaBatch<'static>,
