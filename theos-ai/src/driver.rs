@@ -10,7 +10,7 @@ use serde_json::Value;
 
 use crate::backend::{Backend, BackendError, GenerationRequest, Phase, Thinking};
 use crate::clock::Clock;
-use crate::context::{ContextOptions, PlayerTurn, Prompt, assemble};
+use crate::context::{ContextOptions, PlayerTurn, Prompt, assemble, strip_spotlight_marks};
 use crate::embed::{EmbedError, Embedder};
 use crate::lore::{Corpus, RecordId, Speaker};
 use crate::memory::MemoryProbe;
@@ -387,7 +387,9 @@ impl Npc {
     /// and `metrics.retrieval` is zero.
     ///
     /// Every untrusted segment of the prompt is moderated as a player message
-    /// before generation; the output is not moderated (it is free text the
+    /// before generation, with the spotlight marks removed: the moderator sees
+    /// the text the player wrote, whether or not the prompt was spotlighted.
+    /// The output is not moderated (it is free text the
     /// caller interprets). Callers must not show streamed text to a player
     /// without moderating it, and no memory system may store a moderated
     /// exchange.
@@ -402,7 +404,7 @@ impl Npc {
         let vram_start = self.probe.vram_bytes();
         let mut moderation = Duration::ZERO;
         for text in job.prompt.untrusted() {
-            self.check_player_text(text, &mut moderation)?;
+            self.check_player_text(&strip_spotlight_marks(text), &mut moderation)?;
         }
         let out = self.run_loop(
             &job.prompt,
@@ -1309,6 +1311,33 @@ mod tests {
             *seen.lock().unwrap(),
             vec![(ModerationSource::PlayerMessage, "one".to_owned())]
         );
+    }
+
+    #[test]
+    fn generate_moderates_spotlighted_text_without_marks() {
+        let (m, seen) = TestMod::new();
+        let mut r = moderated(rig(vec![script(MS, MS, spelled("ok"))]), m);
+        let mut j = untrusted_job(vec![Segment::untrusted("hello")]);
+        j.prompt = j.prompt.spotlighted();
+        r.npc.generate(&j).unwrap();
+        assert_eq!(
+            *seen.lock().unwrap(),
+            vec![(ModerationSource::PlayerMessage, "hello".to_owned())]
+        );
+    }
+
+    #[test]
+    fn generate_blocks_a_spotlighted_banned_text() {
+        let (m, _) = TestMod::new();
+        let m = m.blocking("bad", ModerationCategory::Hate);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled("ok"))]), m);
+        let mut j = untrusted_job(vec![Segment::untrusted("so bad")]);
+        j.prompt = j.prompt.spotlighted();
+        assert_eq!(
+            r.npc.generate(&j).unwrap_err(),
+            NpcError::PlayerModerated(ModerationCategory::Hate)
+        );
+        assert!(r.backend.requests().is_empty());
     }
 
     #[test]
