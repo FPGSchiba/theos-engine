@@ -22,3 +22,5 @@ Content for the nearest-neighbour moderator (`theos-ai` `KnnModerator`), loaded 
 - **Tone.** Lines are short and non-graphic: requests and statements, never explicit material or working instructions.
 - **Scope.** The banned lists hold only these categories, never dark or depressing in-world topics.
 - **Review.** People review the lists. Changes are re-tuned with `npc-poc moderation-tune`.
+
+**Sources.** `hate.toml` adds hateful test cases from HateCheck (Röttger et al., ACL 2021, [paul-rottger/hatecheck-data](https://github.com/paul-rottger/hatecheck-data)) and the German suite of Multilingual HateCheck (Röttger et al., WOAH 2022, [rewire-online/multilingual-hatecheck](https://github.com/rewire-online/multilingual-hatecheck)), both CC BY 4.0. The file header says how they were selected. Every other line was written for this project.
