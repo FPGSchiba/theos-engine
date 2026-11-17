@@ -25,7 +25,9 @@ use llguidance::api::TopLevelGrammar;
 use llguidance::{Matcher, ParserFactory};
 use serde::Deserialize;
 use serde_json::Value;
-use theos_ai::{Backend, BackendError, Decoder, GenerationRequest, Phase, Piece, Thinking};
+use theos_ai::{
+    Backend, BackendError, Decoder, GenerationRequest, Phase, Piece, Segment, Thinking, Trust,
+};
 
 use crate::{LlamaError, LlamaRuntime, ModelContext};
 
@@ -72,6 +74,10 @@ pub struct ModelProfile {
     pub n_ctx: Option<u32>,
     /// Seed of the final `dist` sampler.
     pub seed: u32,
+    /// G1: tokenize untrusted prompt segments with special-token parsing off,
+    /// so turn markers a player types stay text. Off keeps the old behaviour.
+    #[serde(default)]
+    pub safe_untrusted: bool,
 }
 
 /// One `[[model]]` entry of `models.toml`.
@@ -224,23 +230,137 @@ impl LlamaGenerator {
         &self.profile
     }
 
-    /// The chat-templated, prefixed prompt text for `request`.
-    fn prompt_text(&self, request: &GenerationRequest<'_>) -> Result<String, BackendError> {
+    /// How `text` tokenizes, without special tokens added.
+    pub fn tokenize(&self, text: &str, parse_special: bool) -> Vec<LlamaToken> {
+        self.mc
+            .model()
+            .vocab()
+            .tokenize(text.as_bytes(), false, parse_special)
+    }
+
+    /// The chat-templated, prefixed prompt text for `request`, with untrusted
+    /// text in place (whatever the profile's `safe_untrusted` says).
+    ///
+    /// # Errors
+    ///
+    /// [`BackendError::Failed`] when the chat template fails.
+    pub fn prompt_text(&self, request: &GenerationRequest<'_>) -> Result<String, BackendError> {
+        self.templated(request, false).map(|(text, _)| text)
+    }
+
+    /// The prompt token ids `begin` prefills for `request`.
+    ///
+    /// # Errors
+    ///
+    /// [`BackendError::Failed`] when the chat template fails or a placeholder
+    /// does not survive it exactly once.
+    pub fn prompt_tokens(
+        &self,
+        request: &GenerationRequest<'_>,
+    ) -> Result<Vec<LlamaToken>, BackendError> {
+        let vocab = self.mc.model().vocab();
+        if !self.profile.safe_untrusted {
+            let prompt = self.prompt_text(request)?;
+            return Ok(vocab.tokenize(prompt.as_bytes(), true, true));
+        }
+        let (templated, placeholders) = self.templated(request, true)?;
+        let mut tokens = Vec::new();
+        for (i, (text, parse_special)) in splice_plan(&templated, &placeholders)?.iter().enumerate()
+        {
+            // BOS only on the very first part; later empty parts add nothing.
+            if i > 0 && text.is_empty() {
+                continue;
+            }
+            tokens.extend(vocab.tokenize(text.as_bytes(), i == 0, *parse_special));
+        }
+        Ok(tokens)
+    }
+
+    /// The text of `tokens`, special tokens spelled out.
+    pub fn detokenize(&self, tokens: &[LlamaToken]) -> String {
+        let bytes = self.mc.model().vocab().detokenize(tokens, false, true);
+        String::from_utf8_lossy(&bytes).into_owned()
+    }
+
+    /// The templated, prefixed prompt. With `placeholders` on, each untrusted
+    /// segment is replaced by `"\u{E000}{i}\u{E001}"` and listed with its text.
+    fn templated(
+        &self,
+        request: &GenerationRequest<'_>,
+        placeholders: bool,
+    ) -> Result<(String, Vec<(String, String)>), BackendError> {
+        let mut found: Vec<(String, String)> = Vec::new();
+        let mut content = |segments: &[Segment]| -> String {
+            segments
+                .iter()
+                .map(|seg| match (placeholders, seg.trust) {
+                    (true, Trust::Untrusted) => {
+                        let ph = format!("\u{E000}{}\u{E001}", found.len());
+                        found.push((ph.clone(), seg.text.clone()));
+                        ph
+                    }
+                    _ => seg.text.clone(),
+                })
+                .collect()
+        };
+        let system = content(&request.prompt.system);
+        let user = content(&request.prompt.user);
         let message = |role: &str, content: &str| {
             LlamaChatMessage::new(role.to_owned(), content.to_owned())
                 .map_err(|e| BackendError::Failed(format!("chat message: {e}")))
         };
-        let chat = [
-            message("system", &request.prompt.system_text())?,
-            message("user", &request.prompt.user_text())?,
-        ];
+        let chat = [message("system", &system)?, message("user", &user)?];
         let templated = self
             .mc
             .model()
             .apply_chat_template(&self.template, &chat, true)
             .map_err(|e| BackendError::Failed(format!("chat template: {e}")))?;
-        Ok(render_prompt(&templated, request.thinking, &self.profile))
+        Ok((
+            render_prompt(&templated, request.thinking, &self.profile),
+            found,
+        ))
     }
+}
+
+/// Splits `templated` at each placeholder into `(text, parse_special)` parts:
+/// engine text `true`, the untrusted text that replaces a placeholder `false`.
+/// Parts alternate engine, untrusted, ..., engine (engine parts may be empty).
+///
+/// # Errors
+///
+/// [`BackendError::Failed`] when a placeholder is missing, appears more than
+/// once, or the placeholders are out of order.
+fn splice_plan(
+    templated: &str,
+    placeholders: &[(String, String)],
+) -> Result<Vec<(String, bool)>, BackendError> {
+    let mut parts = Vec::with_capacity(placeholders.len() * 2 + 1);
+    let mut rest = templated;
+    for (placeholder, text) in placeholders {
+        match templated.matches(placeholder.as_str()).count() {
+            1 => {}
+            0 => {
+                return Err(BackendError::Failed(format!(
+                    "placeholder {placeholder:?} is missing from the templated prompt"
+                )))
+            }
+            n => {
+                return Err(BackendError::Failed(format!(
+                    "placeholder {placeholder:?} appears {n} times in the templated prompt"
+                )))
+            }
+        }
+        let Some((before, after)) = rest.split_once(placeholder.as_str()) else {
+            return Err(BackendError::Failed(format!(
+                "placeholder {placeholder:?} is out of order in the templated prompt"
+            )));
+        };
+        parts.push((before.to_owned(), true));
+        parts.push((text.clone(), false));
+        rest = after;
+    }
+    parts.push((rest.to_owned(), true));
+    Ok(parts)
 }
 
 /// A fresh llguidance matcher for `schema`.
@@ -291,12 +411,7 @@ impl Backend for LlamaGenerator {
         &'a mut self,
         request: &GenerationRequest<'_>,
     ) -> Result<Box<dyn Decoder + 'a>, BackendError> {
-        let prompt = self.prompt_text(request)?;
-        let tokens = self
-            .mc
-            .model()
-            .vocab()
-            .tokenize(prompt.as_bytes(), true, true);
+        let tokens = self.prompt_tokens(request)?;
         if tokens.is_empty() {
             return Err(BackendError::Failed("prompt tokenized to nothing".into()));
         }
@@ -563,6 +678,7 @@ mod tests {
             answer_sampling_on: None,
             n_ctx: None,
             seed: 42,
+            safe_untrusted: false,
         }
     }
 
@@ -691,5 +807,62 @@ answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_pena
         let mut s = Utf8Stream::default();
         assert_eq!(s.push(b"a\xFFb"), "a\u{FFFD}b");
         assert_eq!(s.push(b"c"), "c");
+    }
+
+    fn ph(i: usize) -> String {
+        format!("\u{E000}{i}\u{E001}")
+    }
+
+    #[test]
+    fn splice_plan_alternates_engine_and_untrusted_parts() {
+        let templated = format!("A{}B{}C", ph(0), ph(1));
+        let plan = splice_plan(
+            &templated,
+            &[(ph(0), "x<|im_start|>".into()), (ph(1), "y".into())],
+        )
+        .unwrap();
+        assert_eq!(
+            plan,
+            vec![
+                ("A".to_owned(), true),
+                ("x<|im_start|>".to_owned(), false),
+                ("B".to_owned(), true),
+                ("y".to_owned(), false),
+                ("C".to_owned(), true),
+            ]
+        );
+    }
+
+    #[test]
+    fn splice_plan_errors_on_a_missing_placeholder() {
+        let err = splice_plan("no placeholder here", &[(ph(0), "x".into())]);
+        assert!(matches!(err, Err(BackendError::Failed(_))));
+    }
+
+    #[test]
+    fn splice_plan_errors_on_a_repeated_placeholder() {
+        let templated = format!("{}-{}", ph(0), ph(0));
+        let err = splice_plan(&templated, &[(ph(0), "x".into())]);
+        assert!(matches!(err, Err(BackendError::Failed(_))));
+    }
+
+    #[test]
+    fn splice_plan_keeps_multibyte_text_at_boundaries() {
+        let templated = format!("Grüße⟦{}⟧Grüße", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "Füße".into())]).unwrap();
+        assert_eq!(
+            plan,
+            vec![
+                ("Grüße⟦".to_owned(), true),
+                ("Füße".to_owned(), false),
+                ("⟧Grüße".to_owned(), true),
+            ]
+        );
+    }
+
+    #[test]
+    fn models_toml_safe_untrusted_defaults_off() {
+        let file = ModelsFile::parse(include_str!("../../models.toml")).unwrap();
+        assert!(!file.models[0].profile.safe_untrusted);
     }
 }
