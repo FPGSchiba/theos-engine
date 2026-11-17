@@ -1,27 +1,26 @@
-//! The `moderation-tune` command: measure the nearest-neighbour moderator on the
-//! held-out lines and propose thresholds. It writes nothing; the person running it
-//! copies the values into `fixtures/moderation/moderation.toml`.
+//! The `moderation-tune` command: score the held-out lines with the real embedder and
+//! grid-search thresholds under the moderator's own decision rule. It writes nothing;
+//! the person running it copies the values into `fixtures/moderation/moderation.toml`.
 //!
-//! Held-out lines are never examples, so there is no leave-one-out here: every
-//! held-out line (banned and allowed) is evaluated as a player message against the
-//! full example lists. The moderator is built with a threshold nothing can reach, so
-//! the evidence is the closest banned example overall, whatever the current
-//! `moderation.toml` says.
+//! Held-out lines are never examples, so there is no leave-one-out: every held-out line
+//! (banned and allowed) is scored as a player message against the full example lists.
+//!
+//! `KnnEvidence` only carries the deciding piece, so this module scores the pieces
+//! itself: it splits a line the way `KnnModerator` does (the whole text plus each
+//! sentence), embeds every piece as a document, and keeps per piece the best banned
+//! similarity (with its category) and the best allowed similarity. The moderator's rule
+//! is "block iff some piece and category has `best_c >= min_similarity` and
+//! `best_c - best_a >= margin`"; `best_a` is the same for every category of a piece, so
+//! the best category of a piece decides for the whole piece, and the stored numbers
+//! reproduce the rule exactly for any threshold pair.
 
 use std::fmt::Write as _;
 use std::path::Path;
 
 use anyhow::anyhow;
 use guard_kit::{load_lists, ModerationLists};
-use theos_ai::{
-    Embedder, KnnModerator, KnnThresholds, ModerationError, ModerationSource, SourceThreshold,
-};
+use theos_ai::{cosine, EmbedError, EmbedInput, Embedder};
 use theos_ai_llama::{models_dir, LlamaEmbedder, LlamaRuntime, ModelsFile};
-
-use crate::run::build_knn;
-
-/// The proposed margin: how much closer to a banned example than to any allowed one.
-pub const MARGIN: f32 = 0.05;
 
 /// Whether a held-out line belongs to a banned category or to the allowed list.
 #[derive(Clone, Copy, Debug, PartialEq, Eq)]
@@ -32,7 +31,18 @@ pub enum LineKind {
     Allowed,
 }
 
-/// The evidence for one held-out line.
+/// The scores of one piece of a line.
+#[derive(Clone, Debug, PartialEq)]
+pub struct PieceScore {
+    /// The closest banned category.
+    pub category: String,
+    /// Its similarity.
+    pub banned: f32,
+    /// The similarity to the closest allowed example.
+    pub allowed: Option<f32>,
+}
+
+/// The scores of one held-out line.
 #[derive(Clone, Debug, PartialEq)]
 pub struct TuneLine {
     /// The list the line came from: a category id, or `allowed`.
@@ -41,13 +51,29 @@ pub struct TuneLine {
     pub kind: LineKind,
     /// The line.
     pub line: String,
-    /// The closest banned category and its similarity.
-    pub banned: Option<(String, f32)>,
-    /// The similarity to the closest allowed example.
-    pub allowed: Option<f32>,
+    /// One score per piece (the whole text plus each sentence).
+    pub pieces: Vec<PieceScore>,
 }
 
-/// How many held-out lines of one category a threshold catches.
+impl TuneLine {
+    /// The piece with the highest banned similarity, for the table.
+    pub fn best(&self) -> Option<&PieceScore> {
+        self.pieces.iter().fold(None, |top, p| match top {
+            Some(t) if t.banned >= p.banned => Some(t),
+            _ => Some(p),
+        })
+    }
+
+    /// Whether the moderator would block this line at `min_similarity` and `margin`.
+    pub fn blocks(&self, min_similarity: f32, margin: f32) -> bool {
+        self.pieces.iter().any(|p| {
+            p.banned >= min_similarity
+                && p.banned - p.allowed.unwrap_or(f32::NEG_INFINITY) >= margin
+        })
+    }
+}
+
+/// How many held-out lines of one category a threshold pair catches.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Catch {
     /// The category id.
@@ -58,99 +84,217 @@ pub struct Catch {
     pub total: usize,
 }
 
-/// The thresholds [`propose`] suggests.
+/// A threshold pair and what it does to the held-out lines.
+#[derive(Clone, Debug, PartialEq)]
+pub struct Choice {
+    /// The minimum similarity.
+    pub min_similarity: f32,
+    /// The margin.
+    pub margin: f32,
+    /// Banned held-out lines caught, per category in order of first appearance.
+    pub caught: Vec<Catch>,
+    /// Banned held-out lines caught in all.
+    pub caught_total: usize,
+    /// The allowed held-out lines this pair would block.
+    pub blocked_allowed: Vec<String>,
+}
+
+/// The two proposals [`propose`] makes.
 #[derive(Clone, Debug, PartialEq)]
 pub struct Proposal {
-    /// `None` when there is no allowed held-out line to measure against.
-    pub min_similarity: Option<f32>,
-    /// Always [`MARGIN`].
-    pub margin: f32,
-    /// Banned held-out lines caught per category, in the order the categories first appear.
-    pub caught: Vec<Catch>,
+    /// The best pair that blocks no allowed held-out line; `None` when none exists.
+    pub strict: Option<Choice>,
+    /// The best pair that may block one allowed held-out line, for transparency.
+    pub one_allowed: Option<Choice>,
 }
 
-/// Rounds up to the next 0.01. A hundredth of a hundredth of slack absorbs the
-/// float error of `0.43 + 0.01`, which would otherwise round `0.44` up to `0.45`.
-fn round_up_hundredth(x: f32) -> f32 {
-    let hundredths = (f64::from(x) * 100.0 - 1e-3).ceil();
-    // The value is a small multiple of 0.01; the narrowing is exact enough for a threshold.
-    (hundredths / 100.0) as f32
+/// Grid bounds in hundredths: min_similarity 0.30..=0.95, margin 0.00..=0.20.
+const MIN_RANGE: std::ops::RangeInclusive<u32> = 30..=95;
+const MARGIN_RANGE: std::ops::RangeInclusive<u32> = 0..=20;
+
+fn hundredths(n: u32) -> f32 {
+    // n is at most 95, so the conversion is exact; the division is correctly rounded,
+    // like the literal `0.xx` in a config file.
+    n as f32 / 100.0
 }
 
-/// Proposes `min_similarity` as the highest nearest-banned similarity over the allowed
-/// held-out lines, plus 0.01, rounded up to 0.01, so that none of them blocks; the
-/// margin is [`MARGIN`]. Reports how many banned held-out lines of each category the
-/// pair catches (similarity at least `min_similarity` and at least [`MARGIN`] ahead of
-/// the closest allowed example).
-pub fn propose(lines: &[TuneLine]) -> Proposal {
-    let highest = lines
-        .iter()
-        .filter(|l| l.kind == LineKind::Allowed)
-        .filter_map(|l| l.banned.as_ref().map(|(_, s)| *s))
-        .fold(None, |top: Option<f32>, s| {
-            Some(top.map_or(s, |t| t.max(s)))
-        });
-    let min_similarity = highest.map(|h| round_up_hundredth(h + 0.01));
+fn evaluate_pair(lines: &[TuneLine], min_similarity: f32, margin: f32) -> Choice {
     let mut caught: Vec<Catch> = Vec::new();
-    for l in lines.iter().filter(|l| l.kind == LineKind::Banned) {
-        let at = match caught.iter().position(|c| c.category == l.list) {
-            Some(at) => at,
-            None => {
-                caught.push(Catch {
-                    category: l.list.clone(),
-                    caught: 0,
-                    total: 0,
-                });
-                caught.len() - 1
+    let mut blocked_allowed = Vec::new();
+    for l in lines {
+        let blocks = l.blocks(min_similarity, margin);
+        match l.kind {
+            LineKind::Allowed => {
+                if blocks {
+                    blocked_allowed.push(l.line.clone());
+                }
             }
-        };
-        caught[at].total += 1;
-        let blocks = match (min_similarity, &l.banned) {
-            (Some(min), Some((_, sim))) => {
-                *sim >= min && *sim - l.allowed.unwrap_or(f32::NEG_INFINITY) >= MARGIN
+            LineKind::Banned => {
+                let at = match caught.iter().position(|c| c.category == l.list) {
+                    Some(at) => at,
+                    None => {
+                        caught.push(Catch {
+                            category: l.list.clone(),
+                            caught: 0,
+                            total: 0,
+                        });
+                        caught.len() - 1
+                    }
+                };
+                caught[at].total += 1;
+                if blocks {
+                    caught[at].caught += 1;
+                }
             }
-            _ => false,
-        };
-        if blocks {
-            caught[at].caught += 1;
         }
     }
-    Proposal {
+    Choice {
         min_similarity,
-        margin: MARGIN,
+        margin,
+        caught_total: caught.iter().map(|c| c.caught).sum(),
         caught,
+        blocked_allowed,
     }
 }
 
-/// Evaluates every held-out line of `lists` as a player message.
+/// The pair with the most banned lines caught among those blocking at most
+/// `max_blocked` allowed lines; ties go to the higher `min_similarity`, then the
+/// higher margin.
+fn best_pair(lines: &[TuneLine], max_blocked: usize) -> Option<Choice> {
+    let mut best: Option<(Choice, u32, u32)> = None;
+    for m in MIN_RANGE {
+        for g in MARGIN_RANGE {
+            let c = evaluate_pair(lines, hundredths(m), hundredths(g));
+            if c.blocked_allowed.len() > max_blocked {
+                continue;
+            }
+            // Iteration is ascending, so `>=` keeps the later (higher) pair on a tie.
+            let better = best
+                .as_ref()
+                .is_none_or(|(b, _, _)| c.caught_total >= b.caught_total);
+            if better {
+                best = Some((c, m, g));
+            }
+        }
+    }
+    best.map(|(c, _, _)| c)
+}
+
+/// Grid-searches `min_similarity` 0.30..=0.95 and `margin` 0.00..=0.20 in steps of 0.01
+/// under the moderator's rule, once with no allowed held-out line blocked and once
+/// with at most one.
+pub fn propose(lines: &[TuneLine]) -> Proposal {
+    Proposal {
+        strict: best_pair(lines, 0),
+        one_allowed: best_pair(lines, 1),
+    }
+}
+
+/// The whole text plus each sentence, trimmed, non-empty, de-duplicated: the same
+/// pieces `KnnModerator` checks.
+fn pieces(text: &str) -> Vec<&str> {
+    let mut out: Vec<&str> = Vec::new();
+    for piece in std::iter::once(text)
+        .chain(text.split(['.', '!', '?', '\n']))
+        .map(str::trim)
+    {
+        if !piece.is_empty() && !out.contains(&piece) {
+            out.push(piece);
+        }
+    }
+    out
+}
+
+fn embed_all(embedder: &mut dyn Embedder, texts: &[&str]) -> Result<Vec<Vec<f32>>, EmbedError> {
+    let inputs: Vec<EmbedInput<'_>> = texts.iter().map(|t| EmbedInput::Document(t)).collect();
+    let out = embedder.embed(&inputs)?;
+    if out.len() != inputs.len() {
+        return Err(EmbedError::CountMismatch {
+            expected: inputs.len(),
+            got: out.len(),
+        });
+    }
+    Ok(out)
+}
+
+/// The best similarity of `vector` among `examples`; NaN never wins.
+fn best_of(examples: &[Vec<f32>], vector: &[f32]) -> Option<f32> {
+    examples
+        .iter()
+        .map(|e| cosine(vector, e))
+        .filter(|s| !s.is_nan())
+        .fold(None, |top: Option<f32>, s| {
+            Some(top.map_or(s, |t| t.max(s)))
+        })
+}
+
+/// Scores every held-out line of `lists` as a player message.
 ///
 /// # Errors
 ///
 /// When the embedder fails.
-pub fn evaluate_lines(
-    moderator: &mut KnnModerator,
+pub fn score_lines(
+    embedder: &mut dyn Embedder,
     lists: &ModerationLists,
-) -> Result<Vec<TuneLine>, ModerationError> {
-    let mut out = Vec::new();
-    let banned = lists
-        .banned
-        .iter()
-        .flat_map(|c| c.held_out.iter().map(move |l| (c.category.id(), l)))
-        .map(|(id, l)| (id, LineKind::Banned, l));
-    let allowed = lists
+) -> Result<Vec<TuneLine>, EmbedError> {
+    let mut banned: Vec<(&str, Vec<Vec<f32>>)> = Vec::new();
+    for c in &lists.banned {
+        let texts: Vec<&str> = c.examples.iter().map(String::as_str).collect();
+        let vectors = if texts.is_empty() {
+            Vec::new()
+        } else {
+            embed_all(embedder, &texts)?
+        };
+        banned.push((c.category.id(), vectors));
+    }
+    let allowed_texts: Vec<&str> = lists.allowed.iter().map(String::as_str).collect();
+    let allowed = if allowed_texts.is_empty() {
+        Vec::new()
+    } else {
+        embed_all(embedder, &allowed_texts)?
+    };
+
+    let held_banned = lists.banned.iter().flat_map(|c| {
+        c.held_out
+            .iter()
+            .map(move |l| (c.category.id(), LineKind::Banned, l))
+    });
+    let held_allowed = lists
         .allowed_held_out
         .iter()
         .map(|l| ("allowed", LineKind::Allowed, l));
-    for (list, kind, line) in banned.chain(allowed) {
-        let e = moderator.evaluate(ModerationSource::PlayerMessage, line)?;
+    let mut out = Vec::new();
+    for (list, kind, line) in held_banned.chain(held_allowed) {
+        let texts = pieces(line);
+        let vectors = if texts.is_empty() {
+            Vec::new()
+        } else {
+            embed_all(embedder, &texts)?
+        };
+        let mut scores = Vec::new();
+        for vector in &vectors {
+            // The best category of the piece decides for the piece (see the module docs).
+            let mut top: Option<(&str, f32)> = None;
+            for (id, examples) in &banned {
+                if let Some(s) = best_of(examples, vector) {
+                    if top.is_none_or(|(_, t)| s > t) {
+                        top = Some((id, s));
+                    }
+                }
+            }
+            if let Some((id, s)) = top {
+                scores.push(PieceScore {
+                    category: id.to_owned(),
+                    banned: s,
+                    allowed: best_of(&allowed, vector),
+                });
+            }
+        }
         out.push(TuneLine {
             list: list.to_owned(),
             kind,
             line: line.clone(),
-            banned: e
-                .nearest_banned
-                .and_then(|n| n.category.map(|c| (c.id().to_owned(), n.similarity))),
-            allowed: e.nearest_allowed.map(|n| n.similarity),
+            pieces: scores,
         });
     }
     Ok(out)
@@ -160,15 +304,36 @@ fn cell(s: &str) -> String {
     s.replace('|', "\\|").replace(['\r', '\n'], " ")
 }
 
-/// The table and the proposal as text.
+fn describe(out: &mut String, c: &Choice) {
+    let _ = writeln!(
+        out,
+        "min_similarity = {:.2}, margin = {:.2}: catches {} banned held-out lines, blocks {} allowed held-out lines",
+        c.min_similarity,
+        c.margin,
+        c.caught_total,
+        c.blocked_allowed.len()
+    );
+    for k in &c.caught {
+        let _ = writeln!(out, "- {}: {}/{}", k.category, k.caught, k.total);
+    }
+}
+
+/// The table and the proposals as text.
 pub fn render(lines: &[TuneLine], proposal: &Proposal) -> String {
     let mut out = String::from(
-        "| list | line | best banned | similarity | best allowed similarity |\n|---|---|---|---|---|\n",
+        "| list | line | best banned | similarity | best allowed similarity (same piece) |\n|---|---|---|---|---|\n",
     );
     for l in lines {
-        let (cat, sim) = l.banned.as_ref().map_or_else(
-            || ("n/a".to_owned(), "n/a".to_owned()),
-            |(c, s)| (c.clone(), format!("{s:.3}")),
+        let (cat, sim, alw) = l.best().map_or_else(
+            || ("n/a".to_owned(), "n/a".to_owned(), "n/a".to_owned()),
+            |p| {
+                (
+                    p.category.clone(),
+                    format!("{:.3}", p.banned),
+                    p.allowed
+                        .map_or_else(|| "n/a".to_owned(), |s| format!("{s:.3}")),
+                )
+            },
         );
         let _ = writeln!(
             out,
@@ -177,26 +342,33 @@ pub fn render(lines: &[TuneLine], proposal: &Proposal) -> String {
             cell(&l.line),
             cat,
             sim,
-            l.allowed
-                .map_or_else(|| "n/a".to_owned(), |s| format!("{s:.3}")),
+            alw
         );
     }
     out.push('\n');
-    match proposal.min_similarity {
+    match &proposal.strict {
         None => out.push_str(
-            "No allowed held-out line to measure against: no min_similarity can be proposed.\n",
+            "No pair in the grid blocks zero allowed held-out lines: nothing can be proposed.\n",
         ),
-        Some(min) => {
+        Some(c) => {
+            out.push_str("Proposed (most banned held-out lines caught, zero allowed blocked; ties go to the higher min_similarity, then the higher margin):\n\n");
             let _ = writeln!(
                 out,
-                "Proposed (highest nearest-banned similarity over the allowed held-out lines, plus 0.01, rounded up to 0.01):\n\n[player]\nmin_similarity = {min:.2}\nmargin = {:.2}\n\n[reply]\nmin_similarity = {min:.2}\nmargin = {:.2}\n",
-                proposal.margin, proposal.margin
+                "[player]\nmin_similarity = {:.2}\nmargin = {:.2}\n\n[reply]\nmin_similarity = {:.2}\nmargin = {:.2}\n",
+                c.min_similarity, c.margin, c.min_similarity, c.margin
             );
+            describe(&mut out, c);
         }
     }
-    out.push_str("Banned held-out lines this would catch:\n\n");
-    for c in &proposal.caught {
-        let _ = writeln!(out, "- {}: {}/{}", c.category, c.caught, c.total);
+    out.push_str("\nFor transparency, the best pair if one allowed held-out line may block:\n\n");
+    match &proposal.one_allowed {
+        None => out.push_str("none\n"),
+        Some(c) => {
+            describe(&mut out, c);
+            for l in &c.blocked_allowed {
+                let _ = writeln!(out, "- would block allowed line: {}", cell(l));
+            }
+        }
     }
     out
 }
@@ -222,14 +394,8 @@ pub fn tune_cli(moderation_dir: &Path, models: Option<&Path>) -> anyhow::Result<
         );
     }
     let rt = LlamaRuntime::init().map_err(|e| anyhow!("{e}"))?;
-    let embedder = LlamaEmbedder::load(rt, &path).map_err(|e| anyhow!("{e}"))?;
-    let mut moderator = build_knn(
-        Box::new(embedder) as Box<dyn Embedder>,
-        &lists,
-        unreachable_thresholds(),
-    )
-    .map_err(|e| anyhow!("{e}"))?;
-    let lines = evaluate_lines(&mut moderator, &lists).map_err(|e| anyhow!("{e}"))?;
+    let mut embedder = LlamaEmbedder::load(rt, &path).map_err(|e| anyhow!("{e}"))?;
+    let lines = score_lines(&mut embedder, &lists).map_err(|e| anyhow!("{e}"))?;
     let proposal = propose(&lines);
     println!("{}", render(&lines, &proposal));
     println!(
@@ -242,92 +408,107 @@ pub fn tune_cli(moderation_dir: &Path, models: Option<&Path>) -> anyhow::Result<
     Ok(())
 }
 
-/// Thresholds nothing reaches (cosine similarity is at most 1), so the evidence is
-/// always the closest banned example overall.
-fn unreachable_thresholds() -> KnnThresholds {
-    let t = SourceThreshold {
-        min_similarity: 2.0,
-        margin: 0.0,
-    };
-    KnnThresholds {
-        player: t,
-        reply: t,
-    }
-}
-
 #[cfg(test)]
 mod tests {
     use super::*;
     use guard_kit::CategoryList;
     use theos_ai::testkit::FakeEmbedder;
-    use theos_ai::ModerationCategory;
+    use theos_ai::{KnnThresholds, ModerationCategory, SourceThreshold};
 
-    fn line(list: &str, kind: LineKind, banned: Option<f32>, allowed: Option<f32>) -> TuneLine {
+    /// A line with one piece per `(category, banned, allowed)`.
+    fn tl(list: &str, kind: LineKind, pieces: &[(&str, f32, Option<f32>)]) -> TuneLine {
         TuneLine {
             list: list.into(),
             kind,
-            line: format!("a {list} line"),
-            banned: banned.map(|s| ("hate".to_owned(), s)),
-            allowed,
+            line: format!("a {list} line {}", pieces.len()),
+            pieces: pieces
+                .iter()
+                .map(|(c, b, a)| PieceScore {
+                    category: (*c).into(),
+                    banned: *b,
+                    allowed: *a,
+                })
+                .collect(),
         }
     }
 
+    fn allowed(banned: f32, alw: f32) -> TuneLine {
+        tl("allowed", LineKind::Allowed, &[("hate", banned, Some(alw))])
+    }
+
+    fn banned(list: &str, b: f32, a: f32) -> TuneLine {
+        tl(list, LineKind::Banned, &[(list, b, Some(a))])
+    }
+
     #[test]
-    fn proposal_is_the_highest_allowed_banned_similarity_plus_a_hundredth() {
-        let lines = [
-            line("allowed", LineKind::Allowed, Some(0.30), Some(0.9)),
-            line("allowed", LineKind::Allowed, Some(0.43), Some(0.9)),
-            line("allowed", LineKind::Allowed, Some(0.10), Some(0.9)),
-        ];
+    fn margin_separates_what_the_threshold_cannot() {
+        // The allowed line is closer to a banned example (0.85) than the banned line is
+        // (0.70), so no threshold alone separates them; the margin does.
+        let lines = [allowed(0.85, 0.84), banned("hate", 0.70, 0.40)];
         let p = propose(&lines);
-        assert_eq!(p.min_similarity, Some(0.44));
-        assert_eq!(p.margin, 0.05);
+        let c = p.strict.unwrap();
+        assert_eq!((c.min_similarity, c.margin), (0.70, 0.20));
+        assert_eq!(c.caught_total, 1);
+        assert!(c.blocked_allowed.is_empty());
     }
 
     #[test]
-    fn proposal_rounds_up_to_the_next_hundredth() {
-        let lines = [line("allowed", LineKind::Allowed, Some(0.4321), None)];
-        assert_eq!(propose(&lines).min_similarity, Some(0.45));
+    fn ties_go_to_the_higher_min_similarity_then_the_higher_margin() {
+        let lines = [banned("hate", 0.90, 0.10)];
+        let c = propose(&lines).strict.unwrap();
+        // Every pair with min <= 0.90 and margin <= 0.20 catches the line; the highest wins.
+        assert_eq!((c.min_similarity, c.margin), (0.90, 0.20));
     }
 
     #[test]
-    fn proposal_ignores_banned_lines_when_choosing_the_threshold() {
-        let lines = [
-            line("allowed", LineKind::Allowed, Some(0.2), None),
-            line("hate", LineKind::Banned, Some(0.9), None),
-        ];
-        assert_eq!(propose(&lines).min_similarity, Some(0.21));
-    }
-
-    #[test]
-    fn proposal_without_allowed_lines_has_no_threshold_and_catches_nothing() {
-        let lines = [line("hate", LineKind::Banned, Some(0.99), None)];
-        let p = propose(&lines);
-        assert_eq!(p.min_similarity, None);
-        assert_eq!(
-            p.caught,
-            [Catch {
-                category: "hate".into(),
-                caught: 0,
-                total: 1
-            }]
+    fn a_line_blocks_through_any_piece() {
+        let line = tl(
+            "hate",
+            LineKind::Banned,
+            &[("hate", 0.90, Some(0.95)), ("hate", 0.60, Some(0.10))],
         );
+        assert!(
+            line.blocks(0.60, 0.20),
+            "the second piece passes the margin"
+        );
+        assert!(!line.blocks(0.61, 0.20));
+        assert!(!line.blocks(0.50, 0.60));
     }
 
     #[test]
-    fn caught_counts_banned_lines_per_category_that_clear_threshold_and_margin() {
+    fn no_allowed_similarity_means_only_the_threshold_matters() {
+        let line = tl("hate", LineKind::Banned, &[("hate", 0.5, None)]);
+        assert!(line.blocks(0.5, 0.2));
+    }
+
+    #[test]
+    fn the_one_allowed_pair_names_the_line_it_would_block() {
+        // Blocking the allowed line (0.80, 0.79) is the only way to catch the second
+        // banned line (0.80, 0.795): their numbers are too alike for any threshold or margin.
+        let a = allowed(0.80, 0.79);
         let lines = [
-            line("allowed", LineKind::Allowed, Some(0.50), Some(0.9)),
-            // threshold 0.51
-            line("hate", LineKind::Banned, Some(0.80), Some(0.40)), // caught
-            line("hate", LineKind::Banned, Some(0.50), Some(0.10)), // below threshold
-            line("self-harm", LineKind::Banned, Some(0.70), Some(0.68)), // margin too small
-            line("self-harm", LineKind::Banned, Some(0.70), None),  // no allowed: caught
+            a.clone(),
+            banned("hate", 0.90, 0.10),
+            banned("hate", 0.80, 0.795),
         ];
         let p = propose(&lines);
-        assert_eq!(p.min_similarity, Some(0.51));
+        assert_eq!(p.strict.as_ref().unwrap().caught_total, 1);
+        let relaxed = p.one_allowed.unwrap();
+        assert_eq!(relaxed.caught_total, 2);
+        assert_eq!(relaxed.blocked_allowed, [a.line]);
+    }
+
+    #[test]
+    fn caught_is_counted_per_category() {
+        let lines = [
+            allowed(0.30, 0.20),
+            banned("hate", 0.80, 0.10),
+            banned("hate", 0.20, 0.10),
+            banned("self-harm", 0.80, 0.10),
+        ];
+        let c = propose(&lines).strict.unwrap();
         assert_eq!(
-            p.caught,
+            c.caught,
             [
                 Catch {
                     category: "hate".into(),
@@ -337,10 +518,28 @@ mod tests {
                 Catch {
                     category: "self-harm".into(),
                     caught: 1,
-                    total: 2
+                    total: 1
                 }
             ]
         );
+    }
+
+    #[test]
+    fn no_strict_pair_when_an_allowed_line_beats_the_whole_grid() {
+        let lines = [allowed(0.99, 0.0), banned("hate", 0.9, 0.1)];
+        let p = propose(&lines);
+        assert!(p.strict.is_none());
+        assert!(p.one_allowed.is_some());
+    }
+
+    #[test]
+    fn pieces_are_the_whole_text_and_its_sentences() {
+        assert_eq!(
+            pieces("One. Two!  Three"),
+            ["One. Two!  Three", "One", "Two", "Three"]
+        );
+        assert_eq!(pieces("Just one"), ["Just one"]);
+        assert!(pieces("  ").is_empty());
     }
 
     fn lists() -> ModerationLists {
@@ -352,10 +551,10 @@ mod tests {
             banned: vec![CategoryList {
                 category: ModerationCategory::Hate,
                 examples: vec!["we hate the northern people".into()],
-                held_out: vec!["we hate the northern people so much".into()],
+                held_out: vec!["we hate the northern people so much. good morning".into()],
             }],
             allowed: vec!["good morning dear friend".into()],
-            allowed_held_out: vec!["good morning friend".into(), "what is the weather".into()],
+            allowed_held_out: vec!["good morning friend".into()],
             thresholds: KnnThresholds {
                 player: t,
                 reply: t,
@@ -364,51 +563,39 @@ mod tests {
     }
 
     #[test]
-    fn evaluate_lines_covers_every_held_out_line_with_the_real_lists_shape() {
-        let lists = lists();
-        let mut m = build_knn(
-            Box::new(FakeEmbedder::default()),
-            &lists,
-            unreachable_thresholds(),
-        )
-        .unwrap();
-        let lines = evaluate_lines(&mut m, &lists).unwrap();
-        assert_eq!(lines.len(), 3);
+    fn score_lines_scores_every_piece_of_every_held_out_line() {
+        let mut e = FakeEmbedder::default();
+        let lines = score_lines(&mut e, &lists()).unwrap();
+        assert_eq!(lines.len(), 2);
         assert_eq!(lines[0].kind, LineKind::Banned);
         assert_eq!(lines[0].list, "hate");
-        let (cat, sim) = lines[0].banned.clone().unwrap();
-        assert_eq!(cat, "hate");
-        assert!(sim > 0.5, "shares most words with its example: {sim}");
-        assert!(lines[1..].iter().all(|l| l.kind == LineKind::Allowed));
-        assert!(lines[1].allowed.unwrap() > lines[1].banned.as_ref().unwrap().1);
-        // The unreachable thresholds never block, so the closest banned example is reported
-        // for every line.
-        assert!(lines.iter().all(|l| l.banned.is_some()));
+        assert_eq!(lines[0].pieces.len(), 3, "whole text and two sentences");
+        let first_sentence = &lines[0].pieces[1];
+        assert!(first_sentence.banned > 0.7, "{first_sentence:?}");
+        let second_sentence = &lines[0].pieces[2];
+        assert!(second_sentence.allowed.unwrap() > second_sentence.banned);
+        assert_eq!(lines[1].kind, LineKind::Allowed);
+        assert_eq!(lines[1].pieces.len(), 1);
+        assert_eq!(lines[0].best().unwrap().category, "hate");
     }
 
     #[test]
-    fn render_shows_the_table_the_proposal_and_the_catch_counts() {
-        let lines = [
-            line("allowed", LineKind::Allowed, Some(0.30), Some(0.9)),
-            line("hate", LineKind::Banned, Some(0.80), Some(0.2)),
-        ];
+    fn render_shows_the_table_the_pair_the_catches_and_the_relaxed_pair() {
+        let a = allowed(0.80, 0.79);
+        let lines = [a, banned("hate", 0.90, 0.10), banned("hate", 0.80, 0.795)];
         let text = render(&lines, &propose(&lines));
-        assert!(text.contains("| allowed | a allowed line | hate | 0.300 | 0.900 |"));
-        assert!(text.contains("[player]\nmin_similarity = 0.31\nmargin = 0.05"));
-        assert!(text.contains("[reply]\nmin_similarity = 0.31"));
-        assert!(text.contains("- hate: 1/1"));
+        assert!(text.contains("| allowed | a allowed line 1 | hate | 0.800 | 0.790 |"));
+        assert!(text.contains("[player]\nmin_similarity = "));
+        assert!(text.contains("[reply]\nmin_similarity = "));
+        assert!(text.contains("- hate: 1/2"));
+        assert!(text.contains("one allowed held-out line may block"));
+        assert!(text.contains("- would block allowed line: a allowed line 1"));
     }
 
     #[test]
-    fn render_without_a_threshold_says_so() {
-        let text = render(&[], &propose(&[]));
-        assert!(text.contains("no min_similarity can be proposed"));
-    }
-
-    #[test]
-    fn rounding_survives_float_error() {
-        assert_eq!(round_up_hundredth(0.44), 0.44);
-        assert_eq!(round_up_hundredth(0.4401), 0.45);
-        assert_eq!(round_up_hundredth(0.0), 0.0);
+    fn render_without_a_strict_pair_says_so() {
+        let lines = [allowed(0.99, 0.0)];
+        let text = render(&lines, &propose(&lines));
+        assert!(text.contains("nothing can be proposed"));
     }
 }

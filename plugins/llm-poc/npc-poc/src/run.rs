@@ -7,6 +7,7 @@ use std::sync::Arc;
 use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use anyhow::{anyhow, bail, Context};
+use guard_kit::CheckRecord;
 use guard_kit::{
     load_lists, write_review, Guards, ModerationLists, RecordingModerator, Records, Tag,
 };
@@ -94,6 +95,17 @@ pub struct RunOutcome {
     pub fatal: Option<anyhow::Error>,
 }
 
+/// The tag the warm-up request's moderation checks are recorded under.
+const WARM_UP_TAG: &str = "warm-up";
+
+/// The recorded checks of the scenario requests: the warm-up's are left out, so the
+/// review page and its counts hold scenario checks only.
+fn scenario_records(records: &Records) -> Vec<CheckRecord> {
+    let mut all = records.snapshot();
+    all.retain(|r| r.tag != WARM_UP_TAG);
+    all
+}
+
 /// The file each finished row is appended to, one JSON object per line.
 const ROWS_FILE: &str = "rows.jsonl";
 
@@ -171,7 +183,7 @@ pub fn run_model(
         let path = results_dir.join(ROWS_FILE);
         let mut sink =
             std::fs::File::create(&path).with_context(|| format!("creating {}", path.display()))?;
-        tag.set("warm-up");
+        tag.set(WARM_UP_TAG);
         warmed = warm_up(worker, scenarios, deadline)?;
         run_requests(
             worker, model, scenarios, visible, deadline, total, modes, tag, &mut rows, &mut sink,
@@ -667,7 +679,7 @@ pub fn run_cli(
         report::write(&out, &header, &rows)?;
         if let Some(lists) = &lists {
             let review = out.join("moderation-review.md");
-            write_review(&review, &records.snapshot(), &lists.thresholds)
+            write_review(&review, &scenario_records(&records), &lists.thresholds)
                 .with_context(|| format!("writing {}", review.display()))?;
         }
         println!("{}", report::summary_table(&rows));
@@ -1509,6 +1521,77 @@ mod tests {
             &tag,
         );
         assert_eq!(tag.get(), "m1/retrieved(top 1)");
+    }
+
+    #[test]
+    fn warm_up_checks_are_not_in_the_review_records() {
+        let tag = Tag::default();
+        let records = Records::default();
+        let (t, r) = (tag.clone(), records.clone());
+        let mut worker = NpcWorker::spawn(move || {
+            let clock = FakeClock::new();
+            let backend = ScriptedBackend::new(clock.clone());
+            for _ in 0..4 {
+                backend.push(Script {
+                    prompt_tokens: 1,
+                    prefill: Duration::ZERO,
+                    per_token: Duration::ZERO,
+                    pieces: vec![Piece {
+                        text: r#"{"sources":[],"reply":"fine"}"#.into(),
+                        phase: Phase::Answer,
+                    }],
+                });
+            }
+            let knn = KnnModerator::new(
+                Box::new(FakeEmbedder::default()),
+                vec![(theos_ai::ModerationCategory::Hate, vec!["hate them".into()])],
+                vec!["good day".into()],
+                KnnThresholds {
+                    player: theos_ai::SourceThreshold {
+                        min_similarity: 0.9,
+                        margin: 0.0,
+                    },
+                    reply: theos_ai::SourceThreshold {
+                        min_similarity: 0.9,
+                        margin: 0.0,
+                    },
+                },
+            )
+            .map_err(NpcError::ModerationFailed)?;
+            Ok(Npc::new(NpcParts {
+                backend: Box::new(backend),
+                embedder: Box::new(FakeEmbedder::default()),
+                corpus: Corpus::new(vec![belief("B-1", "n")]).unwrap(),
+                speakers: vec![speaker("n")],
+                options: ContextOptions::default(),
+                clock: Box::new(clock),
+                probe: Box::new(NoProbe),
+            })?
+            .with_moderator(Box::new(RecordingModerator::new(knn, t, r))))
+        })
+        .unwrap();
+        let dir = Scratch::new("warm-records");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &moderated_scenarios("a fine question"),
+            &golden_n(),
+            Duration::from_secs(3),
+            &dir.0,
+            &[Thinking::Off],
+            &tag,
+        );
+        assert!(run.fatal.is_none());
+        let raw = records.snapshot();
+        assert!(
+            raw.iter().any(|c| c.tag == "warm-up"),
+            "the warm-up was checked"
+        );
+        let kept = scenario_records(&records);
+        assert!(!kept.is_empty());
+        assert!(kept.iter().all(|c| c.tag.starts_with("m1/")), "{kept:?}");
+        // Two checks per request (question and reply): 3 scenario requests.
+        assert_eq!(kept.len(), 6);
     }
 
     #[test]
