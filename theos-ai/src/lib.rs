@@ -11,6 +11,7 @@ pub mod embed;
 pub mod knowledge;
 pub mod lore;
 pub mod memory;
+pub mod moderation;
 pub mod reply;
 pub mod retrieval;
 pub mod worker;
@@ -29,6 +30,10 @@ pub use driver::{
     NpcParts, NpcRequest, NpcResponse, StopReason,
 };
 pub use memory::{MemoryProbe, NoProbe};
+pub use moderation::{
+    AllowAll, ContentModerator, ModerationCategory, ModerationError, ModerationPipeline,
+    ModerationSource, ModerationVerdict,
+};
 
 pub use context::{
     Context, ContextOptions, PlayerTurn, Prompt, SPOTLIGHT_CLOSE, SPOTLIGHT_OPEN, SPOTLIGHT_RULE,
