@@ -13,6 +13,11 @@
 //! `best_c - best_a >= margin`"; `best_a` is the same for every category of a piece, so
 //! the best category of a piece decides for the whole piece, and the stored numbers
 //! reproduce the rule exactly for any threshold pair.
+//!
+//! The proposal is a tuning fit on the held-out lines: the thresholds are chosen on the
+//! very lines they are then counted on, so the counts are in-sample for the threshold
+//! choice, not a held-out estimate. A caught banned line counts as caught under its own
+//! category or under another one (the category the moderator would report).
 
 use std::fmt::Write as _;
 use std::path::Path;
@@ -66,10 +71,21 @@ impl TuneLine {
 
     /// Whether the moderator would block this line at `min_similarity` and `margin`.
     pub fn blocks(&self, min_similarity: f32, margin: f32) -> bool {
-        self.pieces.iter().any(|p| {
-            p.banned >= min_similarity
-                && p.banned - p.allowed.unwrap_or(f32::NEG_INFINITY) >= margin
-        })
+        self.blocked_category(min_similarity, margin).is_some()
+    }
+
+    /// The category the moderator would report for this line: that of the blocking piece
+    /// with the highest banned similarity (the first of equals); `None` when no piece blocks.
+    pub fn blocked_category(&self, min_similarity: f32, margin: f32) -> Option<&str> {
+        let mut top: Option<&PieceScore> = None;
+        for p in &self.pieces {
+            let blocks = p.banned >= min_similarity
+                && p.banned - p.allowed.unwrap_or(f32::NEG_INFINITY) >= margin;
+            if blocks && top.is_none_or(|t| p.banned > t.banned) {
+                top = Some(p);
+            }
+        }
+        top.map(|p| p.category.as_str())
     }
 }
 
@@ -78,10 +94,20 @@ impl TuneLine {
 pub struct Catch {
     /// The category id.
     pub category: String,
-    /// Lines that would block.
+    /// Lines that would block and be reported as this very category.
     pub caught: usize,
+    /// Lines that would block but be reported as another category, per that category
+    /// in order of first appearance.
+    pub other: Vec<(String, usize)>,
     /// Held-out lines of the category.
     pub total: usize,
+}
+
+impl Catch {
+    /// Lines that would block under any category.
+    pub fn blocked(&self) -> usize {
+        self.caught + self.other.iter().map(|(_, n)| n).sum::<usize>()
+    }
 }
 
 /// A threshold pair and what it does to the held-out lines.
@@ -93,7 +119,7 @@ pub struct Choice {
     pub margin: f32,
     /// Banned held-out lines caught, per category in order of first appearance.
     pub caught: Vec<Catch>,
-    /// Banned held-out lines caught in all.
+    /// Banned held-out lines that would block in all, under whatever category.
     pub caught_total: usize,
     /// The allowed held-out lines this pair would block.
     pub blocked_allowed: Vec<String>,
@@ -136,14 +162,22 @@ fn evaluate_pair(lines: &[TuneLine], min_similarity: f32, margin: f32) -> Choice
                         caught.push(Catch {
                             category: l.list.clone(),
                             caught: 0,
+                            other: Vec::new(),
                             total: 0,
                         });
                         caught.len() - 1
                     }
                 };
                 caught[at].total += 1;
-                if blocks {
-                    caught[at].caught += 1;
+                if let Some(reported) = l.blocked_category(min_similarity, margin) {
+                    if reported == l.list {
+                        caught[at].caught += 1;
+                    } else if let Some(o) = caught[at].other.iter_mut().find(|(c, _)| c == reported)
+                    {
+                        o.1 += 1;
+                    } else {
+                        caught[at].other.push((reported.to_owned(), 1));
+                    }
                 }
             }
         }
@@ -151,7 +185,7 @@ fn evaluate_pair(lines: &[TuneLine], min_similarity: f32, margin: f32) -> Choice
     Choice {
         min_similarity,
         margin,
-        caught_total: caught.iter().map(|c| c.caught).sum(),
+        caught_total: caught.iter().map(Catch::blocked).sum(),
         caught,
         blocked_allowed,
     }
@@ -305,7 +339,42 @@ fn describe(out: &mut String, c: &Choice) {
         c.blocked_allowed.len()
     );
     for k in &c.caught {
-        let _ = writeln!(out, "- {}: {}/{}", k.category, k.caught, k.total);
+        let others = if k.other.is_empty() {
+            "0".to_owned()
+        } else {
+            let parts: Vec<String> = k.other.iter().map(|(c, n)| format!("{n} as {c}")).collect();
+            format!(
+                "{} ({})",
+                k.other.iter().map(|(_, n)| n).sum::<usize>(),
+                parts.join(", ")
+            )
+        };
+        let _ = writeln!(
+            out,
+            "- {}: {}/{} caught as {}, {} caught under another category",
+            k.category, k.caught, k.total, k.category, others
+        );
+    }
+}
+
+/// What the embedder's similarity floor means for the proposed pair.
+fn floor_note(lines: &[TuneLine], c: &Choice) -> String {
+    let lowest = lines
+        .iter()
+        .filter_map(|l| l.best().map(|p| p.banned))
+        .fold(None, |low: Option<f32>, s| {
+            Some(low.map_or(s, |l| l.min(s)))
+        });
+    match lowest {
+        None => String::from("No held-out line has a banned score.\n"),
+        Some(low) if c.min_similarity <= low => format!(
+            "The lowest best banned similarity over all held-out lines is {low:.3}. The proposed min_similarity ({:.2}) lies at or below it, so every held-out line passes the similarity condition and the margin ({:.2}) is the deciding condition.\n",
+            c.min_similarity, c.margin
+        ),
+        Some(low) => format!(
+            "The lowest best banned similarity over all held-out lines is {low:.3}; the proposed min_similarity ({:.2}) lies above it, so both conditions decide.\n",
+            c.min_similarity
+        ),
     }
 }
 
@@ -342,13 +411,16 @@ pub fn render(lines: &[TuneLine], proposal: &Proposal) -> String {
             "No pair in the grid blocks zero allowed held-out lines: nothing can be proposed.\n",
         ),
         Some(c) => {
-            out.push_str("Proposed (most banned held-out lines caught, zero allowed blocked; ties go to the higher min_similarity, then the higher margin):\n\n");
+            out.push_str("Tuning fit on the held-out lines (in-sample for the threshold choice, not a held-out estimate): most banned held-out lines caught, zero allowed blocked; ties go to the higher min_similarity, then the higher margin:\n\n");
             let _ = writeln!(
                 out,
                 "[player]\nmin_similarity = {:.2}\nmargin = {:.2}\n\n[reply]\nmin_similarity = {:.2}\nmargin = {:.2}\n",
                 c.min_similarity, c.margin, c.min_similarity, c.margin
             );
+            out.push_str("The [reply] values are copied from the player side: they are untuned (there are no held-out model replies).\n\n");
             describe(&mut out, c);
+            out.push('\n');
+            out.push_str(&floor_note(lines, c));
         }
     }
     out.push_str("\nFor transparency, the best pair if one allowed held-out line may block:\n\n");
@@ -504,15 +576,100 @@ mod tests {
                 Catch {
                     category: "hate".into(),
                     caught: 1,
+                    other: Vec::new(),
                     total: 2
                 },
                 Catch {
                     category: "self-harm".into(),
                     caught: 1,
+                    other: Vec::new(),
                     total: 1
                 }
             ]
         );
+    }
+
+    #[test]
+    fn caught_separates_the_own_category_from_another_category() {
+        // The second "hate" line is blocked, but its closest banned example is a
+        // self-harm one: the moderator would report self-harm for it.
+        let cross = tl("hate", LineKind::Banned, &[("self-harm", 0.80, Some(0.10))]);
+        let lines = [
+            allowed(0.30, 0.20),
+            banned("hate", 0.80, 0.10),
+            cross.clone(),
+            banned("hate", 0.20, 0.10),
+        ];
+        assert_eq!(cross.blocked_category(0.5, 0.0), Some("self-harm"));
+        assert_eq!(cross.blocked_category(0.9, 0.0), None);
+        let c = propose(&lines).strict.unwrap();
+        assert_eq!(
+            c.caught,
+            [Catch {
+                category: "hate".into(),
+                caught: 1,
+                other: vec![("self-harm".into(), 1)],
+                total: 3
+            }]
+        );
+        assert_eq!(c.caught_total, 2, "any block counts for the search");
+        let text = render(&lines, &propose(&lines));
+        assert!(
+            text.contains(
+                "- hate: 1/3 caught as hate, 1 (1 as self-harm) caught under another category"
+            ),
+            "{text}"
+        );
+    }
+
+    #[test]
+    fn the_reported_category_is_that_of_the_best_blocking_piece() {
+        let line = tl(
+            "hate",
+            LineKind::Banned,
+            &[("hate", 0.70, Some(0.1)), ("self-harm", 0.90, Some(0.1))],
+        );
+        assert_eq!(line.blocked_category(0.5, 0.0), Some("self-harm"));
+        // The 0.90 piece fails the margin: the other one reports.
+        let line = tl(
+            "hate",
+            LineKind::Banned,
+            &[("hate", 0.70, Some(0.1)), ("self-harm", 0.90, Some(0.85))],
+        );
+        assert_eq!(line.blocked_category(0.5, 0.2), Some("hate"));
+    }
+
+    #[test]
+    fn render_labels_the_fit_in_sample_and_gives_the_floor() {
+        let lines = [allowed(0.30, 0.29), banned("hate", 0.70, 0.40)];
+        let text = render(&lines, &propose(&lines));
+        assert!(
+            text.contains("in-sample for the threshold choice"),
+            "{text}"
+        );
+        assert!(text.contains("not a held-out estimate"));
+        assert!(text.contains("[reply] values are copied from the player side"));
+        assert!(text.contains("untuned"));
+        // The lowest best banned similarity over the held-out lines is 0.300.
+        assert!(
+            text.contains("lowest best banned similarity over all held-out lines is 0.300"),
+            "{text}"
+        );
+    }
+
+    #[test]
+    fn render_says_the_margin_decides_when_min_similarity_is_below_the_floor() {
+        // Both lines score above 0.60, so any min_similarity up to 0.70 is satisfied by all
+        // of them; the proposal's margin separates them.
+        let lines = [allowed(0.85, 0.84), banned("hate", 0.70, 0.40)];
+        let c = propose(&lines).strict.unwrap();
+        assert!(c.min_similarity <= 0.70);
+        let text = render(&lines, &propose(&lines));
+        assert!(text.contains("is the deciding condition"), "{text}");
+        let above = [banned("hate", 0.90, 0.10), allowed(0.30, 0.20)];
+        let c = propose(&above).strict.unwrap();
+        assert!(c.min_similarity > 0.30);
+        assert!(render(&above, &propose(&above)).contains("both conditions decide"));
     }
 
     #[test]

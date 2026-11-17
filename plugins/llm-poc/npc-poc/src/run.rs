@@ -72,6 +72,10 @@ pub struct Row {
     /// text) or `reply:<category id>` (the model's reply). Such a row has no
     /// checks and no measurements, and is not an error.
     pub moderated: Option<String>,
+    /// Wall time of the request as the harness measured it (submit to answer), in
+    /// ms. Set for rows that carry no driver metrics (stopped by the moderator,
+    /// failed moderation or any other failure), so their cost is not lost.
+    pub elapsed_ms: Option<f64>,
 }
 
 /// The scopes every scenario runs under.
@@ -246,14 +250,19 @@ fn run_requests(
                     player_name: scenario.player_name.clone(),
                     good_outcome: scenario.good_outcome.clone(),
                     moderated: None,
+                    elapsed_ms: None,
                 };
                 tag.set(format!("{}/{}", scenario.id, report::scope_label(scope)));
+                let started = std::time::Instant::now();
                 worker
                     .submit(request)
                     .map_err(|_| anyhow!("the NPC worker stopped"))?;
                 let (_, outcome) = worker
                     .wait()
                     .ok_or_else(|| anyhow!("the NPC worker stopped"))?;
+                if outcome.is_err() {
+                    row.elapsed_ms = Some(started.elapsed().as_secs_f64() * 1000.0);
+                }
                 match outcome {
                     Ok(response) => {
                         row.checks = Some(check(
@@ -1472,6 +1481,10 @@ mod tests {
             assert_eq!(row.moderated.as_deref(), Some("player:hate"));
             assert!(row.checks.is_none() && row.metrics.is_none());
             assert!(row.reply_error.is_none(), "a moderated row is not an error");
+            assert!(
+                row.elapsed_ms.is_some_and(|e| e >= 0.0),
+                "the harness times a row the moderator stopped"
+            );
         }
         assert_eq!(
             seen.requests().len(),
@@ -1480,6 +1493,29 @@ mod tests {
         );
         assert!(defects(&run.rows).is_empty());
         assert_eq!(jsonl(&dir)[0]["moderated"], "player:hate");
+        assert!(jsonl(&dir)[0]["elapsed_ms"].as_f64().is_some());
+    }
+
+    #[test]
+    fn finished_rows_write_moderation_ms_and_no_elapsed_ms() {
+        let (mut worker, _) = guarded_worker("x", None, ContextOptions::default(), true);
+        let dir = Scratch::new("mod-ms");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &moderated_scenarios("a fine question"),
+            &golden_n(),
+            Duration::from_secs(3),
+            &dir.0,
+            &[Thinking::Off],
+            &Tag::default(),
+        );
+        assert!(run.fatal.is_none());
+        let first = &run.rows[0];
+        assert!(first.metrics.is_some() && first.elapsed_ms.is_none());
+        let line = &jsonl(&dir)[0];
+        assert!(line["metrics"]["moderation_ms"].as_f64().is_some());
+        assert!(line["elapsed_ms"].is_null());
     }
 
     #[test]

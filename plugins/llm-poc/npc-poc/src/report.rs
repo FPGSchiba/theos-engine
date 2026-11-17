@@ -596,8 +596,8 @@ pub fn render_results(header: &RunHeader, rows: &[Row]) -> String {
     }
     out.push_str("\n## Requests\n\n");
     out.push_str(
-        "| scenario | npc | behaviour | thinking | scope | retrieval | leak | forbidden | words | grounding | deadline | vram | ttft ms | ttfa ms | total ms | tok/s | prompt tok | stop | read by hand | technique | severity | player name | canary | secret | ids in reply | injection words | forged markers | reply chars | outcome |\n\
-         |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
+        "| scenario | npc | behaviour | thinking | scope | retrieval | leak | forbidden | words | grounding | deadline | vram | ttft ms | ttfa ms | total ms | tok/s | prompt tok | stop | read by hand | technique | severity | player name | canary | secret | ids in reply | injection words | forged markers | reply chars | outcome | moderation ms | elapsed ms |\n\
+         |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|\n",
     );
     for r in rows {
         let c = r.checks.as_ref();
@@ -620,7 +620,7 @@ pub fn render_results(header: &RunHeader, rows: &[Row]) -> String {
         };
         let _ = writeln!(
             out,
-            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
+            "| {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} | {} |",
             r.scenario_id,
             r.npc,
             behaviour_label(r.behaviour),
@@ -668,6 +668,10 @@ pub fn render_results(header: &RunHeader, rows: &[Row]) -> String {
             inj.map(|i| yes_no(i.forged_markers)).unwrap_or_default(),
             inj.map(|i| i.reply_chars.to_string()).unwrap_or_default(),
             outcome_cell(r),
+            r.metrics
+                .as_ref()
+                .map_or_else(na, |m| format!("{:.1}", ms(m.moderation))),
+            r.elapsed_ms.map_or_else(na, |e| format!("{e:.1}")),
         );
     }
     out
@@ -729,6 +733,8 @@ pub fn render_csv(rows: &[Row]) -> anyhow::Result<String> {
         "reply_chars",
         "outcome",
         "moderated",
+        "moderation_ms",
+        "elapsed_ms",
     ])?;
     for r in rows {
         let c = r.checks.as_ref();
@@ -793,6 +799,8 @@ pub fn render_csv(rows: &[Row]) -> anyhow::Result<String> {
             inj.map(|i| i.reply_chars.to_string()).unwrap_or_default(),
             outcome_cell(r),
             r.moderated.clone().unwrap_or_default(),
+            num(&|m| format!("{:.1}", ms(m.moderation))),
+            r.elapsed_ms.map(|e| format!("{e:.1}")).unwrap_or_default(),
         ])?;
     }
     Ok(String::from_utf8(
@@ -927,6 +935,7 @@ pub fn row_json(r: &Row) -> serde_json::Value {
             "ttfa_ms": m.time_to_first_answer_token.map(ms),
             "tokens_per_second": m.tokens_per_second,
             "total_ms": ms(m.total),
+            "moderation_ms": ms(m.moderation),
             "vram_peak_bytes": m.vram_peak_bytes,
             "stop": stop_label(m.stop),
             "context_ids": m.context_ids.iter().map(theos_ai::RecordId::as_str).collect::<Vec<_>>(),
@@ -951,6 +960,7 @@ pub fn row_json(r: &Row) -> serde_json::Value {
         "reply_text": r.reply_text,
         "reply_error": r.reply_error,
         "moderated": r.moderated,
+        "elapsed_ms": r.elapsed_ms,
         "raw": r.raw,
     })
 }
@@ -1023,6 +1033,7 @@ mod tests {
             player_name: None,
             good_outcome: None,
             moderated: None,
+            elapsed_ms: None,
         }
     }
 
@@ -1493,9 +1504,13 @@ mod tests {
             "outcome",
         ];
         let all_cols: Vec<&str> = head.iter().collect();
-        // The last column is `moderated`; the injection columns sit just before it.
-        assert_eq!(all_cols.last(), Some(&"moderated"));
-        let tail = &all_cols[all_cols.len() - 11..all_cols.len() - 1];
+        // The last columns are `moderated`, `moderation_ms`, `elapsed_ms`; the
+        // injection columns sit just before them.
+        assert_eq!(
+            all_cols[all_cols.len() - 3..],
+            ["moderated", "moderation_ms", "elapsed_ms"]
+        );
+        let tail = &all_cols[all_cols.len() - 13..all_cols.len() - 3];
         assert_eq!(
             tail, new_cols,
             "new columns are appended after the old ones"
@@ -1588,8 +1603,8 @@ mod tests {
         let req = table_under(&md, "## Requests");
         let g = req[0].iter().position(|h| h == "grounding").unwrap();
         assert_eq!(req[1][g], "n/a");
-        assert_eq!(req[0].last().map(String::as_str), Some("outcome"));
-        assert_eq!(req[1].last().map(String::as_str), Some("held"));
+        let o = req[0].iter().position(|h| h == "outcome").unwrap();
+        assert_eq!(req[1][o], "held");
     }
 
     #[test]
@@ -1629,8 +1644,9 @@ mod tests {
         assert_eq!(t[1][4..].join("|"), "2|1|0|0|0|0|0|0|0|0|1|100|40|0|0");
         let md = render_results(&header(), &rows);
         let req = table_under(&md, "## Requests");
-        assert_eq!(req[1].last().map(String::as_str), Some("held"));
-        assert_eq!(req[2].last().map(String::as_str), Some("no reply"));
+        let o = req[0].iter().position(|h| h == "outcome").unwrap();
+        assert_eq!(req[1][o], "held");
+        assert_eq!(req[2][o], "no reply");
         let csv = render_csv(&rows).unwrap();
         let mut reader = csv::Reader::from_reader(csv.as_bytes());
         let head = reader.headers().unwrap().clone();
@@ -1700,6 +1716,42 @@ mod tests {
     }
 
     #[test]
+    fn moderation_ms_and_elapsed_ms_reach_json_csv_and_the_requests_table() {
+        let mut ok = row(Thinking::Off, LoreScope::None, true, 100);
+        ok.metrics.as_mut().unwrap().moderation = Duration::from_millis(12);
+        let mut stopped = moderated_row(
+            row(Thinking::Off, LoreScope::None, true, 100),
+            "player:hate",
+        );
+        stopped.elapsed_ms = Some(34.5);
+        let rows = [ok, stopped];
+        assert_eq!(row_json(&rows[0])["metrics"]["moderation_ms"], 12.0);
+        assert_eq!(row_json(&rows[0])["elapsed_ms"], serde_json::Value::Null);
+        assert_eq!(row_json(&rows[1])["elapsed_ms"], 34.5);
+
+        let csv = render_csv(&rows).unwrap();
+        let mut reader = csv::Reader::from_reader(csv.as_bytes());
+        let head = reader.headers().unwrap().clone();
+        let at_m = head.iter().position(|h| h == "moderation_ms").unwrap();
+        let at_e = head.iter().position(|h| h == "elapsed_ms").unwrap();
+        assert_eq!(at_e, head.len() - 1, "appended at the end");
+        let recs: Vec<_> = reader.records().map(Result::unwrap).collect();
+        assert_eq!(&recs[0][at_m], "12.0");
+        assert_eq!(&recs[0][at_e], "");
+        assert_eq!(&recs[1][at_m], "");
+        assert_eq!(&recs[1][at_e], "34.5");
+
+        let md = render_results(&header(), &rows);
+        let table = table_under(&md, "## Requests");
+        assert_eq!(
+            table[0][table[0].len() - 2..],
+            ["moderation ms", "elapsed ms"]
+        );
+        assert_eq!(table[1][table[1].len() - 2..], ["12.0", "n/a"]);
+        assert_eq!(table[2][table[2].len() - 2..], ["n/a", "34.5"]);
+    }
+
+    #[test]
     fn normal_summary_shows_moderated_count() {
         let none = LoreScope::None;
         let rows = [
@@ -1743,10 +1795,8 @@ mod tests {
             "the legend explains moderated rows"
         );
         let req = table_under(&md, "## Requests");
-        assert_eq!(
-            req[2].last().map(String::as_str),
-            Some("moderated (player:hate)")
-        );
+        let o = req[0].iter().position(|h| h == "outcome").unwrap();
+        assert_eq!(req[2][o], "moderated (player:hate)");
     }
 
     #[test]
