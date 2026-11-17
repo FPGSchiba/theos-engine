@@ -786,9 +786,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/report.rs": {
-    "mtime": 1794672203.0627713,
-    "seen": 1794672351.8098354,
-    "ast_hash": "9b593484972dbe7e19a6489a5c8f6785",
+    "mtime": 1794934326.954988,
+    "seen": 1794934407.766919,
+    "ast_hash": "82145bcd08545efcb315e7b2cdb6a9f3",
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/run.rs": {
@@ -804,9 +804,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/score.rs": {
-    "mtime": 1794578909.5509849,
-    "seen": 1794671608.6085582,
-    "ast_hash": "43111b3557f86672b42876f116fc08e7",
+    "mtime": 1794934326.9980605,
+    "seen": 1794934407.767079,
+    "ast_hash": "ce8aff294ad8f93e6b87e82ca2b60f61",
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/Cargo.toml": {
@@ -870,9 +870,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/driver.rs": {
-    "mtime": 1794933864.5621824,
-    "seen": 1794933936.0902476,
-    "ast_hash": "5b92d0b6d69529ce0ceddaa3860c5639",
+    "mtime": 1794934329.203567,
+    "seen": 1794934407.7682927,
+    "ast_hash": "f7f7b220993f6df18ee5956099bd97eb",
     "semantic_hash": ""
   },
   "theos-ai/src/embed.rs": {
@@ -2052,9 +2052,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/inject.rs": {
-    "mtime": 1794689593.2343686,
-    "seen": 1794689643.4874332,
-    "ast_hash": "c39acdbcee180cfa20cad786c7e19025",
+    "mtime": 1794934323.4877374,
+    "seen": 1794934407.7660308,
+    "ast_hash": "896b20b843196a9673b87f2c74e521bc",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/main.rs": {
@@ -2070,9 +2070,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/report.rs": {
-    "mtime": 1794689609.3876026,
-    "seen": 1794689643.4875245,
-    "ast_hash": "93df96f4772c467a6c1c859fef05ad1c",
+    "mtime": 1794934326.9104166,
+    "seen": 1794934407.7661963,
+    "ast_hash": "ac160490d21257d33ba1ddd9a22071d4",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/run.rs": {
