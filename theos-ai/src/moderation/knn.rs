@@ -75,7 +75,7 @@ fn best<'a>(examples: &'a [Example], piece: &[f32]) -> Option<(&'a Example, f32)
     for ex in examples {
         let sim = cosine(piece, &ex.vector);
         // Strict comparison: the first of equals wins, and NaN never wins.
-        if top.is_none_or(|(_, s)| sim > s) {
+        if !sim.is_nan() && top.is_none_or(|(_, s)| sim > s) {
             top = Some((ex, sim));
         }
     }
@@ -126,6 +126,12 @@ fn embed_documents(
             }
             .into());
         }
+        if dims == 0 {
+            return Err(EmbedError::Backend("embedder returned empty vectors".into()).into());
+        }
+    }
+    if out.iter().flatten().any(|x| !x.is_finite()) {
+        return Err(EmbedError::Backend("embedder returned non-finite values".into()).into());
     }
     Ok(out)
 }
@@ -573,6 +579,65 @@ mod tests {
                 got: 3
             })
         ));
+    }
+
+    #[test]
+    fn new_rejects_non_finite_example_vectors() {
+        for bad in [f32::NAN, f32::INFINITY] {
+            let r = KnnModerator::new(
+                Box::new(Canned(vec![vec![bad, 1.0], vec![1.0, 0.0]])),
+                banned(),
+                Vec::new(),
+                same(0.6, 0.1),
+            );
+            assert!(matches!(
+                r,
+                Err(ModerationError::Embed(EmbedError::Backend(_)))
+            ));
+        }
+    }
+
+    #[test]
+    fn new_rejects_empty_vectors() {
+        let r = KnnModerator::new(
+            Box::new(Canned(vec![Vec::new(), Vec::new()])),
+            banned(),
+            Vec::new(),
+            same(0.6, 0.1),
+        );
+        assert!(matches!(
+            r,
+            Err(ModerationError::Embed(EmbedError::Backend(_)))
+        ));
+    }
+
+    #[test]
+    fn evaluate_rejects_non_finite_and_empty_piece_vectors() {
+        struct Bad(usize, Vec<f32>);
+        impl Embedder for Bad {
+            fn embed(&mut self, i: &[EmbedInput<'_>]) -> Result<Vec<Vec<f32>>, EmbedError> {
+                self.0 += 1;
+                if self.0 == 1 {
+                    Ok(vec![vec![1.0, 0.0]; i.len()])
+                } else {
+                    Ok(vec![self.1.clone(); i.len()])
+                }
+            }
+        }
+        for bad in [
+            vec![f32::NAN, 0.0],
+            vec![f32::NEG_INFINITY, 0.0],
+            Vec::new(),
+        ] {
+            let mut m =
+                KnnModerator::new(Box::new(Bad(0, bad)), banned(), Vec::new(), same(0.6, 0.1))
+                    .unwrap();
+            let err = m.check(PLAYER, "hello").unwrap_err();
+            assert!(matches!(
+                err,
+                ModerationError::Embed(EmbedError::Backend(_))
+            ));
+        }
     }
 
     #[test]
