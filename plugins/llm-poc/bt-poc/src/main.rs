@@ -188,7 +188,11 @@ fn main() -> anyhow::Result<()> {
                 ids.iter().map(RecordId::new).collect()
             };
             let p = prompt::render(&fx, s, &ids, true).prompt;
-            println!("=== system ===\n{}\n=== user ===\n{}", p.system, p.user);
+            println!(
+                "=== system ===\n{}\n=== user ===\n{}",
+                p.system_text(),
+                p.user_text()
+            );
         }
     }
     Ok(())

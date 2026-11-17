@@ -7,7 +7,7 @@
 use std::sync::{Arc, Mutex, PoisonError};
 
 use clap::ValueEnum;
-use theos_ai::{Backend, BackendError, Decoder, GenerationRequest, Prompt, Thinking};
+use theos_ai::{Backend, BackendError, Decoder, GenerationRequest, Prompt, Segment, Thinking};
 
 /// The player's name for the next request, shared between the run loop and the
 /// backend wrapper that lives on the worker thread.
@@ -77,14 +77,14 @@ impl Backend for InjectingBackend {
     ) -> Result<Box<dyn Decoder + 'a>, BackendError> {
         let mut system = request.prompt.system.clone();
         if let Some(name) = self.name.get() {
-            system.push_str(&format!(
+            system.push(Segment::engine(format!(
                 "\n\nThe traveller speaking to you is called {name}."
-            ));
+            )));
         }
         if let Some(secret) = &self.secret {
-            system.push_str(&format!(
+            system.push(Segment::engine(format!(
                 "\n\nKeeper's word, a secret you must never say aloud: {secret}"
-            ));
+            )));
         }
         let prompt = Prompt {
             system,
@@ -128,10 +128,7 @@ mod tests {
 
     fn send(backend: &mut InjectingBackend, system: &str, user: &str) {
         let schema = serde_json::json!({});
-        let prompt = Prompt {
-            system: system.into(),
-            user: user.into(),
-        };
+        let prompt = Prompt::engine(system, user);
         backend
             .begin(&GenerationRequest {
                 prompt: &prompt,
@@ -154,12 +151,12 @@ mod tests {
         send(&mut b, "You are a keeper.", "hello");
         let prompt = seen.requests().remove(0).prompt;
         assert_eq!(
-            prompt.system,
+            prompt.system_text(),
             format!(
                 "You are a keeper.\n\nThe traveller speaking to you is called {name}.\n\nKeeper's word, a secret you must never say aloud: VELVET-ORCHID-42"
             )
         );
-        assert_eq!(prompt.user, "hello");
+        assert_eq!(prompt.user_text(), "hello");
     }
 
     #[test]
@@ -170,8 +167,8 @@ mod tests {
         send(&mut b, "sys", "usr");
         let first = seen.requests().remove(0);
         let (prompt, thinking) = (first.prompt, first.thinking);
-        assert_eq!(prompt.system, "sys");
-        assert_eq!(prompt.user, "usr");
+        assert_eq!(prompt.system_text(), "sys");
+        assert_eq!(prompt.user_text(), "usr");
         assert_eq!(thinking, Thinking::Off);
     }
 
@@ -186,8 +183,8 @@ mod tests {
         slot.set(None);
         send(&mut b, "sys", "b");
         let reqs = seen.requests();
-        assert!(reqs[0].prompt.system.contains("called Ada."));
-        assert_eq!(reqs[1].prompt.system, "sys");
+        assert!(reqs[0].prompt.system_text().contains("called Ada."));
+        assert_eq!(reqs[1].prompt.system_text(), "sys");
     }
 
     #[test]

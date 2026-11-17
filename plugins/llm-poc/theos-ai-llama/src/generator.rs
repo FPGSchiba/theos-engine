@@ -231,8 +231,8 @@ impl LlamaGenerator {
                 .map_err(|e| BackendError::Failed(format!("chat message: {e}")))
         };
         let chat = [
-            message("system", &request.prompt.system)?,
-            message("user", &request.prompt.user)?,
+            message("system", &request.prompt.system_text())?,
+            message("user", &request.prompt.user_text())?,
         ];
         let templated = self
             .mc

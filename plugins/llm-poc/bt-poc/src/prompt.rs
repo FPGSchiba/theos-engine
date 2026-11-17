@@ -488,7 +488,7 @@ pub fn render(
         scenario.directive.clone()
     };
     RenderedPrompt {
-        prompt: Prompt { system: s, user },
+        prompt: Prompt::engine(s, user),
         lore_ids: rendered,
         actor_block,
         lore_block,
@@ -524,12 +524,12 @@ mod tests {
         let b06 = scenario(&fx, "b06");
         let p = render(&fx, b06, &all_visible(&fx, &b06.actor), true);
         assert!(p
-            .system
+            .system_text()
             .contains("\n- vareth: spirit, 400 m, called \"Vareth the Long Cold\"\n"));
         let b14 = scenario(&fx, "b14");
         let p = render(&fx, b14, &[], true);
-        assert!(p.system.contains("\n- player: player, 50 m\n"));
-        assert!(p.system.contains("\n- warden-1: ally, 4 m\n"));
+        assert!(p.system_text().contains("\n- player: player, 50 m\n"));
+        assert!(p.system_text().contains("\n- warden-1: ally, 4 m\n"));
     }
 
     #[test]
@@ -537,10 +537,10 @@ mod tests {
         let fx = load_default();
         let b13 = scenario(&fx, "b13");
         let p = render(&fx, b13, &[], true);
-        assert!(p.system.contains(&fx.enemies["fx-reed-lurker"].body));
-        assert!(p.system.contains("Reed lurker"));
-        assert!(!p.system.contains("What you know"));
-        assert!(!p.system.contains("What you reject"));
+        assert!(p.system_text().contains(&fx.enemies["fx-reed-lurker"].body));
+        assert!(p.system_text().contains("Reed lurker"));
+        assert!(!p.system_text().contains("What you know"));
+        assert!(!p.system_text().contains("What you reject"));
     }
 
     #[test]
@@ -550,17 +550,17 @@ mod tests {
         let entry = &fx.visible[&b06.actor];
         let given = vec![RecordId::new("B-947")];
         let p = render(&fx, b06, &given, true);
-        assert!(p.system.contains("What you know:\n[B-947] "));
+        assert!(p.system_text().contains("What you know:\n[B-947] "));
         for id in entry.held.iter().chain(&entry.rejected) {
             if id != "B-947" {
                 assert!(
-                    !p.system.contains(&format!("[{id}]")),
+                    !p.system_text().contains(&format!("[{id}]")),
                     "{id} must not be in the prompt"
                 );
             }
         }
         let none = render(&fx, b06, &[], true);
-        assert!(!none.system.contains("[B-947]"));
+        assert!(!none.system_text().contains("[B-947]"));
     }
 
     #[test]
@@ -574,7 +574,7 @@ mod tests {
             .expect("b03's actor rejects a belief");
         let p = render(&fx, b03, &[RecordId::new(rejected)], true);
         assert!(p
-            .system
+            .system_text()
             .contains(&format!("What you reject:\n[{rejected}] ")));
     }
 
@@ -583,20 +583,20 @@ mod tests {
         let fx = load_default();
         let b06 = scenario(&fx, "b06");
         let p = render(&fx, b06, &[], true);
-        assert_eq!(p.user, b06.directive);
-        assert!(!p.system.contains(&b06.directive));
+        assert_eq!(p.user_text(), b06.directive);
+        assert!(!p.system_text().contains(&b06.directive));
         let mut silent = scenario(&fx, "b20").clone();
         silent.directive.clear();
         let p = render(&fx, &silent, &[], true);
-        assert_eq!(p.user, "Act on your record and the situation.");
+        assert_eq!(p.user_text(), "Act on your record and the situation.");
     }
 
     #[test]
     fn prompt_lists_only_the_actors_own_events() {
         let fx = load_default();
         let p = render(&fx, scenario(&fx, "b04"), &[], true);
-        assert!(p.system.contains("Chant"));
-        assert!(p.system.contains("Ground-Ohm"));
+        assert!(p.system_text().contains("Chant"));
+        assert!(p.system_text().contains("Ground-Ohm"));
         for other in [
             "CarveRune",
             "BindSpirit",
@@ -604,24 +604,24 @@ mod tests {
             "CallAllies",
             "ReadPlate",
         ] {
-            assert!(!p.system.contains(other), "{other} leaked into b04");
+            assert!(!p.system_text().contains(other), "{other} leaked into b04");
         }
         let p = render(&fx, scenario(&fx, "b10"), &[], true);
-        assert!(p.system.contains("You have no events"));
-        assert!(!p.system.contains("Chant"));
+        assert!(p.system_text().contains("You have no events"));
+        assert!(!p.system_text().contains("Chant"));
     }
 
     #[test]
     fn prompt_holds_flags_health_and_vocabulary() {
         let fx = load_default();
         let p = render(&fx, scenario(&fx, "b01"), &[], true);
-        assert!(p.system.contains("threatened: an armed stranger"));
-        assert!(p.system.contains("Your health: 1"));
-        assert!(p.system.contains("Decorator_Timeout"));
-        assert!(p.system.contains("allies_in_range"));
-        assert!(p.system.contains("MovementState.mode"));
-        assert!(p.system.contains("\"sources\""));
-        assert!(p.system.contains("well-watch"));
+        assert!(p.system_text().contains("threatened: an armed stranger"));
+        assert!(p.system_text().contains("Your health: 1"));
+        assert!(p.system_text().contains("Decorator_Timeout"));
+        assert!(p.system_text().contains("allies_in_range"));
+        assert!(p.system_text().contains("MovementState.mode"));
+        assert!(p.system_text().contains("\"sources\""));
+        assert!(p.system_text().contains("well-watch"));
     }
 
     #[test]
@@ -641,8 +641,14 @@ mod tests {
         let r = super::render(&fx, b06, &given, true);
         for id in [&truth, &other] {
             let rec = fx.corpus.get(id).expect("in corpus");
-            assert!(!r.prompt.system.contains(id.as_str()), "{id} rendered");
-            assert!(!r.prompt.system.contains(&rec.title), "{id} title rendered");
+            assert!(
+                !r.prompt.system_text().contains(id.as_str()),
+                "{id} rendered"
+            );
+            assert!(
+                !r.prompt.system_text().contains(&rec.title),
+                "{id} title rendered"
+            );
             assert!(!r.lore_ids.contains(id));
         }
         assert_eq!(r.lore_ids, vec![RecordId::new("B-947")]);
@@ -666,9 +672,9 @@ mod tests {
             .collect();
         let want: Vec<&str> = r.lore_ids.iter().map(RecordId::as_str).collect();
         assert_eq!(in_block, want);
-        assert!(r.prompt.system.contains(&r.actor_block));
-        assert!(r.prompt.system.contains(&r.lore_block));
-        assert!(r.prompt.system.contains(&r.situation));
+        assert!(r.prompt.system_text().contains(&r.actor_block));
+        assert!(r.prompt.system_text().contains(&r.lore_block));
+        assert!(r.prompt.system_text().contains(&r.situation));
         assert!(r.situation.contains("Your health"));
     }
 
@@ -685,11 +691,11 @@ mod tests {
         let fx = load_default();
         let b06 = scenario(&fx, "b06");
         let p = render(&fx, b06, &["B-947".into()], true);
-        assert!(!p.system.contains("What you reject"));
+        assert!(!p.system_text().contains("What you reject"));
         let b03 = scenario(&fx, "b03");
         let rejected = fx.visible[&b03.actor].rejected[0].as_str();
         let p = render(&fx, b03, &[rejected.into()], true);
-        assert!(p.system.contains("claims under \"What you reject\""));
+        assert!(p.system_text().contains("claims under \"What you reject\""));
     }
 
     #[test]
@@ -699,7 +705,7 @@ mod tests {
         for ex in fx.examples.as_array().unwrap() {
             let reply = ex["reply"].to_string();
             assert!(reply.find("\"sources\"").unwrap() < reply.find("\"tree\"").unwrap());
-            assert!(p.system.contains(&format!("Reply: {reply}")));
+            assert!(p.system_text().contains(&format!("Reply: {reply}")));
         }
     }
 
@@ -713,7 +719,7 @@ mod tests {
             "from the moment it is installed until the scenario's duration",
             "within the same tick if the child finishes at once",
         ] {
-            assert!(p.system.contains(needle), "missing: {needle}");
+            assert!(p.system_text().contains(needle), "missing: {needle}");
         }
     }
 
@@ -721,6 +727,6 @@ mod tests {
     fn entity_kind_restriction_renders_for_event_payload() {
         let fx = load_default();
         let p = render(&fx, scenario(&fx, "b06"), &[], true);
-        assert!(p.system.contains("of kind spirit"));
+        assert!(p.system_text().contains("of kind spirit"));
     }
 }

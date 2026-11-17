@@ -207,17 +207,17 @@ fn no_forbidden_record_reaches_any_prompt() {
                     }
                     for rec in &outside {
                         assert!(
-                            !ctx.prompt.system.contains(&format!("[{}]", rec.id)),
+                            !ctx.prompt.system_text().contains(&format!("[{}]", rec.id)),
                             "{label}: id of {} in prompt",
                             rec.id
                         );
                         assert!(
-                            !contains_bare_id(&ctx.prompt.system, rec.id.as_str()),
+                            !contains_bare_id(&ctx.prompt.system_text(), rec.id.as_str()),
                             "{label}: bare id of {} in prompt",
                             rec.id
                         );
                         assert!(
-                            !ctx.prompt.system.contains(&rec.title),
+                            !ctx.prompt.system_text().contains(&rec.title),
                             "{label}: title of {} in prompt",
                             rec.id
                         );

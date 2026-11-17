@@ -593,7 +593,7 @@ mod tests {
         assert_eq!(requests.len(), 1);
         let sent = &requests[0];
         assert_eq!(sent.thinking, Thinking::On);
-        assert_eq!(sent.prompt.user, "who?");
+        assert_eq!(sent.prompt.user_text(), "who?");
         let schema = sent.schema.as_ref().unwrap();
         let listed = schema["properties"]["sources"]["items"]["enum"]
             .as_array()
@@ -824,10 +824,7 @@ mod tests {
     fn job(pieces: Vec<Piece>) -> (Rig, GenerateJob) {
         let r = rig(vec![script(MS, MS, pieces)]);
         let job = GenerateJob {
-            prompt: Prompt {
-                system: "sys".into(),
-                user: "usr".into(),
-            },
+            prompt: Prompt::engine("sys", "usr"),
             schema: None,
             thinking: Thinking::Off,
             thinking_budget: None,
@@ -855,7 +852,7 @@ mod tests {
         r.npc.generate(&j).unwrap();
         let requests = r.backend.requests();
         assert_eq!(requests[0].schema, None);
-        assert_eq!(requests[0].prompt.system, "sys");
+        assert_eq!(requests[0].prompt.system_text(), "sys");
     }
 
     #[test]
@@ -894,10 +891,7 @@ mod tests {
     fn generate_stops_at_the_deadline() {
         let mut r = rig(vec![script(ms(100), ms(20), answer_pieces(400))]);
         let j = GenerateJob {
-            prompt: Prompt {
-                system: String::new(),
-                user: String::new(),
-            },
+            prompt: Prompt::engine("", ""),
             schema: None,
             thinking: Thinking::Off,
             thinking_budget: None,

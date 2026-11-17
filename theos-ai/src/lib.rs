@@ -30,7 +30,7 @@ pub use driver::{
 };
 pub use memory::{MemoryProbe, NoProbe};
 
-pub use context::{Context, ContextOptions, Prompt, assemble};
+pub use context::{Context, ContextOptions, Prompt, Segment, Trust, assemble};
 pub use embed::{EmbedError, EmbedInput, Embedder, cosine};
 pub use knowledge::{Visible, visible};
 pub use lore::{

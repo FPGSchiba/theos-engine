@@ -61,18 +61,17 @@ fn ids() -> Vec<RecordId> {
 }
 
 fn prompt() -> Prompt {
-    Prompt {
-        system: "You are Hask, a throat-singer of the high passes. Answer the player in \
+    Prompt::engine(
+        "You are Hask, a throat-singer of the high passes. Answer the player in \
                  character, in one or two sentences. Reply as JSON: list the records you \
                  draw on in \"sources\" and put your answer in \"reply\".\n\
                  What you know:\n\
                  [B-945] The greater the god, the truer the note it demands. A small spirit \
                  forgives a clumsy song, but a great or proud Listener will not.\n\
                  [B-946] Vareth the Long Cold is a frost-elemental of the high passes: her \
-                 note is low and slow, her power vast and her pride immense."
-            .into(),
-        user: "Is it safe to sing to Vareth?".into(),
-    }
+                 note is low and slow, her power vast and her pride immense.",
+        "Is it safe to sing to Vareth?",
+    )
 }
 
 // Title and body of B-946 and B-947, as the retriever embeds them.
@@ -179,10 +178,10 @@ fn generator_emits_thinking_pieces_then_answer_when_thinking_on() {
 fn generator_without_schema_returns_free_text() {
     let _gpu = gpu();
     let mut generator = generator();
-    let prompt = Prompt {
-        system: "Answer with exactly one plain word and nothing else.".into(),
-        user: "What colour is a clear daytime sky?".into(),
-    };
+    let prompt = Prompt::engine(
+        "Answer with exactly one plain word and nothing else.",
+        "What colour is a clear daytime sky?",
+    );
     let request = GenerationRequest {
         prompt: &prompt,
         schema: None,
@@ -210,10 +209,7 @@ fn generator_uses_the_configured_n_ctx() {
     while generator.count_tokens(&filler, false) < 9000 {
         filler.push_str("The forge burns low and the old smith hums a tuneless song. ");
     }
-    let prompt = Prompt {
-        system: "Summarise the text in one word.".into(),
-        user: filler,
-    };
+    let prompt = Prompt::engine("Summarise the text in one word.", filler);
     let request = GenerationRequest {
         prompt: &prompt,
         schema: None,
@@ -264,10 +260,10 @@ fn generator_closes_thinking_at_the_budget() {
 fn generator_without_schema_closes_thinking_at_the_budget() {
     let _gpu = gpu();
     let mut generator = generator();
-    let prompt = Prompt {
-        system: "Answer in one short sentence.".into(),
-        user: "What colour is a clear daytime sky?".into(),
-    };
+    let prompt = Prompt::engine(
+        "Answer in one short sentence.",
+        "What colour is a clear daytime sky?",
+    );
     let request = GenerationRequest {
         prompt: &prompt,
         schema: None,

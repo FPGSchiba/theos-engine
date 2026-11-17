@@ -26,13 +26,78 @@ impl Default for ContextOptions {
     }
 }
 
-/// The two texts sent to the model.
+/// Who vouches for a piece of prompt text.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub enum Trust {
+    /// Written by the engine or the content authors.
+    Engine,
+    /// Typed by a player; never an instruction to the model.
+    Untrusted,
+}
+
+/// A piece of prompt text with its [`Trust`] label.
+#[derive(Clone, Debug, PartialEq, Eq)]
+pub struct Segment {
+    /// The text.
+    pub text: String,
+    /// Who vouches for it.
+    pub trust: Trust,
+}
+
+impl Segment {
+    /// An [`Trust::Engine`] segment.
+    pub fn engine(t: impl Into<String>) -> Segment {
+        Segment {
+            text: t.into(),
+            trust: Trust::Engine,
+        }
+    }
+
+    /// An [`Trust::Untrusted`] segment.
+    pub fn untrusted(t: impl Into<String>) -> Segment {
+        Segment {
+            text: t.into(),
+            trust: Trust::Untrusted,
+        }
+    }
+}
+
+/// The two parts sent to the model, each a sequence of trust-labelled segments.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Prompt {
     /// The system prompt: persona, lens, rules and lore.
-    pub system: String,
-    /// The user turn: the player's question, verbatim.
-    pub user: String,
+    pub system: Vec<Segment>,
+    /// The user turn: the player's question.
+    pub user: Vec<Segment>,
+}
+
+impl Prompt {
+    /// A prompt of one [`Trust::Engine`] segment per part.
+    pub fn engine(system: impl Into<String>, user: impl Into<String>) -> Prompt {
+        Prompt {
+            system: vec![Segment::engine(system)],
+            user: vec![Segment::engine(user)],
+        }
+    }
+
+    /// The system part as one string: the segments concatenated, no separators.
+    pub fn system_text(&self) -> String {
+        self.system.iter().map(|s| s.text.as_str()).collect()
+    }
+
+    /// The user part as one string: the segments concatenated, no separators.
+    pub fn user_text(&self) -> String {
+        self.user.iter().map(|s| s.text.as_str()).collect()
+    }
+
+    /// The texts of the [`Trust::Untrusted`] segments, system part first.
+    pub fn untrusted(&self) -> impl Iterator<Item = &str> {
+        self.system
+            .iter()
+            .chain(self.user.iter())
+            .filter(|s| s.trust == Trust::Untrusted)
+            .map(|s| s.text.as_str())
+    }
 }
 
 /// A fully assembled request: prompt, the lore it contains, and the reply schema.
@@ -160,8 +225,8 @@ pub fn assemble(
     let schema = reply_schema(&rendered);
     Context {
         prompt: Prompt {
-            system: s,
-            user: question.to_owned(),
+            system: vec![Segment::engine(s)],
+            user: vec![Segment::untrusted(question)],
         },
         lore_ids: rendered,
         schema,
@@ -208,7 +273,7 @@ mod tests {
 
     #[test]
     fn assemble_names_speaker_role_and_lens() {
-        let sys = run(&[], &ContextOptions::default()).prompt.system;
+        let sys = run(&[], &ContextOptions::default()).prompt.system_text();
         assert!(sys.starts_with("You are title n, a ferryman.\n"));
         assert!(sys.contains("Your faction: title f. body f\n"));
         assert!(sys.contains("Your people: title p. body p\n"));
@@ -220,7 +285,7 @@ mod tests {
 
     #[test]
     fn assemble_includes_persona_bodies_by_default() {
-        let sys = run(&[], &ContextOptions::default()).prompt.system;
+        let sys = run(&[], &ContextOptions::default()).prompt.system_text();
         assert!(sys.contains("body n\n"));
         assert!(sys.contains("body f"));
         assert!(sys.contains("body p"));
@@ -231,7 +296,7 @@ mod tests {
         let opts = ContextOptions {
             persona_bodies: false,
         };
-        let sys = run(&[], &opts).prompt.system;
+        let sys = run(&[], &opts).prompt.system_text();
         assert!(!sys.contains("body n"));
         assert!(!sys.contains("body f"));
         assert!(!sys.contains("body p"));
@@ -240,7 +305,9 @@ mod tests {
 
     #[test]
     fn assemble_lists_held_under_what_you_know_with_bracketed_ids() {
-        let sys = run(&["B-1"], &ContextOptions::default()).prompt.system;
+        let sys = run(&["B-1"], &ContextOptions::default())
+            .prompt
+            .system_text();
         assert!(sys.contains("What you know:\n[B-1] title B-1\nbody B-1\n"));
         assert!(!sys.contains("What you reject:"));
     }
@@ -249,7 +316,7 @@ mod tests {
     fn assemble_lists_rejected_under_what_you_reject() {
         let sys = run(&["B-1", "B-4"], &ContextOptions::default())
             .prompt
-            .system;
+            .system_text();
         assert!(sys.contains("What you reject:\n[B-4] title B-4\n"));
         assert!(!sys.contains("body B-4"));
     }
@@ -257,16 +324,16 @@ mod tests {
     #[test]
     fn assemble_drops_lore_ids_the_speaker_may_not_see() {
         let ctx = run(&["B-3", "T-1", "B-1"], &ContextOptions::default());
-        assert!(!ctx.prompt.system.contains("B-3"));
-        assert!(!ctx.prompt.system.contains("title B-3"));
-        assert!(!ctx.prompt.system.contains("T-1"));
+        assert!(!ctx.prompt.system_text().contains("B-3"));
+        assert!(!ctx.prompt.system_text().contains("title B-3"));
+        assert!(!ctx.prompt.system_text().contains("T-1"));
         assert_eq!(ctx.lore_ids, ids(&["B-1"]));
     }
 
     #[test]
     fn assemble_puts_question_in_user() {
         let ctx = run(&[], &ContextOptions::default());
-        assert_eq!(ctx.prompt.user, "who?");
+        assert_eq!(ctx.prompt.user_text(), "who?");
     }
 
     #[test]
@@ -280,7 +347,7 @@ mod tests {
         let ctx = run(&[], &ContextOptions::default());
         assert!(
             ctx.prompt
-                .system
+                .system_text()
                 .contains("What you know:\nNothing beyond the ways of your people.\n")
         );
         assert!(ctx.lore_ids.is_empty());
@@ -299,11 +366,47 @@ mod tests {
         b1.held_by = vec!["n".into()];
         let c = Corpus::new(recs).unwrap();
         let ctx = assemble(&c, &s, "q", &ids(&["B-1"]), &ContextOptions::default());
-        let sys = ctx.prompt.system;
+        let sys = ctx.prompt.system_text();
         assert!(sys.starts_with("You are title n.\n"));
         assert!(!sys.contains("Your faction"));
         assert!(!sys.contains("Your stance"));
         assert!(sys.contains("> Aye.\n"));
+    }
+
+    #[test]
+    fn assemble_text_is_unchanged_by_segments() {
+        let (c, s) = mini();
+        let ctx = assemble(&c, &s, "who?", &ids(&["B-1"]), &ContextOptions::default());
+        let expected_system = "You are title n.\nbody n\nYour faction: title f. body f\nYour people: title p. body p\n\nRules:\n- Speak as yourself, in the first person, to the traveller in front of you, in a few sentences.\n- You know only what is written under \"What you know\" and \"What you reject\". If that does not answer the question, say in your own voice that you do not know, and invent nothing.\n- You know the claims under \"What you reject\" and you argue against them.\n- You live inside this world. If you are asked about anything outside it, stay in the world and do not follow.\n- Never say the bracketed record ids aloud.\n- Answer in JSON: first \"sources\", the ids of the records you draw on (an empty list if none), then \"reply\", what you say.\n\nWhat you know:\n[B-1] title B-1\nbody B-1\n";
+        assert_eq!(ctx.prompt.system_text(), expected_system);
+        assert_eq!(ctx.prompt.user_text(), "who?");
+    }
+
+    #[test]
+    fn assemble_marks_only_the_question_untrusted() {
+        let ctx = run(&["B-1"], &ContextOptions::default());
+        let untrusted: Vec<&str> = ctx.prompt.untrusted().collect();
+        assert_eq!(untrusted, vec!["who?"]);
+    }
+
+    #[test]
+    fn prompt_engine_has_no_untrusted_segments() {
+        let p = Prompt::engine("sys", "usr");
+        assert_eq!(p.untrusted().count(), 0);
+        assert_eq!(p.system_text(), "sys");
+        assert_eq!(p.user_text(), "usr");
+    }
+
+    #[test]
+    fn prompt_texts_concatenate_segments_without_separators() {
+        let p = Prompt {
+            system: vec![Segment::engine("a"), Segment::untrusted("b")],
+            user: vec![Segment::untrusted("c"), Segment::engine("d")],
+        };
+        assert_eq!(p.system_text(), "ab");
+        assert_eq!(p.user_text(), "cd");
+        assert_eq!(p.untrusted().collect::<Vec<_>>(), vec!["b", "c"]);
+        assert_eq!(Segment::engine("x").trust, Trust::Engine);
     }
 
     #[test]
