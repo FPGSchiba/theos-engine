@@ -40,7 +40,8 @@ pub struct Nearest {
 pub struct KnnEvidence {
     /// The verdict.
     pub verdict: ModerationVerdict,
-    /// The deciding piece.
+    /// The deciding piece: the whole text or a sentence of at least
+    /// [`MIN_PIECE_WORDS`] words (see [`moderation_pieces`]).
     pub piece: String,
     /// Nearest banned example of that piece.
     pub nearest_banned: Option<Nearest>,
@@ -50,7 +51,8 @@ pub struct KnnEvidence {
 
 /// Nearest-neighbour moderator.
 ///
-/// The text is split into pieces (the whole text plus each sentence), every
+/// The text is split into pieces (the whole text plus each sentence of at
+/// least [`MIN_PIECE_WORDS`] words, see [`moderation_pieces`]), every
 /// piece is embedded, and a piece blocks when it is close to a banned example
 /// and clearly closer to it than to any allowed example. Take the maximum over
 /// pieces, so one banned sentence in a long message still blocks.
@@ -90,25 +92,46 @@ fn nearest(category: Option<ModerationCategory>, hit: Option<(&Example, f32)>) -
     })
 }
 
-/// The whole text plus each sentence, trimmed, non-empty and de-duplicated.
-fn pieces(text: &str) -> Vec<&str> {
-    let mut out: Vec<&str> = Vec::new();
-    let whole = std::iter::once(text);
-    let sentences = text.split(['.', '!', '?', '\n']);
-    for piece in whole.chain(sentences).map(str::trim) {
-        if !piece.is_empty() && !out.contains(&piece) {
-            out.push(piece);
+/// Sentences with fewer words than this are not pieces of their own: a one-
+/// or two-word fragment ("Is it", "No") sits close to many examples and decides
+/// false glitches. The whole text is always a piece.
+pub const MIN_PIECE_WORDS: usize = 3;
+
+/// The words of `text`: whitespace-separated tokens with an alphanumeric char.
+fn word_count(text: &str) -> usize {
+    text.split_whitespace()
+        .filter(|w| w.chars().any(char::is_alphanumeric))
+        .count()
+}
+
+/// The pieces of `text` that moderation checks: the whole text (trimmed, if
+/// non-empty) plus each sentence (split on `.`, `!`, `?` and newline, trimmed)
+/// of at least [`MIN_PIECE_WORDS`] words, de-duplicated.
+#[must_use]
+pub fn moderation_pieces(text: &str) -> Vec<String> {
+    let mut out: Vec<String> = Vec::new();
+    let whole = std::iter::once(text).map(str::trim);
+    let sentences = text
+        .split(['.', '!', '?', '\n'])
+        .map(str::trim)
+        .filter(|s| word_count(s) >= MIN_PIECE_WORDS);
+    for piece in whole.chain(sentences) {
+        if !piece.is_empty() && !out.iter().any(|p| p == piece) {
+            out.push(piece.to_owned());
         }
     }
     out
 }
 
 /// Embeds `texts` as documents and validates count and dimensions.
-fn embed_documents(
+fn embed_documents<T: AsRef<str>>(
     embedder: &mut dyn Embedder,
-    texts: &[&str],
+    texts: &[T],
 ) -> Result<Vec<Vec<f32>>, ModerationError> {
-    let inputs: Vec<EmbedInput<'_>> = texts.iter().map(|t| EmbedInput::Document(t)).collect();
+    let inputs: Vec<EmbedInput<'_>> = texts
+        .iter()
+        .map(|t| EmbedInput::Document(t.as_ref()))
+        .collect();
     let out = embedder.embed(&inputs)?;
     if out.len() != inputs.len() {
         return Err(EmbedError::CountMismatch {
@@ -193,7 +216,7 @@ impl KnnModerator {
         source: ModerationSource,
         text: &str,
     ) -> Result<KnnEvidence, ModerationError> {
-        let pieces = pieces(text);
+        let pieces = moderation_pieces(text);
         if pieces.is_empty() {
             return Ok(KnnEvidence {
                 verdict: ModerationVerdict::Allow,
@@ -404,6 +427,24 @@ mod tests {
     }
 
     #[test]
+    fn short_sentence_pieces_are_ignored_but_the_whole_text_is_checked() {
+        assert_eq!(
+            moderation_pieces("Some say the Tower is a machine. Is it?"),
+            [
+                "Some say the Tower is a machine. Is it?",
+                "Some say the Tower is a machine"
+            ]
+        );
+        assert_eq!(moderation_pieces("No. Yes!"), ["No. Yes!"]);
+    }
+
+    #[test]
+    fn a_short_whole_text_is_still_a_piece() {
+        assert_eq!(moderation_pieces("Is it?"), ["Is it?"]);
+        assert!(moderation_pieces("  ").is_empty());
+    }
+
+    #[test]
     fn empty_text_allows_without_embedding() {
         let calls = Rc::new(Cell::new(0));
         let mut m = KnnModerator::new(
@@ -535,7 +576,7 @@ mod tests {
     #[test]
     fn evaluate_rejects_a_wrong_vector_count() {
         // Examples embed fine; the piece call returns 1 vector for the 3
-        // pieces of "a. b" (whole text plus two sentences).
+        // pieces of "a b c. d e f" (whole text plus two sentences).
         struct TwoStep(usize);
         impl Embedder for TwoStep {
             fn embed(&mut self, i: &[EmbedInput<'_>]) -> Result<Vec<Vec<f32>>, EmbedError> {
@@ -549,7 +590,7 @@ mod tests {
         }
         let mut m =
             KnnModerator::new(Box::new(TwoStep(0)), banned(), Vec::new(), same(0.6, 0.1)).unwrap();
-        let err = m.check(PLAYER, "a. b").unwrap_err();
+        let err = m.check(PLAYER, "a b c. d e f").unwrap_err();
         assert!(matches!(
             err,
             ModerationError::Embed(EmbedError::CountMismatch {

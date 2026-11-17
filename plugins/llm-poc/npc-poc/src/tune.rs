@@ -6,8 +6,8 @@
 //! (banned and allowed) is scored as a player message against the full example lists.
 //!
 //! `KnnEvidence` only carries the deciding piece, so this module scores the pieces
-//! itself: it splits a line the way `KnnModerator` does (the whole text plus each
-//! sentence), embeds every piece as a document, and keeps per piece the best banned
+//! itself: it splits a line with `theos_ai::moderation_pieces`, the very function
+//! `KnnModerator` uses (the whole text plus each sentence of at least three words), embeds every piece as a document, and keeps per piece the best banned
 //! similarity (with its category) and the best allowed similarity. The moderator's rule
 //! is "block iff some piece and category has `best_c >= min_similarity` and
 //! `best_c - best_a >= margin`"; `best_a` is the same for every category of a piece, so
@@ -19,7 +19,7 @@ use std::path::Path;
 
 use anyhow::anyhow;
 use guard_kit::{load_lists, ModerationLists};
-use theos_ai::{cosine, EmbedError, EmbedInput, Embedder};
+use theos_ai::{cosine, moderation_pieces, EmbedError, EmbedInput, Embedder};
 use theos_ai_llama::{models_dir, LlamaEmbedder, LlamaRuntime, ModelsFile};
 
 /// Whether a held-out line belongs to a banned category or to the allowed list.
@@ -190,23 +190,14 @@ pub fn propose(lines: &[TuneLine]) -> Proposal {
     }
 }
 
-/// The whole text plus each sentence, trimmed, non-empty, de-duplicated: the same
-/// pieces `KnnModerator` checks.
-fn pieces(text: &str) -> Vec<&str> {
-    let mut out: Vec<&str> = Vec::new();
-    for piece in std::iter::once(text)
-        .chain(text.split(['.', '!', '?', '\n']))
-        .map(str::trim)
-    {
-        if !piece.is_empty() && !out.contains(&piece) {
-            out.push(piece);
-        }
-    }
-    out
-}
-
-fn embed_all(embedder: &mut dyn Embedder, texts: &[&str]) -> Result<Vec<Vec<f32>>, EmbedError> {
-    let inputs: Vec<EmbedInput<'_>> = texts.iter().map(|t| EmbedInput::Document(t)).collect();
+fn embed_all<T: AsRef<str>>(
+    embedder: &mut dyn Embedder,
+    texts: &[T],
+) -> Result<Vec<Vec<f32>>, EmbedError> {
+    let inputs: Vec<EmbedInput<'_>> = texts
+        .iter()
+        .map(|t| EmbedInput::Document(t.as_ref()))
+        .collect();
     let out = embedder.embed(&inputs)?;
     if out.len() != inputs.len() {
         return Err(EmbedError::CountMismatch {
@@ -265,7 +256,7 @@ pub fn score_lines(
         .map(|l| ("allowed", LineKind::Allowed, l));
     let mut out = Vec::new();
     for (list, kind, line) in held_banned.chain(held_allowed) {
-        let texts = pieces(line);
+        let texts = moderation_pieces(line);
         let vectors = if texts.is_empty() {
             Vec::new()
         } else {
@@ -533,13 +524,18 @@ mod tests {
     }
 
     #[test]
-    fn pieces_are_the_whole_text_and_its_sentences() {
+    fn tune_uses_the_shared_piece_split() {
+        let line = "We hate the northern people so much. Is it?";
+        let mut e = FakeEmbedder::default();
+        let mut l = lists();
+        l.banned[0].held_out = vec![line.into()];
+        let lines = score_lines(&mut e, &l).unwrap();
         assert_eq!(
-            pieces("One. Two!  Three"),
-            ["One. Two!  Three", "One", "Two", "Three"]
+            lines[0].pieces.len(),
+            moderation_pieces(line).len(),
+            "no piece for the two-word sentence"
         );
-        assert_eq!(pieces("Just one"), ["Just one"]);
-        assert!(pieces("  ").is_empty());
+        assert_eq!(lines[0].pieces.len(), 2);
     }
 
     fn lists() -> ModerationLists {
@@ -551,7 +547,9 @@ mod tests {
             banned: vec![CategoryList {
                 category: ModerationCategory::Hate,
                 examples: vec!["we hate the northern people".into()],
-                held_out: vec!["we hate the northern people so much. good morning".into()],
+                held_out: vec![
+                    "we hate the northern people so much. good morning to you all".into(),
+                ],
             }],
             allowed: vec!["good morning dear friend".into()],
             allowed_held_out: vec!["good morning friend".into()],

@@ -31,9 +31,9 @@ pub use driver::{
 };
 pub use memory::{MemoryProbe, NoProbe};
 pub use moderation::{
-    AllowAll, ContentModerator, KnnEvidence, KnnModerator, KnnThresholds, ModerationCategory,
-    ModerationError, ModerationPipeline, ModerationSource, ModerationVerdict, Nearest,
-    SourceThreshold,
+    AllowAll, ContentModerator, KnnEvidence, KnnModerator, KnnThresholds, MIN_PIECE_WORDS,
+    ModerationCategory, ModerationError, ModerationPipeline, ModerationSource, ModerationVerdict,
+    Nearest, SourceThreshold, moderation_pieces,
 };
 
 pub use context::{
