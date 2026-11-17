@@ -18,9 +18,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/lib.rs": {
-    "mtime": 1794581589.9850054,
-    "seen": 1794671608.6096888,
-    "ast_hash": "ca93f16f0669eb8bed45de8e4da6fa1f",
+    "mtime": 1794933511.070424,
+    "seen": 1794933674.7568839,
+    "ast_hash": "a67c759f473d86af37cbbee1d8cc3a60",
     "semantic_hash": ""
   },
   "theos-assets/src/lib.rs": {
@@ -792,9 +792,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/run.rs": {
-    "mtime": 1794581894.8053186,
-    "seen": 1794671608.6085563,
-    "ast_hash": "ae23fd78a272c0fb515802a2b1ce881b",
+    "mtime": 1794933562.2743824,
+    "seen": 1794933674.7555845,
+    "ast_hash": "484cc3b164bcd907f2af0759f5185c4b",
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/scenarios.rs": {
@@ -828,9 +828,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/src/generator.rs": {
-    "mtime": 1794582694.0086608,
-    "seen": 1794671608.6088178,
-    "ast_hash": "543e06b9f8d34242e653b30cec6542eb",
+    "mtime": 1794933555.065283,
+    "seen": 1794933674.7560618,
+    "ast_hash": "daeadad8b5cd26a24919018fb5e6ecb4",
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/src/lib.rs": {
@@ -846,9 +846,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/tests/real_model.rs": {
-    "mtime": 1794582015.7910109,
-    "seen": 1794671608.6090074,
-    "ast_hash": "35f85f4bcfa1f61f88d3642d3638a741",
+    "mtime": 1794933543.5683854,
+    "seen": 1794933674.756242,
+    "ast_hash": "76adf6eb992f06d18be7f6fd47772977",
     "semantic_hash": ""
   },
   "theos-ai/src/backend.rs": {
@@ -864,15 +864,15 @@
     "semantic_hash": ""
   },
   "theos-ai/src/context.rs": {
-    "mtime": 1794558075.1058269,
-    "seen": 1794560768.4898322,
-    "ast_hash": "658549ec341dad045c86fb4e0d76f70e",
+    "mtime": 1794933566.7317502,
+    "seen": 1794933674.7567139,
+    "ast_hash": "824a5355565be2b3b9f62b3ab48f7f4c",
     "semantic_hash": ""
   },
   "theos-ai/src/driver.rs": {
-    "mtime": 1794672001.1453476,
-    "seen": 1794672351.8111835,
-    "ast_hash": "ce91d525e122653c988f301160bc2189",
+    "mtime": 1794933523.8289518,
+    "seen": 1794933674.7567148,
+    "ast_hash": "c79a113684960025c13a5f38959af567",
     "semantic_hash": ""
   },
   "theos-ai/src/embed.rs": {
@@ -930,9 +930,9 @@
     "semantic_hash": ""
   },
   "theos-ai/tests/lore_poc.rs": {
-    "mtime": 1794561162.2609828,
-    "seen": 1794561413.763794,
-    "ast_hash": "87b1b04e1a83ed52058af52122bc4eed",
+    "mtime": 1794933533.5460439,
+    "seen": 1794933674.7574165,
+    "ast_hash": "252512f49b252a94f7de969da0f870f2",
     "semantic_hash": ""
   },
   "docs/superpowers/specs/2026-11-13-npc-llm-poc-design.md": {
@@ -2058,15 +2058,15 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/main.rs": {
-    "mtime": 1794689588.303378,
-    "seen": 1794689643.4874344,
-    "ast_hash": "47a1fa109c8732ebb6e68e985d9d97e5",
+    "mtime": 1794933562.328491,
+    "seen": 1794933674.7548316,
+    "ast_hash": "e7a218a97f9cf2a0d90fd3d024898fa3",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/prompt.rs": {
-    "mtime": 1794582514.754991,
-    "seen": 1794671608.6083372,
-    "ast_hash": "77e3be75b5d5f5c4508fe9032b070f9b",
+    "mtime": 1794933617.6880848,
+    "seen": 1794933674.7548332,
+    "ast_hash": "d0e8b6b44e65df29023ed2addf365502",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/report.rs": {
@@ -2100,9 +2100,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/inject.rs": {
-    "mtime": 1794581653.0982625,
-    "seen": 1794671608.6085534,
-    "ast_hash": "ffc068d1c65b2f6f2c9869cb0162663d",
+    "mtime": 1794933555.5548942,
+    "seen": 1794933674.75543,
+    "ast_hash": "a5ddc504c4a7ee115e47666ce675ade5",
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/examples/bt_spike.rs": {
@@ -2169,6 +2169,30 @@
     "mtime": 1794672980.046286,
     "seen": 1794673052.8744357,
     "ast_hash": "ad975f3503e3ce5e318443eb0ecedccb",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/compare_rows.py": {
+    "mtime": 1794932804.0726025,
+    "seen": 1794933674.7552557,
+    "ast_hash": "44d16ea78b002fc6498216060f8b2de4",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-11-17-npc-guardrails-design.md": {
+    "mtime": 1794931397.596014,
+    "seen": 1794933674.7651324,
+    "ast_hash": "7771fe6aa5271b418653c19cd6e032f9",
+    "semantic_hash": ""
+  },
+  "fixtures/moderation/README.md": {
+    "mtime": 1794932941.4709873,
+    "seen": 1794933674.7760413,
+    "ast_hash": "1291de59823a6a0d0d2ae65f502c82e2",
+    "semantic_hash": ""
+  },
+  "plans/npc-guardrails-2026-11-17.md": {
+    "mtime": 1794932714.0914378,
+    "seen": 1794933674.7777057,
+    "ast_hash": "8727e482376b0c354559cc568fa613ca",
     "semantic_hash": ""
   }
 }
