@@ -10,6 +10,7 @@ mod report;
 mod run;
 mod scenarios;
 mod score;
+mod tune;
 
 use std::path::PathBuf;
 
@@ -50,6 +51,19 @@ enum Command {
         /// Leave the persona bodies out of the prompt.
         #[arg(long)]
         no_persona_bodies: bool,
+        /// Guards to switch on: `none`, `input` (g1, g4, g9), `all`, or a comma list of
+        /// `mod`, `g1`, `g4`, `g9`.
+        #[arg(long, default_value = "none")]
+        guards: String,
+        /// Moderation example lists; defaults to `fixtures/moderation` of this repository.
+        #[arg(long)]
+        moderation: Option<PathBuf>,
+    },
+    /// Measure the moderator on the held-out lines and propose thresholds (writes nothing).
+    ModerationTune {
+        /// Moderation example lists; defaults to `fixtures/moderation` of this repository.
+        #[arg(long)]
+        moderation: Option<PathBuf>,
     },
 }
 
@@ -62,6 +76,10 @@ struct Snapshot<'a> {
 
 fn default_fixture() -> PathBuf {
     PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../fixtures/lore-poc")
+}
+
+fn default_moderation() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../fixtures/moderation")
 }
 
 fn export(fixture: &std::path::Path) -> anyhow::Result<PathBuf> {
@@ -92,6 +110,8 @@ fn main() -> anyhow::Result<()> {
             models,
             deadline_ms,
             no_persona_bodies,
+            guards,
+            moderation,
         } => run::run_cli(
             &default_fixture(),
             scenarios,
@@ -99,7 +119,12 @@ fn main() -> anyhow::Result<()> {
             models,
             std::time::Duration::from_millis(deadline_ms),
             !no_persona_bodies,
+            guard_kit::Guards::parse(&guards)?,
+            &moderation.unwrap_or_else(default_moderation),
         )?,
+        Command::ModerationTune { moderation } => {
+            tune::tune_cli(&moderation.unwrap_or_else(default_moderation), None)?;
+        }
     }
     Ok(())
 }

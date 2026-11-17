@@ -13,5 +13,6 @@ serde_json = "1"
 toml = "0.8"
 anyhow = "1"
 theos-ai-llama = { path = "../theos-ai-llama" }
+guard-kit = { path = "../guard-kit" }
 regex = "1"
 csv = "1"
