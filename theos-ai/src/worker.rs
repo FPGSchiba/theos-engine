@@ -222,6 +222,8 @@ mod tests {
             scope: LoreScope::AllVisible,
             thinking: Thinking::On,
             deadline: Duration::from_secs(3),
+            player_name: None,
+            extra_instruction: None,
         }
     }
 

@@ -10,7 +10,7 @@ use serde_json::Value;
 
 use crate::backend::{Backend, BackendError, GenerationRequest, Phase, Thinking};
 use crate::clock::Clock;
-use crate::context::{ContextOptions, Prompt, assemble};
+use crate::context::{ContextOptions, PlayerTurn, Prompt, assemble};
 use crate::embed::{EmbedError, Embedder};
 use crate::lore::{Corpus, RecordId, Speaker};
 use crate::memory::MemoryProbe;
@@ -83,6 +83,10 @@ pub struct NpcRequest {
     pub thinking: Thinking,
     /// Time allowed from the start of the request until generation is cut off.
     pub deadline: Duration,
+    /// The name the player goes by, if known; placed by the assembler.
+    pub player_name: Option<String>,
+    /// Game-written text appended at the very end of the system prompt.
+    pub extra_instruction: Option<String>,
 }
 
 /// One prompt to run through the model as it stands, with no retrieval and no
@@ -248,7 +252,11 @@ impl Npc {
         let ctx = assemble(
             self.retriever.corpus(),
             speaker,
-            &request.question,
+            &PlayerTurn {
+                question: &request.question,
+                player_name: request.player_name.as_deref(),
+                extra_instruction: request.extra_instruction.as_deref(),
+            },
             &ids,
             &self.options,
         );
@@ -545,6 +553,8 @@ mod tests {
             scope: LoreScope::AllVisible,
             thinking: Thinking::On,
             deadline,
+            player_name: None,
+            extra_instruction: None,
         }
     }
 
@@ -569,7 +579,11 @@ mod tests {
         let expected = assemble(
             &corpus,
             &speaker,
-            "who?",
+            &PlayerTurn {
+                question: "who?",
+                player_name: None,
+                extra_instruction: None,
+            },
             &Retriever::build(corpus.clone(), &mut FakeEmbedder::default())
                 .unwrap()
                 .select(
@@ -602,6 +616,19 @@ mod tests {
         for id in &resp.metrics.context_ids {
             assert!(listed.iter().any(|v| v == id.as_str()));
         }
+    }
+
+    #[test]
+    fn answer_passes_player_name_and_extra_instruction_to_the_assembler() {
+        let mut r = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let mut req = request(DEFAULT_DEADLINE);
+        req.player_name = Some("Ada".into());
+        req.extra_instruction = Some("Be brief.".into());
+        r.npc.answer(&req).unwrap();
+        let requests = r.backend.requests();
+        let sys = requests[0].prompt.system_text();
+        assert!(sys.ends_with("is called Ada.\n\nBe brief."));
+        assert_eq!(requests[0].prompt.user_text(), "who?");
     }
 
     #[test]

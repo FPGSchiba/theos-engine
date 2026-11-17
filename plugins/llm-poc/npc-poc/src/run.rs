@@ -109,6 +109,8 @@ fn warm_up(
             },
             thinking: Thinking::Off,
             deadline,
+            player_name: None,
+            extra_instruction: None,
         })
         .map_err(|_| anyhow!("the NPC worker stopped"))?;
     let (_, outcome) = worker
@@ -201,6 +203,8 @@ fn run_requests(
                     scope,
                     thinking,
                     deadline,
+                    player_name: None,
+                    extra_instruction: None,
                 };
                 let mut row = Row {
                     model: model.to_owned(),
@@ -423,7 +427,10 @@ fn spawn_worker(
             embedder: Box::new(embedder),
             corpus,
             speakers,
-            options: ContextOptions { persona_bodies },
+            options: ContextOptions {
+                persona_bodies,
+                ..ContextOptions::default()
+            },
             clock: Box::new(SystemClock),
             probe,
         })

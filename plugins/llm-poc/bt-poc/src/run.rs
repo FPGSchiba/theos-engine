@@ -560,6 +560,7 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
             speakers: fx.speakers.clone(),
             options: ContextOptions {
                 persona_bodies: run.cfg.persona_bodies,
+                ..ContextOptions::default()
             },
             clock: Box::new(SystemClock),
             probe,

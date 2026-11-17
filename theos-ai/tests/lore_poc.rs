@@ -186,9 +186,16 @@ fn no_forbidden_record_reaches_any_prompt() {
                     let ctx = assemble(
                         &corpus,
                         speaker,
-                        &sc.question,
+                        &theos_ai::PlayerTurn {
+                            question: &sc.question,
+                            player_name: None,
+                            extra_instruction: None,
+                        },
                         &ids,
-                        &ContextOptions { persona_bodies },
+                        &ContextOptions {
+                            persona_bodies,
+                            ..ContextOptions::default()
+                        },
                     );
                     for id in &ctx.lore_ids {
                         let rec = corpus.get(id).expect("rendered id is in corpus");
