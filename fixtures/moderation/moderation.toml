@@ -1,0 +1,14 @@
+# Thresholds of the nearest-neighbour moderator (theos-ai KnnModerator).
+# A text is blocked with a category when its best similarity to that
+# category's examples is at least `min_similarity` and beats its best
+# similarity to allowed.toml by at least `margin`.
+# Starting values; tuned with `npc-poc moderation-tune` in Task 12 of
+# plans/npc-guardrails-2026-11-17.md.
+
+[player]
+min_similarity = 0.80
+margin = 0.05
+
+[reply]
+min_similarity = 0.80
+margin = 0.05
