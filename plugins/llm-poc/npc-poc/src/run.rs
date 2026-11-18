@@ -99,6 +99,11 @@ pub struct RunOutcome {
     pub fatal: Option<anyhow::Error>,
 }
 
+/// The warm-up question: a fixed, benign, in-world line, so the moderator never blocks the
+/// warm-up (a blocked warm-up leaves the first measured request cold). It is not a scenario
+/// question, so the measured prompts do not depend on it.
+pub(crate) const WARM_UP_QUESTION: &str = "Good day. How is the weather on this floor?";
+
 /// The tag the warm-up request's moderation checks are recorded under.
 const WARM_UP_TAG: &str = "warm-up";
 
@@ -114,7 +119,7 @@ fn scenario_records(records: &Records) -> Vec<CheckRecord> {
 const ROWS_FILE: &str = "rows.jsonl";
 
 /// Sends one unrecorded request so the first measured one is not cold: thinking
-/// off, the first scenario's speaker and question, scope `Retrieved`.
+/// off, the first scenario's speaker, the fixed [`WARM_UP_QUESTION`], scope `Retrieved`.
 fn warm_up(
     worker: &mut NpcWorker,
     scenarios: &Scenarios,
@@ -126,7 +131,7 @@ fn warm_up(
     worker
         .submit(NpcRequest {
             speaker: RecordId::new(first.npc.as_str()),
-            question: first.question.clone(),
+            question: WARM_UP_QUESTION.to_owned(),
             scope: LoreScope::Retrieved {
                 top_k: scenarios.top_k,
             },
@@ -1488,8 +1493,8 @@ mod tests {
         }
         assert_eq!(
             seen.requests().len(),
-            0,
-            "the warm-up is moderated too: nothing reached the backend"
+            1,
+            "only the benign warm-up reached the backend; every scenario request was stopped"
         );
         assert!(defects(&run.rows).is_empty());
         assert_eq!(jsonl(&dir)[0]["moderated"], "player:hate");
@@ -1539,6 +1544,32 @@ mod tests {
             assert!(row.checks.is_none());
             assert!(row.reply_text.is_empty() && row.reply_error.is_none());
         }
+    }
+
+    #[test]
+    fn the_warm_up_sends_the_fixed_benign_question_not_a_scenario_question() {
+        // A scenario question the stub moderator blocks must not make the warm-up blocked.
+        let (mut worker, seen) = guarded_worker("x", None, ContextOptions::default(), true);
+        let dir = Scratch::new("warm-q");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &moderated_scenarios("a BANNED question"),
+            &golden_n(),
+            Duration::from_secs(3),
+            &dir.0,
+            &[Thinking::Off],
+            &Tag::default(),
+        );
+        assert!(run.fatal.is_none());
+        let warm = run.warm_up.unwrap();
+        assert!(!warm.stop.contains("moderat"), "{}", warm.stop);
+        assert_eq!(
+            WARM_UP_QUESTION,
+            "Good day. How is the weather on this floor?"
+        );
+        let first = &seen.requests()[0];
+        assert!(first.prompt.user_text().contains(WARM_UP_QUESTION));
     }
 
     #[test]

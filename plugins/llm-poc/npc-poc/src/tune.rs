@@ -357,25 +357,48 @@ fn describe(out: &mut String, c: &Choice) {
     }
 }
 
-/// What the embedder's similarity floor means for the proposed pair.
-fn floor_note(lines: &[TuneLine], c: &Choice) -> String {
-    let lowest = lines
-        .iter()
-        .filter_map(|l| l.best().map(|p| p.banned))
-        .fold(None, |low: Option<f32>, s| {
-            Some(low.map_or(s, |l| l.min(s)))
-        });
-    match lowest {
-        None => String::from("No held-out line has a banned score.\n"),
-        Some(low) if c.min_similarity <= low => format!(
-            "The lowest best banned similarity over all held-out lines is {low:.3}. The proposed min_similarity ({:.2}) lies at or below it, so every held-out line passes the similarity condition and the margin ({:.2}) is the deciding condition.\n",
-            c.min_similarity, c.margin
-        ),
-        Some(low) => format!(
-            "The lowest best banned similarity over all held-out lines is {low:.3}; the proposed min_similarity ({:.2}) lies above it, so both conditions decide.\n",
-            c.min_similarity
-        ),
+/// How many held-out lines have a verdict that depends on `min_similarity`.
+#[derive(Clone, Copy, Debug, PartialEq, Eq)]
+pub struct Decides {
+    /// Lines whose verdict at the proposed pair differs from the verdict at the grid floor
+    /// (`min_similarity` 0.30) with the same margin.
+    pub total: usize,
+    /// Of those, banned held-out lines.
+    pub banned: usize,
+    /// Of those, allowed held-out lines.
+    pub allowed: usize,
+    /// All held-out lines.
+    pub lines: usize,
+}
+
+/// Counts the lines `min_similarity` decides at `c`: the verdict (the real per-piece rule)
+/// at the proposed pair against the verdict at the grid floor with the same margin.
+pub fn min_similarity_decides(lines: &[TuneLine], c: &Choice) -> Decides {
+    let floor = hundredths(*MIN_RANGE.start());
+    let mut d = Decides {
+        total: 0,
+        banned: 0,
+        allowed: 0,
+        lines: lines.len(),
+    };
+    for l in lines {
+        if l.blocks(c.min_similarity, c.margin) != l.blocks(floor, c.margin) {
+            d.total += 1;
+            match l.kind {
+                LineKind::Banned => d.banned += 1,
+                LineKind::Allowed => d.allowed += 1,
+            }
+        }
     }
+    d
+}
+
+fn floor_note(lines: &[TuneLine], c: &Choice) -> String {
+    let d = min_similarity_decides(lines, c);
+    format!(
+        "min_similarity decides {} of {} held-out lines (banned: {}, allowed: {}); the margin decides the rest.\n",
+        d.total, d.lines, d.banned, d.allowed
+    )
 }
 
 /// The table and the proposals as text.
@@ -650,26 +673,65 @@ mod tests {
         assert!(text.contains("not a held-out estimate"));
         assert!(text.contains("[reply] values are copied from the player side"));
         assert!(text.contains("untuned"));
-        // The lowest best banned similarity over the held-out lines is 0.300.
-        assert!(
-            text.contains("lowest best banned similarity over all held-out lines is 0.300"),
-            "{text}"
+        assert!(text.contains("min_similarity decides "), "{text}");
+        assert!(text.contains("the margin decides the rest"), "{text}");
+        assert!(!text.contains("both conditions decide"));
+    }
+
+    fn choice(min_similarity: f32, margin: f32) -> Choice {
+        Choice {
+            min_similarity,
+            margin,
+            caught: Vec::new(),
+            caught_total: 0,
+            blocked_allowed: Vec::new(),
+        }
+    }
+
+    #[test]
+    fn min_similarity_decides_a_line_the_floor_would_block() {
+        // The allowed line (0.45 vs 0.10) passes the margin and would block at the grid floor
+        // 0.30; only min_similarity 0.60 lets it through. The banned line blocks either way.
+        let lines = [
+            allowed(0.45, 0.10),
+            banned("hate", 0.80, 0.20),
+            allowed(0.20, 0.10),
+        ];
+        let d = min_similarity_decides(&lines, &choice(0.60, 0.10));
+        assert_eq!(
+            d,
+            Decides {
+                total: 1,
+                banned: 0,
+                allowed: 1,
+                lines: 3
+            }
         );
     }
 
     #[test]
-    fn render_says_the_margin_decides_when_min_similarity_is_below_the_floor() {
-        // Both lines score above 0.60, so any min_similarity up to 0.70 is satisfied by all
-        // of them; the proposal's margin separates them.
-        let lines = [allowed(0.85, 0.84), banned("hate", 0.70, 0.40)];
-        let c = propose(&lines).strict.unwrap();
-        assert!(c.min_similarity <= 0.70);
+    fn min_similarity_decides_a_banned_line_it_makes_the_moderator_miss() {
+        // A banned line at 0.50 blocks at the floor but not at 0.60: min_similarity loses it.
+        let lines = [banned("hate", 0.50, 0.10), banned("hate", 0.90, 0.10)];
+        let d = min_similarity_decides(&lines, &choice(0.60, 0.10));
+        assert_eq!((d.total, d.banned, d.allowed), (1, 1, 0));
+    }
+
+    #[test]
+    fn min_similarity_decides_nothing_when_the_margin_separates_every_line() {
+        // Every line is either far above both thresholds or fails the margin at the floor too.
+        let lines = [
+            allowed(0.85, 0.84),
+            banned("hate", 0.90, 0.10),
+            allowed(0.10, 0.05),
+        ];
+        let d = min_similarity_decides(&lines, &choice(0.60, 0.20));
+        assert_eq!(d.total, 0);
         let text = render(&lines, &propose(&lines));
-        assert!(text.contains("is the deciding condition"), "{text}");
-        let above = [banned("hate", 0.90, 0.10), allowed(0.30, 0.20)];
-        let c = propose(&above).strict.unwrap();
-        assert!(c.min_similarity > 0.30);
-        assert!(render(&above, &propose(&above)).contains("both conditions decide"));
+        assert!(
+            text.contains("min_similarity decides 0 of 3 held-out lines (banned: 0, allowed: 0); the margin decides the rest."),
+            "{text}"
+        );
     }
 
     #[test]
