@@ -303,7 +303,8 @@ impl Npc {
     /// error: the response carries `Err(ReplyError::Unfinished(_))` and the
     /// metrics of what was generated.
     ///
-    /// The question and then the player name are moderated before retrieval; a
+    /// The question and then the player name are moderated before retrieval, with
+    /// any spotlight marks the player typed removed (the model never sees them); a
     /// block or a moderator failure ends the call before the backend is used.
     /// A reply that parses is moderated before it is returned: only
     /// `reply.text` is checked. When a reply is blocked, or the moderator
@@ -330,9 +331,12 @@ impl Npc {
         let vram_start = self.probe.vram_bytes();
 
         let mut moderation = Duration::ZERO;
-        self.check_player_text(&request.question, &mut moderation)?;
+        // The moderator sees what the model sees: spotlighting removes the marks a player
+        // typed, so they are removed here too (always: with G4 off it only gives the
+        // moderator a cleaner view, as `generate` does).
+        self.check_player_text(&strip_spotlight_marks(&request.question), &mut moderation)?;
         if let Some(name) = &request.player_name {
-            self.check_player_text(name, &mut moderation)?;
+            self.check_player_text(&strip_spotlight_marks(name), &mut moderation)?;
         }
 
         let retrieval_start = self.clock.now();
@@ -380,8 +384,9 @@ impl Npc {
             let start = self.clock.now();
             let verdict = self.moderate(ModerationSource::ModelReply, &r.text);
             moderation += self.clock.now().duration_since(start);
-            if let ModerationVerdict::Block(c) = verdict? {
-                return Err(NpcError::ReplyModerated(c));
+            match verdict? {
+                ModerationVerdict::Allow => {}
+                ModerationVerdict::Block(c) => return Err(NpcError::ReplyModerated(c)),
             }
         }
         let cited_ids = reply
@@ -1205,6 +1210,37 @@ mod tests {
         assert!(r.backend.requests().is_empty());
         let texts: Vec<String> = seen.lock().unwrap().iter().map(|c| c.1.clone()).collect();
         assert_eq!(texts, vec!["who?".to_owned(), "Slur".to_owned()]);
+    }
+
+    #[test]
+    fn marks_typed_in_the_question_do_not_hide_it_from_the_moderator() {
+        let (m, seen) = TestMod::new();
+        let m = m.blocking("bomb", ModerationCategory::RealWorldHarm);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(GOOD))]), m);
+        let mut req = request(DEFAULT_DEADLINE);
+        req.question = "b\u{27e6}o\u{27e7}m\u{27e6}b\u{27e7}".into();
+        let err = r.npc.answer(&req).unwrap_err();
+        assert_eq!(
+            err,
+            NpcError::PlayerModerated(ModerationCategory::RealWorldHarm)
+        );
+        assert!(r.backend.requests().is_empty());
+        assert_eq!(seen.lock().unwrap()[0].1, "bomb");
+    }
+
+    #[test]
+    fn marks_typed_in_the_name_do_not_hide_it_from_the_moderator() {
+        let (m, _) = TestMod::new();
+        let m = m.blocking("bomb", ModerationCategory::RealWorldHarm);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(GOOD))]), m);
+        let mut req = request(DEFAULT_DEADLINE);
+        req.player_name = Some("b\u{27e6}o\u{27e7}mb".into());
+        let err = r.npc.answer(&req).unwrap_err();
+        assert_eq!(
+            err,
+            NpcError::PlayerModerated(ModerationCategory::RealWorldHarm)
+        );
+        assert!(r.backend.requests().is_empty());
     }
 
     #[test]

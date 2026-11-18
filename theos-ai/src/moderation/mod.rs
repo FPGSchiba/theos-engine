@@ -155,8 +155,9 @@ impl ContentModerator for ModerationPipeline {
         text: &str,
     ) -> Result<ModerationVerdict, ModerationError> {
         for stage in &mut self.stages {
-            if let block @ ModerationVerdict::Block(_) = stage.check(source, text)? {
-                return Ok(block);
+            match stage.check(source, text)? {
+                ModerationVerdict::Allow => {}
+                block @ ModerationVerdict::Block(_) => return Ok(block),
             }
         }
         Ok(ModerationVerdict::Allow)

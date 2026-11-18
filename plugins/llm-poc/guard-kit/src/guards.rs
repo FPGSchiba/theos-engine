@@ -9,7 +9,7 @@ pub struct Guards {
     pub moderation: bool,
     /// Safe tokenization of untrusted segments (`g1`).
     pub g1: bool,
-    /// Instruction-ordering guard (`g4`).
+    /// Spotlighting of untrusted text (`g4`).
     pub g4: bool,
     /// Name-line guard (`g9`).
     pub g9: bool,
