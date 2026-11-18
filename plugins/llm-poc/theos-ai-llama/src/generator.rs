@@ -81,6 +81,13 @@ pub struct ModelProfile {
     /// only then the prompt is spliced, with untrusted parts tokenized with
     /// special parsing off, and token boundaries around untrusted parts may
     /// differ from the canonical tokenization. Off keeps the old behaviour.
+    ///
+    /// Limit: G1 neutralises CONTROL-type special tokens (the chat template's turn
+    /// markers) in untrusted text. User-defined tokens of the vocabulary (for
+    /// Qwen3.5: `<think>`, `</think>`, `<tool_call>`, `</tool_call>`,
+    /// `<tool_response>`, `</tool_response>`) are parsed by llama.cpp even with
+    /// special parsing off and still reach the model as special tokens. A game that
+    /// uses tool calling must handle that separately.
     #[serde(default)]
     pub safe_untrusted: bool,
 }
@@ -180,7 +187,7 @@ impl LlamaGenerator {
                 "the answer separator tokenizes to nothing".into(),
             ));
         }
-        // Special parsing on: `</think>` is one control token for Qwen3.5.
+        // Special parsing on: `</think>` is one (user-defined) special token for Qwen3.5.
         let think_end = model.vocab().tokenize(THINK_END.as_bytes(), false, true);
         if think_end.is_empty() {
             return Err(LlamaError::Model("`</think>` tokenizes to nothing".into()));
@@ -257,8 +264,10 @@ impl LlamaGenerator {
     ///
     /// # Errors
     ///
-    /// [`BackendError::Failed`] when the chat template fails or a placeholder
-    /// does not survive it exactly once.
+    /// [`BackendError::Failed`] when the chat template fails, or, on the splice
+    /// path only (when G1 is on and a segment is forged), when a placeholder does
+    /// not survive the template exactly once. A clean prompt takes the canonical
+    /// path and its placeholders are not validated.
     pub fn prompt_tokens(
         &self,
         request: &GenerationRequest<'_>,
@@ -395,6 +404,10 @@ fn splice_plan(
 /// differently with special parsing on (`special`) than off (`plain`), or the canonical
 /// prompt holds more control tokens than the skeleton with placeholders in place of the
 /// untrusted texts (`canonical_controls` against `skeleton_controls`, a defence in depth).
+///
+/// Only CONTROL-type tokens are seen: user-defined special tokens (Qwen3.5's `</think>`
+/// and tool-call tags) tokenize the same with parsing on and off, so they never make a
+/// segment forged (see `ModelProfile::safe_untrusted`).
 fn is_forged(
     special: &[Vec<LlamaToken>],
     plain: &[Vec<LlamaToken>],

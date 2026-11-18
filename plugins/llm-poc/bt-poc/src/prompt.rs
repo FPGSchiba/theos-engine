@@ -536,7 +536,10 @@ fn push_engine(segs: &mut Vec<Segment>, text: &str) {
 
 /// The directive as segments: its first line is the scenario author's (Engine); every
 /// further non-blank line is what the player said or wrote (Untrusted). The newlines
-/// stay Engine text, so the joined text is the directive unchanged.
+/// stay Engine text, so the joined text is the directive unchanged. Each further line is
+/// its own untrusted segment and is moderated on its own, so a multi-line player utterance
+/// is moderated line by line (no fixture has more than one player line); the pinned
+/// prompts depend on this split.
 fn directive_segments(directive: &str) -> Vec<Segment> {
     let mut segs = Vec::new();
     for (i, line) in directive.split('\n').enumerate() {
