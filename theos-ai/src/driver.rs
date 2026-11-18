@@ -308,7 +308,9 @@ impl Npc {
     /// The question and then the player name are moderated before retrieval. The
     /// moderator always checks the text with the spotlight mark characters removed;
     /// with spotlighting on the model sees the same text, with it off the model sees
-    /// the marks as typed. A block or a moderator failure ends the call before the backend is used.
+    /// the marks as typed. Question and name are checked separately, one text each,
+    /// for the same reason untrusted segments are (see [`crate::Segment`]). A block or a
+    /// moderator failure ends the call before the backend is used.
     /// A reply that parses is moderated before it is returned: only
     /// `reply.text` is checked. When a reply is blocked, or the moderator
     /// fails, the call returns an error that carries no reply text. A
@@ -418,7 +420,9 @@ impl Npc {
     /// and `metrics.retrieval` is zero.
     ///
     /// Every untrusted segment of the prompt is moderated as a player message
-    /// before generation, with the spotlight marks removed: the moderator sees
+    /// before generation, one by one (one player utterance belongs in one
+    /// segment; a caller that splits an utterance across segments weakens
+    /// moderation), with the spotlight marks removed: the moderator sees
     /// the text the player wrote, whether or not the prompt was spotlighted.
     /// The output is not moderated (it is free text the
     /// caller interprets). Callers must not show streamed text to a player

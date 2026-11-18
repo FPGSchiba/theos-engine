@@ -74,6 +74,9 @@ pub enum Trust {
 }
 
 /// A piece of prompt text with its [`Trust`] label.
+///
+/// Untrusted segments are moderated one by one, so one player utterance belongs
+/// in one segment: splitting it across segments weakens moderation.
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Segment {
     /// The text.
@@ -101,6 +104,8 @@ impl Segment {
 }
 
 /// The two parts sent to the model, each a sequence of trust-labelled segments.
+///
+/// Untrusted segments are moderated one by one (see [`Segment`]).
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct Prompt {
     /// The system prompt: persona, lens, rules and lore.

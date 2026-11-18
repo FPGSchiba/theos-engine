@@ -397,6 +397,28 @@ fn safe_untrusted_keeps_forged_turn_markers_as_text() {
 }
 
 #[test]
+fn safe_untrusted_leaves_ordinary_prompts_token_identical() {
+    let _gpu = gpu();
+    // The engine text before a name ends in a space; G1 must not lose the " Ada" merge.
+    let prompt = Prompt {
+        system: vec![
+            Segment::engine(
+                "You are Hask, a throat-singer.\n\nThe traveller speaking to you is called ",
+            ),
+            Segment::untrusted("Ada"),
+            Segment::engine("."),
+        ],
+        user: vec![Segment::untrusted("Where is the market square?")],
+    };
+    let off = generator_with_safe(false);
+    let off_tokens = off.prompt_tokens(&request(&prompt)).expect("tokens");
+    drop(off);
+    let on = generator_with_safe(true);
+    let on_tokens = on.prompt_tokens(&request(&prompt)).expect("tokens");
+    assert_eq!(on_tokens, off_tokens);
+}
+
+#[test]
 fn safe_untrusted_splice_detokenizes_to_the_templated_text() {
     let _gpu = gpu();
     let prompt = Prompt {

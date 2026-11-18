@@ -360,7 +360,26 @@ fn splice_plan(
         rest = after;
     }
     parts.push((rest.to_owned(), true));
+    move_trailing_blanks(&mut parts);
     Ok(parts)
+}
+
+/// Moves the trailing run of horizontal whitespace (spaces and tabs after the last
+/// newline, if any) of each engine part that precedes an untrusted part to the start of
+/// that untrusted part. Tokenized apart, the space would be a token of its own and the
+/// merge of the space with the first word (" Ada") would be lost, so G1 would change
+/// ordinary prompts. Whitespace holds no special-token text, so it is safe in an
+/// untrusted part.
+fn move_trailing_blanks(parts: &mut [(String, bool)]) {
+    for i in (1..parts.len()).step_by(2) {
+        let engine = &mut parts[i - 1].0;
+        let line = engine.rfind('\n').map_or(0, |n| n + 1);
+        let blanks = line + engine[line..].trim_end_matches([' ', '\t']).len();
+        if blanks < engine.len() {
+            let moved = engine.split_off(blanks);
+            parts[i].0.insert_str(0, &moved);
+        }
+    }
 }
 
 /// A fresh llguidance matcher for `schema`.
@@ -831,6 +850,41 @@ answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_pena
                 ("C".to_owned(), true),
             ]
         );
+    }
+
+    #[test]
+    fn splice_plan_moves_the_space_before_a_name_into_the_untrusted_part() {
+        let templated = format!("It is called {}.", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "Ada".into())]).unwrap();
+        assert_eq!(
+            plan,
+            vec![
+                ("It is called".to_owned(), true),
+                (" Ada".to_owned(), false),
+                (".".to_owned(), true),
+            ]
+        );
+    }
+
+    #[test]
+    fn splice_plan_moves_nothing_after_a_newline() {
+        let templated = format!("Line\n{}", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "x".into())]).unwrap();
+        assert_eq!(plan[0], ("Line\n".to_owned(), true));
+        assert_eq!(plan[1], ("x".to_owned(), false));
+    }
+
+    #[test]
+    fn splice_plan_moves_only_the_blanks_after_the_last_newline() {
+        let templated = format!("Line\n  \t{}", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "x".into())]).unwrap();
+        assert_eq!(plan[0], ("Line\n".to_owned(), true));
+        assert_eq!(plan[1], ("  \tx".to_owned(), false));
+        // Blanks only, no newline: all of them move; multibyte text before stays whole.
+        let templated = format!("Grüße  {}", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "x".into())]).unwrap();
+        assert_eq!(plan[0], ("Grüße".to_owned(), true));
+        assert_eq!(plan[1], ("  x".to_owned(), false));
     }
 
     #[test]
