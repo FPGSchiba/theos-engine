@@ -464,7 +464,7 @@ Runs of 2026-11-17/18, Qwen3.5-4B Q4_K_M, persona bodies on.
 - **Dialogue:** thinking off, three lore scopes. Injections: 25 scenarios → 75 requests. Normal: 32 questions → 96 requests.
 - **Trees:** grammar on, thinking on with a budget. Normal: 20 scenarios → 38 requests. Injections: 12 scenarios → 20 requests. Each injection run is judged against the normal run of the same guards. G9 has no effect on trees (there is no player name), so trees were not run for g9 alone.
 - **Moderation:** thresholds 0.54 / 0.14 for both sources, approved by the owner; hate examples broadened with HateCheck.
-- **Final moderator:** sentence pieces under three words are ignored, and `generate` moderates untrusted text without spotlight marks. Both came from the first measurement (see "Defects found"). Only `mod` and `all` use the moderator; they were re-run after those fixes and again after the whole-branch review's timing fixes, with identical verdicts.
+- **Final moderator:** sentence pieces under three words are ignored, and `generate` moderates untrusted text without spotlight marks. Both came from the first measurement (see "Defects found"). Only `mod` and `all` use the moderator; they were re-run after those fixes and again after the whole-branch review's timing fixes, with identical moderation verdicts. One timing-dependent change: bj04 under `all` hit its deadline in the last run.
 
 All counts only; results folders and review pages are ignored and local.
 
@@ -519,12 +519,12 @@ The reference itself matched the runs recorded on 2026-11-14 (75/75, 37/37, 20/2
 |---|---|---|---|---|
 | none | 0 | 37/38 | 14/38 | 5050 / 5646 / 6266 |
 | mod | 1 | 36/37 | 13/37 | 5565 / 5909 / 6407 |
-| g1 | 0 | 37/38 (identical to none) | 14/38 | 4965 / 5604 / 6045 |
+| g1 | 0 | 38/38 | 15/38 | 4965 / 5604 / 6045 |
 | g4 | 0 | 38/38 | **9/38** | 7134 / 6550 / **13659** |
 | input | 0 | 38/38 | 9/38 | 6880 / 6658 / 13791 |
 | all | 0 | 38/38 | 9/38 | 6728 / 7294 / 14773 |
 
-- The 37/38 rows (none, g1) and the 38/38 rows differ only by b09's deadline cut-off, which depends on timing.
+- G1's +1 gate and +1 behaviour against `none` are b09 finishing under its deadline in the g1 run. b09 is cut off by its deadline in `none`, which depends on timing. The other 37 tree rows of g1 are byte-identical to `none`.
 - Spotlighting entity names costs trees 5 behaviour passes and doubles the median time in the `retrieved` scope.
 - Why is a hypothesis, not tested. Two possible causes:
   - the rule speaks of "what someone said", which fits dialogue, not entity names;
@@ -559,14 +559,17 @@ The reference itself matched the runs recorded on 2026-11-14 (75/75, 37/37, 20/2
 - **Tuning fit, not a held-out estimate:** the thresholds were chosen on the same held-out lines they are scored on. On them, 37 of 56 banned lines are caught and 0 of 16 allowed lines are blocked.
 - **Caught as their own category:** self-harm 5/8, hate 15/28, real-world-harm 3/8, sexual-minors 7/8 (plus 1/8 caught as world-break), world-break 6/8.
 - **Reply side:** its thresholds are copied from the player side and untuned (there are no held-out model replies). Every false glitch in the normal suites is reply-side.
-- **Both conditions decide:** the lowest best banned similarity over all held-out lines is 0.374, below 0.54.
+- **The margin decides, not `min_similarity`:** on the 76 held-out lines, `min_similarity` decides 0 verdicts. Each line's verdict at 0.54 / 0.14 equals its verdict at 0.30 / 0.14. On the live review pages the margin term binds in 316 of 320 nearest misses. In practice the moderator is "closer to a banned example than to any allowed example by at least 0.14".
 
-**Cost** (moderator alone per check from the review pages; per request from `metrics.moderation`, which now includes the reply check):
+**Cost.**
+- **Per check:** the moderator alone, from the review pages.
+- **Per request:** from `metrics.moderation`. In dialogue that covers the player and reply checks, as it always did; since the review fixes `total` includes the reply check too. In trees it covers the input checks plus the tree-name check, which the harness now adds.
+- **Percentiles:** nearest rank over the requests that have metrics. For trees the per-request maximum is given instead of p95, because 19 requests is too few for a stable p95.
 
 | | Player check, median (p95) | Reply check, median (p95) | Per request, median (p95) |
 |---|---|---|---|
 | Dialogue | 18–29 ms (27–52) | 41–43 ms (56–115) | 60–83 ms (75–113) |
-| Trees | 6–12 ms (9–26) | 7 ms (9–24) | 7–27 ms (26–47) |
+| Trees | 6–12 ms (9–26) | 7 ms (9–24) | 7–27 ms (max 66) |
 
 - A request whose player message is blocked ends in about 30 ms, because the model is never called.
 - G4 adds about 30 prompt tokens in dialogue and 27 in trees.
