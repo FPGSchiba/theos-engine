@@ -2,11 +2,12 @@
 # A text is blocked with a category when its best similarity to that
 # category's examples is at least `min_similarity` and beats its best
 # similarity to allowed.toml by at least `margin`.
-# Tuned 2026-11-17 with `npc-poc moderation-tune` (Task 12 of
+# Tuned with `npc-poc moderation-tune` (Task 12 of
 # plans/npc-guardrails-2026-11-17.md): grid search under the real decision
-# rule, most banned held-out lines caught (23/40) with zero allowed held-out
-# lines blocked. Same values for both sources until the review pages say
-# otherwise.
+# rule; on the held-out lines (a tuning fit, not a held-out estimate) it
+# catches 37 of 56 banned lines and blocks 0 of 16 allowed lines (re-tuned
+# 2026-11-18 after the hate expansion and the minimum piece length; same
+# values). The reply values are copied from the player side (untuned).
 
 [player]
 min_similarity = 0.54
