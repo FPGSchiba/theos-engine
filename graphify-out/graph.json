@@ -8033,7 +8033,7 @@
       "file_type": "code",
       "norm_label": ".check()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1159"
+      "source_location": "L1162"
     },
     {
       "id": "theos_ai_src_moderation_mod",
@@ -8055,7 +8055,7 @@
       "file_type": "code",
       "norm_label": "allow_all_allows()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L230"
+      "source_location": "L238"
     },
     {
       "id": "theos_ai_src_moderation_mod_allowall",
@@ -8066,7 +8066,7 @@
       "file_type": "code",
       "norm_label": "allowall",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L123"
+      "source_location": "L131"
     },
     {
       "id": "theos_ai_src_moderation_mod_allowall_check",
@@ -8077,7 +8077,7 @@
       "file_type": "code",
       "norm_label": ".check()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L126"
+      "source_location": "L134"
     },
     {
       "id": "theos_ai_src_moderation_mod_category_ids_round_trip_and_unknown_is_custom",
@@ -8088,7 +8088,7 @@
       "file_type": "code",
       "norm_label": "category_ids_round_trip_and_unknown_is_custom()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L203"
+      "source_location": "L211"
     },
     {
       "id": "theos_ai_src_moderation_mod_contentmoderator",
@@ -8099,7 +8099,7 @@
       "file_type": "code",
       "norm_label": "contentmoderator",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L105"
+      "source_location": "L113"
     },
     {
       "id": "theos_ai_src_moderation_mod_custom_with_a_built_in_id_is_not_the_built_in",
@@ -8110,7 +8110,7 @@
       "file_type": "code",
       "norm_label": "custom_with_a_built_in_id_is_not_the_built_in()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L220"
+      "source_location": "L228"
     },
     {
       "id": "theos_ai_src_moderation_mod_embed_error_converts_and_displays",
@@ -8121,7 +8121,7 @@
       "file_type": "code",
       "norm_label": "embed_error_converts_and_displays()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L266"
+      "source_location": "L274"
     },
     {
       "id": "theos_ai_src_moderation_mod_empty_pipeline_allows",
@@ -8132,7 +8132,7 @@
       "file_type": "code",
       "norm_label": "empty_pipeline_allows()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L257"
+      "source_location": "L265"
     },
     {
       "id": "theos_ai_src_moderation_mod_moderationcategory",
@@ -8176,7 +8176,7 @@
       "file_type": "code",
       "norm_label": "moderationerror",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L92"
+      "source_location": "L96"
     },
     {
       "id": "theos_ai_src_moderation_mod_moderationpipeline",
@@ -8187,7 +8187,7 @@
       "file_type": "code",
       "norm_label": "moderationpipeline",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L140"
+      "source_location": "L148"
     },
     {
       "id": "theos_ai_src_moderation_mod_moderationpipeline_check",
@@ -8198,7 +8198,7 @@
       "file_type": "code",
       "norm_label": ".check()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L152"
+      "source_location": "L160"
     },
     {
       "id": "theos_ai_src_moderation_mod_moderationpipeline_new",
@@ -8209,7 +8209,7 @@
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L146"
+      "source_location": "L154"
     },
     {
       "id": "theos_ai_src_moderation_mod_moderationsource",
@@ -8231,7 +8231,7 @@
       "file_type": "code",
       "norm_label": "moderationverdict",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L82"
+      "source_location": "L86"
     },
     {
       "id": "theos_ai_src_moderation_mod_pipeline_error_fails_closed_even_if_a_later_stage_would_allow",
@@ -8242,7 +8242,7 @@
       "file_type": "code",
       "norm_label": "pipeline_error_fails_closed_even_if_a_later_stage_would_allow()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L247"
+      "source_location": "L255"
     },
     {
       "id": "theos_ai_src_moderation_mod_pipeline_returns_the_first_block_and_skips_later_stages",
@@ -8253,7 +8253,7 @@
       "file_type": "code",
       "norm_label": "pipeline_returns_the_first_block_and_skips_later_stages()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L236"
+      "source_location": "L244"
     },
     {
       "id": "theos_ai_src_moderation_mod_rs_box",
@@ -8341,7 +8341,7 @@
       "file_type": "code",
       "norm_label": "stub",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L173"
+      "source_location": "L181"
     },
     {
       "id": "theos_ai_src_moderation_mod_stub_check",
@@ -8352,7 +8352,7 @@
       "file_type": "code",
       "norm_label": ".check()",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L179"
+      "source_location": "L187"
     },
     {
       "id": "theos_magic_src_chakra",
@@ -9704,7 +9704,7 @@
       "file_type": "code",
       "norm_label": "allow_all_answers_exactly_as_before()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1323"
+      "source_location": "L1326"
     },
     {
       "id": "theos_ai_src_driver_answer_counts_thinking_and_answer_tokens_separately_and_parses_only_answer",
@@ -9715,7 +9715,7 @@
       "file_type": "code",
       "norm_label": "answer_counts_thinking_and_answer_tokens_separately_and_parses_only_answer()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L849"
+      "source_location": "L852"
     },
     {
       "id": "theos_ai_src_driver_answer_errors_on_unknown_speaker",
@@ -9726,7 +9726,7 @@
       "file_type": "code",
       "norm_label": "answer_errors_on_unknown_speaker()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L950"
+      "source_location": "L953"
     },
     {
       "id": "theos_ai_src_driver_answer_keeps_highest_vram_sample",
@@ -9737,7 +9737,7 @@
       "file_type": "code",
       "norm_label": "answer_keeps_highest_vram_sample()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L931"
+      "source_location": "L934"
     },
     {
       "id": "theos_ai_src_driver_answer_measures_time_to_first_token_total_and_tokens_per_second",
@@ -9748,7 +9748,7 @@
       "file_type": "code",
       "norm_label": "answer_measures_time_to_first_token_total_and_tokens_per_second()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L771"
+      "source_location": "L774"
     },
     {
       "id": "theos_ai_src_driver_answer_passes_no_thinking_budget",
@@ -9759,7 +9759,7 @@
       "file_type": "code",
       "norm_label": "answer_passes_no_thinking_budget()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1038"
+      "source_location": "L1041"
     },
     {
       "id": "theos_ai_src_driver_answer_passes_player_name_and_extra_instruction_to_the_assembler",
@@ -9770,7 +9770,7 @@
       "file_type": "code",
       "norm_label": "answer_passes_player_name_and_extra_instruction_to_the_assembler()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L758"
+      "source_location": "L761"
     },
     {
       "id": "theos_ai_src_driver_answer_passes_prompt_schema_and_thinking_to_backend",
@@ -9781,7 +9781,7 @@
       "file_type": "code",
       "norm_label": "answer_passes_prompt_schema_and_thinking_to_backend()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L739"
+      "source_location": "L742"
     },
     {
       "id": "theos_ai_src_driver_answer_pieces",
@@ -9792,7 +9792,7 @@
       "file_type": "code",
       "norm_label": "answer_pieces()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L630"
+      "source_location": "L633"
     },
     {
       "id": "theos_ai_src_driver_answer_records_context_ids_from_retrieval",
@@ -9803,7 +9803,7 @@
       "file_type": "code",
       "norm_label": "answer_records_context_ids_from_retrieval()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L711"
+      "source_location": "L714"
     },
     {
       "id": "theos_ai_src_driver_answer_returns_parsed_reply_and_cited_ids",
@@ -9814,7 +9814,7 @@
       "file_type": "code",
       "norm_label": "answer_returns_parsed_reply_and_cited_ids()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L700"
+      "source_location": "L703"
     },
     {
       "id": "theos_ai_src_driver_answer_stops_at_deadline_between_tokens",
@@ -9825,7 +9825,7 @@
       "file_type": "code",
       "norm_label": "answer_stops_at_deadline_between_tokens()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L800"
+      "source_location": "L803"
     },
     {
       "id": "theos_ai_src_driver_answer_stops_at_token_cap",
@@ -9836,7 +9836,7 @@
       "file_type": "code",
       "norm_label": "answer_stops_at_token_cap()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L837"
+      "source_location": "L840"
     },
     {
       "id": "theos_ai_src_driver_answer_without_probe_samples_reports_no_vram",
@@ -9847,7 +9847,7 @@
       "file_type": "code",
       "norm_label": "answer_without_probe_samples_reports_no_vram()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L943"
+      "source_location": "L946"
     },
     {
       "id": "theos_ai_src_driver_backend_failure_is_an_npc_error",
@@ -9858,7 +9858,7 @@
       "file_type": "code",
       "norm_label": "backend_failure_is_an_npc_error()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L921"
+      "source_location": "L924"
     },
     {
       "id": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
@@ -9869,7 +9869,7 @@
       "file_type": "code",
       "norm_label": "blocked_player_name_never_reaches_the_backend()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1202"
+      "source_location": "L1205"
     },
     {
       "id": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
@@ -9880,7 +9880,7 @@
       "file_type": "code",
       "norm_label": "blocked_question_never_reaches_the_backend()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1188"
+      "source_location": "L1191"
     },
     {
       "id": "theos_ai_src_driver_blocked_reply_is_reply_moderated",
@@ -9891,7 +9891,7 @@
       "file_type": "code",
       "norm_label": "blocked_reply_is_reply_moderated()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1262"
+      "source_location": "L1265"
     },
     {
       "id": "theos_ai_src_driver_context_full_stops_with_reason_not_error",
@@ -9902,7 +9902,7 @@
       "file_type": "code",
       "norm_label": "context_full_stops_with_reason_not_error()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L899"
+      "source_location": "L902"
     },
     {
       "id": "theos_ai_src_driver_deadline_passed_during_prefill_generates_no_tokens",
@@ -9913,7 +9913,7 @@
       "file_type": "code",
       "norm_label": "deadline_passed_during_prefill_generates_no_tokens()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L814"
+      "source_location": "L817"
     },
     {
       "id": "theos_ai_src_driver_fullbackend",
@@ -9924,7 +9924,7 @@
       "file_type": "code",
       "norm_label": "fullbackend",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L872"
+      "source_location": "L875"
     },
     {
       "id": "theos_ai_src_driver_fullbackend_begin",
@@ -9935,7 +9935,7 @@
       "file_type": "code",
       "norm_label": ".begin()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L890"
+      "source_location": "L893"
     },
     {
       "id": "theos_ai_src_driver_fulldecoder",
@@ -9946,7 +9946,7 @@
       "file_type": "code",
       "norm_label": "fulldecoder",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L873"
+      "source_location": "L876"
     },
     {
       "id": "theos_ai_src_driver_fulldecoder_next",
@@ -9957,7 +9957,7 @@
       "file_type": "code",
       "norm_label": ".next()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L879"
+      "source_location": "L882"
     },
     {
       "id": "theos_ai_src_driver_fulldecoder_prompt_tokens",
@@ -9968,7 +9968,7 @@
       "file_type": "code",
       "norm_label": ".prompt_tokens()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L876"
+      "source_location": "L879"
     },
     {
       "id": "theos_ai_src_driver_generate_blocked_or_failed_input_never_reaches_the_backend",
@@ -9979,7 +9979,7 @@
       "file_type": "code",
       "norm_label": "generate_blocked_or_failed_input_never_reaches_the_backend()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1417"
+      "source_location": "L1420"
     },
     {
       "id": "theos_ai_src_driver_generate_blocks_a_spotlighted_banned_text",
@@ -9990,7 +9990,7 @@
       "file_type": "code",
       "norm_label": "generate_blocks_a_spotlighted_banned_text()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1403"
+      "source_location": "L1406"
     },
     {
       "id": "theos_ai_src_driver_generate_checks_untrusted_segments_only",
@@ -10001,7 +10001,7 @@
       "file_type": "code",
       "norm_label": "generate_checks_untrusted_segments_only()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1375"
+      "source_location": "L1378"
     },
     {
       "id": "theos_ai_src_driver_generate_honours_its_token_cap",
@@ -10012,7 +10012,7 @@
       "file_type": "code",
       "norm_label": "generate_honours_its_token_cap()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1045"
+      "source_location": "L1048"
     },
     {
       "id": "theos_ai_src_driver_generate_moderates_spotlighted_text_without_marks",
@@ -10023,7 +10023,7 @@
       "file_type": "code",
       "norm_label": "generate_moderates_spotlighted_text_without_marks()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1390"
+      "source_location": "L1393"
     },
     {
       "id": "theos_ai_src_driver_generate_passes_none_schema_to_the_backend",
@@ -10034,7 +10034,7 @@
       "file_type": "code",
       "norm_label": "generate_passes_none_schema_to_the_backend()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1013"
+      "source_location": "L1016"
     },
     {
       "id": "theos_ai_src_driver_generate_passes_the_thinking_budget_to_the_backend",
@@ -10045,7 +10045,7 @@
       "file_type": "code",
       "norm_label": "generate_passes_the_thinking_budget_to_the_backend()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1022"
+      "source_location": "L1025"
     },
     {
       "id": "theos_ai_src_driver_generate_runs_a_prompt_without_retrieval_or_parsing",
@@ -10056,7 +10056,7 @@
       "file_type": "code",
       "norm_label": "generate_runs_a_prompt_without_retrieval_or_parsing()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1001"
+      "source_location": "L1004"
     },
     {
       "id": "theos_ai_src_driver_generate_stops_at_the_deadline",
@@ -10067,7 +10067,7 @@
       "file_type": "code",
       "norm_label": "generate_stops_at_the_deadline()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1054"
+      "source_location": "L1057"
     },
     {
       "id": "theos_ai_src_driver_generatejob",
@@ -10100,7 +10100,7 @@
       "file_type": "code",
       "norm_label": "job()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L987"
+      "source_location": "L990"
     },
     {
       "id": "theos_ai_src_driver_loopoutcome",
@@ -10111,7 +10111,7 @@
       "file_type": "code",
       "norm_label": "loopoutcome",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L573"
+      "source_location": "L576"
     },
     {
       "id": "theos_ai_src_driver_loopoutcome_metrics",
@@ -10122,7 +10122,7 @@
       "file_type": "code",
       "norm_label": ".metrics()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L589"
+      "source_location": "L592"
     },
     {
       "id": "theos_ai_src_driver_malformed_and_thinking_text_are_not_moderated",
@@ -10133,7 +10133,7 @@
       "file_type": "code",
       "norm_label": "malformed_and_thinking_text_are_not_moderated()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1300"
+      "source_location": "L1303"
     },
     {
       "id": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
@@ -10144,7 +10144,7 @@
       "file_type": "code",
       "norm_label": "marks_typed_in_the_name_do_not_hide_it_from_the_moderator()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1232"
+      "source_location": "L1235"
     },
     {
       "id": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
@@ -10155,7 +10155,7 @@
       "file_type": "code",
       "norm_label": "marks_typed_in_the_question_do_not_hide_it_from_the_moderator()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1216"
+      "source_location": "L1219"
     },
     {
       "id": "theos_ai_src_driver_metrics",
@@ -10177,7 +10177,7 @@
       "file_type": "code",
       "norm_label": "metrics_report_moderation_time()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1348"
+      "source_location": "L1351"
     },
     {
       "id": "theos_ai_src_driver_moderate_is_public_and_maps_errors",
@@ -10188,7 +10188,7 @@
       "file_type": "code",
       "norm_label": "moderate_is_public_and_maps_errors()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1436"
+      "source_location": "L1439"
     },
     {
       "id": "theos_ai_src_driver_moderated",
@@ -10199,7 +10199,7 @@
       "file_type": "code",
       "norm_label": "moderated()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1180"
+      "source_location": "L1183"
     },
     {
       "id": "theos_ai_src_driver_moderator_error_on_input_is_moderation_failed_and_backend_not_called",
@@ -10210,7 +10210,7 @@
       "file_type": "code",
       "norm_label": "moderator_error_on_input_is_moderation_failed_and_backend_not_called()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1247"
+      "source_location": "L1250"
     },
     {
       "id": "theos_ai_src_driver_moderator_error_on_reply_is_moderation_failed",
@@ -10221,7 +10221,7 @@
       "file_type": "code",
       "norm_label": "moderator_error_on_reply_is_moderation_failed()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1278"
+      "source_location": "L1281"
     },
     {
       "id": "theos_ai_src_driver_ms",
@@ -10232,7 +10232,7 @@
       "file_type": "code",
       "norm_label": "ms()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L619"
+      "source_location": "L622"
     },
     {
       "id": "theos_ai_src_driver_new_errors_on_duplicate_speaker",
@@ -10243,7 +10243,7 @@
       "file_type": "code",
       "norm_label": "new_errors_on_duplicate_speaker()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L961"
+      "source_location": "L964"
     },
     {
       "id": "theos_ai_src_driver_npc",
@@ -10265,7 +10265,7 @@
       "file_type": "code",
       "norm_label": ".answer()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L329"
+      "source_location": "L332"
     },
     {
       "id": "theos_ai_src_driver_npc_check_player_text",
@@ -10276,7 +10276,7 @@
       "file_type": "code",
       "norm_label": ".check_player_text()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L290"
+      "source_location": "L292"
     },
     {
       "id": "theos_ai_src_driver_npc_error_is_send",
@@ -10287,7 +10287,7 @@
       "file_type": "code",
       "norm_label": "npc_error_is_send()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1459"
+      "source_location": "L1462"
     },
     {
       "id": "theos_ai_src_driver_npc_generate",
@@ -10298,7 +10298,7 @@
       "file_type": "code",
       "norm_label": ".generate()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L430"
+      "source_location": "L433"
     },
     {
       "id": "theos_ai_src_driver_npc_moderate",
@@ -10309,7 +10309,7 @@
       "file_type": "code",
       "norm_label": ".moderate()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L278"
+      "source_location": "L280"
     },
     {
       "id": "theos_ai_src_driver_npc_new",
@@ -10331,7 +10331,7 @@
       "file_type": "code",
       "norm_label": ".run_loop()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482"
+      "source_location": "L485"
     },
     {
       "id": "theos_ai_src_driver_npc_select",
@@ -10342,7 +10342,7 @@
       "file_type": "code",
       "norm_label": ".select()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L463"
+      "source_location": "L466"
     },
     {
       "id": "theos_ai_src_driver_npc_with_moderator",
@@ -10408,7 +10408,7 @@
       "file_type": "code",
       "norm_label": "piece()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L623"
+      "source_location": "L626"
     },
     {
       "id": "theos_ai_src_driver_reply_moderated_error_carries_no_reply_text",
@@ -10419,7 +10419,7 @@
       "file_type": "code",
       "norm_label": "reply_moderated_error_carries_no_reply_text()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1289"
+      "source_location": "L1292"
     },
     {
       "id": "theos_ai_src_driver_request",
@@ -10430,7 +10430,7 @@
       "file_type": "code",
       "norm_label": "request()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L685"
+      "source_location": "L688"
     },
     {
       "id": "theos_ai_src_driver_rig",
@@ -10441,7 +10441,7 @@
       "file_type": "code",
       "norm_label": "rig",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L650"
+      "source_location": "L653"
     },
     {
       "id": "theos_ai_src_driver_rig_with",
@@ -10452,7 +10452,7 @@
       "file_type": "code",
       "norm_label": "rig_with()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L656"
+      "source_location": "L659"
     },
     {
       "id": "theos_ai_src_driver_rs_box",
@@ -10562,7 +10562,7 @@
       "file_type": "code",
       "norm_label": "script()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L641"
+      "source_location": "L644"
     },
     {
       "id": "theos_ai_src_driver_select_never_returns_a_record_hidden_from_the_speaker_for_any_scope",
@@ -10573,7 +10573,7 @@
       "file_type": "code",
       "norm_label": "select_never_returns_a_record_hidden_from_the_speaker_for_any_scope()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1089"
+      "source_location": "L1092"
     },
     {
       "id": "theos_ai_src_driver_select_rejects_an_unknown_speaker",
@@ -10584,7 +10584,7 @@
       "file_type": "code",
       "norm_label": "select_rejects_an_unknown_speaker()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1112"
+      "source_location": "L1115"
     },
     {
       "id": "theos_ai_src_driver_select_returns_the_filtered_ranked_ids",
@@ -10595,7 +10595,7 @@
       "file_type": "code",
       "norm_label": "select_returns_the_filtered_ranked_ids()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1071"
+      "source_location": "L1074"
     },
     {
       "id": "theos_ai_src_driver_single_token_reports_zero_tokens_per_second",
@@ -10606,7 +10606,7 @@
       "file_type": "code",
       "norm_label": "single_token_reports_zero_tokens_per_second()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L828"
+      "source_location": "L831"
     },
     {
       "id": "theos_ai_src_driver_spelled",
@@ -10617,7 +10617,7 @@
       "file_type": "code",
       "norm_label": "spelled()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L635"
+      "source_location": "L638"
     },
     {
       "id": "theos_ai_src_driver_stopreason",
@@ -10639,7 +10639,7 @@
       "file_type": "code",
       "norm_label": "testmod",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1126"
+      "source_location": "L1129"
     },
     {
       "id": "theos_ai_src_driver_testmod_blocking",
@@ -10650,7 +10650,7 @@
       "file_type": "code",
       "norm_label": ".blocking()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1147"
+      "source_location": "L1150"
     },
     {
       "id": "theos_ai_src_driver_testmod_failing_on",
@@ -10661,7 +10661,7 @@
       "file_type": "code",
       "norm_label": ".failing_on()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1152"
+      "source_location": "L1155"
     },
     {
       "id": "theos_ai_src_driver_testmod_new",
@@ -10672,7 +10672,7 @@
       "file_type": "code",
       "norm_label": ".new()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1134"
+      "source_location": "L1137"
     },
     {
       "id": "theos_ai_src_driver_thinking_tokens_do_not_count_toward_the_answer_cap",
@@ -10683,7 +10683,7 @@
       "file_type": "code",
       "norm_label": "thinking_tokens_do_not_count_toward_the_answer_cap()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L862"
+      "source_location": "L865"
     },
     {
       "id": "theos_ai_src_driver_time_to_first_answer_token_is_none_when_only_thinking_came",
@@ -10694,7 +10694,7 @@
       "file_type": "code",
       "norm_label": "time_to_first_answer_token_is_none_when_only_thinking_came()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L791"
+      "source_location": "L794"
     },
     {
       "id": "theos_ai_src_driver_time_to_first_answer_token_skips_the_thinking_phase",
@@ -10705,7 +10705,7 @@
       "file_type": "code",
       "norm_label": "time_to_first_answer_token_skips_the_thinking_phase()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L781"
+      "source_location": "L784"
     },
     {
       "id": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
@@ -10716,7 +10716,7 @@
       "file_type": "code",
       "norm_label": "total_includes_the_reply_moderation_time()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1334"
+      "source_location": "L1337"
     },
     {
       "id": "theos_ai_src_driver_unfinished_reply_is_not_moderated",
@@ -10727,7 +10727,7 @@
       "file_type": "code",
       "norm_label": "unfinished_reply_is_not_moderated()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1314"
+      "source_location": "L1317"
     },
     {
       "id": "theos_ai_src_driver_unparsable_reply_is_a_reply_error_not_an_npc_error",
@@ -10738,7 +10738,7 @@
       "file_type": "code",
       "norm_label": "unparsable_reply_is_a_reply_error_not_an_npc_error()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L979"
+      "source_location": "L982"
     },
     {
       "id": "theos_ai_src_driver_untrusted_job",
@@ -10749,7 +10749,7 @@
       "file_type": "code",
       "norm_label": "untrusted_job()",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1360"
+      "source_location": "L1363"
     },
     {
       "id": "theos_ai_src_lib",
@@ -55916,7 +55916,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1326",
+      "source_location": "L1329",
       "weight": 1.0
     },
     {
@@ -55928,7 +55928,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1326",
+      "source_location": "L1329",
       "weight": 1.0
     },
     {
@@ -55940,7 +55940,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1327",
+      "source_location": "L1330",
       "weight": 1.0
     },
     {
@@ -55952,7 +55952,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1327",
+      "source_location": "L1330",
       "weight": 1.0
     },
     {
@@ -55964,7 +55964,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L850",
+      "source_location": "L853",
       "weight": 1.0
     },
     {
@@ -55976,7 +55976,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L851",
+      "source_location": "L854",
       "weight": 1.0
     },
     {
@@ -55988,7 +55988,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L853",
+      "source_location": "L856",
       "weight": 1.0
     },
     {
@@ -56000,7 +56000,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L853",
+      "source_location": "L856",
       "weight": 1.0
     },
     {
@@ -56012,7 +56012,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L952",
+      "source_location": "L955",
       "weight": 1.0
     },
     {
@@ -56024,7 +56024,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L953",
+      "source_location": "L956",
       "weight": 1.0
     },
     {
@@ -56036,7 +56036,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L933",
+      "source_location": "L936",
       "weight": 1.0
     },
     {
@@ -56048,7 +56048,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L935",
+      "source_location": "L938",
       "weight": 1.0
     },
     {
@@ -56060,7 +56060,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L938",
+      "source_location": "L941",
       "weight": 1.0
     },
     {
@@ -56072,7 +56072,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L938",
+      "source_location": "L941",
       "weight": 1.0
     },
     {
@@ -56084,7 +56084,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L773",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -56096,7 +56096,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L773",
+      "source_location": "L776",
       "weight": 1.0
     },
     {
@@ -56108,7 +56108,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1040",
+      "source_location": "L1043",
       "weight": 1.0
     },
     {
@@ -56120,24 +56120,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1040",
+      "source_location": "L1043",
       "weight": 1.0
     },
     {
       "source": "theos_ai_src_driver_answer_passes_player_name_and_extra_instruction_to_the_assembler",
       "target": "theos_ai_src_driver_request",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L760",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_answer_passes_player_name_and_extra_instruction_to_the_assembler",
-      "target": "theos_ai_src_driver_npc_answer",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -56148,6 +56136,18 @@
       "weight": 1.0
     },
     {
+      "source": "theos_ai_src_driver_answer_passes_player_name_and_extra_instruction_to_the_assembler",
+      "target": "theos_ai_src_driver_npc_answer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L766",
+      "weight": 1.0
+    },
+    {
       "source": "theos_ai_src_driver_answer_passes_prompt_schema_and_thinking_to_backend",
       "target": "theos_ai_src_driver_npc_answer",
       "relation": "calls",
@@ -56156,7 +56156,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L741",
+      "source_location": "L744",
       "weight": 1.0
     },
     {
@@ -56168,7 +56168,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L741",
+      "source_location": "L744",
       "weight": 1.0
     },
     {
@@ -56180,7 +56180,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L631",
+      "source_location": "L634",
       "weight": 1.0
     },
     {
@@ -56192,7 +56192,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L713",
+      "source_location": "L716",
       "weight": 1.0
     },
     {
@@ -56204,7 +56204,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L713",
+      "source_location": "L716",
       "weight": 1.0
     },
     {
@@ -56216,7 +56216,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L723",
+      "source_location": "L726",
       "weight": 1.0
     },
     {
@@ -56228,7 +56228,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L702",
+      "source_location": "L705",
       "weight": 1.0
     },
     {
@@ -56240,7 +56240,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L702",
+      "source_location": "L705",
       "weight": 1.0
     },
     {
@@ -56252,7 +56252,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L802",
+      "source_location": "L805",
       "weight": 1.0
     },
     {
@@ -56264,7 +56264,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L802",
+      "source_location": "L805",
       "weight": 1.0
     },
     {
@@ -56276,7 +56276,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L839",
+      "source_location": "L842",
       "weight": 1.0
     },
     {
@@ -56288,7 +56288,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L839",
+      "source_location": "L842",
       "weight": 1.0
     },
     {
@@ -56300,7 +56300,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L945",
+      "source_location": "L948",
       "weight": 1.0
     },
     {
@@ -56312,7 +56312,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L945",
+      "source_location": "L948",
       "weight": 1.0
     },
     {
@@ -56324,7 +56324,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L923",
+      "source_location": "L926",
       "weight": 1.0
     },
     {
@@ -56336,48 +56336,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L923",
+      "source_location": "L926",
       "weight": 1.0
     },
     {
       "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
       "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1203",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
-      "target": "theos_ai_src_driver_testmod_blocking",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1204",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
-      "target": "theos_ai_src_driver_moderated",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1205",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
-      "target": "theos_ai_src_driver_request",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -56389,7 +56353,19 @@
     },
     {
       "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
-      "target": "theos_ai_src_driver_npc_answer",
+      "target": "theos_ai_src_driver_testmod_blocking",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1207",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
+      "target": "theos_ai_src_driver_moderated",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -56400,44 +56376,32 @@
       "weight": 1.0
     },
     {
+      "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
+      "target": "theos_ai_src_driver_request",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1209",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_blocked_player_name_never_reaches_the_backend",
+      "target": "theos_ai_src_driver_npc_answer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1211",
+      "weight": 1.0
+    },
+    {
       "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
       "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1189",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
-      "target": "theos_ai_src_driver_testmod_blocking",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1190",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
-      "target": "theos_ai_src_driver_moderated",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1191",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
-      "target": "theos_ai_src_driver_npc_answer",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -56449,6 +56413,42 @@
     },
     {
       "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
+      "target": "theos_ai_src_driver_testmod_blocking",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1193",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
+      "target": "theos_ai_src_driver_moderated",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1194",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
+      "target": "theos_ai_src_driver_npc_answer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1195",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_blocked_question_never_reaches_the_backend",
       "target": "theos_ai_src_driver_request",
       "relation": "calls",
       "_origin": "ast",
@@ -56456,7 +56456,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1192",
+      "source_location": "L1195",
       "weight": 1.0
     },
     {
@@ -56468,7 +56468,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1263",
+      "source_location": "L1266",
       "weight": 1.0
     },
     {
@@ -56480,7 +56480,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1264",
+      "source_location": "L1267",
       "weight": 1.0
     },
     {
@@ -56492,7 +56492,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1265",
+      "source_location": "L1268",
       "weight": 1.0
     },
     {
@@ -56504,7 +56504,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1266",
+      "source_location": "L1269",
       "weight": 1.0
     },
     {
@@ -56516,7 +56516,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1266",
+      "source_location": "L1269",
       "weight": 1.0
     },
     {
@@ -56528,7 +56528,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L901",
+      "source_location": "L904",
       "weight": 1.0
     },
     {
@@ -56540,7 +56540,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L911",
+      "source_location": "L914",
       "weight": 1.0
     },
     {
@@ -56552,7 +56552,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L911",
+      "source_location": "L914",
       "weight": 1.0
     },
     {
@@ -56564,7 +56564,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L816",
+      "source_location": "L819",
       "weight": 1.0
     },
     {
@@ -56576,7 +56576,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L818",
+      "source_location": "L821",
       "weight": 1.0
     },
     {
@@ -56588,7 +56588,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L894",
+      "source_location": "L897",
       "weight": 1.0
     },
     {
@@ -56600,7 +56600,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L894",
+      "source_location": "L897",
       "weight": 1.0
     },
     {
@@ -56612,7 +56612,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L884",
+      "source_location": "L887",
       "weight": 1.0
     },
     {
@@ -56624,7 +56624,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1420",
+      "source_location": "L1423",
       "weight": 1.0
     },
     {
@@ -56636,7 +56636,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1420",
+      "source_location": "L1423",
       "weight": 1.0
     },
     {
@@ -56648,7 +56648,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1424",
+      "source_location": "L1427",
       "weight": 1.0
     },
     {
@@ -56660,7 +56660,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1428",
+      "source_location": "L1431",
       "weight": 1.0
     },
     {
@@ -56672,7 +56672,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1429",
+      "source_location": "L1432",
       "weight": 1.0
     },
     {
@@ -56684,7 +56684,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1404",
+      "source_location": "L1407",
       "weight": 1.0
     },
     {
@@ -56696,7 +56696,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1405",
+      "source_location": "L1408",
       "weight": 1.0
     },
     {
@@ -56708,7 +56708,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1406",
+      "source_location": "L1409",
       "weight": 1.0
     },
     {
@@ -56720,7 +56720,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1407",
+      "source_location": "L1410",
       "weight": 1.0
     },
     {
@@ -56732,7 +56732,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1376",
+      "source_location": "L1379",
       "weight": 1.0
     },
     {
@@ -56744,7 +56744,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1377",
+      "source_location": "L1380",
       "weight": 1.0
     },
     {
@@ -56756,7 +56756,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1378",
+      "source_location": "L1381",
       "weight": 1.0
     },
     {
@@ -56768,7 +56768,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1382",
+      "source_location": "L1385",
       "weight": 1.0
     },
     {
@@ -56780,7 +56780,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1046",
+      "source_location": "L1049",
       "weight": 1.0
     },
     {
@@ -56792,7 +56792,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1046",
+      "source_location": "L1049",
       "weight": 1.0
     },
     {
@@ -56804,7 +56804,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1048",
+      "source_location": "L1051",
       "weight": 1.0
     },
     {
@@ -56816,7 +56816,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1391",
+      "source_location": "L1394",
       "weight": 1.0
     },
     {
@@ -56828,7 +56828,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1392",
+      "source_location": "L1395",
       "weight": 1.0
     },
     {
@@ -56840,7 +56840,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1393",
+      "source_location": "L1396",
       "weight": 1.0
     },
     {
@@ -56852,7 +56852,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1395",
+      "source_location": "L1398",
       "weight": 1.0
     },
     {
@@ -56864,7 +56864,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1014",
+      "source_location": "L1017",
       "weight": 1.0
     },
     {
@@ -56876,7 +56876,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1014",
+      "source_location": "L1017",
       "weight": 1.0
     },
     {
@@ -56888,7 +56888,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1015",
+      "source_location": "L1018",
       "weight": 1.0
     },
     {
@@ -56900,7 +56900,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1023",
+      "source_location": "L1026",
       "weight": 1.0
     },
     {
@@ -56912,7 +56912,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1023",
+      "source_location": "L1026",
       "weight": 1.0
     },
     {
@@ -56924,7 +56924,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1027",
+      "source_location": "L1030",
       "weight": 1.0
     },
     {
@@ -56936,7 +56936,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1002",
+      "source_location": "L1005",
       "weight": 1.0
     },
     {
@@ -56948,7 +56948,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1002",
+      "source_location": "L1005",
       "weight": 1.0
     },
     {
@@ -56960,7 +56960,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1003",
+      "source_location": "L1006",
       "weight": 1.0
     },
     {
@@ -56972,7 +56972,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1064",
+      "source_location": "L1067",
       "weight": 1.0
     },
     {
@@ -56984,36 +56984,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L601",
+      "source_location": "L604",
       "weight": 1.0
     },
     {
       "source": "theos_ai_src_driver_malformed_and_thinking_text_are_not_moderated",
       "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1301",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_malformed_and_thinking_text_are_not_moderated",
-      "target": "theos_ai_src_driver_spelled",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1303",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_malformed_and_thinking_text_are_not_moderated",
-      "target": "theos_ai_src_driver_moderated",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57025,6 +57001,30 @@
     },
     {
       "source": "theos_ai_src_driver_malformed_and_thinking_text_are_not_moderated",
+      "target": "theos_ai_src_driver_spelled",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1306",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_malformed_and_thinking_text_are_not_moderated",
+      "target": "theos_ai_src_driver_moderated",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1307",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_malformed_and_thinking_text_are_not_moderated",
       "target": "theos_ai_src_driver_npc_answer",
       "relation": "calls",
       "_origin": "ast",
@@ -57032,7 +57032,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1305",
+      "source_location": "L1308",
       "weight": 1.0
     },
     {
@@ -57044,48 +57044,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1305",
+      "source_location": "L1308",
       "weight": 1.0
     },
     {
       "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
       "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1233",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_testmod_blocking",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1234",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_moderated",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1235",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_request",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57097,7 +57061,19 @@
     },
     {
       "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_npc_answer",
+      "target": "theos_ai_src_driver_testmod_blocking",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1237",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
+      "target": "theos_ai_src_driver_moderated",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57108,44 +57084,32 @@
       "weight": 1.0
     },
     {
+      "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
+      "target": "theos_ai_src_driver_request",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1239",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_marks_typed_in_the_name_do_not_hide_it_from_the_moderator",
+      "target": "theos_ai_src_driver_npc_answer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1241",
+      "weight": 1.0
+    },
+    {
       "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
       "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1217",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_testmod_blocking",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1218",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_moderated",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1219",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_request",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57157,7 +57121,19 @@
     },
     {
       "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
-      "target": "theos_ai_src_driver_npc_answer",
+      "target": "theos_ai_src_driver_testmod_blocking",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1221",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
+      "target": "theos_ai_src_driver_moderated",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57165,6 +57141,30 @@
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
       "source_location": "L1222",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
+      "target": "theos_ai_src_driver_request",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1223",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_marks_typed_in_the_question_do_not_hide_it_from_the_moderator",
+      "target": "theos_ai_src_driver_npc_answer",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1225",
       "weight": 1.0
     },
     {
@@ -57176,7 +57176,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1350",
+      "source_location": "L1353",
       "weight": 1.0
     },
     {
@@ -57188,7 +57188,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1351",
+      "source_location": "L1354",
       "weight": 1.0
     },
     {
@@ -57200,7 +57200,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1352",
+      "source_location": "L1355",
       "weight": 1.0
     },
     {
@@ -57212,7 +57212,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1353",
+      "source_location": "L1356",
       "weight": 1.0
     },
     {
@@ -57224,7 +57224,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1353",
+      "source_location": "L1356",
       "weight": 1.0
     },
     {
@@ -57236,7 +57236,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1437",
+      "source_location": "L1440",
       "weight": 1.0
     },
     {
@@ -57248,7 +57248,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1438",
+      "source_location": "L1441",
       "weight": 1.0
     },
     {
@@ -57260,7 +57260,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1438",
+      "source_location": "L1441",
       "weight": 1.0
     },
     {
@@ -57272,7 +57272,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1441",
+      "source_location": "L1444",
       "weight": 1.0
     },
     {
@@ -57284,7 +57284,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1182",
+      "source_location": "L1185",
       "weight": 1.0
     },
     {
@@ -57296,36 +57296,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1182",
+      "source_location": "L1185",
       "weight": 1.0
     },
     {
       "source": "theos_ai_src_driver_moderator_error_on_input_is_moderation_failed_and_backend_not_called",
       "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1248",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_moderator_error_on_input_is_moderation_failed_and_backend_not_called",
-      "target": "theos_ai_src_driver_moderated",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1249",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_moderator_error_on_input_is_moderation_failed_and_backend_not_called",
-      "target": "theos_ai_src_driver_testmod_failing_on",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57337,6 +57313,30 @@
     },
     {
       "source": "theos_ai_src_driver_moderator_error_on_input_is_moderation_failed_and_backend_not_called",
+      "target": "theos_ai_src_driver_moderated",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1252",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_moderator_error_on_input_is_moderation_failed_and_backend_not_called",
+      "target": "theos_ai_src_driver_testmod_failing_on",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1254",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_moderator_error_on_input_is_moderation_failed_and_backend_not_called",
       "target": "theos_ai_src_driver_npc_answer",
       "relation": "calls",
       "_origin": "ast",
@@ -57344,7 +57344,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1253",
+      "source_location": "L1256",
       "weight": 1.0
     },
     {
@@ -57356,36 +57356,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1253",
+      "source_location": "L1256",
       "weight": 1.0
     },
     {
       "source": "theos_ai_src_driver_moderator_error_on_reply_is_moderation_failed",
       "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1279",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_moderator_error_on_reply_is_moderation_failed",
-      "target": "theos_ai_src_driver_moderated",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1280",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_moderator_error_on_reply_is_moderation_failed",
-      "target": "theos_ai_src_driver_testmod_failing_on",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57397,6 +57373,30 @@
     },
     {
       "source": "theos_ai_src_driver_moderator_error_on_reply_is_moderation_failed",
+      "target": "theos_ai_src_driver_moderated",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1283",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_moderator_error_on_reply_is_moderation_failed",
+      "target": "theos_ai_src_driver_testmod_failing_on",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1285",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_moderator_error_on_reply_is_moderation_failed",
       "target": "theos_ai_src_driver_npc_answer",
       "relation": "calls",
       "_origin": "ast",
@@ -57404,7 +57404,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1284",
+      "source_location": "L1287",
       "weight": 1.0
     },
     {
@@ -57416,7 +57416,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1284",
+      "source_location": "L1287",
       "weight": 1.0
     },
     {
@@ -57428,7 +57428,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L963",
+      "source_location": "L966",
       "weight": 1.0
     },
     {
@@ -57440,7 +57440,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L337",
+      "source_location": "L340",
       "weight": 1.0
     },
     {
@@ -57452,7 +57452,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L348",
+      "source_location": "L351",
       "weight": 1.0
     },
     {
@@ -57464,7 +57464,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L367",
+      "source_location": "L370",
       "weight": 1.0
     },
     {
@@ -57476,7 +57476,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L385",
+      "source_location": "L388",
       "weight": 1.0
     },
     {
@@ -57488,7 +57488,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L397",
+      "source_location": "L400",
       "weight": 1.0
     },
     {
@@ -57500,7 +57500,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L292",
+      "source_location": "L294",
       "weight": 1.0
     },
     {
@@ -57512,7 +57512,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L435",
+      "source_location": "L438",
       "weight": 1.0
     },
     {
@@ -57524,7 +57524,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L437",
+      "source_location": "L440",
       "weight": 1.0
     },
     {
@@ -57536,7 +57536,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L447",
+      "source_location": "L450",
       "weight": 1.0
     },
     {
@@ -57548,7 +57548,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L283",
+      "source_location": "L285",
       "weight": 1.0
     },
     {
@@ -57572,7 +57572,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L493",
+      "source_location": "L496",
       "weight": 1.0
     },
     {
@@ -57584,7 +57584,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L501",
+      "source_location": "L504",
       "weight": 1.0
     },
     {
@@ -57596,7 +57596,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L518",
+      "source_location": "L521",
       "weight": 1.0
     },
     {
@@ -57608,7 +57608,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L537",
+      "source_location": "L540",
       "weight": 1.0
     },
     {
@@ -57620,7 +57620,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1291",
+      "source_location": "L1294",
       "weight": 1.0
     },
     {
@@ -57632,7 +57632,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1292",
+      "source_location": "L1295",
       "weight": 1.0
     },
     {
@@ -57644,7 +57644,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1293",
+      "source_location": "L1296",
       "weight": 1.0
     },
     {
@@ -57656,7 +57656,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1294",
+      "source_location": "L1297",
       "weight": 1.0
     },
     {
@@ -57668,7 +57668,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1294",
+      "source_location": "L1297",
       "weight": 1.0
     },
     {
@@ -57680,7 +57680,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L687",
+      "source_location": "L690",
       "weight": 1.0
     },
     {
@@ -57692,7 +57692,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L682",
+      "source_location": "L685",
       "weight": 1.0
     },
     {
@@ -57704,7 +57704,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L682",
+      "source_location": "L685",
       "weight": 1.0
     },
     {
@@ -57716,7 +57716,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L657",
+      "source_location": "L660",
       "weight": 1.0
     },
     {
@@ -57728,7 +57728,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1100",
+      "source_location": "L1103",
       "weight": 1.0
     },
     {
@@ -57740,7 +57740,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1080",
+      "source_location": "L1083",
       "weight": 1.0
     },
     {
@@ -57752,7 +57752,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L830",
+      "source_location": "L833",
       "weight": 1.0
     },
     {
@@ -57764,7 +57764,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L830",
+      "source_location": "L833",
       "weight": 1.0
     },
     {
@@ -57776,7 +57776,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L637",
+      "source_location": "L640",
       "weight": 1.0
     },
     {
@@ -57788,7 +57788,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L863",
+      "source_location": "L866",
       "weight": 1.0
     },
     {
@@ -57800,7 +57800,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L864",
+      "source_location": "L867",
       "weight": 1.0
     },
     {
@@ -57812,7 +57812,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L866",
+      "source_location": "L869",
       "weight": 1.0
     },
     {
@@ -57824,7 +57824,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L866",
+      "source_location": "L869",
       "weight": 1.0
     },
     {
@@ -57836,7 +57836,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L792",
+      "source_location": "L795",
       "weight": 1.0
     },
     {
@@ -57848,7 +57848,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L794",
+      "source_location": "L797",
       "weight": 1.0
     },
     {
@@ -57860,7 +57860,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L794",
+      "source_location": "L797",
       "weight": 1.0
     },
     {
@@ -57872,7 +57872,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L782",
+      "source_location": "L785",
       "weight": 1.0
     },
     {
@@ -57884,7 +57884,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L783",
+      "source_location": "L786",
       "weight": 1.0
     },
     {
@@ -57896,7 +57896,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L785",
+      "source_location": "L788",
       "weight": 1.0
     },
     {
@@ -57908,48 +57908,12 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L785",
+      "source_location": "L788",
       "weight": 1.0
     },
     {
       "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
       "target": "theos_ai_src_driver_npc_answer",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1336",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
-      "target": "theos_ai_src_driver_request",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1336",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
-      "target": "theos_ai_src_driver_testmod_new",
-      "relation": "calls",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "call",
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1338",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
-      "target": "theos_ai_src_driver_ms",
       "relation": "calls",
       "_origin": "ast",
       "confidence": "EXTRACTED",
@@ -57961,6 +57925,42 @@
     },
     {
       "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
+      "target": "theos_ai_src_driver_request",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1339",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
+      "target": "theos_ai_src_driver_testmod_new",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1341",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
+      "target": "theos_ai_src_driver_ms",
+      "relation": "calls",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "call",
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1342",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver_total_includes_the_reply_moderation_time",
       "target": "theos_ai_src_driver_npc_with_moderator",
       "relation": "calls",
       "_origin": "ast",
@@ -57968,7 +57968,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1340",
+      "source_location": "L1343",
       "weight": 1.0
     },
     {
@@ -57980,7 +57980,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1315",
+      "source_location": "L1318",
       "weight": 1.0
     },
     {
@@ -57992,7 +57992,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1316",
+      "source_location": "L1319",
       "weight": 1.0
     },
     {
@@ -58004,7 +58004,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1317",
+      "source_location": "L1320",
       "weight": 1.0
     },
     {
@@ -58016,7 +58016,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1317",
+      "source_location": "L1320",
       "weight": 1.0
     },
     {
@@ -58028,7 +58028,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L981",
+      "source_location": "L984",
       "weight": 1.0
     },
     {
@@ -58040,7 +58040,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L981",
+      "source_location": "L984",
       "weight": 1.0
     },
     {
@@ -59516,7 +59516,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L231",
+      "source_location": "L239",
       "weight": 1.0
     },
     {
@@ -59528,7 +59528,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L214",
+      "source_location": "L222",
       "weight": 1.0
     },
     {
@@ -59540,7 +59540,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L258",
+      "source_location": "L266",
       "weight": 1.0
     },
     {
@@ -59552,7 +59552,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L158",
+      "source_location": "L166",
       "weight": 1.0
     },
     {
@@ -59564,7 +59564,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L250",
+      "source_location": "L258",
       "weight": 1.0
     },
     {
@@ -59576,7 +59576,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L251",
+      "source_location": "L259",
       "weight": 1.0
     },
     {
@@ -59588,7 +59588,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L240",
+      "source_location": "L248",
       "weight": 1.0
     },
     {
@@ -59600,7 +59600,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L241",
+      "source_location": "L249",
       "weight": 1.0
     },
     {
@@ -59612,7 +59612,7 @@
       "confidence_score": 1.0,
       "context": "call",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L192",
+      "source_location": "L200",
       "weight": 1.0
     },
     {
@@ -74360,7 +74360,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L575",
+      "source_location": "L578",
       "weight": 1.0
     },
     {
@@ -74372,7 +74372,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L576",
+      "source_location": "L579",
       "weight": 1.0
     },
     {
@@ -74384,7 +74384,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L583",
+      "source_location": "L586",
       "weight": 1.0
     },
     {
@@ -74396,7 +74396,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L584",
+      "source_location": "L587",
       "weight": 1.0
     },
     {
@@ -74708,7 +74708,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L651",
+      "source_location": "L654",
       "weight": 1.0
     },
     {
@@ -74720,7 +74720,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L652",
+      "source_location": "L655",
       "weight": 1.0
     },
     {
@@ -74732,7 +74732,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L653",
+      "source_location": "L656",
       "weight": 1.0
     },
     {
@@ -74744,7 +74744,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1127",
+      "source_location": "L1130",
       "weight": 1.0
     },
     {
@@ -74756,7 +74756,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1129",
+      "source_location": "L1132",
       "weight": 1.0
     },
     {
@@ -74768,7 +74768,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1130",
+      "source_location": "L1133",
       "weight": 1.0
     },
     {
@@ -75157,18 +75157,6 @@
     },
     {
       "source": "theos_ai_src_moderation_mod_moderationerror",
-      "target": "theos_ai_src_embed_embederror",
-      "relation": "references",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "context": "field",
-      "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L95",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_moderation_mod_moderationerror",
       "target": "theos_ai_src_moderation_mod_rs_string",
       "relation": "references",
       "_origin": "ast",
@@ -75176,7 +75164,19 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L98",
+      "source_location": "L102",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_moderation_mod_moderationerror",
+      "target": "theos_ai_src_embed_embederror",
+      "relation": "references",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "context": "field",
+      "source_file": "theos-ai/src/moderation/mod.rs",
+      "source_location": "L99",
       "weight": 1.0
     },
     {
@@ -75188,7 +75188,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L141",
+      "source_location": "L149",
       "weight": 1.0
     },
     {
@@ -75200,7 +75200,7 @@
       "confidence_score": 1.0,
       "context": "field",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L86",
+      "source_location": "L90",
       "weight": 1.0
     },
     {
@@ -80084,7 +80084,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L890",
+      "source_location": "L893",
       "weight": 1.0
     },
     {
@@ -80096,7 +80096,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L890",
+      "source_location": "L893",
       "weight": 1.0
     },
     {
@@ -80108,7 +80108,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L890",
+      "source_location": "L893",
       "weight": 1.0
     },
     {
@@ -80120,7 +80120,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L879",
+      "source_location": "L882",
       "weight": 1.0
     },
     {
@@ -80132,7 +80132,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L879",
+      "source_location": "L882",
       "weight": 1.0
     },
     {
@@ -80156,7 +80156,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L987",
+      "source_location": "L990",
       "weight": 1.0
     },
     {
@@ -80252,7 +80252,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L329",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -80264,7 +80264,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L329",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -80276,7 +80276,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L290",
+      "source_location": "L292",
       "weight": 1.0
     },
     {
@@ -80288,7 +80288,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L430",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -80300,7 +80300,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L430",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -80312,7 +80312,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L278",
+      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -80324,7 +80324,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L278",
+      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -80348,7 +80348,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -80360,7 +80360,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -80372,7 +80372,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -80384,7 +80384,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L463",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -80396,7 +80396,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L463",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -80408,7 +80408,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L463",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -80528,7 +80528,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L680",
+      "source_location": "L683",
       "weight": 1.0
     },
     {
@@ -80540,7 +80540,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L656",
+      "source_location": "L659",
       "weight": 1.0
     },
     {
@@ -80552,7 +80552,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L656",
+      "source_location": "L659",
       "weight": 1.0
     },
     {
@@ -80564,7 +80564,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L641",
+      "source_location": "L644",
       "weight": 1.0
     },
     {
@@ -80576,7 +80576,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1127",
+      "source_location": "L1130",
       "weight": 1.0
     },
     {
@@ -80588,7 +80588,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1130",
+      "source_location": "L1133",
       "weight": 1.0
     },
     {
@@ -80600,7 +80600,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1130",
+      "source_location": "L1133",
       "weight": 1.0
     },
     {
@@ -80612,7 +80612,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1159",
+      "source_location": "L1162",
       "weight": 1.0
     },
     {
@@ -80624,7 +80624,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1159",
+      "source_location": "L1162",
       "weight": 1.0
     },
     {
@@ -80636,7 +80636,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1360",
+      "source_location": "L1363",
       "weight": 1.0
     },
     {
@@ -81368,7 +81368,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L126",
+      "source_location": "L134",
       "weight": 1.0
     },
     {
@@ -81380,7 +81380,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L126",
+      "source_location": "L134",
       "weight": 1.0
     },
     {
@@ -81392,7 +81392,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L141",
+      "source_location": "L149",
       "weight": 1.0
     },
     {
@@ -81404,7 +81404,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L152",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -81416,7 +81416,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L152",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -81428,7 +81428,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L146",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -81440,7 +81440,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L146",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -81452,7 +81452,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L189",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -81464,7 +81464,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L189",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -81476,7 +81476,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L189",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -81488,7 +81488,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L179",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -81500,7 +81500,7 @@
       "confidence_score": 1.0,
       "context": "generic_arg",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L179",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -87092,7 +87092,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L170",
+      "source_location": "L178",
       "weight": 1.0
     },
     {
@@ -87104,7 +87104,7 @@
       "confidence_score": 1.0,
       "context": "import",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L171",
+      "source_location": "L179",
       "weight": 1.0
     },
     {
@@ -93380,7 +93380,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L890",
+      "source_location": "L893",
       "weight": 1.0
     },
     {
@@ -93392,7 +93392,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L987",
+      "source_location": "L990",
       "weight": 1.0
     },
     {
@@ -93404,7 +93404,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L589",
+      "source_location": "L592",
       "weight": 1.0
     },
     {
@@ -93416,7 +93416,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1180",
+      "source_location": "L1183",
       "weight": 1.0
     },
     {
@@ -93428,7 +93428,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L329",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -93440,7 +93440,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L290",
+      "source_location": "L292",
       "weight": 1.0
     },
     {
@@ -93452,7 +93452,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L430",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -93464,7 +93464,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L278",
+      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -93488,7 +93488,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -93500,7 +93500,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -93512,7 +93512,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -93524,7 +93524,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -93536,7 +93536,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -93548,7 +93548,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L463",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -93572,7 +93572,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L623",
+      "source_location": "L626",
       "weight": 1.0
     },
     {
@@ -93584,7 +93584,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L685",
+      "source_location": "L688",
       "weight": 1.0
     },
     {
@@ -93596,7 +93596,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L680",
+      "source_location": "L683",
       "weight": 1.0
     },
     {
@@ -93608,7 +93608,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L656",
+      "source_location": "L659",
       "weight": 1.0
     },
     {
@@ -93620,7 +93620,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L656",
+      "source_location": "L659",
       "weight": 1.0
     },
     {
@@ -93632,7 +93632,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L641",
+      "source_location": "L644",
       "weight": 1.0
     },
     {
@@ -93644,7 +93644,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L641",
+      "source_location": "L644",
       "weight": 1.0
     },
     {
@@ -93656,7 +93656,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1147",
+      "source_location": "L1150",
       "weight": 1.0
     },
     {
@@ -93668,7 +93668,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1159",
+      "source_location": "L1162",
       "weight": 1.0
     },
     {
@@ -93680,7 +93680,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1360",
+      "source_location": "L1363",
       "weight": 1.0
     },
     {
@@ -94004,7 +94004,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L126",
+      "source_location": "L134",
       "weight": 1.0
     },
     {
@@ -94016,7 +94016,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L152",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -94028,7 +94028,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L146",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -94040,7 +94040,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L189",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -94052,7 +94052,7 @@
       "confidence_score": 1.0,
       "context": "parameter_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L179",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -101384,7 +101384,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L630",
+      "source_location": "L633",
       "weight": 1.0
     },
     {
@@ -101396,7 +101396,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L890",
+      "source_location": "L893",
       "weight": 1.0
     },
     {
@@ -101408,7 +101408,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L879",
+      "source_location": "L882",
       "weight": 1.0
     },
     {
@@ -101420,7 +101420,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L987",
+      "source_location": "L990",
       "weight": 1.0
     },
     {
@@ -101432,7 +101432,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L987",
+      "source_location": "L990",
       "weight": 1.0
     },
     {
@@ -101444,7 +101444,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L589",
+      "source_location": "L592",
       "weight": 1.0
     },
     {
@@ -101456,7 +101456,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1180",
+      "source_location": "L1183",
       "weight": 1.0
     },
     {
@@ -101468,7 +101468,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L619",
+      "source_location": "L622",
       "weight": 1.0
     },
     {
@@ -101480,7 +101480,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L329",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -101492,7 +101492,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L290",
+      "source_location": "L292",
       "weight": 1.0
     },
     {
@@ -101504,7 +101504,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L430",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -101516,7 +101516,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L278",
+      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -101540,7 +101540,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -101552,7 +101552,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L463",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -101564,7 +101564,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L685",
+      "source_location": "L688",
       "weight": 1.0
     },
     {
@@ -101576,7 +101576,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L635",
+      "source_location": "L638",
       "weight": 1.0
     },
     {
@@ -101588,7 +101588,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1159",
+      "source_location": "L1162",
       "weight": 1.0
     },
     {
@@ -101600,7 +101600,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1134",
+      "source_location": "L1137",
       "weight": 1.0
     },
     {
@@ -101612,7 +101612,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1360",
+      "source_location": "L1363",
       "weight": 1.0
     },
     {
@@ -101996,7 +101996,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L126",
+      "source_location": "L134",
       "weight": 1.0
     },
     {
@@ -102020,7 +102020,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L152",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -102032,7 +102032,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L146",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -102044,7 +102044,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L189",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -102056,7 +102056,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L189",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -102068,7 +102068,7 @@
       "confidence_score": 1.0,
       "context": "return_type",
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L179",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -118987,7 +118987,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1001",
+      "source_location": "L1004",
       "weight": 1.0
     },
     {
@@ -118998,7 +118998,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1013",
+      "source_location": "L1016",
       "weight": 1.0
     },
     {
@@ -119009,18 +119009,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1022",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver",
-      "target": "theos_ai_src_driver_answer_passes_no_thinking_budget",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1038",
+      "source_location": "L1025",
       "weight": 1.0
     },
     {
@@ -119036,13 +119025,24 @@
     },
     {
       "source": "theos_ai_src_driver",
+      "target": "theos_ai_src_driver_answer_passes_no_thinking_budget",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L1041",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver",
       "target": "theos_ai_src_driver_generate_honours_its_token_cap",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1045",
+      "source_location": "L1048",
       "weight": 1.0
     },
     {
@@ -119053,7 +119053,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1054",
+      "source_location": "L1057",
       "weight": 1.0
     },
     {
@@ -119064,7 +119064,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1071",
+      "source_location": "L1074",
       "weight": 1.0
     },
     {
@@ -119075,7 +119075,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1089",
+      "source_location": "L1092",
       "weight": 1.0
     },
     {
@@ -119086,7 +119086,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1112",
+      "source_location": "L1115",
       "weight": 1.0
     },
     {
@@ -119097,7 +119097,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1126",
+      "source_location": "L1129",
       "weight": 1.0
     },
     {
@@ -119108,7 +119108,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1180",
+      "source_location": "L1183",
       "weight": 1.0
     },
     {
@@ -119119,7 +119119,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1188",
+      "source_location": "L1191",
       "weight": 1.0
     },
     {
@@ -119130,7 +119130,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1202",
+      "source_location": "L1205",
       "weight": 1.0
     },
     {
@@ -119141,7 +119141,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1216",
+      "source_location": "L1219",
       "weight": 1.0
     },
     {
@@ -119152,7 +119152,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1232",
+      "source_location": "L1235",
       "weight": 1.0
     },
     {
@@ -119174,7 +119174,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1247",
+      "source_location": "L1250",
       "weight": 1.0
     },
     {
@@ -119185,7 +119185,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1262",
+      "source_location": "L1265",
       "weight": 1.0
     },
     {
@@ -119196,7 +119196,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1278",
+      "source_location": "L1281",
       "weight": 1.0
     },
     {
@@ -119207,7 +119207,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1289",
+      "source_location": "L1292",
       "weight": 1.0
     },
     {
@@ -119218,7 +119218,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1300",
+      "source_location": "L1303",
       "weight": 1.0
     },
     {
@@ -119229,7 +119229,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1314",
+      "source_location": "L1317",
       "weight": 1.0
     },
     {
@@ -119240,7 +119240,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1323",
+      "source_location": "L1326",
       "weight": 1.0
     },
     {
@@ -119251,7 +119251,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1334",
+      "source_location": "L1337",
       "weight": 1.0
     },
     {
@@ -119262,7 +119262,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1348",
+      "source_location": "L1351",
       "weight": 1.0
     },
     {
@@ -119273,7 +119273,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1360",
+      "source_location": "L1363",
       "weight": 1.0
     },
     {
@@ -119284,7 +119284,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1375",
+      "source_location": "L1378",
       "weight": 1.0
     },
     {
@@ -119295,7 +119295,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1390",
+      "source_location": "L1393",
       "weight": 1.0
     },
     {
@@ -119306,7 +119306,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1403",
+      "source_location": "L1406",
       "weight": 1.0
     },
     {
@@ -119328,7 +119328,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1417",
+      "source_location": "L1420",
       "weight": 1.0
     },
     {
@@ -119339,7 +119339,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1436",
+      "source_location": "L1439",
       "weight": 1.0
     },
     {
@@ -119350,7 +119350,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1459",
+      "source_location": "L1462",
       "weight": 1.0
     },
     {
@@ -119416,7 +119416,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L573",
+      "source_location": "L576",
       "weight": 1.0
     },
     {
@@ -119427,7 +119427,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L619",
+      "source_location": "L622",
       "weight": 1.0
     },
     {
@@ -119438,7 +119438,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L623",
+      "source_location": "L626",
       "weight": 1.0
     },
     {
@@ -119449,7 +119449,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L630",
+      "source_location": "L633",
       "weight": 1.0
     },
     {
@@ -119460,7 +119460,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L635",
+      "source_location": "L638",
       "weight": 1.0
     },
     {
@@ -119471,7 +119471,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L641",
+      "source_location": "L644",
       "weight": 1.0
     },
     {
@@ -119482,7 +119482,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L656",
+      "source_location": "L659",
       "weight": 1.0
     },
     {
@@ -119493,7 +119493,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L680",
+      "source_location": "L683",
       "weight": 1.0
     },
     {
@@ -119504,7 +119504,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L685",
+      "source_location": "L688",
       "weight": 1.0
     },
     {
@@ -119515,7 +119515,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L700",
+      "source_location": "L703",
       "weight": 1.0
     },
     {
@@ -119526,7 +119526,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L711",
+      "source_location": "L714",
       "weight": 1.0
     },
     {
@@ -119537,7 +119537,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L739",
+      "source_location": "L742",
       "weight": 1.0
     },
     {
@@ -119548,7 +119548,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L758",
+      "source_location": "L761",
       "weight": 1.0
     },
     {
@@ -119559,7 +119559,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L771",
+      "source_location": "L774",
       "weight": 1.0
     },
     {
@@ -119570,7 +119570,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L781",
+      "source_location": "L784",
       "weight": 1.0
     },
     {
@@ -119581,7 +119581,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L791",
+      "source_location": "L794",
       "weight": 1.0
     },
     {
@@ -119592,7 +119592,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L800",
+      "source_location": "L803",
       "weight": 1.0
     },
     {
@@ -119603,7 +119603,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L814",
+      "source_location": "L817",
       "weight": 1.0
     },
     {
@@ -119614,18 +119614,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L828",
-      "weight": 1.0
-    },
-    {
-      "source": "theos_ai_src_driver",
-      "target": "theos_ai_src_driver_answer_stops_at_token_cap",
-      "relation": "contains",
-      "_origin": "ast",
-      "confidence": "EXTRACTED",
-      "confidence_score": 1.0,
-      "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L837",
+      "source_location": "L831",
       "weight": 1.0
     },
     {
@@ -119641,13 +119630,24 @@
     },
     {
       "source": "theos_ai_src_driver",
+      "target": "theos_ai_src_driver_answer_stops_at_token_cap",
+      "relation": "contains",
+      "_origin": "ast",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "theos-ai/src/driver.rs",
+      "source_location": "L840",
+      "weight": 1.0
+    },
+    {
+      "source": "theos_ai_src_driver",
       "target": "theos_ai_src_driver_answer_counts_thinking_and_answer_tokens_separately_and_parses_only_answer",
       "relation": "contains",
       "_origin": "ast",
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L849",
+      "source_location": "L852",
       "weight": 1.0
     },
     {
@@ -119658,7 +119658,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L862",
+      "source_location": "L865",
       "weight": 1.0
     },
     {
@@ -119669,7 +119669,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L872",
+      "source_location": "L875",
       "weight": 1.0
     },
     {
@@ -119680,7 +119680,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L873",
+      "source_location": "L876",
       "weight": 1.0
     },
     {
@@ -119691,7 +119691,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L899",
+      "source_location": "L902",
       "weight": 1.0
     },
     {
@@ -119702,7 +119702,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L921",
+      "source_location": "L924",
       "weight": 1.0
     },
     {
@@ -119713,7 +119713,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L931",
+      "source_location": "L934",
       "weight": 1.0
     },
     {
@@ -119724,7 +119724,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L943",
+      "source_location": "L946",
       "weight": 1.0
     },
     {
@@ -119735,7 +119735,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L950",
+      "source_location": "L953",
       "weight": 1.0
     },
     {
@@ -119746,7 +119746,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L961",
+      "source_location": "L964",
       "weight": 1.0
     },
     {
@@ -119757,7 +119757,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L979",
+      "source_location": "L982",
       "weight": 1.0
     },
     {
@@ -119768,7 +119768,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L987",
+      "source_location": "L990",
       "weight": 1.0
     },
     {
@@ -120747,7 +120747,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L105",
+      "source_location": "L113",
       "weight": 1.0
     },
     {
@@ -120758,7 +120758,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L123",
+      "source_location": "L131",
       "weight": 1.0
     },
     {
@@ -120769,7 +120769,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L140",
+      "source_location": "L148",
       "weight": 1.0
     },
     {
@@ -120780,7 +120780,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L189",
+      "source_location": "L197",
       "weight": 1.0
     },
     {
@@ -120791,7 +120791,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L203",
+      "source_location": "L211",
       "weight": 1.0
     },
     {
@@ -120802,7 +120802,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L220",
+      "source_location": "L228",
       "weight": 1.0
     },
     {
@@ -120824,7 +120824,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L230",
+      "source_location": "L238",
       "weight": 1.0
     },
     {
@@ -120835,7 +120835,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L236",
+      "source_location": "L244",
       "weight": 1.0
     },
     {
@@ -120846,7 +120846,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L247",
+      "source_location": "L255",
       "weight": 1.0
     },
     {
@@ -120857,7 +120857,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L257",
+      "source_location": "L265",
       "weight": 1.0
     },
     {
@@ -120868,7 +120868,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L266",
+      "source_location": "L274",
       "weight": 1.0
     },
     {
@@ -120890,7 +120890,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L82",
+      "source_location": "L86",
       "weight": 1.0
     },
     {
@@ -120901,7 +120901,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L92",
+      "source_location": "L96",
       "weight": 1.0
     },
     {
@@ -129294,7 +129294,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L889",
+      "source_location": "L892",
       "weight": 1.0
     },
     {
@@ -129305,7 +129305,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L875",
+      "source_location": "L878",
       "weight": 1.0
     },
     {
@@ -129316,7 +129316,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1158",
+      "source_location": "L1161",
       "weight": 1.0
     },
     {
@@ -129426,7 +129426,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L125",
+      "source_location": "L133",
       "weight": 1.0
     },
     {
@@ -129437,7 +129437,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L151",
+      "source_location": "L159",
       "weight": 1.0
     },
     {
@@ -129448,7 +129448,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L178",
+      "source_location": "L186",
       "weight": 1.0
     },
     {
@@ -132209,7 +132209,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L890",
+      "source_location": "L893",
       "weight": 1.0
     },
     {
@@ -132220,7 +132220,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L876",
+      "source_location": "L879",
       "weight": 1.0
     },
     {
@@ -132231,7 +132231,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L879",
+      "source_location": "L882",
       "weight": 1.0
     },
     {
@@ -132242,7 +132242,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L589",
+      "source_location": "L592",
       "weight": 1.0
     },
     {
@@ -132275,7 +132275,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L278",
+      "source_location": "L280",
       "weight": 1.0
     },
     {
@@ -132286,7 +132286,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L290",
+      "source_location": "L292",
       "weight": 1.0
     },
     {
@@ -132297,7 +132297,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L329",
+      "source_location": "L332",
       "weight": 1.0
     },
     {
@@ -132308,7 +132308,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L430",
+      "source_location": "L433",
       "weight": 1.0
     },
     {
@@ -132319,7 +132319,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L463",
+      "source_location": "L466",
       "weight": 1.0
     },
     {
@@ -132330,7 +132330,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L482",
+      "source_location": "L485",
       "weight": 1.0
     },
     {
@@ -132341,7 +132341,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1134",
+      "source_location": "L1137",
       "weight": 1.0
     },
     {
@@ -132352,7 +132352,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1147",
+      "source_location": "L1150",
       "weight": 1.0
     },
     {
@@ -132363,7 +132363,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1152",
+      "source_location": "L1155",
       "weight": 1.0
     },
     {
@@ -132374,7 +132374,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1159",
+      "source_location": "L1162",
       "weight": 1.0
     },
     {
@@ -132605,7 +132605,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L126",
+      "source_location": "L134",
       "weight": 1.0
     },
     {
@@ -132638,7 +132638,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L146",
+      "source_location": "L154",
       "weight": 1.0
     },
     {
@@ -132649,7 +132649,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L152",
+      "source_location": "L160",
       "weight": 1.0
     },
     {
@@ -132660,7 +132660,7 @@
       "confidence": "EXTRACTED",
       "confidence_score": 1.0,
       "source_file": "theos-ai/src/moderation/mod.rs",
-      "source_location": "L179",
+      "source_location": "L187",
       "weight": 1.0
     },
     {
@@ -137330,7 +137330,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1324",
+      "source_location": "L1327",
       "weight": 1.0
     },
     {
@@ -137342,7 +137342,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L852",
+      "source_location": "L855",
       "weight": 1.0
     },
     {
@@ -137354,7 +137354,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L951",
+      "source_location": "L954",
       "weight": 1.0
     },
     {
@@ -137366,7 +137366,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L932",
+      "source_location": "L935",
       "weight": 1.0
     },
     {
@@ -137378,7 +137378,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L772",
+      "source_location": "L775",
       "weight": 1.0
     },
     {
@@ -137390,7 +137390,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1039",
+      "source_location": "L1042",
       "weight": 1.0
     },
     {
@@ -137402,7 +137402,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L759",
+      "source_location": "L762",
       "weight": 1.0
     },
     {
@@ -137414,7 +137414,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L740",
+      "source_location": "L743",
       "weight": 1.0
     },
     {
@@ -137426,7 +137426,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L712",
+      "source_location": "L715",
       "weight": 1.0
     },
     {
@@ -137438,7 +137438,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L714",
+      "source_location": "L717",
       "weight": 1.0
     },
     {
@@ -137450,7 +137450,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L715",
+      "source_location": "L718",
       "weight": 1.0
     },
     {
@@ -137462,7 +137462,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L701",
+      "source_location": "L704",
       "weight": 1.0
     },
     {
@@ -137474,7 +137474,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L801",
+      "source_location": "L804",
       "weight": 1.0
     },
     {
@@ -137486,7 +137486,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L838",
+      "source_location": "L841",
       "weight": 1.0
     },
     {
@@ -137498,7 +137498,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L944",
+      "source_location": "L947",
       "weight": 1.0
     },
     {
@@ -137510,7 +137510,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L922",
+      "source_location": "L925",
       "weight": 1.0
     },
     {
@@ -137522,7 +137522,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1205",
+      "source_location": "L1208",
       "weight": 1.0
     },
     {
@@ -137534,7 +137534,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1191",
+      "source_location": "L1194",
       "weight": 1.0
     },
     {
@@ -137546,7 +137546,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1265",
+      "source_location": "L1268",
       "weight": 1.0
     },
     {
@@ -137558,7 +137558,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L900",
+      "source_location": "L903",
       "weight": 1.0
     },
     {
@@ -137570,7 +137570,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L815",
+      "source_location": "L818",
       "weight": 1.0
     },
     {
@@ -137582,7 +137582,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1428",
+      "source_location": "L1431",
       "weight": 1.0
     },
     {
@@ -137594,7 +137594,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1406",
+      "source_location": "L1409",
       "weight": 1.0
     },
     {
@@ -137606,7 +137606,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1377",
+      "source_location": "L1380",
       "weight": 1.0
     },
     {
@@ -137618,7 +137618,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1392",
+      "source_location": "L1395",
       "weight": 1.0
     },
     {
@@ -137630,7 +137630,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1055",
+      "source_location": "L1058",
       "weight": 1.0
     },
     {
@@ -137642,7 +137642,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L988",
+      "source_location": "L991",
       "weight": 1.0
     },
     {
@@ -137654,7 +137654,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1304",
+      "source_location": "L1307",
       "weight": 1.0
     },
     {
@@ -137666,7 +137666,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1235",
+      "source_location": "L1238",
       "weight": 1.0
     },
     {
@@ -137678,7 +137678,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1219",
+      "source_location": "L1222",
       "weight": 1.0
     },
     {
@@ -137690,7 +137690,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1349",
+      "source_location": "L1352",
       "weight": 1.0
     },
     {
@@ -137702,7 +137702,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1441",
+      "source_location": "L1444",
       "weight": 1.0
     },
     {
@@ -137714,7 +137714,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1250",
+      "source_location": "L1253",
       "weight": 1.0
     },
     {
@@ -137726,7 +137726,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1281",
+      "source_location": "L1284",
       "weight": 1.0
     },
     {
@@ -137738,7 +137738,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L962",
+      "source_location": "L965",
       "weight": 1.0
     },
     {
@@ -137750,7 +137750,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L337",
+      "source_location": "L340",
       "weight": 1.0
     },
     {
@@ -137762,7 +137762,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L355",
+      "source_location": "L358",
       "weight": 1.0
     },
     {
@@ -137774,7 +137774,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L379",
+      "source_location": "L382",
       "weight": 1.0
     },
     {
@@ -137786,7 +137786,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L435",
+      "source_location": "L438",
       "weight": 1.0
     },
     {
@@ -137798,7 +137798,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L538",
+      "source_location": "L541",
       "weight": 1.0
     },
     {
@@ -137810,7 +137810,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1293",
+      "source_location": "L1296",
       "weight": 1.0
     },
     {
@@ -137822,7 +137822,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L681",
+      "source_location": "L684",
       "weight": 1.0
     },
     {
@@ -137834,7 +137834,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L662",
+      "source_location": "L665",
       "weight": 1.0
     },
     {
@@ -137846,7 +137846,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1091",
+      "source_location": "L1094",
       "weight": 1.0
     },
     {
@@ -137858,7 +137858,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1092",
+      "source_location": "L1095",
       "weight": 1.0
     },
     {
@@ -137870,7 +137870,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1113",
+      "source_location": "L1116",
       "weight": 1.0
     },
     {
@@ -137882,7 +137882,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1072",
+      "source_location": "L1075",
       "weight": 1.0
     },
     {
@@ -137894,7 +137894,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1074",
+      "source_location": "L1077",
       "weight": 1.0
     },
     {
@@ -137906,7 +137906,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L829",
+      "source_location": "L832",
       "weight": 1.0
     },
     {
@@ -137918,7 +137918,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L865",
+      "source_location": "L868",
       "weight": 1.0
     },
     {
@@ -137930,7 +137930,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L793",
+      "source_location": "L796",
       "weight": 1.0
     },
     {
@@ -137942,7 +137942,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L784",
+      "source_location": "L787",
       "weight": 1.0
     },
     {
@@ -137954,7 +137954,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1335",
+      "source_location": "L1338",
       "weight": 1.0
     },
     {
@@ -137966,7 +137966,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L1316",
+      "source_location": "L1319",
       "weight": 1.0
     },
     {
@@ -137978,7 +137978,7 @@
       "confidence_score": 0.85,
       "context": "call",
       "source_file": "theos-ai/src/driver.rs",
-      "source_location": "L980",
+      "source_location": "L983",
       "weight": 1.0
     },
     {
@@ -139570,5 +139570,5 @@
       "source_file": ".github/workflows/check-lint.yml"
     }
   ],
-  "built_at_commit": "2fe80be8126f914ae8e723927cd9a2fd0d3bbe62"
+  "built_at_commit": "d30380ed29872c1a9dd205480f1abfb5e2a0c32c"
 }

@@ -1,7 +1,7 @@
 # Graph Report - npc-llm-poc  (2026-11-18)
 
 ## Corpus Check
-- 378 files · ~317,798 words
+- 378 files · ~318,004 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
@@ -10,7 +10,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2fe80be8`
+- Built from commit: `d30380ed`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
