@@ -828,9 +828,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/src/generator.rs": {
-    "mtime": 1795029671.5458412,
-    "seen": 1795029795.2947698,
-    "ast_hash": "0c2e8c75c28daf0adba01aa99864f7b6",
+    "mtime": 1795032511.6312058,
+    "seen": 1795032596.1033857,
+    "ast_hash": "63c1491eed5644d3d05443ea7fd581bf",
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/src/lib.rs": {
@@ -846,9 +846,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/theos-ai-llama/tests/real_model.rs": {
-    "mtime": 1795029671.5493412,
-    "seen": 1795029795.2949271,
-    "ast_hash": "fb99ea1c95ea69d9483692bc73abf2f9",
+    "mtime": 1795032511.632208,
+    "seen": 1795032596.1035454,
+    "ast_hash": "af40289e8cecfcc5c831ef13805e9d39",
     "semantic_hash": ""
   },
   "theos-ai/src/backend.rs": {
@@ -2064,9 +2064,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/prompt.rs": {
-    "mtime": 1794936531.3037412,
-    "seen": 1794936595.0056078,
-    "ast_hash": "3f6b15f0254e50b1131ca734907a90f3",
+    "mtime": 1795032511.632712,
+    "seen": 1795032596.1008797,
+    "ast_hash": "13366c4fb0fee004d3c6aea8f26b2e3d",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/src/report.rs": {
@@ -2190,9 +2190,9 @@
     "semantic_hash": ""
   },
   "plans/npc-guardrails-2026-11-17.md": {
-    "mtime": 1795027706.6158912,
-    "seen": 1795027927.3406167,
-    "ast_hash": "ba7a024d519edf3a6187a9ba83c0f120",
+    "mtime": 1795032504.2638347,
+    "seen": 1795032596.1262944,
+    "ast_hash": "431370da75afeb227a647888ceba7343",
     "semantic_hash": ""
   },
   "theos-ai/src/moderation/knn.rs": {
