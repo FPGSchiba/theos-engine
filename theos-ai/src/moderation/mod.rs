@@ -77,6 +77,10 @@ pub enum ModerationSource {
 }
 
 /// The outcome of checking one text.
+///
+/// Non-exhaustive: callers outside theos-ai must treat any verdict other than
+/// [`ModerationVerdict::Allow`], including variants added later, as a block (fail
+/// closed).
 #[derive(Clone, Debug, PartialEq, Eq)]
 #[non_exhaustive]
 pub enum ModerationVerdict {
@@ -102,6 +106,10 @@ pub enum ModerationError {
 ///
 /// Takes `&mut self` and has no `Send` bound: the NPC worker builds its parts
 /// on its own thread.
+///
+/// Callers handling the returned [`ModerationVerdict`] outside theos-ai must
+/// treat anything but `Allow` as a block (fail closed), also variants added
+/// later.
 pub trait ContentModerator {
     /// Checks `text`, which came from `source`.
     ///

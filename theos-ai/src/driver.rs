@@ -274,7 +274,9 @@ impl Npc {
     /// # Errors
     ///
     /// Only [`NpcError::ModerationFailed`], when the moderator reaches no
-    /// verdict. A block is the `Ok` verdict.
+    /// verdict. A block is the `Ok` verdict. [`ModerationVerdict`] is
+    /// non-exhaustive: callers must treat any verdict other than `Allow`,
+    /// including variants added later, as a block (fail closed).
     pub fn moderate(
         &mut self,
         source: ModerationSource,
@@ -303,9 +305,10 @@ impl Npc {
     /// error: the response carries `Err(ReplyError::Unfinished(_))` and the
     /// metrics of what was generated.
     ///
-    /// The question and then the player name are moderated before retrieval, with
-    /// any spotlight marks the player typed removed (the model never sees them); a
-    /// block or a moderator failure ends the call before the backend is used.
+    /// The question and then the player name are moderated before retrieval. The
+    /// moderator always checks the text with the spotlight mark characters removed;
+    /// with spotlighting on the model sees the same text, with it off the model sees
+    /// the marks as typed. A block or a moderator failure ends the call before the backend is used.
     /// A reply that parses is moderated before it is returned: only
     /// `reply.text` is checked. When a reply is blocked, or the moderator
     /// fails, the call returns an error that carries no reply text. A
