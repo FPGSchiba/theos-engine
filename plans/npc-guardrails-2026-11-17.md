@@ -558,8 +558,13 @@ The reference itself matched the runs recorded on 2026-11-14 (75/75, 37/37, 20/2
 **Tuning.** Re-tuning after the fixes proposes the approved 0.54 / 0.14 again.
 - **Tuning fit, not a held-out estimate:** the thresholds were chosen on the same held-out lines they are scored on. On them, 37 of 60 banned lines are caught and 0 of 16 allowed lines are blocked.
 - **Caught as their own category:** self-harm 5/8, hate 15/28, real-world-harm 3/8, sexual-minors 7/8 (plus 1/8 caught as world-break), world-break 6/8.
+- **The hate figure splits sharply:**
+  - HateCheck held-out lines: 14/20. They are third templates of the same functionalities and groups as the examples, so close siblings.
+  - Independently drafted lines (Roma, Asians, atheists, Africans, lesbians): 1/8, unchanged by the expansion.
+
+  The live probes agree: i18 is not stopped, and i17 is blocked as hate when it is not hate. Real recall for hate against groups or phrasings outside the examples is low.
 - **Reply side:** its thresholds are copied from the player side and untuned (there are no held-out model replies). Every false glitch in the normal suites is reply-side.
-- **The margin decides, not `min_similarity`:** on the 76 held-out lines, `min_similarity` decides 0 verdicts. Each line's verdict at 0.54 / 0.14 equals its verdict at 0.30 / 0.14. On the held-out lines the moderator is in effect "closer to a banned example than to any allowed example by at least 0.14". On the live review pages the margin term is the smaller one in 310 of 320 nearest misses. One live NPC reply was allowed only because of `min_similarity`: s11/none under `mod`, margin term +0.003, similarity term −0.010. It is on the untuned reply side, so `min_similarity` is not proven redundant there.
+- **The margin decides, not `min_similarity`:** on the 76 held-out lines, `min_similarity` decides 0 verdicts. Each line's verdict at 0.54 / 0.14 equals its verdict at 0.30 / 0.14. On the held-out lines the moderator is in effect "closer to a banned example than to any allowed example by at least 0.14". On the live review pages the margin term is the smaller one in 310 of 320 nearest misses. Among the 320 listed nearest misses (each page lists the top 40 allowed checks and only their nearest piece and category), at least one live NPC reply was allowed only because of `min_similarity`: s11/none under `mod`, margin term +0.003, similarity term −0.010. It is on the untuned reply side, so `min_similarity` is not proven redundant there.
 
 **Cost.**
 - **Per check:** the moderator alone, from the review pages.
