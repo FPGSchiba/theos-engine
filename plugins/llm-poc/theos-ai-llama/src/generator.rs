@@ -74,8 +74,13 @@ pub struct ModelProfile {
     pub n_ctx: Option<u32>,
     /// Seed of the final `dist` sampler.
     pub seed: u32,
-    /// G1: tokenize untrusted prompt segments with special-token parsing off,
-    /// so turn markers a player types stay text. Off keeps the old behaviour.
+    /// G1: keep turn markers a player types as text. The prompt is tokenized
+    /// canonically (byte-identical to G1 off) unless an untrusted segment
+    /// carries special-token text (it tokenizes differently with special
+    /// parsing on, or the prompt holds more control tokens than its skeleton);
+    /// only then the prompt is spliced, with untrusted parts tokenized with
+    /// special parsing off, and token boundaries around untrusted parts may
+    /// differ from the canonical tokenization. Off keeps the old behaviour.
     #[serde(default)]
     pub safe_untrusted: bool,
 }
@@ -263,7 +268,29 @@ impl LlamaGenerator {
             let prompt = self.prompt_text(request)?;
             return Ok(vocab.tokenize(prompt.as_bytes(), true, true));
         }
+        // Canonical first: the same text and tokens as with G1 off.
+        let canonical = self.prompt_text(request)?;
+        let canonical_tokens = vocab.tokenize(canonical.as_bytes(), true, true);
         let (templated, placeholders) = self.templated(request, true)?;
+        let special: Vec<Vec<LlamaToken>> = placeholders
+            .iter()
+            .map(|(_, text)| vocab.tokenize(text.as_bytes(), false, true))
+            .collect();
+        let plain: Vec<Vec<LlamaToken>> = placeholders
+            .iter()
+            .map(|(_, text)| vocab.tokenize(text.as_bytes(), false, false))
+            .collect();
+        let controls =
+            |tokens: &[LlamaToken]| tokens.iter().filter(|t| vocab.is_control(**t)).count();
+        let skeleton_tokens = vocab.tokenize(templated.as_bytes(), true, true);
+        if !is_forged(
+            &special,
+            &plain,
+            controls(&canonical_tokens),
+            controls(&skeleton_tokens),
+        ) {
+            return Ok(canonical_tokens);
+        }
         let mut tokens = Vec::new();
         for (i, (text, parse_special)) in splice_plan(&templated, &placeholders)?.iter().enumerate()
         {
@@ -362,6 +389,19 @@ fn splice_plan(
     parts.push((rest.to_owned(), true));
     move_trailing_blanks(&mut parts);
     Ok(parts)
+}
+
+/// Whether an untrusted segment carries special-token text: some segment tokenizes
+/// differently with special parsing on (`special`) than off (`plain`), or the canonical
+/// prompt holds more control tokens than the skeleton with placeholders in place of the
+/// untrusted texts (`canonical_controls` against `skeleton_controls`, a defence in depth).
+fn is_forged(
+    special: &[Vec<LlamaToken>],
+    plain: &[Vec<LlamaToken>],
+    canonical_controls: usize,
+    skeleton_controls: usize,
+) -> bool {
+    special.iter().zip(plain).any(|(s, p)| s != p) || canonical_controls > skeleton_controls
 }
 
 /// Moves the trailing run of horizontal whitespace (spaces and tabs after the last
@@ -885,6 +925,32 @@ answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_pena
         let plan = splice_plan(&templated, &[(ph(0), "x".into())]).unwrap();
         assert_eq!(plan[0], ("Grüße".to_owned(), true));
         assert_eq!(plan[1], ("  x".to_owned(), false));
+    }
+
+    fn t(ids: &[i32]) -> Vec<LlamaToken> {
+        ids.iter().map(|i| LlamaToken::new(*i)).collect()
+    }
+
+    #[test]
+    fn forged_is_false_when_nothing_differs_and_the_counts_match() {
+        let seg = [t(&[1, 2])];
+        assert!(!is_forged(&seg, &seg, 3, 3));
+        assert!(!is_forged(&[], &[], 0, 0));
+    }
+
+    #[test]
+    fn forged_when_a_segment_tokenizes_differently_with_special_parsing() {
+        assert!(is_forged(&[t(&[9])], &[t(&[1, 2, 3])], 3, 3));
+        // One forged segment among clean ones is enough.
+        assert!(is_forged(&[t(&[1]), t(&[9])], &[t(&[1]), t(&[4, 5])], 3, 3));
+    }
+
+    #[test]
+    fn forged_when_the_prompt_holds_more_control_tokens_than_the_skeleton() {
+        let seg = [t(&[1])];
+        assert!(is_forged(&seg, &seg, 4, 3));
+        // Fewer is not a forgery (nothing was added).
+        assert!(!is_forged(&seg, &seg, 2, 3));
     }
 
     #[test]

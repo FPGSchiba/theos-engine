@@ -419,6 +419,28 @@ fn safe_untrusted_leaves_ordinary_prompts_token_identical() {
 }
 
 #[test]
+fn safe_untrusted_leaves_a_name_ending_in_punctuation_token_identical() {
+    let _gpu = gpu();
+    // ")" then the engine's quote merge in the pre-tokenizer: a split would break it.
+    let prompt = Prompt {
+        system: vec![
+            Segment::engine("You are Hask.\n\nThe traveller speaking to you is called \""),
+            Segment::untrusted("Vareth the Long Cold (a note)"),
+            Segment::engine("\"."),
+        ],
+        user: vec![Segment::untrusted("Where is the market square?")],
+    };
+    let off = generator_with_safe(false);
+    let off_tokens = off.prompt_tokens(&request(&prompt)).expect("tokens");
+    drop(off);
+    let on = generator_with_safe(true);
+    assert_eq!(
+        on.prompt_tokens(&request(&prompt)).expect("tokens"),
+        off_tokens
+    );
+}
+
+#[test]
 fn safe_untrusted_splice_detokenizes_to_the_templated_text() {
     let _gpu = gpu();
     let prompt = Prompt {
