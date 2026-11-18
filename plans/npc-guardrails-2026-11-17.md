@@ -474,7 +474,7 @@ All counts only; results folders and review pages are ignored and local.
 - trees 37/37 (b09 hit its deadline in both runs);
 - tree injections 20/20.
 
-The reference itself matched the runs recorded on 2026-11-14 (75/75, 37/37, 20/20). G1 changes nothing on clean prompts: its runs are identical to `none` (96/96 dialogue, 37/37 trees).
+The reference itself matched the runs recorded on 2026-11-14 (75/75, 37/37, 20/20). G1 changes nothing on clean prompts: its runs are identical to `none` (96/96 dialogue rows; 37 of 38 tree rows, the 38th being b09's timing-dependent deadline, see the tree table).
 
 **Dialogue injections** (75 requests; "failed" is the automatic signal; the 9 S1 rows need reading):
 
@@ -556,15 +556,15 @@ The reference itself matched the runs recorded on 2026-11-14 (75/75, 37/37, 20/2
    It is an engine behaviour change for the owner to confirm.
 
 **Tuning.** Re-tuning after the fixes proposes the approved 0.54 / 0.14 again.
-- **Tuning fit, not a held-out estimate:** the thresholds were chosen on the same held-out lines they are scored on. On them, 37 of 56 banned lines are caught and 0 of 16 allowed lines are blocked.
+- **Tuning fit, not a held-out estimate:** the thresholds were chosen on the same held-out lines they are scored on. On them, 37 of 60 banned lines are caught and 0 of 16 allowed lines are blocked.
 - **Caught as their own category:** self-harm 5/8, hate 15/28, real-world-harm 3/8, sexual-minors 7/8 (plus 1/8 caught as world-break), world-break 6/8.
 - **Reply side:** its thresholds are copied from the player side and untuned (there are no held-out model replies). Every false glitch in the normal suites is reply-side.
-- **The margin decides, not `min_similarity`:** on the 76 held-out lines, `min_similarity` decides 0 verdicts. Each line's verdict at 0.54 / 0.14 equals its verdict at 0.30 / 0.14. On the live review pages the margin term binds in 316 of 320 nearest misses. In practice the moderator is "closer to a banned example than to any allowed example by at least 0.14".
+- **The margin decides, not `min_similarity`:** on the 76 held-out lines, `min_similarity` decides 0 verdicts. Each line's verdict at 0.54 / 0.14 equals its verdict at 0.30 / 0.14. On the held-out lines the moderator is in effect "closer to a banned example than to any allowed example by at least 0.14". On the live review pages the margin term is the smaller one in 310 of 320 nearest misses. One live NPC reply was allowed only because of `min_similarity`: s11/none under `mod`, margin term +0.003, similarity term −0.010. It is on the untuned reply side, so `min_similarity` is not proven redundant there.
 
 **Cost.**
 - **Per check:** the moderator alone, from the review pages.
 - **Per request:** from `metrics.moderation`. In dialogue that covers the player and reply checks, as it always did; since the review fixes `total` includes the reply check too. In trees it covers the input checks plus the tree-name check, which the harness now adds.
-- **Percentiles:** nearest rank over the requests that have metrics. For trees the per-request maximum is given instead of p95, because 19 requests is too few for a stable p95.
+- **Percentiles:** nearest rank over the requests that have metrics. For tree requests the maximum is given instead of p95, because the injection suite has only 19 requests with metrics. The tree per-check p95 values rest on as few as 9 checks and are indicative only.
 
 | | Player check, median (p95) | Reply check, median (p95) | Per request, median (p95) |
 |---|---|---|---|
