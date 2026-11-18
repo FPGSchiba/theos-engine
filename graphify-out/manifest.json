@@ -792,9 +792,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/run.rs": {
-    "mtime": 1794946369.357806,
-    "seen": 1794946755.5638828,
-    "ast_hash": "c740f04b04de2f8ff1f915e6f666c771",
+    "mtime": 1795026032.6554446,
+    "seen": 1795026145.4313905,
+    "ast_hash": "18c498ff23edbac62a5f75346866859e",
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/scenarios.rs": {
@@ -870,9 +870,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/driver.rs": {
-    "mtime": 1794946182.4484692,
-    "seen": 1794946755.5650926,
-    "ast_hash": "027959e25e6b9b21ad5bdeaddebbff17",
+    "mtime": 1795025974.150359,
+    "seen": 1795026145.432728,
+    "ast_hash": "7b3dcb272131655a2bc95bf02dfde661",
     "semantic_hash": ""
   },
   "theos-ai/src/embed.rs": {
@@ -2190,9 +2190,9 @@
     "semantic_hash": ""
   },
   "plans/npc-guardrails-2026-11-17.md": {
-    "mtime": 1794945187.944276,
-    "seen": 1794945205.3211594,
-    "ast_hash": "f58ba01577e0faf10bf679c839974412",
+    "mtime": 1795025967.2053998,
+    "seen": 1795026145.4536662,
+    "ast_hash": "4cd42c643f781a0c998e57b378902afd",
     "semantic_hash": ""
   },
   "theos-ai/src/moderation/knn.rs": {
@@ -2202,9 +2202,9 @@
     "semantic_hash": ""
   },
   "theos-ai/src/moderation/mod.rs": {
-    "mtime": 1794946203.3189962,
-    "seen": 1794946755.5654743,
-    "ast_hash": "e7b635aa7bf359c6d71c3e85b6232a31",
+    "mtime": 1795025974.150359,
+    "seen": 1795026145.4332423,
+    "ast_hash": "93e84498103df02bddd78ceb476efa23",
     "semantic_hash": ""
   },
   "plugins/llm-poc/guard-kit/Cargo.toml": {
@@ -2214,9 +2214,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/guard-kit/src/guards.rs": {
-    "mtime": 1794935372.9573827,
-    "seen": 1794935389.3924553,
-    "ast_hash": "fb86684500538b7f099b99e10d87fa59",
+    "mtime": 1795025974.1508512,
+    "seen": 1795026145.4305916,
+    "ast_hash": "c13a4399212429af094ba4a7c771fd94",
     "semantic_hash": ""
   },
   "plugins/llm-poc/guard-kit/src/lib.rs": {
@@ -2250,9 +2250,9 @@
     "semantic_hash": ""
   },
   "plugins/llm-poc/npc-poc/src/tune.rs": {
-    "mtime": 1794946493.5230942,
-    "seen": 1794946755.5640378,
-    "ast_hash": "2a561360a83ea4c221b249b935e4d963",
+    "mtime": 1795026006.5291593,
+    "seen": 1795026145.4315436,
+    "ast_hash": "3fe75b45247042644f35e598c59ec39a",
     "semantic_hash": ""
   },
   "plugins/llm-poc/bt-poc/tests/data/prompts-none.json": {
