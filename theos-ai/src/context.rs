@@ -133,15 +133,26 @@ impl Prompt {
         self.user.iter().map(|s| s.text.as_str()).collect()
     }
 
-    /// This prompt with every [`Trust::Untrusted`] segment wrapped in
-    /// [`SPOTLIGHT_OPEN`] and [`SPOTLIGHT_CLOSE`] and [`SPOTLIGHT_RULE`] appended
-    /// to the system part. Marks inside untrusted text are removed first, so it
-    /// cannot close or open a span.
+    /// [`Prompt::mark_untrusted`] plus [`SPOTLIGHT_RULE`] appended to the system
+    /// part.
     ///
     /// Not idempotent: calling it on an already spotlighted prompt wraps the
     /// spans again (after stripping the marks it just added) and appends the
     /// rule a second time. Call it once.
     pub fn spotlighted(&self) -> Prompt {
+        let mut p = self.mark_untrusted();
+        p.system.push(Segment::engine(SPOTLIGHT_RULE));
+        p
+    }
+
+    /// This prompt with every [`Trust::Untrusted`] segment wrapped in
+    /// [`SPOTLIGHT_OPEN`] and [`SPOTLIGHT_CLOSE`]. Marks inside untrusted text
+    /// are removed first, so it cannot close or open a span. Appends no rule:
+    /// this is for callers that place their own rule in their own prompt text
+    /// (use [`Prompt::spotlighted`] for the dialogue rule).
+    ///
+    /// Not idempotent: calling it again wraps the spans again.
+    pub fn mark_untrusted(&self) -> Prompt {
         let wrap = |segs: &[Segment]| -> Vec<Segment> {
             segs.iter()
                 .map(|s| match s.trust {
@@ -153,10 +164,8 @@ impl Prompt {
                 })
                 .collect()
         };
-        let mut system = wrap(&self.system);
-        system.push(Segment::engine(SPOTLIGHT_RULE));
         Prompt {
-            system,
+            system: wrap(&self.system),
             user: wrap(&self.user),
         }
     }
@@ -646,6 +655,32 @@ mod tests {
             format!("sys \u{27e6}x\u{27e7}{SPOTLIGHT_RULE}")
         );
         assert_eq!(p.user_text(), "usr");
+    }
+
+    #[test]
+    fn mark_untrusted_wraps_and_strips_like_spotlighted_without_a_rule() {
+        let p = Prompt {
+            system: vec![
+                Segment::engine("sys "),
+                Segment::untrusted("a \u{27e7} b \u{27e6}"),
+            ],
+            user: vec![Segment::untrusted("q")],
+        };
+        let m = p.mark_untrusted();
+        assert_eq!(m.system_text(), "sys \u{27e6}a  b \u{27e7}");
+        assert_eq!(m.user_text(), "\u{27e6}q\u{27e7}");
+        assert!(!m.system_text().contains(SPOTLIGHT_RULE));
+    }
+
+    #[test]
+    fn spotlighted_equals_mark_untrusted_plus_the_rule() {
+        let p = Prompt {
+            system: vec![Segment::engine("sys "), Segment::untrusted("a")],
+            user: vec![Segment::untrusted("q")],
+        };
+        let mut expected = p.mark_untrusted();
+        expected.system.push(Segment::engine(SPOTLIGHT_RULE));
+        assert_eq!(p.spotlighted(), expected);
     }
 
     #[test]
