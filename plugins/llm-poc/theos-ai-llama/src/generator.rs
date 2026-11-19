@@ -335,6 +335,8 @@ impl LlamaGenerator {
                 tokens.extend(vocab.tokenize(text.as_bytes(), i == 0, true));
             } else {
                 // No piece of an untrusted part equals a user-defined token's text.
+                // Per-piece tokenization relies on a byte-level BPE vocabulary (Qwen); a
+                // SentencePiece vocabulary would add a prefix space to every piece.
                 for piece in split_user_defined(text, &self.user_defined) {
                     tokens.extend(vocab.tokenize(piece.as_bytes(), false, false));
                 }
@@ -456,13 +458,25 @@ fn is_forged(
 }
 
 /// The text of every USER_DEFINED token of `vocab`, read from the token attributes
-/// (`LlamaTokenAttr::UserDefined`). Empty and non-UTF-8 texts are skipped.
+/// (`LlamaTokenAttr::UserDefined`). Non-UTF-8 texts are skipped, see
+/// [`usable_user_defined`] for the rest.
 fn user_defined_tokens(vocab: &LlamaVocab<'_>) -> Vec<String> {
-    (0..vocab.n_tokens())
-        .map(LlamaToken::new)
-        .filter(|t| vocab.attr(*t).contains(LlamaTokenAttr::UserDefined))
-        .filter_map(|t| vocab.text(t).and_then(|c| c.to_str().ok()))
-        .filter(|s| !s.is_empty())
+    usable_user_defined(
+        (0..vocab.n_tokens())
+            .map(LlamaToken::new)
+            .filter(|t| vocab.attr(*t).contains(LlamaTokenAttr::UserDefined))
+            .filter_map(|t| vocab.text(t).and_then(|c| c.to_str().ok())),
+    )
+}
+
+/// The token texts G1 can act on: those of at least two characters. A one-character
+/// token cannot be cut in two, and keeping it would make `is_forged` flag every prompt
+/// that holds that character and give up the canonical (G1-off identical) tokenization
+/// for nothing.
+fn usable_user_defined<'a>(texts: impl IntoIterator<Item = &'a str>) -> Vec<String> {
+    texts
+        .into_iter()
+        .filter(|s| s.chars().count() >= 2)
         .map(str::to_owned)
         .collect()
 }
@@ -1081,6 +1095,14 @@ answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_pena
             assert!(!piece.is_empty());
             assert!(ud.iter().all(|t| !piece.contains(t.as_str())), "{piece:?}");
         }
+    }
+
+    #[test]
+    fn a_one_character_user_defined_token_is_dropped_and_forges_nothing() {
+        let ud = usable_user_defined(["<think>", "|", "", "é"]);
+        assert_eq!(ud, ["<think>"]);
+        let seg = [t(&[1])];
+        assert!(!is_forged(&seg, &seg, 3, 3, &["a | b é"], &ud));
     }
 
     #[test]
