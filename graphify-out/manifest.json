@@ -2190,9 +2190,9 @@
     "semantic_hash": ""
   },
   "plans/npc-guardrails-2026-11-17.md": {
-    "mtime": 1795032504.2638347,
-    "seen": 1795032596.1262944,
-    "ast_hash": "431370da75afeb227a647888ceba7343",
+    "mtime": 1795105906.307587,
+    "seen": 1795105917.1073596,
+    "ast_hash": "2bc9d67745335367682c5d85d3e986d2",
     "semantic_hash": ""
   },
   "theos-ai/src/moderation/knn.rs": {
