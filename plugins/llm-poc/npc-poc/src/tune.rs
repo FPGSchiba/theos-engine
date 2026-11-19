@@ -401,6 +401,39 @@ fn floor_note(lines: &[TuneLine], c: &Choice) -> String {
     )
 }
 
+/// Parses an `--at` value `min_similarity,margin`.
+///
+/// # Errors
+///
+/// A message when the value is not two comma-separated numbers.
+pub fn parse_pair(s: &str) -> Result<(f32, f32), String> {
+    let (m, g) = s
+        .split_once(',')
+        .ok_or_else(|| format!("expected `min_similarity,margin`, got `{s}`"))?;
+    let num = |x: &str| {
+        x.trim()
+            .parse::<f32>()
+            .map_err(|e| format!("`{x}` is not a number: {e}"))
+    };
+    Ok((num(m)?, num(g)?))
+}
+
+/// What the pair `min_similarity`, `margin` does to the held-out lines, by the same
+/// per-piece rule as the proposals: banned lines caught as their own category and under
+/// another one, the allowed lines blocked (with the lines), and how many lines
+/// `min_similarity` decides.
+pub fn render_pair(lines: &[TuneLine], min_similarity: f32, margin: f32) -> String {
+    let c = evaluate_pair(lines, min_similarity, margin);
+    let mut out = format!("At min_similarity = {min_similarity:.2}, margin = {margin:.2}:\n\n");
+    describe(&mut out, &c);
+    for l in &c.blocked_allowed {
+        let _ = writeln!(out, "- would block allowed line: {}", cell(l));
+    }
+    out.push('\n');
+    out.push_str(&floor_note(lines, &c));
+    out
+}
+
 /// The table and the proposals as text.
 pub fn render(lines: &[TuneLine], proposal: &Proposal) -> String {
     let mut out = String::from(
@@ -464,7 +497,11 @@ pub fn render(lines: &[TuneLine], proposal: &Proposal) -> String {
 /// # Errors
 ///
 /// A missing or invalid list directory, a missing model file, or an embedder failure.
-pub fn tune_cli(moderation_dir: &Path, models: Option<&Path>) -> anyhow::Result<()> {
+pub fn tune_cli(
+    moderation_dir: &Path,
+    models: Option<&Path>,
+    at: &[(f32, f32)],
+) -> anyhow::Result<()> {
     let lists = load_lists(moderation_dir)?;
     let models_path = models.map_or_else(
         || Path::new(env!("CARGO_MANIFEST_DIR")).join("../models.toml"),
@@ -484,6 +521,9 @@ pub fn tune_cli(moderation_dir: &Path, models: Option<&Path>) -> anyhow::Result<
     let lines = score_lines(&mut embedder, &lists).map_err(|e| anyhow!("{e}"))?;
     let proposal = propose(&lines);
     println!("{}", render(&lines, &proposal));
+    for (m, g) in at {
+        println!("{}", render_pair(&lines, *m, *g));
+    }
     println!(
         "current thresholds: player {} / {}, reply {} / {}",
         lists.thresholds.player.min_similarity,
@@ -676,6 +716,54 @@ mod tests {
         assert!(text.contains("min_similarity decides "), "{text}");
         assert!(text.contains("the margin decides the rest"), "{text}");
         assert!(!text.contains("both conditions decide"));
+    }
+
+    #[test]
+    fn render_pair_reports_catches_other_category_blocked_allowed_and_decides() {
+        let mut other = banned("hate", 0.70, 0.10);
+        other.pieces[0].category = "self-harm".into();
+        let lines = [
+            banned("hate", 0.80, 0.10),
+            other,
+            banned("hate", 0.40, 0.10),
+            allowed(0.65, 0.10),
+            allowed(0.20, 0.10),
+            allowed(0.50, 0.10),
+        ];
+        let text = render_pair(&lines, 0.60, 0.10);
+        assert!(
+            text.starts_with("At min_similarity = 0.60, margin = 0.10:"),
+            "{text}"
+        );
+        assert!(
+            text.contains("catches 2 banned held-out lines, blocks 1 allowed held-out lines"),
+            "{text}"
+        );
+        assert!(
+            text.contains(
+                "- hate: 1/3 caught as hate, 1 (1 as self-harm) caught under another category"
+            ),
+            "{text}"
+        );
+        assert!(
+            text.contains("- would block allowed line: a allowed line 1"),
+            "{text}"
+        );
+        // The 0.40 banned line and the 0.50 allowed line differ between 0.60 and the floor.
+        assert!(
+            text.contains("min_similarity decides 2 of 6 held-out lines (banned: 1, allowed: 1)"),
+            "{text}"
+        );
+        // The proposal's own evaluation of the pair gives the same counts.
+        let c = evaluate_pair(&lines, 0.60, 0.10);
+        assert_eq!((c.caught_total, c.blocked_allowed.len()), (2, 1));
+    }
+
+    #[test]
+    fn parse_pair_reads_min_similarity_and_margin() {
+        assert_eq!(parse_pair("0.55,0.1"), Ok((0.55, 0.1)));
+        assert!(parse_pair("0.55").is_err());
+        assert!(parse_pair("a,b").is_err());
     }
 
     fn choice(min_similarity: f32, margin: f32) -> Choice {

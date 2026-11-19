@@ -64,6 +64,10 @@ enum Command {
         /// Moderation example lists; defaults to `fixtures/moderation` of this repository.
         #[arg(long)]
         moderation: Option<PathBuf>,
+        /// Also report this `min_similarity,margin` pair (repeatable), by the same
+        /// per-piece rule as the proposal.
+        #[arg(long, value_parser = tune::parse_pair)]
+        at: Vec<(f32, f32)>,
     },
 }
 
@@ -122,8 +126,8 @@ fn main() -> anyhow::Result<()> {
             guard_kit::Guards::parse(&guards)?,
             &moderation.unwrap_or_else(default_moderation),
         )?,
-        Command::ModerationTune { moderation } => {
-            tune::tune_cli(&moderation.unwrap_or_else(default_moderation), None)?;
+        Command::ModerationTune { moderation, at } => {
+            tune::tune_cli(&moderation.unwrap_or_else(default_moderation), None, &at)?;
         }
     }
     Ok(())
