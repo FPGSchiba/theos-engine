@@ -711,8 +711,16 @@ mod tests {
             .expect("situation present");
         let json_at = sys.find("Reply with one JSON object").unwrap();
         assert!(rule_at < situation_at && rule_at < json_at);
-        // The rule is the last bullet of the task rules, right before the situation.
+        // The rule is the last bullet of the task rules: the line before it is a bullet
+        // of the list and no further bullet follows it before the situation.
         assert!(sys[..rule_at].contains("- Use only the entity handles"));
+        let last_before = sys[..rule_at].trim_end_matches('\n').rsplit('\n').next();
+        assert!(
+            last_before.is_some_and(|l| l.starts_with("- ")),
+            "{last_before:?}"
+        );
+        assert!(sys[rule_at + TREE_RULE.len()..]
+            .starts_with("\nSituation, at the moment your tree is installed:\n"));
         assert!(!sys.contains("is what someone said or wrote"));
         assert!(!sys.contains(theos_ai::SPOTLIGHT_RULE.trim()));
         assert_eq!(

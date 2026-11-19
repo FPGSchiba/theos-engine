@@ -339,9 +339,8 @@ fn run_one(
     cfg.tag.set(row.key());
     // With G4 the render already marked the untrusted text and carries the tree's own
     // spotlight rule; the dialogue rule would land after the JSON instruction.
-    let prompt = rp.prompt.clone();
     let job = GenerateJob {
-        prompt,
+        prompt: rp.prompt,
         schema: grammar.then(|| tree_schema(fx, s, &rp.lore_ids)),
         thinking: if thinking {
             Thinking::On
