@@ -4,10 +4,12 @@
 # similarity to allowed.toml by at least `margin`.
 # Tuned with `npc-poc moderation-tune` (Task 12 of
 # plans/npc-guardrails-2026-11-17.md): grid search under the real decision
-# rule; on the held-out lines (a tuning fit, not a held-out estimate) it
-# catches 37 of 60 banned lines and blocks 0 of 16 allowed lines (re-tuned
-# 2026-11-18 after the hate expansion and the minimum piece length; same
-# values). The reply values are copied from the player side (untuned).
+# rule; owner-approved values. On the final lists (2026-11-19, incl. the
+# request-shaped hate lines) these values catch 41 of 68 banned held-out lines
+# and block 0 of 18 allowed held-out lines (a tuning fit, not a held-out
+# estimate; `moderation-tune --at 0.54,0.14`). The grid would now propose
+# 0.53 / 0.14 (one more line); 0.54 is kept as approved. The reply values are
+# copied from the player side (untuned).
 
 [player]
 min_similarity = 0.54
