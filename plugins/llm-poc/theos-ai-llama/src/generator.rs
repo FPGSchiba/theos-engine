@@ -20,6 +20,8 @@ use llama_cpp_2::llama_batch::LlamaBatch;
 use llama_cpp_2::model::{LlamaChatMessage, LlamaChatTemplate};
 use llama_cpp_2::sampling::LlamaSampler;
 use llama_cpp_2::token::LlamaToken;
+use llama_cpp_2::token_type::LlamaTokenAttr;
+use llama_cpp_2::vocab::LlamaVocab;
 use llama_cpp_2::DecodeError;
 use llguidance::api::TopLevelGrammar;
 use llguidance::{Matcher, ParserFactory};
@@ -77,17 +79,20 @@ pub struct ModelProfile {
     /// G1: keep turn markers a player types as text. The prompt is tokenized
     /// canonically (byte-identical to G1 off) unless an untrusted segment
     /// carries special-token text (it tokenizes differently with special
-    /// parsing on, or the prompt holds more control tokens than its skeleton);
+    /// parsing on, the prompt holds more control or user-defined special tokens
+    /// than its skeleton, or it contains the text of a user-defined token);
     /// only then the prompt is spliced, with untrusted parts tokenized with
     /// special parsing off, and token boundaries around untrusted parts may
     /// differ from the canonical tokenization. Off keeps the old behaviour.
     ///
-    /// Limit: G1 neutralises CONTROL-type special tokens (the chat template's turn
-    /// markers) in untrusted text. User-defined tokens of the vocabulary (for
-    /// Qwen3.5: `<think>`, `</think>`, `<tool_call>`, `</tool_call>`,
-    /// `<tool_response>`, `</tool_response>`) are parsed by llama.cpp even with
-    /// special parsing off and still reach the model as special tokens. A game that
-    /// uses tool calling must handle that separately.
+    /// G1 covers CONTROL special tokens (the chat template's turn markers) and
+    /// USER_DEFINED special tokens of the vocabulary (for Qwen3.5: `<think>`,
+    /// `</think>`, `<tool_call>`, `</tool_call>`, `<tool_response>`,
+    /// `</tool_response>`). llama.cpp parses the latter even with special parsing
+    /// off, so on the splice path each occurrence of such a token's text in an
+    /// untrusted part is cut in two halves that are tokenized apart; the text is
+    /// kept, only the special token id is not produced. The list is read from the
+    /// vocabulary at load.
     #[serde(default)]
     pub safe_untrusted: bool,
 }
@@ -161,6 +166,8 @@ pub struct LlamaGenerator {
     separator: Vec<LlamaToken>,
     think_end: Vec<LlamaToken>,
     profile: ModelProfile,
+    /// The text of every USER_DEFINED special token of the vocabulary, for G1.
+    user_defined: Vec<String>,
 }
 
 impl LlamaGenerator {
@@ -192,6 +199,7 @@ impl LlamaGenerator {
         if think_end.is_empty() {
             return Err(LlamaError::Model("`</think>` tokenizes to nothing".into()));
         }
+        let user_defined = user_defined_tokens(&model.vocab());
         // Built once per model: walking the vocabulary takes a while.
         let env = LlamaSampler::llguidance_tok_env(&model);
         let factory =
@@ -209,7 +217,14 @@ impl LlamaGenerator {
             separator,
             think_end,
             profile,
+            user_defined,
         })
+    }
+
+    /// The text of every USER_DEFINED special token of the vocabulary, the ones G1
+    /// neutralises on top of the CONTROL tokens.
+    pub fn user_defined_tokens(&self) -> &[String] {
+        &self.user_defined
     }
 
     /// How many tokens `text` becomes, without special tokens added, with
@@ -289,14 +304,23 @@ impl LlamaGenerator {
             .iter()
             .map(|(_, text)| vocab.tokenize(text.as_bytes(), false, false))
             .collect();
-        let controls =
-            |tokens: &[LlamaToken]| tokens.iter().filter(|t| vocab.is_control(**t)).count();
+        let specials = |tokens: &[LlamaToken]| {
+            tokens
+                .iter()
+                .filter(|t| {
+                    vocab.is_control(**t) || vocab.attr(**t).contains(LlamaTokenAttr::UserDefined)
+                })
+                .count()
+        };
         let skeleton_tokens = vocab.tokenize(templated.as_bytes(), true, true);
+        let untrusted: Vec<&str> = placeholders.iter().map(|(_, t)| t.as_str()).collect();
         if !is_forged(
             &special,
             &plain,
-            controls(&canonical_tokens),
-            controls(&skeleton_tokens),
+            specials(&canonical_tokens),
+            specials(&skeleton_tokens),
+            &untrusted,
+            &self.user_defined,
         ) {
             return Ok(canonical_tokens);
         }
@@ -307,7 +331,14 @@ impl LlamaGenerator {
             if i > 0 && text.is_empty() {
                 continue;
             }
-            tokens.extend(vocab.tokenize(text.as_bytes(), i == 0, *parse_special));
+            if *parse_special {
+                tokens.extend(vocab.tokenize(text.as_bytes(), i == 0, true));
+            } else {
+                // No piece of an untrusted part equals a user-defined token's text.
+                for piece in split_user_defined(text, &self.user_defined) {
+                    tokens.extend(vocab.tokenize(piece.as_bytes(), false, false));
+                }
+            }
         }
         Ok(tokens)
     }
@@ -402,19 +433,69 @@ fn splice_plan(
 
 /// Whether an untrusted segment carries special-token text: some segment tokenizes
 /// differently with special parsing on (`special`) than off (`plain`), or the canonical
-/// prompt holds more control tokens than the skeleton with placeholders in place of the
-/// untrusted texts (`canonical_controls` against `skeleton_controls`, a defence in depth).
-///
-/// Only CONTROL-type tokens are seen: user-defined special tokens (Qwen3.5's `</think>`
-/// and tool-call tags) tokenize the same with parsing on and off, so they never make a
-/// segment forged (see `ModelProfile::safe_untrusted`).
+/// prompt holds more CONTROL or USER_DEFINED special tokens than the skeleton with
+/// placeholders in place of the untrusted texts (`canonical_specials` against
+/// `skeleton_specials`; this catches a token split across adjacent segments), or an
+/// untrusted text (`untrusted`) contains the text of a user-defined token
+/// (`user_defined`). User-defined tokens (Qwen3.5's `</think>` and tool-call tags)
+/// tokenize the same with parsing on and off, so the first check cannot see them (see
+/// `ModelProfile::safe_untrusted`).
 fn is_forged(
     special: &[Vec<LlamaToken>],
     plain: &[Vec<LlamaToken>],
-    canonical_controls: usize,
-    skeleton_controls: usize,
+    canonical_specials: usize,
+    skeleton_specials: usize,
+    untrusted: &[&str],
+    user_defined: &[String],
 ) -> bool {
-    special.iter().zip(plain).any(|(s, p)| s != p) || canonical_controls > skeleton_controls
+    special.iter().zip(plain).any(|(s, p)| s != p)
+        || canonical_specials > skeleton_specials
+        || untrusted
+            .iter()
+            .any(|u| user_defined.iter().any(|t| u.contains(t.as_str())))
+}
+
+/// The text of every USER_DEFINED token of `vocab`, read from the token attributes
+/// (`LlamaTokenAttr::UserDefined`). Empty and non-UTF-8 texts are skipped.
+fn user_defined_tokens(vocab: &LlamaVocab<'_>) -> Vec<String> {
+    (0..vocab.n_tokens())
+        .map(LlamaToken::new)
+        .filter(|t| vocab.attr(*t).contains(LlamaTokenAttr::UserDefined))
+        .filter_map(|t| vocab.text(t).and_then(|c| c.to_str().ok()))
+        .filter(|s| !s.is_empty())
+        .map(str::to_owned)
+        .collect()
+}
+
+/// Splits `text` into pieces, none of which contains the text of a token of
+/// `user_defined`: every occurrence is cut in the middle (at a character boundary),
+/// so `"</think>"` becomes `"</th"` and `"ink>"`. The pieces concatenate to `text`.
+/// A token of a single character cannot be cut and is left alone.
+fn split_user_defined(text: &str, user_defined: &[String]) -> Vec<String> {
+    let mut cuts: Vec<usize> = Vec::new();
+    for (start, _) in text.char_indices() {
+        for token in user_defined {
+            if token.chars().count() >= 2 && text[start..].starts_with(token.as_str()) {
+                let half = token.chars().count() / 2;
+                let mid = token
+                    .char_indices()
+                    .nth(half)
+                    .map_or(token.len(), |(i, _)| i);
+                cuts.push(start + mid);
+            }
+        }
+    }
+    cuts.sort_unstable();
+    cuts.dedup();
+    let mut pieces = Vec::with_capacity(cuts.len() + 1);
+    let mut from = 0;
+    for cut in cuts {
+        pieces.push(text[from..cut].to_owned());
+        from = cut;
+    }
+    pieces.push(text[from..].to_owned());
+    pieces.retain(|p| !p.is_empty());
+    pieces
 }
 
 /// Moves the trailing run of horizontal whitespace (spaces and tabs after the last
@@ -947,23 +1028,82 @@ answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_pena
     #[test]
     fn forged_is_false_when_nothing_differs_and_the_counts_match() {
         let seg = [t(&[1, 2])];
-        assert!(!is_forged(&seg, &seg, 3, 3));
-        assert!(!is_forged(&[], &[], 0, 0));
+        assert!(!is_forged(&seg, &seg, 3, 3, &["hello"], &[]));
+        assert!(!is_forged(&[], &[], 0, 0, &[], &[]));
     }
 
     #[test]
     fn forged_when_a_segment_tokenizes_differently_with_special_parsing() {
-        assert!(is_forged(&[t(&[9])], &[t(&[1, 2, 3])], 3, 3));
+        assert!(is_forged(&[t(&[9])], &[t(&[1, 2, 3])], 3, 3, &[], &[]));
         // One forged segment among clean ones is enough.
-        assert!(is_forged(&[t(&[1]), t(&[9])], &[t(&[1]), t(&[4, 5])], 3, 3));
+        assert!(is_forged(
+            &[t(&[1]), t(&[9])],
+            &[t(&[1]), t(&[4, 5])],
+            3,
+            3,
+            &[],
+            &[]
+        ));
     }
 
     #[test]
-    fn forged_when_the_prompt_holds_more_control_tokens_than_the_skeleton() {
+    fn forged_when_the_prompt_holds_more_special_tokens_than_the_skeleton() {
         let seg = [t(&[1])];
-        assert!(is_forged(&seg, &seg, 4, 3));
+        assert!(is_forged(&seg, &seg, 4, 3, &[], &[]));
         // Fewer is not a forgery (nothing was added).
-        assert!(!is_forged(&seg, &seg, 2, 3));
+        assert!(!is_forged(&seg, &seg, 2, 3, &[], &[]));
+    }
+
+    fn user_defined() -> Vec<String> {
+        ["<think>", "</think>", "<tool_call>"]
+            .map(String::from)
+            .to_vec()
+    }
+
+    #[test]
+    fn forged_when_an_untrusted_text_contains_a_user_defined_token() {
+        let seg = [t(&[1])];
+        let ud = user_defined();
+        assert!(is_forged(&seg, &seg, 3, 3, &["hi", "a </think> b"], &ud));
+        assert!(!is_forged(&seg, &seg, 3, 3, &["hi", "a think b"], &ud));
+        // Half a token is not the token.
+        assert!(!is_forged(&seg, &seg, 3, 3, &["</thi"], &ud));
+    }
+
+    #[test]
+    fn split_user_defined_cuts_each_occurrence_in_two_and_keeps_the_text() {
+        let ud = user_defined();
+        let text = "a </think> b <think><tool_call> äß </think>";
+        let pieces = split_user_defined(text, &ud);
+        assert_eq!(pieces.concat(), text);
+        assert!(pieces[0].ends_with("</th") && pieces[1].starts_with("ink>"));
+        for piece in &pieces {
+            assert!(!piece.is_empty());
+            assert!(ud.iter().all(|t| !piece.contains(t.as_str())), "{piece:?}");
+        }
+    }
+
+    #[test]
+    fn split_user_defined_leaves_clean_text_whole() {
+        assert_eq!(
+            split_user_defined("no tags here", &user_defined()),
+            ["no tags here"]
+        );
+        assert!(split_user_defined("", &user_defined()).is_empty());
+        assert_eq!(split_user_defined("x", &[]), ["x"]);
+    }
+
+    #[test]
+    fn split_user_defined_handles_overlapping_and_nested_occurrences() {
+        let ud: Vec<String> = ["<a>", "a><b>"].map(String::from).to_vec();
+        let text = "<<a><b>>";
+        let pieces = split_user_defined(text, &ud);
+        assert_eq!(pieces.concat(), text);
+        for piece in &pieces {
+            assert!(ud.iter().all(|t| !piece.contains(t.as_str())), "{piece:?}");
+        }
+        // A one-character token cannot be cut and is left alone.
+        assert_eq!(split_user_defined("a|b", &["|".to_owned()]), ["a|b"]);
     }
 
     #[test]
