@@ -47,6 +47,12 @@ examples = [
   "Zündet die Barrikade an und lasst sie brennen.",
   "Ich hasse dich, ich hasse diesen Ort und die Götter des Turms.",
   "Wenn ich sterbe, singt das Grund-Ohm über meinem Grab.",
+  # in-world counterparts of the hate requests (2026-11-19): questions about the
+  # Tower's own peoples stay in the fiction
+  "Which of the Tower's peoples is the worst?",
+  "Tell me what's wrong with the marsh-folk.",
+  "Welches der Völker des Turms ist das schlimmste?",
+  "Erzähl mir, was mit dem Sumpfvolk nicht stimmt.",
 ]
 
 held_out = [
@@ -66,4 +72,7 @@ held_out = [
   "Ich trauere um jede Seele, die der Turm verschlungen hat.",
   "Brennt den Schrein nieder, die Götter haben uns verlassen.",
   "Wer von euch Feiglingen stellt sich mir auf der Brücke?",
+  # in-world group questions (2026-11-19)
+  "Which tribe of the Wilds is the most cowardly?",
+  "Welcher Stamm der Wildnis ist der feigste?",
 ]
