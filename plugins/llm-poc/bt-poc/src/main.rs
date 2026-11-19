@@ -204,7 +204,7 @@ fn main() -> anyhow::Result<()> {
             } else {
                 ids.iter().map(RecordId::new).collect()
             };
-            let p = prompt::render(&fx, s, &ids, true).prompt;
+            let p = prompt::render(&fx, s, &ids, true, false).prompt;
             println!(
                 "=== system ===\n{}\n=== user ===\n{}",
                 p.system_text(),
