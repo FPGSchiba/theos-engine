@@ -3,8 +3,22 @@ name = "theos-ai"
 version = "0.1.0"
 edition = "2024"
 
+[features]
+# Test-support helpers such as `FakeEmbedder`.
+testkit = []
+
 [dependencies]
 theos-shared = { workspace = true }
+serde = { workspace = true }
+serde_json = { workspace = true, features = ["preserve_order"] }
+thiserror = { workspace = true }
+
+[dev-dependencies]
+toml = { workspace = true }
+
+[[test]]
+name = "lore_poc"
+required-features = ["testkit"]
 
 [lints]
 workspace = true

@@ -1,0 +1,423 @@
+{
+  "fx-shrine-keeper": {
+    "persona": [
+      "fx-shrine-keeper",
+      "fates-cult",
+      "hearth-folk"
+    ],
+    "lens": {
+      "thinks_from": "The Three Fates wove the world, and the Tower is their loom",
+      "stance": "certain; the Tower simply is, as a mountain is",
+      "tier": "T1"
+    },
+    "held": [
+      "B-901",
+      "B-902",
+      "B-903",
+      "B-904",
+      "B-905",
+      "B-906",
+      "B-907"
+    ],
+    "rejected": [],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  },
+  "fx-hedge-scribe": {
+    "persona": [
+      "fx-hedge-scribe",
+      "hedge-scribes",
+      "scribes"
+    ],
+    "lens": {
+      "thinks_from": "The world is held together by the First Script, a language older than speech",
+      "stance": "the craft is complete; a student's task is to copy the old sentences ever more faithfully",
+      "tier": "T1",
+      "speaks_to": "apprentices, in workshop rules and grave warnings"
+    },
+    "held": [
+      "B-904",
+      "B-905",
+      "B-913",
+      "B-914",
+      "B-915",
+      "B-916",
+      "B-917",
+      "B-918",
+      "B-919",
+      "B-921",
+      "B-922",
+      "B-923"
+    ],
+    "rejected": [],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  },
+  "fx-academy-scribe": {
+    "persona": [
+      "fx-academy-scribe",
+      "academy-scribes",
+      "scribes"
+    ],
+    "lens": {
+      "thinks_from": "The world is held together by the First Script, a language older than speech",
+      "stance": "the craft is complete; a student's task is to copy the old sentences ever more faithfully",
+      "tier": "T1",
+      "speaks_to": "apprentices, in workshop rules and grave warnings"
+    },
+    "held": [
+      "B-904",
+      "B-905",
+      "B-913",
+      "B-914",
+      "B-915",
+      "B-916",
+      "B-917",
+      "B-918",
+      "B-920",
+      "B-921",
+      "B-922",
+      "B-923"
+    ],
+    "rejected": [
+      "B-919"
+    ],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  },
+  "fx-sect-elder": {
+    "persona": [
+      "fx-sect-elder",
+      "quiet-river-sect",
+      "martial-sects"
+    ],
+    "lens": {
+      "thinks_from": "The body is a river of Chi; mastery is discipline, not calculation",
+      "stance": "the ancestral forms are finished; to surpass them is arrogance, even heresy",
+      "tier": "T1",
+      "speaks_to": "novices, through the forms and through cautionary tales"
+    },
+    "held": [
+      "B-904",
+      "B-905",
+      "B-924",
+      "B-925",
+      "B-926",
+      "B-927",
+      "B-928",
+      "B-929",
+      "B-930",
+      "B-931",
+      "B-932",
+      "B-933"
+    ],
+    "rejected": [],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  },
+  "fx-cantor": {
+    "persona": [
+      "fx-cantor",
+      "order-of-the-measured-voice",
+      "cantors"
+    ],
+    "lens": {
+      "thinks_from": "Everything has a true name; reality is not commanded but agreed with",
+      "stance": "serene certainty that the old masters sang reality to its limit",
+      "tier": "T1",
+      "speaks_to": "novices, who learn to breathe the rests before they are trusted with a true name"
+    },
+    "held": [
+      "B-904",
+      "B-905",
+      "B-934",
+      "B-935",
+      "B-936",
+      "B-937",
+      "B-938",
+      "B-939",
+      "B-940",
+      "B-941"
+    ],
+    "rejected": [],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  },
+  "fx-binder": {
+    "persona": [
+      "fx-binder",
+      "throat-kin"
+    ],
+    "lens": {
+      "thinks_from": "The world is thick with Listeners, each carrying one eternal note",
+      "stance": "listen and answer; a binder casts nothing",
+      "tier": "T1",
+      "speaks_to": "apprentices, in sayings and cautionary tales"
+    },
+    "held": [
+      "B-904",
+      "B-905",
+      "B-942",
+      "B-943",
+      "B-944",
+      "B-945",
+      "B-946",
+      "B-947",
+      "B-948",
+      "B-949",
+      "B-950",
+      "B-951",
+      "B-952",
+      "B-953"
+    ],
+    "rejected": [],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  },
+  "fx-plate-reader": {
+    "persona": [
+      "fx-plate-reader",
+      "concordance"
+    ],
+    "lens": {
+      "thinks_from": "The old plates and ruin-inscriptions can be collected and reconciled",
+      "stance": "a small, mistrusted scholarly tradition",
+      "tier": "T2"
+    },
+    "held": [
+      "B-904",
+      "B-908",
+      "B-910",
+      "B-911",
+      "B-912"
+    ],
+    "rejected": [
+      "B-909"
+    ],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  },
+  "fx-heretic": {
+    "persona": [
+      "fx-heretic",
+      "concordance-heretics",
+      "concordance"
+    ],
+    "lens": {
+      "thinks_from": "The old plates and ruin-inscriptions can be collected and reconciled",
+      "stance": "a small, mistrusted scholarly tradition",
+      "tier": "T2"
+    },
+    "held": [
+      "B-904",
+      "B-908",
+      "B-909",
+      "B-910",
+      "B-911",
+      "B-912"
+    ],
+    "rejected": [],
+    "unaware_of": [
+      "T-901",
+      "T-902",
+      "T-903",
+      "T-904",
+      "T-905",
+      "T-906",
+      "T-907",
+      "T-908",
+      "T-909",
+      "T-910",
+      "T-911",
+      "T-912",
+      "T-913",
+      "T-914",
+      "T-915",
+      "T-916",
+      "T-917",
+      "T-918",
+      "T-919",
+      "T-920",
+      "T-921",
+      "T-922",
+      "T-923",
+      "T-924",
+      "T-925"
+    ]
+  }
+}

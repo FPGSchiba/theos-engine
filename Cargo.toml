@@ -67,6 +67,7 @@ shared_memory       = "0.12"
 tracing             = "0.1"
 tracing-subscriber  = { version = "0.3", features = ["env-filter", "json", "fmt", "time"] }
 thiserror           = "1"
+toml                = "0.8"
 # --- Editor shell ---
 tauri               = { version = "2", features = [] }
 egui                = "0.27"

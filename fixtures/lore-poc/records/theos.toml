@@ -1,0 +1,8 @@
+# PoC fixture, not canon
+[project]
+name = "lore-poc-fixture"
+kind = "content"
+schema_version = 1
+
+[parts]
+enabled = ["codex", "changes", "scripts", "graph", "concepts", "maps", "review", "mcp"]

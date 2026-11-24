@@ -1,20 +1,41 @@
 #![forbid(unsafe_code)]
+#![deny(missing_docs)]
+//! AI layer: lore records and the speaker-rule knowledge filter.
 
+pub mod backend;
+pub mod clock;
 pub mod components;
-
-pub use components::{AiBrain, PendingAiResponse};
-
-pub fn add(left: u64, right: u64) -> u64 {
-    left + right
-}
+pub mod context;
+pub mod driver;
+pub mod embed;
+pub mod knowledge;
+pub mod lore;
+pub mod memory;
+pub mod reply;
+pub mod retrieval;
+pub mod worker;
 
 #[cfg(test)]
-mod tests {
-    use super::*;
+pub(crate) mod test_support;
 
-    #[test]
-    fn it_works() {
-        let result = add(2, 2);
-        assert_eq!(result, 4);
-    }
-}
+/// Test-support helpers such as the fake embedder.
+#[cfg(any(test, feature = "testkit"))]
+pub mod testkit;
+pub use backend::{Backend, BackendError, Decoder, GenerationRequest, Phase, Piece, Thinking};
+pub use clock::{Clock, SystemClock};
+pub use components::{AiBrain, PendingAiResponse};
+pub use driver::{
+    ANSWER_TOKEN_CAP, DEFAULT_DEADLINE, Metrics, Npc, NpcError, NpcParts, NpcRequest, NpcResponse,
+    StopReason,
+};
+pub use memory::{MemoryProbe, NoProbe};
+
+pub use context::{Context, ContextOptions, Prompt, assemble};
+pub use embed::{EmbedError, EmbedInput, Embedder, cosine};
+pub use knowledge::{Visible, visible};
+pub use lore::{
+    Corpus, CorpusError, HolderKind, Lens, LoreKind, LoreRecord, PersonaLayer, RecordId, Speaker,
+};
+pub use reply::{MAX_REPLY_CHARS, MAX_SOURCES, Reply, ReplyError, parse_reply, reply_schema};
+pub use retrieval::{LoreScope, Retriever};
+pub use worker::{Completed, NpcWorker, Ticket, WorkerGone};

@@ -1,0 +1,19 @@
+[package]
+name = "theos-ai-llama"
+version = "0.1.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+theos-ai = { path = "../../../theos-ai" }
+llama-cpp-2 = { version = "=0.1.161", features = ["cuda", "llguidance"] }
+llguidance = "1.7.5"
+toktrie = "1.7.5"
+# `preserve_order` keeps the reply schema's `sources`-before-`reply` property order.
+serde_json = { version = "1", features = ["preserve_order"] }
+serde = { version = "1", features = ["derive"] }
+toml = "0.8"
+thiserror = "1"
+
+[target.'cfg(windows)'.dependencies]
+windows = { version = "0.62", features = ["Win32_Graphics_Dxgi", "Win32_Graphics_Dxgi_Common", "Win32_Foundation"] }
