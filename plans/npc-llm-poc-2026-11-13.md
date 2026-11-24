@@ -512,3 +512,28 @@ Run 2026-11-13 on the RTX 5080 (16 GB, driver 610.88), CUDA 13.5, `llama-cpp-2` 
 | DXGI `CurrentUsage` | 0 MiB before load → 2828 MiB after the generator → 3830 MiB after the embedder: **DXGI sees CUDA allocations**, no NVML fallback needed |
 
 Note for the owner: llama.cpp counts the "4B" model at 4.21 B parameters, just above the PoC's "4B or less" limit.
+
+## Rulings made during execution
+
+Decisions taken on the owner's behalf while executing this plan, copied from the execution ledger before it was deleted (2026-11-24). Format: decision — why — what it costs if wrong.
+
+1. mini corpus moves to `src/test_support.rs` (`#[cfg(test)] pub(crate) fn mini() -> (Corpus, Speaker)`) — later tasks' unit tests need it and a private test-module helper is unreachable — cost if wrong: one small file moved later.
+2. T7 deadline test uses 20 ms per piece (answer_tokens 145) — the plan's 10 ms hit the 256-token cap first, so the test could never pass — cost if wrong: none, test intent unchanged.
+3. T5 build_embeds_only_beliefs counts inputs with a test-local recording embedder — FakeEmbedder::calls counts calls, not documents — cost if wrong: none.
+4. T1 runs build-only now (steps 2–4, 7); steps 1, 5, 6 (run, record) follow once the owner has downloaded the GGUFs — the build is the stop/go check and needs no model — cost if wrong: a spike run that fails later than it could have.
+5. final review follows the owner's process, not the skill's single fix wave: after each round of fixes a new reviewer, until nothing is open — owner instruction overrides the skill — cost if wrong: extra review rounds.
+6. plugins/llm-poc crates that print (spike, npc-poc) may allow clippy::disallowed_macros at crate level — the root clippy.toml ban targets the engine, not the throwaway harness — cost if wrong: none
+7. default models dir is the repo-root models/ (crate-relative ../../../models), not the plan's ../../models — spec §6 names D:\Projects\theos-engine\models and the plan's relative path was wrong — cost if wrong: none
+8. npc-poc resolves its default fixture and models paths against CARGO_MANIFEST_DIR (../../../fixtures/lore-poc, ../../../models), not the cwd — consistent with the spike's ruling, works from any cwd — cost if wrong: none
+9. accept the three extra error-path tests (build DimensionMismatch, query CountMismatch, query dimension) without RED evidence — they were a coverage request on guards that already existed, the guards return Err only through those paths, and the two load-bearing tests have RED — cost if wrong: a coverage test that would pass against a missing guard
+10. Task 9 proceeds without models — implement, unit tests GREEN, real-model tests written and compiled; their RED/GREEN run waits for the GGUFs — models are not downloaded and theos-ai work is done — cost if wrong: real-model defects surface later, at the run
+11. Task 9 implements DxgiProbe now; switch to NvmlProbe only if the spike run shows DXGI blind to CUDA — spike has not run yet — cost if wrong: a later swap of one small file
+12. finish Task 9 with a fresh sonnet implementer from the uncommitted tree instead of waiting for the opus limit (resets Nov 17) — the code is complete per the agent's last message; the finisher verifies against the brief, writes the report and commits — cost if wrong: the finisher misses an intent the original held; the task review is the net
+13. all further subagents use sonnet/haiku, not opus — opus spend limit hit — cost if wrong: final whole-branch review on a less capable model
+14. Task 9 thinking-on real-model test runs to end of generation and parses the reply, overriding the brief's 'stop after the first Answer piece' — the post-switch path is the generator's riskiest code and the brief left it unguarded — cost if wrong: a slower test
+15. empty cite list FAILS grounding for answer/rumour (README: the answer rests on records); an Err reply fails grounding; leak/forbidden failure in run → write tables, print DEFECT, exit non-zero — scoring rules the README leaves implicit — cost if wrong: a stricter grounding count in the first table
+16. tok/s median excludes rows with < 2 generated tokens, fixed in the same round — zero-token rows would skew the reported median low — cost if wrong: none (the rows stay in the per-request table)
+17. Task 11 reordered — gate + coverage + graphify now, whole-branch review rounds next, then (when GGUFs exist) spike run, real-model tests, harness runs with and without persona bodies — the models are still missing and the review needs no models — cost if wrong: review fixes land before the first real run, so a real-run defect starts a later review round
+18. one unrecorded warm-up request per model before measuring, its time stated in the results header — removes one-off CUDA/llguidance first-use cost from per-request numbers; not speed tuning (no per-request setting changes) — cost if wrong: the table hides a cold-start the owner might care about (mitigated: header shows it)
+19. fix wave also takes cheap minors that change how the table reads: time-to-first-answer-token metric, grounding rules stated in results.md header, gate leak scan on bare ids — cost if wrong: small scope growth
+20. no code fix for the DXGI-blind risk; the spike (DXGI before/after load) and real_model vram_probe_reads_more_after_loading_the_generator MUST pass before any harness run — same guard, no extra review round — cost if wrong: if skipped, a believable but wrong VRAM column
