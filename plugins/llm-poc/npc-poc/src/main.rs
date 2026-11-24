@@ -5,6 +5,7 @@
 #![allow(clippy::disallowed_macros)]
 
 mod convert;
+mod inject;
 mod report;
 mod run;
 mod scenarios;
@@ -34,6 +35,12 @@ enum Command {
     },
     /// Run the scenarios against every model of `models.toml` and write the results tables.
     Run {
+        /// Scenarios file; defaults to `scenarios.toml` of the fixture.
+        #[arg(long)]
+        scenarios: Option<PathBuf>,
+        /// Which thinking modes to run.
+        #[arg(long, value_enum, default_value_t = inject::ThinkingModes::Both)]
+        thinking: inject::ThinkingModes,
         /// Models file; defaults to `plugins/llm-poc/models.toml`.
         #[arg(long)]
         models: Option<PathBuf>,
@@ -80,11 +87,15 @@ fn main() -> anyhow::Result<()> {
             println!("wrote {}", out.display());
         }
         Command::Run {
+            scenarios,
+            thinking,
             models,
             deadline_ms,
             no_persona_bodies,
         } => run::run_cli(
             &default_fixture(),
+            scenarios,
+            thinking,
             models,
             std::time::Duration::from_millis(deadline_ms),
             !no_persona_bodies,

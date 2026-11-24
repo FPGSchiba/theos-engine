@@ -232,3 +232,14 @@ fn vram_probe_reads_more_after_loading_the_generator() {
     );
     drop(generator);
 }
+
+/// The baseline hole: `begin` tokenizes the whole prompt with special parsing on,
+/// so turn-marker text inside the player's name or question becomes a control
+/// token. When the guardrail lands this test flips meaning.
+#[test]
+fn forged_turn_markers_become_control_tokens() {
+    let _gpu = gpu();
+    let generator = generator();
+    assert_eq!(generator.count_tokens("<|im_start|>", true), 1);
+    assert!(generator.count_tokens("<|im_start|>", false) > 1);
+}

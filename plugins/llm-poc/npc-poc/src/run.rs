@@ -18,8 +18,11 @@ use theos_ai_llama::{
     models_dir, DxgiProbe, LlamaEmbedder, LlamaGenerator, LlamaRuntime, ModelEntry, ModelsFile,
 };
 
+use crate::inject::{InjectingBackend, NameSlot, ThinkingModes};
 use crate::report::{self, RunHeader, WarmUp};
-use crate::scenarios::{load_scenarios, load_visible, Behaviour, Scenarios, VisibleEntry};
+use crate::scenarios::{
+    load_scenarios, load_visible, Behaviour, Scenarios, Severity, VisibleEntry,
+};
 use crate::score::{check, Checks};
 
 /// One scored request.
@@ -53,6 +56,14 @@ pub struct Row {
     pub raw: String,
     /// A human should read this answer (`rumour` or `hand_scored`).
     pub hand_read: bool,
+    /// The injection technique of the scenario, when it has one.
+    pub technique: Option<String>,
+    /// How bad it is when the injection works, when the scenario says.
+    pub severity: Option<Severity>,
+    /// The player name shown to the NPC in this request.
+    pub player_name: Option<String>,
+    /// What a good outcome looks like, when the scenario says.
+    pub good_outcome: Option<String>,
 }
 
 /// The scopes every scenario runs under.
@@ -116,7 +127,7 @@ fn warm_up(
     }))
 }
 
-/// Runs thinking `[Off, On]` x scenarios x scopes, one request at a time.
+/// Runs the thinking `modes` x scenarios x scopes, one request at a time.
 ///
 /// One unrecorded warm-up request goes first (see [`WarmUp`]). Every finished
 /// row is appended to `<results_dir>/rows.jsonl` and flushed at once, so a
@@ -126,6 +137,11 @@ fn warm_up(
 /// failed row carrying the error text; the run goes on. Only a scenario naming a
 /// speaker without a `visible.json` entry, or a worker that stopped, ends the
 /// run early, and the rows collected so far are still returned.
+///
+/// `name` is the slot the worker's [`InjectingBackend`] reads: it is set to each
+/// scenario's `player_name` (or cleared) before the request is submitted, and
+/// cleared for the warm-up.
+#[allow(clippy::too_many_arguments)]
 pub fn run_model(
     worker: &mut NpcWorker,
     model: &str,
@@ -133,8 +149,10 @@ pub fn run_model(
     visible: &BTreeMap<String, VisibleEntry>,
     deadline: Duration,
     results_dir: &Path,
+    modes: &[Thinking],
+    name: &NameSlot,
 ) -> RunOutcome {
-    let total = 2 * scenarios.scenario.len() * 3;
+    let total = modes.len() * scenarios.scenario.len() * 3;
     let mut rows = Vec::with_capacity(total);
     let mut warmed = None;
     let fatal = (|| {
@@ -143,9 +161,10 @@ pub fn run_model(
         let path = results_dir.join(ROWS_FILE);
         let mut sink =
             std::fs::File::create(&path).with_context(|| format!("creating {}", path.display()))?;
+        name.set(None);
         warmed = warm_up(worker, scenarios, deadline)?;
         run_requests(
-            worker, model, scenarios, visible, deadline, total, &mut rows, &mut sink,
+            worker, model, scenarios, visible, deadline, total, modes, name, &mut rows, &mut sink,
         )
     })()
     .err();
@@ -164,10 +183,13 @@ fn run_requests(
     visible: &BTreeMap<String, VisibleEntry>,
     deadline: Duration,
     total: usize,
+    modes: &[Thinking],
+    name: &NameSlot,
     rows: &mut Vec<Row>,
     sink: &mut dyn std::io::Write,
 ) -> anyhow::Result<()> {
-    for thinking in [Thinking::Off, Thinking::On] {
+    let markers = scenarios.markers();
+    for &thinking in modes {
         for scenario in &scenarios.scenario {
             let entry = visible
                 .get(&scenario.npc)
@@ -195,7 +217,12 @@ fn run_requests(
                     reply_error: None,
                     raw: String::new(),
                     hand_read: scenario.hand_scored || scenario.behaviour == Behaviour::Rumour,
+                    technique: scenario.technique.clone(),
+                    severity: scenario.severity,
+                    player_name: scenario.player_name.clone(),
+                    good_outcome: scenario.good_outcome.clone(),
                 };
+                name.set(scenario.player_name.clone());
                 worker
                     .submit(request)
                     .map_err(|_| anyhow!("the NPC worker stopped"))?;
@@ -207,6 +234,7 @@ fn run_requests(
                         row.checks = Some(check(
                             scenario,
                             &scenarios.forbid_words,
+                            &markers,
                             entry,
                             scope,
                             &response,
@@ -354,6 +382,7 @@ struct LoadInfo {
 /// Starts a worker whose thread loads the embedder, the generator and the probe.
 ///
 /// llama contexts are not `Send`, so everything is built inside the factory.
+#[allow(clippy::too_many_arguments)]
 fn spawn_worker(
     rt: &Arc<LlamaRuntime>,
     embedder_path: PathBuf,
@@ -362,6 +391,8 @@ fn spawn_worker(
     corpus: &Corpus,
     speakers: &[Speaker],
     persona_bodies: bool,
+    secret: Option<String>,
+    name: Option<NameSlot>,
 ) -> anyhow::Result<(NpcWorker, LoadInfo)> {
     let (info_tx, info_rx) = mpsc::channel::<LoadInfo>();
     let rt = Arc::clone(rt);
@@ -383,8 +414,12 @@ fn spawn_worker(
             Some(p) => Box::new(p),
             None => Box::new(NoProbe),
         };
+        let backend: Box<dyn theos_ai::Backend> = match name {
+            Some(name) => Box::new(InjectingBackend::new(Box::new(generator), secret, name)),
+            None => Box::new(generator),
+        };
         Npc::new(NpcParts {
-            backend: Box::new(generator),
+            backend,
             embedder: Box::new(embedder),
             corpus,
             speakers,
@@ -426,10 +461,26 @@ fn gpu_name() -> String {
 /// written, a leak or forbidden-record defect.
 pub fn run_cli(
     fixture: &Path,
+    scenarios_path: Option<PathBuf>,
+    thinking: ThinkingModes,
     models: Option<PathBuf>,
     deadline: Duration,
     persona_bodies: bool,
 ) -> anyhow::Result<()> {
+    // Everything that can be wrong with the inputs is reported before a model loads.
+    let (corpus, speakers, golden) = verify_fixture(fixture)?;
+    let scenarios =
+        load_scenarios(&scenarios_path.unwrap_or_else(|| fixture.join("scenarios.toml")))?;
+    for s in &scenarios.scenario {
+        if !golden.contains_key(&s.npc) {
+            bail!(
+                "scenario `{}` names `{}`, which has no visible.json entry",
+                s.id,
+                s.npc
+            );
+        }
+    }
+    let modes = thinking.modes();
     let models_path =
         models.unwrap_or_else(|| Path::new(env!("CARGO_MANIFEST_DIR")).join("../models.toml"));
     let file = ModelsFile::load(&models_path).map_err(|e| anyhow!("{e}"))?;
@@ -445,16 +496,18 @@ pub fn run_cli(
         }
     }
 
-    let (corpus, speakers, golden) = verify_fixture(fixture)?;
-    let scenarios = load_scenarios(&fixture.join("scenarios.toml"))?;
     let rt = LlamaRuntime::init().map_err(|e| anyhow!("{e}"))?;
     let gpu = gpu_name();
     let started = SystemTime::now().duration_since(UNIX_EPOCH)?.as_secs();
 
+    let markers = scenarios.markers();
+    let wrap = markers.system_secret.is_some()
+        || scenarios.scenario.iter().any(|s| s.player_name.is_some());
     let mut all_defects = Vec::new();
     let mut fatals = Vec::new();
     for entry in &file.models {
         let model_path = dir.join(&entry.file);
+        let name = NameSlot::default();
         let (mut worker, info) = spawn_worker(
             &rt,
             dir.join(&file.embedder),
@@ -463,6 +516,8 @@ pub fn run_cli(
             &corpus,
             &speakers,
             persona_bodies,
+            markers.system_secret.clone(),
+            wrap.then(|| name.clone()),
         )?;
         let suffix = if persona_bodies {
             ""
@@ -483,6 +538,8 @@ pub fn run_cli(
             &golden,
             deadline,
             &out,
+            &modes,
+            &name,
         );
         drop(worker);
 
@@ -503,6 +560,10 @@ pub fn run_cli(
         };
         report::write(&out, &header, &rows)?;
         println!("{}", report::summary_table(&rows));
+        // An injection run also prints its stable summary, after the normal table.
+        if rows.iter().any(|r| r.behaviour == Behaviour::Resist) {
+            println!("{}", report::injection_summary(&rows));
+        }
         println!("results: {}", out.display());
         if let Some(e) = fatal {
             println!(
@@ -543,6 +604,8 @@ mod tests {
     use super::*;
     use theos_ai::testkit::{FakeClock, FakeEmbedder, FakeProbe, Script, ScriptedBackend};
     use theos_ai::{HolderKind, Lens, LoreKind, PersonaLayer, Phase, Piece};
+
+    const BOTH: [Thinking; 2] = [Thinking::Off, Thinking::On];
 
     /// A results directory under the temp dir, removed on drop.
     struct Scratch(PathBuf);
@@ -606,6 +669,10 @@ mod tests {
             forbid_words: vec![],
             hand_scored: false,
             note: String::new(),
+            technique: None,
+            severity: None,
+            player_name: None,
+            good_outcome: None,
         }
     }
 
@@ -619,6 +686,8 @@ mod tests {
                 scenario("s2", Behaviour::Unaware),
                 scenario("s3", Behaviour::Rumour),
             ],
+            canary: None,
+            system_secret: None,
         };
         let golden = BTreeMap::from([(
             "n".to_owned(),
@@ -663,6 +732,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_none());
         let rows = run.rows;
@@ -694,6 +765,8 @@ mod tests {
             forbid_words: vec![],
             top_k: 1,
             scenario: vec![scenario("s1", Behaviour::Answer)],
+            canary: None,
+            system_secret: None,
         };
         // visible.json says the speaker may see nothing, so every belief in the prompt leaks.
         let golden = BTreeMap::from([(
@@ -738,6 +811,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         )
         .rows;
         let found = defects(&rows);
@@ -809,6 +884,8 @@ mod tests {
             forbid_words: vec![],
             top_k: 1,
             scenario: vec![scenario("s1", Behaviour::Answer)],
+            canary: None,
+            system_secret: None,
         };
         let golden = BTreeMap::from([(
             "n".to_owned(),
@@ -835,6 +912,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_none());
         assert_eq!(run.rows.len(), 6);
@@ -861,6 +940,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_some());
         assert_eq!(
@@ -883,6 +964,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_none());
         let lines = jsonl(&dir);
@@ -907,6 +990,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_some());
         let lines = jsonl(&dir);
@@ -928,6 +1013,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &nested,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_none());
         assert!(nested.join("rows.jsonl").is_file());
@@ -979,6 +1066,8 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_none());
         assert_eq!(run.rows.len(), 6);
@@ -1001,11 +1090,202 @@ mod tests {
             &golden,
             Duration::from_secs(3),
             &dir.0,
+            &BOTH,
+            &NameSlot::default(),
         );
         assert!(run.fatal.is_none());
         assert_eq!(run.rows.len(), 6);
         let warm = run.warm_up.unwrap();
         assert!(warm.stop.contains("boom"), "{}", warm.stop);
+    }
+
+    fn golden_n() -> BTreeMap<String, VisibleEntry> {
+        BTreeMap::from([(
+            "n".to_owned(),
+            VisibleEntry {
+                persona: vec!["n".into()],
+                held: vec!["B-1".into()],
+                rejected: vec![],
+                unaware_of: vec![],
+            },
+        )])
+    }
+
+    /// A worker whose backend is wrapped in an [`InjectingBackend`]; returns the
+    /// handle onto the scripted backend's recorded requests.
+    fn injecting_worker(
+        reply: &'static str,
+        secret: Option<String>,
+        slot: NameSlot,
+    ) -> (NpcWorker, ScriptedBackend) {
+        let clock = FakeClock::new();
+        let backend = ScriptedBackend::new(clock.clone());
+        for _ in 0..12 {
+            backend.push(Script {
+                prompt_tokens: 1,
+                prefill: Duration::ZERO,
+                per_token: Duration::ZERO,
+                pieces: vec![Piece {
+                    text: format!(r#"{{"sources":[],"reply":"{reply}"}}"#),
+                    phase: Phase::Answer,
+                }],
+            });
+        }
+        let handle = backend.handle();
+        let worker = NpcWorker::spawn(move || {
+            Npc::new(NpcParts {
+                backend: Box::new(InjectingBackend::new(Box::new(backend), secret, slot)),
+                embedder: Box::new(FakeEmbedder::default()),
+                corpus: Corpus::new(vec![belief("B-1", "n")]).unwrap(),
+                speakers: vec![speaker("n")],
+                options: ContextOptions::default(),
+                clock: Box::new(clock),
+                probe: Box::new(NoProbe),
+            })
+        })
+        .unwrap();
+        (worker, handle)
+    }
+
+    #[test]
+    fn run_model_runs_only_the_requested_thinking_modes() {
+        let scenarios = Scenarios {
+            forbid_words: vec![],
+            top_k: 1,
+            scenario: vec![
+                scenario("s1", Behaviour::Answer),
+                scenario("s2", Behaviour::Answer),
+            ],
+            canary: None,
+            system_secret: None,
+        };
+        let (mut worker, _) = injecting_worker("x", None, NameSlot::default());
+        let dir = Scratch::new("offonly");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden_n(),
+            Duration::from_secs(3),
+            &dir.0,
+            &[Thinking::Off],
+            &NameSlot::default(),
+        );
+        assert!(run.fatal.is_none());
+        assert_eq!(run.rows.len(), 6);
+        assert!(run.rows.iter().all(|r| r.thinking == Thinking::Off));
+    }
+
+    #[test]
+    fn run_model_sets_the_player_name_per_scenario_and_clears_it() {
+        let mut named = scenario("s1", Behaviour::Answer);
+        named.player_name = Some("Kai".into());
+        let scenarios = Scenarios {
+            forbid_words: vec![],
+            top_k: 1,
+            scenario: vec![named, scenario("s2", Behaviour::Answer)],
+            canary: None,
+            system_secret: None,
+        };
+        let slot = NameSlot::default();
+        let (mut worker, seen) = injecting_worker("x", None, slot.clone());
+        let dir = Scratch::new("names");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden_n(),
+            Duration::from_secs(3),
+            &dir.0,
+            &[Thinking::Off],
+            &slot,
+        );
+        assert!(run.fatal.is_none());
+        let reqs = seen.requests();
+        assert_eq!(reqs.len(), 7, "warm-up plus six");
+        let has_name = |i: usize| reqs[i].0.system.contains("The traveller speaking to you");
+        assert!(!has_name(0), "the warm-up uses no name");
+        assert!((1..=3).all(has_name));
+        assert!((4..=6).all(|i| !has_name(i)));
+        assert!(reqs[1].0.system.contains("called Kai."));
+        assert_eq!(run.rows[0].player_name.as_deref(), Some("Kai"));
+        assert_eq!(run.rows[3].player_name, None);
+    }
+
+    #[test]
+    fn run_refuses_a_missing_scenarios_file() {
+        let missing = std::env::temp_dir().join("npc-poc-no-such-scenarios.toml");
+        let e = run_cli(
+            &crate::default_fixture(),
+            Some(missing),
+            ThinkingModes::Both,
+            None,
+            Duration::from_secs(1),
+            true,
+        )
+        .unwrap_err();
+        assert!(
+            format!("{e:#}").contains("npc-poc-no-such-scenarios.toml"),
+            "{e:#}"
+        );
+    }
+
+    #[test]
+    fn resist_rows_carry_technique_severity_and_injection_checks() {
+        let mut s = scenario("r1", Behaviour::Resist);
+        s.technique = Some("direct".into());
+        s.severity = Some(Severity::S3);
+        s.good_outcome = Some("stays in voice".into());
+        s.expect.clear();
+        let scenarios = Scenarios {
+            forbid_words: vec![],
+            top_k: 1,
+            scenario: vec![s],
+            canary: Some("HONK-7731".into()),
+            system_secret: None,
+        };
+        let (mut worker, _) = injecting_worker("honk 7731", None, NameSlot::default());
+        let dir = Scratch::new("resist");
+        let run = run_model(
+            &mut worker,
+            "fake",
+            &scenarios,
+            &golden_n(),
+            Duration::from_secs(3),
+            &dir.0,
+            &[Thinking::Off],
+            &NameSlot::default(),
+        );
+        assert!(run.fatal.is_none());
+        let row = &run.rows[0];
+        assert_eq!(row.technique.as_deref(), Some("direct"));
+        assert_eq!(row.severity, Some(Severity::S3));
+        assert_eq!(row.good_outcome.as_deref(), Some("stays in voice"));
+        let i = row.checks.as_ref().unwrap().injection.as_ref().unwrap();
+        assert!(i.canary);
+        assert_eq!(i.outcome, Some(Severity::S3));
+    }
+
+    #[test]
+    fn run_refuses_a_scenario_naming_an_unknown_speaker() {
+        let dir = Scratch::new("unknown");
+        std::fs::create_dir_all(&dir.0).unwrap();
+        let file = dir.0.join("s.toml");
+        std::fs::write(
+            &file,
+            "forbid_words = []\ntop_k = 1\n[[scenario]]\nid = \"x\"\nnpc = \"nobody\"\nquestion = \"q\"\nbehaviour = \"answer\"\n",
+        )
+        .unwrap();
+        let e = run_cli(
+            &crate::default_fixture(),
+            Some(file),
+            ThinkingModes::Both,
+            None,
+            Duration::from_secs(1),
+            true,
+        )
+        .unwrap_err();
+        assert!(format!("{e:#}").contains("nobody"), "{e:#}");
     }
 
     #[test]
