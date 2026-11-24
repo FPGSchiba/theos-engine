@@ -1,0 +1,39 @@
+{
+ "scenario": "b08",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "read-everything",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "ReadPlate",
+       "payload": {
+        "plate": "plate-a"
+       }
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "ReadPlate",
+       "payload": {
+        "plate": "plate-b"
+       }
+      }
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  1,
+  2
+ ]
+}

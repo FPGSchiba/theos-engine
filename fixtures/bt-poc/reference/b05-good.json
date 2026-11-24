@@ -1,0 +1,50 @@
+{
+ "scenario": "b05",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-940",
+   "B-936"
+  ],
+  "tree": {
+   "name": "drone-with-rests",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "abbey"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Hold"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "Chant",
+       "payload": {
+        "chant": "Ground-Ohm"
+       }
+      }
+     },
+     {
+      "type": "Wait",
+      "seconds": 2.0
+     }
+    ]
+   }
+  }
+ }
+}

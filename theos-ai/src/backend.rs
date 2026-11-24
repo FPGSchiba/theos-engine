@@ -40,10 +40,16 @@ pub struct Piece {
 pub struct GenerationRequest<'a> {
     /// The prompt to complete.
     pub prompt: &'a Prompt,
-    /// JSON schema the answer must satisfy.
-    pub schema: &'a Value,
+    /// JSON schema the answer must satisfy; `None` leaves the answer
+    /// unconstrained.
+    pub schema: Option<&'a Value>,
     /// Whether thinking is enabled.
     pub thinking: Thinking,
+    /// The most thinking tokens before the backend must close the thinking
+    /// block itself; `None` is no limit. Ignored with thinking off. theos-ai
+    /// does not enforce the budget: the backend must (`ScriptedBackend`
+    /// ignores it).
+    pub thinking_budget: Option<u32>,
 }
 
 /// Why a backend call failed.

@@ -1,0 +1,5409 @@
+{
+ "b01-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   true,
+   false,
+   true
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 5.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 6.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 6.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 7.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   }
+  ]
+ },
+ "b01-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 9,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 5.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 6.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 6.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   },
+   {
+    "t": 7.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "workshop-door",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CarveRune"
+    ]
+   }
+  ]
+ },
+ "b02-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 3,
+  "depth": 2,
+  "checks": [
+   false
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "WakeGlyph"
+    ]
+   }
+  ]
+ },
+ "b02-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   }
+  ]
+ },
+ "b03-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BreathTest",
+     "WakeGlyph"
+    ]
+   }
+  ]
+ },
+ "b03-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "MeasureCord",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "MeasureCord",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "MeasureCord",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "MeasureCord",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "MeasureCord",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "MeasureCord",
+     "WakeGlyph"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "gate-glyph",
+     "Attack.style": "None"
+    },
+    "events": [
+     "MeasureCord",
+     "WakeGlyph"
+    ]
+   }
+  ]
+ },
+ "b04-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 3,
+  "depth": 2,
+  "checks": [
+   false
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Severing Sa",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Severing Sa",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Severing Sa",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Severing Sa",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Severing Sa",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Severing Sa",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Severing Sa",
+     "Chant:Ground-Ohm"
+    ]
+   }
+  ]
+ },
+ "b04-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 6,
+  "depth": 2,
+  "checks": [
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "north-wall",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Kharrian's Stride",
+     "Chant:Severing Sa"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "north-wall",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Kharrian's Stride",
+     "Chant:Severing Sa"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "north-wall",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Kharrian's Stride",
+     "Chant:Severing Sa"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "north-wall",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Kharrian's Stride",
+     "Chant:Severing Sa"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "north-wall",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Kharrian's Stride",
+     "Chant:Severing Sa"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "north-wall",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Kharrian's Stride",
+     "Chant:Severing Sa"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "north-wall",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Kharrian's Stride",
+     "Chant:Severing Sa"
+    ]
+   }
+  ]
+ },
+ "b05-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 2,
+  "depth": 2,
+  "checks": [
+   false,
+   true
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 5.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 6.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm",
+     "Chant:Ground-Ohm"
+    ]
+   }
+  ]
+ },
+ "b05-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 5,
+  "depth": 2,
+  "checks": [
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": [
+     "Chant:Ground-Ohm"
+    ]
+   },
+   {
+    "t": 5.5,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 6.0,
+    "status": "running",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "abbey",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b06-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 3,
+  "depth": 2,
+  "checks": [
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "vareth",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:vareth"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "vareth",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:vareth"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "vareth",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:vareth"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "vareth",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:vareth"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "vareth",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:vareth"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "vareth",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:vareth"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "vareth",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:vareth"
+    ]
+   }
+  ]
+ },
+ "b06-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 5,
+  "depth": 2,
+  "checks": [
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "grandfather-ember",
+     "Destination.entity": "grandfather-ember",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:grandfather-ember"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "grandfather-ember",
+     "Destination.entity": "grandfather-ember",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:grandfather-ember"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "grandfather-ember",
+     "Destination.entity": "grandfather-ember",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:grandfather-ember"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "grandfather-ember",
+     "Destination.entity": "grandfather-ember",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:grandfather-ember"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "grandfather-ember",
+     "Destination.entity": "grandfather-ember",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:grandfather-ember"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "grandfather-ember",
+     "Destination.entity": "grandfather-ember",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:grandfather-ember"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "grandfather-ember",
+     "Destination.entity": "grandfather-ember",
+     "Attack.style": "None"
+    },
+    "events": [
+     "BindSpirit:grandfather-ember"
+    ]
+   }
+  ]
+ },
+ "b07-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   true,
+   false,
+   true
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b07-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 8,
+  "depth": 4,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "bandit",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b08-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 3,
+  "depth": 2,
+  "checks": [
+   true,
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": false,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Idle",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a",
+     "ReadPlate:plate-b"
+    ]
+   }
+  ]
+ },
+ "b08-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 9,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "plate-a",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "plate-a",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "plate-a",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "plate-a",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "plate-a",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "plate-a",
+     "Attack.style": "None"
+    },
+    "events": [
+     "ReadPlate:plate-a"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar-stair",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar-stair",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar-stair",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar-stair",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "cellar-stair",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b09-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   false,
+   true,
+   true
+  ],
+  "behaviour": false,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   }
+  ]
+ },
+ "b09-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 7,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": true,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "none",
+     "Destination.entity": "shrine",
+     "Attack.style": "None"
+    },
+    "events": [
+     "RingBell"
+    ]
+   }
+  ]
+ },
+ "b10-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 10,
+  "depth": 4,
+  "checks": [
+   true,
+   false,
+   false,
+   true
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b10-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 10,
+  "depth": 4,
+  "checks": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b11-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 8,
+  "depth": 3,
+  "checks": [
+   true,
+   false,
+   true,
+   false
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b11-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 8,
+  "depth": 4,
+  "checks": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Heavy"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b12-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 3,
+  "depth": 2,
+  "checks": [
+   false,
+   false,
+   true
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b12-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 8,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b13-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 8,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   false
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b13-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 12,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Flee",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b14-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 9,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   false,
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Advance",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   }
+  ]
+ },
+ "b14-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 15,
+  "depth": 4,
+  "checks": [
+   true,
+   true,
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": [
+     "CallAllies"
+    ]
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "gate",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "gate",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "gate",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "gate",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b15-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 3,
+  "depth": 2,
+  "checks": [
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b15-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "bridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b16-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 9,
+  "depth": 3,
+  "checks": [
+   true,
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b16-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 11,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "captain",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "captain",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "captain",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "captain",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Regroup",
+     "Target.entity": "player",
+     "Destination.entity": "captain",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b17-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   false,
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b17-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b18-bad": {
+  "gate": "fail",
+  "gate_rule": "registered-commands",
+  "gate_message": "'CastFireball' is not a registered command",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "b18-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 4,
+  "depth": 2,
+  "checks": [
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b19-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 8,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   false,
+   true
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 6.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 6.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b19-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 12,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "reeds",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "old-wall",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 4.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "TakeCover",
+     "Target.entity": "none",
+     "Destination.entity": "old-wall",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "old-wall",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 5.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "old-wall",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 6.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "old-wall",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 6.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Charge",
+     "Target.entity": "player",
+     "Destination.entity": "old-wall",
+     "Attack.style": "None"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b20-bad": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 11,
+  "depth": 3,
+  "checks": [
+   true,
+   false,
+   false
+  ],
+  "behaviour": false,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "none",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "none",
+     "Attack.style": "Melee"
+    },
+    "events": []
+   }
+  ]
+ },
+ "b20-good": {
+  "gate": "pass",
+  "gate_rule": null,
+  "gate_message": null,
+  "nodes": 15,
+  "depth": 3,
+  "checks": [
+   true,
+   true,
+   true
+  ],
+  "behaviour": true,
+  "grounding": null,
+  "timeline": [
+   {
+    "t": 0.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "ridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 0.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "ridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "none",
+     "Destination.entity": "ridge",
+     "Attack.style": "None"
+    },
+    "events": []
+   },
+   {
+    "t": 1.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 2.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Hold",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 3.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 3.5,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   },
+   {
+    "t": 4.0,
+    "status": "success",
+    "state": {
+     "MovementState.mode": "Kite",
+     "Target.entity": "player",
+     "Destination.entity": "ridge",
+     "Attack.style": "Ranged"
+    },
+    "events": []
+   }
+  ]
+ },
+ "g1-gate": {
+  "gate": "fail",
+  "gate_rule": "max-depth",
+  "gate_message": "depth 11 exceeds 10",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g10-gate": {
+  "gate": "fail",
+  "gate_rule": "sources",
+  "gate_message": "cites ['T-922'], which a prompt for fx-hedge-scribe cannot hold",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g2-gate": {
+  "gate": "fail",
+  "gate_rule": "max-nodes",
+  "gate_message": "51 nodes exceed 50",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g3-gate": {
+  "gate": "fail",
+  "gate_rule": "registered-conditions",
+  "gate_message": "'is_night' is not a registered condition",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g4-gate": {
+  "gate": "fail",
+  "gate_rule": "params",
+  "gate_message": "health_below.threshold: 1.5 is above 1",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g5-gate": {
+  "gate": "fail",
+  "gate_rule": "params",
+  "gate_message": "Target.entity: 'dragon' is not an entity of the situation",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g6-gate": {
+  "gate": "fail",
+  "gate_rule": "params",
+  "gate_message": "'CallAllies' is not an event of fx-thorn-archer",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g7-gate": {
+  "gate": "fail",
+  "gate_rule": "params",
+  "gate_message": "BindSpirit.spirit: 'apprentice' is a ally, not a spirit",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g8-gate": {
+  "gate": "fail",
+  "gate_rule": "params",
+  "gate_message": "MovementState.mode: 'Sprint' is not one of ['Idle', 'Patrol', 'Hold', 'Advance', 'Charge', 'Kite', 'Flee', 'TakeCover', 'Regroup', 'Follow']",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ },
+ "g9-gate": {
+  "gate": "fail",
+  "gate_rule": "params",
+  "gate_message": "flag_set.flag_name: 'enraged' is not a flag of the situation",
+  "nodes": null,
+  "depth": null,
+  "checks": [],
+  "behaviour": null,
+  "grounding": null,
+  "timeline": null
+ }
+}

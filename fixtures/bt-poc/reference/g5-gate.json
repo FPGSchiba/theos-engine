@@ -1,0 +1,34 @@
+{
+ "scenario": "b11",
+ "expect": "gate:params",
+ "why": "there is no dragon in the world",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "no-such-entity",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "dragon"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Charge"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

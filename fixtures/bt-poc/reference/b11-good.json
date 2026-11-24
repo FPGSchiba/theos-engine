@@ -1,0 +1,68 @@
+{
+ "scenario": "b11",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "brute-slams",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "player"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Charge"
+      }
+     },
+     {
+      "type": "Selector",
+      "children": [
+       {
+        "type": "Sequence",
+        "children": [
+         {
+          "type": "Condition",
+          "check": "health_below",
+          "params": {
+           "threshold": 0.34
+          }
+         },
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "Attack",
+           "field": "style",
+           "value": "Heavy"
+          }
+         }
+        ]
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Attack",
+         "field": "style",
+         "value": "Melee"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

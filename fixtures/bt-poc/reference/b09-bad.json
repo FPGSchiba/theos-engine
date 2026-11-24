@@ -1,0 +1,44 @@
+{
+ "scenario": "b09",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "bell-at-once",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "RingBell",
+       "payload": {}
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "shrine"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Advance"
+      }
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  0
+ ]
+}

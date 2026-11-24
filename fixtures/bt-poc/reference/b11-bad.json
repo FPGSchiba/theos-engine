@@ -1,0 +1,72 @@
+{
+ "scenario": "b11",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "brute-flees",
+   "root": {
+    "type": "Selector",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "health_below",
+        "params": {
+         "threshold": 0.34
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Flee"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Target",
+         "field": "entity",
+         "value": "player"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Charge"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Attack",
+         "field": "style",
+         "value": "Melee"
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  1,
+  3
+ ]
+}

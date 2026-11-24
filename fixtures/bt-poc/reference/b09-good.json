@@ -1,0 +1,62 @@
+{
+ "scenario": "b09",
+ "expect": "pass",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "bell-and-shrine",
+   "root": {
+    "type": "Selector",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "flag_set",
+        "params": {
+         "flag_name": "raiders_near"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "TriggerEvent",
+        "params": {
+         "event_name": "RingBell",
+         "payload": {}
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "shrine"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Advance"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Hold"
+      }
+     }
+    ]
+   }
+  }
+ }
+}

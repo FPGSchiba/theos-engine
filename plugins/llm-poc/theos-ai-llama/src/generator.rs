@@ -29,7 +29,8 @@ use theos_ai::{Backend, BackendError, Decoder, GenerationRequest, Phase, Piece, 
 
 use crate::{LlamaError, LlamaRuntime, ModelContext};
 
-/// Context size, and the largest batch a prompt is prefilled in, in tokens.
+/// Context size, and the largest batch a prompt is prefilled in, in tokens,
+/// when the profile does not set `n_ctx`.
 pub const N_CTX: u32 = 8192;
 
 /// How many recent tokens the presence penalty looks at.
@@ -62,6 +63,13 @@ pub struct ModelProfile {
     pub sampling_off: Sampling,
     /// Sampling with thinking on.
     pub sampling_on: Sampling,
+    /// Sampling for the answer phase after `</think>` when thinking is on;
+    /// `None` keeps `sampling_on` for the whole generation.
+    #[serde(default)]
+    pub answer_sampling_on: Option<Sampling>,
+    /// Context size in tokens; `None` means [`N_CTX`].
+    #[serde(default)]
+    pub n_ctx: Option<u32>,
     /// Seed of the final `dist` sampler.
     pub seed: u32,
 }
@@ -73,6 +81,12 @@ pub struct ModelEntry {
     pub name: String,
     /// GGUF file name, relative to the models directory.
     pub file: String,
+    /// Sampling with thinking off for behaviour-tree output.
+    #[serde(default)]
+    pub tree_sampling_off: Option<Sampling>,
+    /// Sampling for the tree answer with thinking on.
+    #[serde(default)]
+    pub tree_sampling_on: Option<Sampling>,
     /// Prompting and sampling.
     #[serde(flatten)]
     pub profile: ModelProfile,
@@ -120,13 +134,14 @@ impl ModelProfile {
     }
 }
 
-/// A llama.cpp generator with all layers on the GPU and an 8192-token context.
+/// A llama.cpp generator with all layers on the GPU and the profile's context size.
 pub struct LlamaGenerator {
     mc: ModelContext,
     batch: LlamaBatch<'static>,
     factory: ParserFactory,
     template: LlamaChatTemplate,
     separator: Vec<LlamaToken>,
+    think_end: Vec<LlamaToken>,
     profile: ModelProfile,
 }
 
@@ -154,20 +169,27 @@ impl LlamaGenerator {
                 "the answer separator tokenizes to nothing".into(),
             ));
         }
+        // Special parsing on: `</think>` is one control token for Qwen3.5.
+        let think_end = model.vocab().tokenize(THINK_END.as_bytes(), false, true);
+        if think_end.is_empty() {
+            return Err(LlamaError::Model("`</think>` tokenizes to nothing".into()));
+        }
         // Built once per model: walking the vocabulary takes a while.
         let env = LlamaSampler::llguidance_tok_env(&model);
         let factory =
             ParserFactory::new_simple(&env).map_err(|e| LlamaError::Grammar(e.to_string()))?;
+        let n_ctx = profile.n_ctx.unwrap_or(N_CTX);
         let params = LlamaContextParams::default()
-            .with_n_ctx(NonZeroU32::new(N_CTX))
-            .with_n_batch(N_CTX);
+            .with_n_ctx(NonZeroU32::new(n_ctx))
+            .with_n_batch(n_ctx);
         let mc = ModelContext::new(rt, model, params)?;
         Ok(LlamaGenerator {
             mc,
-            batch: LlamaBatch::new(N_CTX as usize, 1),
+            batch: LlamaBatch::new(n_ctx as usize, 1),
             factory,
             template,
             separator,
+            think_end,
             profile,
         })
     }
@@ -186,6 +208,15 @@ impl LlamaGenerator {
     /// Number of parameters in the model.
     pub fn n_params(&self) -> u64 {
         self.mc.model().n_params()
+    }
+
+    /// Asks llguidance to compile `schema` into a matcher, without generating anything.
+    ///
+    /// # Errors
+    ///
+    /// [`BackendError::Failed`] when llguidance rejects the schema.
+    pub fn compile_schema(&self, schema: &Value) -> Result<(), BackendError> {
+        schema_matcher(&self.factory, schema).map(|_| ())
     }
 
     /// The profile the generator was loaded with.
@@ -274,7 +305,11 @@ impl Backend for LlamaGenerator {
         if n_prompt >= n_ctx {
             return Err(BackendError::ContextFull);
         }
-        let matcher = schema_matcher(&self.factory, request.schema)?;
+        // `None`: no grammar anywhere, the chain stays unconstrained.
+        let matcher = request
+            .schema
+            .map(|schema| schema_matcher(&self.factory, schema))
+            .transpose()?;
 
         self.mc.clear();
         self.batch.clear();
@@ -288,25 +323,30 @@ impl Backend for LlamaGenerator {
         let seed = self.profile.seed;
         let (sampler, answer_grammar, phase) = match request.thinking {
             Thinking::Off => (
-                sampler_chain(n_vocab, sampling, seed, Some(matcher)),
+                sampler_chain(n_vocab, sampling, seed, matcher),
                 None,
                 Phase::Answer,
             ),
             Thinking::On => (
                 sampler_chain(n_vocab, sampling, seed, None),
-                Some(matcher),
+                matcher,
                 Phase::Thinking,
             ),
         };
-        // invariant: 0 < n_prompt < n_ctx = 8192, so these fit in i32.
+        let answer_sampling = self.profile.answer_sampling_on.unwrap_or(sampling);
+        // invariant: 0 < n_prompt < n_ctx (the profile's context size, 8192 by
+        // default), so these fit in i32.
         let pos = n_prompt as i32;
         Ok(Box::new(LlamaDecoder {
             mc: &mut self.mc,
             batch: &mut self.batch,
             separator: &self.separator,
+            think_end: &self.think_end,
             sampler,
             answer_grammar,
-            sampling,
+            answer_sampling,
+            thinking_budget: request.thinking_budget,
+            thinking_pieces: 0,
             seed,
             n_vocab,
             n_ctx,
@@ -327,10 +367,18 @@ struct LlamaDecoder<'g> {
     mc: &'g mut ModelContext,
     batch: &'g mut LlamaBatch<'static>,
     separator: &'g [LlamaToken],
+    /// The `</think>` token(s), forced in when the thinking budget runs out.
+    think_end: &'g [LlamaToken],
     sampler: LlamaSampler,
-    /// Thinking on: the schema matcher waiting for the end of the thinking block.
+    /// Thinking on: the schema matcher waiting for the end of the thinking
+    /// block; `None` when there is no schema.
     answer_grammar: Option<Matcher>,
-    sampling: Sampling,
+    /// Sampling for the answer chain after the switch.
+    answer_sampling: Sampling,
+    /// Thinking pieces allowed before the decoder closes the block itself.
+    thinking_budget: Option<u32>,
+    /// Thinking pieces emitted so far.
+    thinking_pieces: u32,
     seed: u32,
     n_vocab: i32,
     n_ctx: u32,
@@ -367,12 +415,21 @@ impl LlamaDecoder<'_> {
         Ok(())
     }
 
-    /// Closes the thinking phase: queue the separator, switch to the schema chain.
+    /// Whether the thinking budget is used up without a natural close.
+    /// `Some(0)` skips thinking entirely: the block is closed before the first token.
+    fn budget_spent(&self) -> bool {
+        self.phase == Phase::Thinking
+            && self
+                .thinking_budget
+                .is_some_and(|budget| self.thinking_pieces >= budget)
+    }
+
+    /// Closes the thinking phase: queue the separator, switch to the answer chain.
     fn start_answer(&mut self) {
         self.pending.extend_from_slice(self.separator);
         // A fresh matcher: none of the thinking tokens are replayed into it.
         let grammar = self.answer_grammar.take();
-        self.sampler = sampler_chain(self.n_vocab, self.sampling, self.seed, grammar);
+        self.sampler = sampler_chain(self.n_vocab, self.answer_sampling, self.seed, grammar);
         self.phase = Phase::Answer;
     }
 }
@@ -385,6 +442,12 @@ impl Decoder for LlamaDecoder<'_> {
     fn next(&mut self) -> Result<Option<Piece>, BackendError> {
         if self.finished {
             return Ok(None);
+        }
+        if self.budget_spent() {
+            // The model did not close the block in time: close it for it. The
+            // forced tokens are decoded, not emitted.
+            self.pending.extend_from_slice(self.think_end);
+            self.start_answer();
         }
         if !self.pending.is_empty() {
             self.decode_pending()?;
@@ -405,6 +468,7 @@ impl Decoder for LlamaDecoder<'_> {
                 phase: Phase::Answer,
             })),
             Phase::Thinking => {
+                self.thinking_pieces += 1;
                 self.thinking_text.push_str(&text);
                 if ends_thinking(&self.thinking_text) {
                     self.start_answer();
@@ -496,6 +560,8 @@ mod tests {
             thinking_on_prefix: "<think>\n".into(),
             sampling_off: s,
             sampling_on: s,
+            answer_sampling_on: None,
+            n_ctx: None,
             seed: 42,
         }
     }
@@ -542,6 +608,55 @@ mod tests {
                 top_k: 20,
                 presence_penalty: 1.5
             }
+        );
+    }
+
+    #[test]
+    fn models_toml_parses_tree_sampling_and_n_ctx() {
+        let file = ModelsFile::parse(include_str!("../../models.toml")).unwrap();
+        let m = &file.models[0];
+        assert_eq!(
+            m.tree_sampling_off,
+            Some(Sampling {
+                temperature: 0.7,
+                top_p: 0.8,
+                top_k: 20,
+                presence_penalty: 0.0
+            })
+        );
+        assert_eq!(
+            m.tree_sampling_on,
+            Some(Sampling {
+                temperature: 1.0,
+                top_p: 0.95,
+                top_k: 20,
+                presence_penalty: 0.0
+            })
+        );
+        // The dialogue profile has neither an answer sampling nor a context size.
+        assert_eq!(m.profile.answer_sampling_on, None);
+        assert_eq!(m.profile.n_ctx, None);
+        let parsed = ModelsFile::parse(
+            r#"
+embedder = "e.gguf"
+
+[[model]]
+name = "m"
+file = "m.gguf"
+thinking_off_prefix = ""
+thinking_on_prefix = ""
+seed = 1
+n_ctx = 16384
+sampling_off = { temperature = 0.7, top_p = 0.8, top_k = 20, presence_penalty = 0.0 }
+sampling_on = { temperature = 1.0, top_p = 0.95, top_k = 20, presence_penalty = 0.0 }
+answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_penalty = 0.0 }
+"#,
+        )
+        .unwrap();
+        assert_eq!(parsed.models[0].profile.n_ctx, Some(16384));
+        assert_eq!(
+            parsed.models[0].profile.answer_sampling_on.map(|a| a.top_k),
+            Some(10)
         );
     }
 

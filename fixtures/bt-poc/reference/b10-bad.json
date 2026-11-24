@@ -1,0 +1,87 @@
+{
+ "scenario": "b10",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "archer-brawls",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "player"
+      }
+     },
+     {
+      "type": "Selector",
+      "children": [
+       {
+        "type": "Sequence",
+        "children": [
+         {
+          "type": "Condition",
+          "check": "entity_in_range",
+          "params": {
+           "target_entity": "player",
+           "radius": 8
+          }
+         },
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "Attack",
+           "field": "style",
+           "value": "Melee"
+          }
+         },
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "MovementState",
+           "field": "mode",
+           "value": "Charge"
+          }
+         }
+        ]
+       },
+       {
+        "type": "Sequence",
+        "children": [
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "Attack",
+           "field": "style",
+           "value": "Ranged"
+          }
+         },
+         {
+          "type": "Action",
+          "command": "SetComponentValue",
+          "params": {
+           "component": "MovementState",
+           "field": "mode",
+           "value": "Hold"
+          }
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  1,
+  2
+ ]
+}

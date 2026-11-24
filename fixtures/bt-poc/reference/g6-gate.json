@@ -1,0 +1,24 @@
+{
+ "scenario": "b10",
+ "expect": "gate:params",
+ "why": "CallAllies is not an event of this actor",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "not-my-event",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "CallAllies",
+       "payload": {}
+      }
+     }
+    ]
+   }
+  }
+ }
+}

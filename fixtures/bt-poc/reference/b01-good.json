@@ -1,0 +1,78 @@
+{
+ "scenario": "b01",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-918"
+  ],
+  "tree": {
+   "name": "calm-carving",
+   "root": {
+    "type": "Selector",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Condition",
+        "check": "flag_set",
+        "params": {
+         "flag_name": "threatened"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "cellar"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "TakeCover"
+        }
+       }
+      ]
+     },
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "Destination",
+         "field": "entity",
+         "value": "workshop-door"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "SetComponentValue",
+        "params": {
+         "component": "MovementState",
+         "field": "mode",
+         "value": "Hold"
+        }
+       },
+       {
+        "type": "Action",
+        "command": "TriggerEvent",
+        "params": {
+         "event_name": "CarveRune",
+         "payload": {}
+        }
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

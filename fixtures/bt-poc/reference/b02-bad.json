@@ -1,0 +1,35 @@
+{
+ "scenario": "b02",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "wake-at-once",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "gate-glyph"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "WakeGlyph",
+       "payload": {}
+      }
+     }
+    ]
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  0
+ ]
+}

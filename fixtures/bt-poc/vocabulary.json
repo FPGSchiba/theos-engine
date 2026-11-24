@@ -1,0 +1,388 @@
+{
+ "tick_seconds": 0.5,
+ "limits": {
+  "max_depth": 10,
+  "max_nodes": 50
+ },
+ "node_types": {
+  "Sequence": {
+   "fields": {
+    "children": "nodes"
+   },
+   "doc": "run children in order; fails on the first failure"
+  },
+  "Selector": {
+   "fields": {
+    "children": "nodes"
+   },
+   "doc": "run children in order; succeeds on the first success"
+  },
+  "Parallel": {
+   "fields": {
+    "children": "nodes",
+    "policy": {
+     "type": "string",
+     "enum": [
+      "all",
+      "one"
+     ],
+     "x-theos-one-of": [
+      "all",
+      "one"
+     ]
+    }
+   },
+   "doc": "tick every child; 'all' succeeds when all succeed, 'one' when one does"
+  },
+  "Decorator_Repeat": {
+   "fields": {
+    "child": "node",
+    "count": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10,
+     "x-theos-range": [
+      1,
+      10
+     ]
+    }
+   },
+   "doc": "run the child count times; fails when it fails"
+  },
+  "Decorator_Invert": {
+   "fields": {
+    "child": "node"
+   },
+   "doc": "swap success and failure of the child"
+  },
+  "Decorator_Timeout": {
+   "fields": {
+    "child": "node",
+    "seconds": {
+     "type": "number",
+     "minimum": 0.5,
+     "maximum": 30,
+     "x-theos-range": [
+      0.5,
+      30
+     ],
+     "x-theos-units": "s"
+    }
+   },
+   "doc": "fail the child if it is still running after seconds"
+  },
+  "Condition": {
+   "fields": {
+    "check": "condition name",
+    "params": "condition params"
+   },
+   "doc": "check the world; succeeds when true"
+  },
+  "Action": {
+   "fields": {
+    "command": "command name",
+    "params": "command params"
+   },
+   "doc": "change your state or fire an event; always succeeds"
+  },
+  "Wait": {
+   "fields": {
+    "seconds": {
+     "type": "number",
+     "minimum": 0.5,
+     "maximum": 30,
+     "x-theos-range": [
+      0.5,
+      30
+     ],
+     "x-theos-units": "s"
+    }
+   },
+   "doc": "keep running for seconds, then succeed"
+  }
+ },
+ "conditions": {
+  "health_below": {
+   "doc": "your health, from 0 to 1, is below threshold",
+   "params": {
+    "threshold": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 1,
+     "x-theos-range": [
+      0,
+      1
+     ]
+    }
+   }
+  },
+  "entity_in_range": {
+   "doc": "target_entity is within radius metres of you",
+   "params": {
+    "target_entity": {
+     "type": "string",
+     "x-theos-live-entity": true
+    },
+    "radius": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 100,
+     "x-theos-range": [
+      0,
+      100
+     ],
+     "x-theos-units": "m"
+    }
+   }
+  },
+  "flag_set": {
+   "doc": "the flag is set; the situation lists the flags that can be set",
+   "params": {
+    "flag_name": {
+     "type": "string",
+     "x-theos-scenario-flag": true
+    }
+   }
+  },
+  "allies_in_range": {
+   "doc": "at least at_least allies (not counting you) are within radius metres",
+   "params": {
+    "radius": {
+     "type": "number",
+     "minimum": 0,
+     "maximum": 100,
+     "x-theos-range": [
+      0,
+      100
+     ],
+     "x-theos-units": "m"
+    },
+    "at_least": {
+     "type": "integer",
+     "minimum": 1,
+     "maximum": 10,
+     "x-theos-range": [
+      1,
+      10
+     ]
+    }
+   },
+   "fixture_addition": true
+  },
+  "time_since_install_over": {
+   "doc": "at least seconds have passed since this tree was installed",
+   "params": {
+    "seconds": {
+     "type": "number",
+     "minimum": 0.5,
+     "maximum": 60,
+     "x-theos-range": [
+      0.5,
+      60
+     ],
+     "x-theos-units": "s"
+    }
+   },
+   "fixture_addition": true
+  }
+ },
+ "left_out": {
+  "has_component": "every actor has the same four components, so the check means nothing here",
+  "random_chance": "the scoring is deterministic",
+  "SpawnEntity, DestroyEntity, UpdateBehaviorTree": "no scenario needs them yet"
+ },
+ "commands": {
+  "SetComponentValue": {
+   "doc": "set one field of one of your components",
+   "params": {
+    "component": "component name",
+    "field": "field name",
+    "value": "per component field"
+   }
+  },
+  "TriggerEvent": {
+   "doc": "fire one of the events you are allowed",
+   "params": {
+    "event_name": "event name",
+    "payload": "per event"
+   }
+  }
+ },
+ "components": {
+  "MovementState": {
+   "mode": {
+    "type": "string",
+    "enum": [
+     "Idle",
+     "Patrol",
+     "Hold",
+     "Advance",
+     "Charge",
+     "Kite",
+     "Flee",
+     "TakeCover",
+     "Regroup",
+     "Follow"
+    ],
+    "x-theos-one-of": [
+     "Idle",
+     "Patrol",
+     "Hold",
+     "Advance",
+     "Charge",
+     "Kite",
+     "Flee",
+     "TakeCover",
+     "Regroup",
+     "Follow"
+    ]
+   }
+  },
+  "Target": {
+   "entity": {
+    "type": "string",
+    "x-theos-live-entity": true,
+    "x-theos-allow-none": true
+   }
+  },
+  "Destination": {
+   "entity": {
+    "type": "string",
+    "x-theos-live-entity": true,
+    "x-theos-allow-none": true
+   }
+  },
+  "Attack": {
+   "style": {
+    "type": "string",
+    "enum": [
+     "None",
+     "Melee",
+     "Ranged",
+     "Heavy"
+    ],
+    "x-theos-one-of": [
+     "None",
+     "Melee",
+     "Ranged",
+     "Heavy"
+    ]
+   }
+  }
+ },
+ "modes": {
+  "Idle": "do nothing in particular",
+  "Patrol": "walk the usual route",
+  "Hold": "stay at Destination (or where you are) and face Target",
+  "Advance": "move toward Destination, or toward Target when no Destination is set",
+  "Charge": "run at Target to close to melee",
+  "Kite": "keep a safe distance from Target while attacking it",
+  "Flee": "run away from danger, toward Destination if one is set",
+  "TakeCover": "move to Destination and stay hidden there",
+  "Regroup": "fall back to Destination, where allies gather",
+  "Follow": "stay close to Target"
+ },
+ "attack_styles": {
+  "None": "do not attack",
+  "Melee": "strike in hand-to-hand range",
+  "Ranged": "shoot or throw from a distance",
+  "Heavy": "the strongest blow you have"
+ },
+ "events": {
+  "CarveRune": {
+   "doc": "carve a glyph into the work in front of you",
+   "payload": {}
+  },
+  "BreathTest": {
+   "doc": "trace a glyph in the air and count a slow breath along each line",
+   "payload": {}
+  },
+  "MeasureCord": {
+   "doc": "check the spacing of a glyph with a measuring-cord",
+   "payload": {}
+  },
+  "WakeGlyph": {
+   "doc": "wake a carved glyph with a strike to its heart",
+   "payload": {}
+  },
+  "Chant": {
+   "doc": "sing one chant of the songbook",
+   "payload": {
+    "chant": {
+     "type": "string",
+     "enum": [
+      "Ground-Ohm",
+      "Kharrian's Stride",
+      "Severing Sa"
+     ],
+     "x-theos-one-of": [
+      "Ground-Ohm",
+      "Kharrian's Stride",
+      "Severing Sa"
+     ]
+    }
+   }
+  },
+  "BindSpirit": {
+   "doc": "sing to a Listener until it agrees to lend its voice",
+   "payload": {
+    "spirit": {
+     "type": "string",
+     "x-theos-live-entity": true,
+     "x-theos-entity-kind": "spirit"
+    }
+   }
+  },
+  "ReadPlate": {
+   "doc": "copy and study the inscription on an old plate",
+   "payload": {
+    "plate": {
+     "type": "string",
+     "x-theos-live-entity": true,
+     "x-theos-entity-kind": "plate"
+    }
+   }
+  },
+  "RingBell": {
+   "doc": "ring the village bell",
+   "payload": {}
+  },
+  "CallAllies": {
+   "doc": "call your squad to you",
+   "payload": {}
+  }
+ },
+ "actors": {
+  "fx-hedge-scribe": [
+   "CarveRune",
+   "BreathTest",
+   "MeasureCord",
+   "WakeGlyph"
+  ],
+  "fx-academy-scribe": [
+   "CarveRune",
+   "BreathTest",
+   "MeasureCord",
+   "WakeGlyph"
+  ],
+  "fx-cantor": [
+   "Chant"
+  ],
+  "fx-binder": [
+   "BindSpirit"
+  ],
+  "fx-sect-elder": [],
+  "fx-plate-reader": [
+   "ReadPlate"
+  ],
+  "fx-shrine-keeper": [
+   "RingBell"
+  ],
+  "fx-thorn-archer": [],
+  "fx-stone-brute": [],
+  "fx-reed-lurker": [],
+  "fx-warden-captain": [
+   "CallAllies"
+  ]
+ }
+}

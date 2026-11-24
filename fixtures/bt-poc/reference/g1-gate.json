@@ -1,0 +1,70 @@
+{
+ "scenario": "b11",
+ "expect": "gate:max-depth",
+ "why": "eleven levels deep",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "too-deep",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Sequence",
+      "children": [
+       {
+        "type": "Sequence",
+        "children": [
+         {
+          "type": "Sequence",
+          "children": [
+           {
+            "type": "Sequence",
+            "children": [
+             {
+              "type": "Sequence",
+              "children": [
+               {
+                "type": "Sequence",
+                "children": [
+                 {
+                  "type": "Sequence",
+                  "children": [
+                   {
+                    "type": "Sequence",
+                    "children": [
+                     {
+                      "type": "Sequence",
+                      "children": [
+                       {
+                        "type": "Action",
+                        "command": "SetComponentValue",
+                        "params": {
+                         "component": "MovementState",
+                         "field": "mode",
+                         "value": "Hold"
+                        }
+                       }
+                      ]
+                     }
+                    ]
+                   }
+                  ]
+                 }
+                ]
+               }
+              ]
+             }
+            ]
+           }
+          ]
+         }
+        ]
+       }
+      ]
+     }
+    ]
+   }
+  }
+ }
+}

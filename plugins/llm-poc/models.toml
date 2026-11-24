@@ -10,3 +10,5 @@ thinking_on_prefix = "<think>\n"
 seed = 42
 sampling_off = { temperature = 0.7, top_p = 0.8, top_k = 20, presence_penalty = 1.5 }
 sampling_on = { temperature = 1.0, top_p = 0.95, top_k = 20, presence_penalty = 1.5 }
+tree_sampling_off = { temperature = 0.7, top_p = 0.8, top_k = 20, presence_penalty = 0.0 }
+tree_sampling_on = { temperature = 1.0, top_p = 0.95, top_k = 20, presence_penalty = 0.0 }

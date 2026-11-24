@@ -1,0 +1,67 @@
+{
+ "scenario": "b04",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-936",
+   "B-937",
+   "B-938"
+  ],
+  "tree": {
+   "name": "mend-the-wall",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "north-wall"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Hold"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "Chant",
+       "payload": {
+        "chant": "Ground-Ohm"
+       }
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "Chant",
+       "payload": {
+        "chant": "Kharrian's Stride"
+       }
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "Chant",
+       "payload": {
+        "chant": "Severing Sa"
+       }
+      }
+     }
+    ]
+   }
+  }
+ }
+}

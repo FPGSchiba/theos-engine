@@ -1,0 +1,27 @@
+{
+ "scenario": "b05",
+ "reply": {
+  "sources": [],
+  "tree": {
+   "name": "unending-drone",
+   "root": {
+    "type": "Decorator_Repeat",
+    "child": {
+     "type": "Action",
+     "command": "TriggerEvent",
+     "params": {
+      "event_name": "Chant",
+      "payload": {
+       "chant": "Ground-Ohm"
+      }
+     }
+    },
+    "count": 10
+   }
+  }
+ },
+ "expect": "breaks",
+ "breaks": [
+  0
+ ]
+}

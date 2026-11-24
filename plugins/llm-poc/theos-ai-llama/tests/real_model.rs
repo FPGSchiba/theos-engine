@@ -134,8 +134,9 @@ fn generator_reply_parses_with_theos_ai_parse_reply() {
     let schema = reply_schema(&ids);
     let request = GenerationRequest {
         prompt: &prompt,
-        schema: &schema,
+        schema: Some(&schema),
         thinking: Thinking::Off,
+        thinking_budget: None,
     };
     let first = run_to_end(&mut generator, &request);
     assert_eq!(first.thinking_pieces, 0, "thinking off emits only answer");
@@ -160,8 +161,9 @@ fn generator_emits_thinking_pieces_then_answer_when_thinking_on() {
     let schema = reply_schema(&ids);
     let request = GenerationRequest {
         prompt: &prompt,
-        schema: &schema,
+        schema: Some(&schema),
         thinking: Thinking::On,
+        thinking_budget: None,
     };
     let run = run_to_end(&mut generator, &request);
     assert!(
@@ -171,6 +173,115 @@ fn generator_emits_thinking_pieces_then_answer_when_thinking_on() {
     let reply = parse_reply(&run.answer, &ids)
         .unwrap_or_else(|e| panic!("{e:?} from raw answer {:?}", run.answer));
     assert!(!reply.text.trim().is_empty(), "empty reply text");
+}
+
+#[test]
+fn generator_without_schema_returns_free_text() {
+    let _gpu = gpu();
+    let mut generator = generator();
+    let prompt = Prompt {
+        system: "Answer with exactly one plain word and nothing else.".into(),
+        user: "What colour is a clear daytime sky?".into(),
+    };
+    let request = GenerationRequest {
+        prompt: &prompt,
+        schema: None,
+        thinking: Thinking::Off,
+        thinking_budget: None,
+    };
+    let run = run_to_end(&mut generator, &request);
+    assert!(!run.answer.trim().is_empty(), "empty free-text answer");
+    assert!(
+        !run.answer.trim_start().starts_with('{'),
+        "answer was forced into JSON: {:?}",
+        run.answer
+    );
+}
+
+#[test]
+fn generator_uses_the_configured_n_ctx() {
+    let _gpu = gpu();
+    let m = &models().models[0];
+    let mut profile = m.profile.clone();
+    profile.n_ctx = Some(16384);
+    let mut generator =
+        LlamaGenerator::load(runtime(), &require(&m.file), profile).expect("load generator");
+    let mut filler = String::new();
+    while generator.count_tokens(&filler, false) < 9000 {
+        filler.push_str("The forge burns low and the old smith hums a tuneless song. ");
+    }
+    let prompt = Prompt {
+        system: "Summarise the text in one word.".into(),
+        user: filler,
+    };
+    let request = GenerationRequest {
+        prompt: &prompt,
+        schema: None,
+        thinking: Thinking::Off,
+        thinking_budget: None,
+    };
+    let mut decoder = generator
+        .begin(&request)
+        .expect("a 9000-token prompt fits in 16384");
+    assert!(decoder.prompt_tokens() > 8192);
+    for _ in 0..4 {
+        decoder
+            .next()
+            .expect("no ContextFull within the first pieces");
+    }
+}
+
+#[test]
+fn generator_closes_thinking_at_the_budget() {
+    let _gpu = gpu();
+    let mut generator = generator();
+    let (prompt, ids) = (prompt(), ids());
+    let schema = reply_schema(&ids);
+    // 8 pieces: the model cannot close its thinking naturally that fast, so
+    // the forced close must have fired.
+    let budget = 8;
+    let request = GenerationRequest {
+        prompt: &prompt,
+        schema: Some(&schema),
+        thinking: Thinking::On,
+        thinking_budget: Some(budget),
+    };
+    let run = run_to_end(&mut generator, &request);
+    assert_eq!(
+        run.thinking_pieces, budget as usize,
+        "the forced close did not fire at the budget"
+    );
+    assert!(
+        !run.answer.contains("</think>"),
+        "forced tokens leaked into the answer: {:?}",
+        run.answer
+    );
+    parse_reply(&run.answer, &ids)
+        .unwrap_or_else(|e| panic!("{e:?} from raw answer {:?}", run.answer));
+}
+
+#[test]
+fn generator_without_schema_closes_thinking_at_the_budget() {
+    let _gpu = gpu();
+    let mut generator = generator();
+    let prompt = Prompt {
+        system: "Answer in one short sentence.".into(),
+        user: "What colour is a clear daytime sky?".into(),
+    };
+    let request = GenerationRequest {
+        prompt: &prompt,
+        schema: None,
+        thinking: Thinking::On,
+        thinking_budget: Some(8),
+    };
+    let run = run_to_end(&mut generator, &request);
+    assert_eq!(run.thinking_pieces, 8, "the forced close did not fire");
+    assert!(!run.answer.trim().is_empty(), "empty unconstrained answer");
+    assert!(
+        !run.answer.contains("</think>"),
+        "forced tokens leaked into the answer: {:?}",
+        run.answer
+    );
 }
 
 #[test]

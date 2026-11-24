@@ -1,0 +1,42 @@
+{
+ "scenario": "b03",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-920"
+  ],
+  "tree": {
+   "name": "wake-academy",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "gate-glyph"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "MeasureCord",
+       "payload": {}
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "WakeGlyph",
+       "payload": {}
+      }
+     }
+    ]
+   }
+  }
+ }
+}

@@ -1,0 +1,54 @@
+{
+ "scenario": "b06",
+ "expect": "pass",
+ "reply": {
+  "sources": [
+   "B-947"
+  ],
+  "tree": {
+   "name": "lesson-on-ember",
+   "root": {
+    "type": "Sequence",
+    "children": [
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Target",
+       "field": "entity",
+       "value": "grandfather-ember"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "Destination",
+       "field": "entity",
+       "value": "grandfather-ember"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "SetComponentValue",
+      "params": {
+       "component": "MovementState",
+       "field": "mode",
+       "value": "Advance"
+      }
+     },
+     {
+      "type": "Action",
+      "command": "TriggerEvent",
+      "params": {
+       "event_name": "BindSpirit",
+       "payload": {
+        "spirit": "grandfather-ember"
+       }
+      }
+     }
+    ]
+   }
+  }
+ }
+}

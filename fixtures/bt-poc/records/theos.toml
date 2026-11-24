@@ -1,0 +1,8 @@
+# PoC fixture, synthetic, not canon
+[project]
+name = "bt-poc-fixture"
+kind = "content"
+schema_version = 1
+
+[parts]
+enabled = ["codex", "changes", "scripts", "graph", "concepts", "maps", "review", "mcp"]
