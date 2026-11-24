@@ -636,3 +636,10 @@ G1 on the final build equals `none` byte for byte on every row without forged sp
 **Moderation review pages:** `moderation-review.md` in each moderation results folder (local).
 - "Closest allowed" is sorted by the distance to the line, which accounts for the margin.
 - The header gives the per-check timing.
+
+**Owner decisions after the results (2026-11-24):**
+- Spotlighting (G4) stays on for dialogue, off for trees. G9 stays off.
+- Thresholds stay at 0.54 / 0.14.
+- In-character deflections that name out-of-world things (s06, s11) stay blocked.
+- **All blocked texts in the normal suites are acceptable.** The mechanism is right. Tuning examples and thresholds against false glitches is each game developer's job: their own lists, possibly per dialogue.
+- **The example lists in `fixtures/moderation/` are test data for this PoC, not engine content.** Each game brings its own moderation through the `ContentModerator` API: its own lists for `KnnModerator`, or its own implementation. No content sign-off is needed here.
