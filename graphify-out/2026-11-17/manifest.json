@@ -1,0 +1,2264 @@
+{
+  ".githooks/pre-commit": {
+    "mtime": 1794556074.6675727,
+    "seen": 1794560768.489814,
+    "ast_hash": "fc97ee2fcd9001e9717989f99bdb5f06",
+    "semantic_hash": ""
+  },
+  "plugins/theos-audio/src/lib.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489829,
+    "ast_hash": "80381954b30a65e80d588784b63bae31",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/components.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898317,
+    "ast_hash": "a180ad971eeeeb1a5a3e6b970a64fac5",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/lib.rs": {
+    "mtime": 1794943797.3463676,
+    "seen": 1794943888.755165,
+    "ast_hash": "5fec1a261fc2ddb9a53b1c8e0be761ed",
+    "semantic_hash": ""
+  },
+  "theos-assets/src/lib.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.48984,
+    "ast_hash": "953c2f4af17bc95b8a7f4e6636da4c65",
+    "semantic_hash": ""
+  },
+  "theos-core/benches/event_bus.rs": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.4898407,
+    "ast_hash": "56b1e0546e091bf16c6b67898e6366da",
+    "semantic_hash": ""
+  },
+  "theos-core/benches/event_bus_alloc.rs": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.4898415,
+    "ast_hash": "1ad43fab1b3ad15f1b9c974295abfbbd",
+    "semantic_hash": ""
+  },
+  "theos-core/benches/frame_timing.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489842,
+    "ast_hash": "4c3ceba3615983699d4247537c85a76a",
+    "semantic_hash": ""
+  },
+  "theos-core/src/dependency_resolver.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898424,
+    "ast_hash": "cc3001be422df5103e7bd1905b494045",
+    "semantic_hash": ""
+  },
+  "theos-core/src/error.rs": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.4898431,
+    "ast_hash": "2ac76d8dd000547e06bf6c4eaa706c8e",
+    "semantic_hash": ""
+  },
+  "theos-core/src/event.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898436,
+    "ast_hash": "40ee767269885c0307e48ebf6bcb9922",
+    "semantic_hash": ""
+  },
+  "theos-core/src/frame_timer.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898446,
+    "ast_hash": "9b7a2353f56b0020e83dc407285b0096",
+    "semantic_hash": ""
+  },
+  "theos-core/src/kernel.rs": {
+    "mtime": 1794556074.6722043,
+    "seen": 1794560768.489845,
+    "ast_hash": "77bf97de9809b091dc92698f67c50083",
+    "semantic_hash": ""
+  },
+  "theos-core/src/lib.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898455,
+    "ast_hash": "f4252062b629292a15256b8af43dd99c",
+    "semantic_hash": ""
+  },
+  "theos-core/src/logging.rs": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.4898462,
+    "ast_hash": "94af06c7bf309c0656e7300c463c4d16",
+    "semantic_hash": ""
+  },
+  "theos-core/tests/kernel_integration.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489847,
+    "ast_hash": "0e9326c4c95dbbeab5ddfa02f28738a9",
+    "semantic_hash": ""
+  },
+  "theos-ecs/src/lib.rs": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.4898481,
+    "ast_hash": "256d0db5b23b8a9fc4db6d4ef0620c9e",
+    "semantic_hash": ""
+  },
+  "theos-ecs/src/testkit.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898486,
+    "ast_hash": "34cb63b07621de182cdf8c850760542e",
+    "semantic_hash": ""
+  },
+  "theos-editor/src/main.rs": {
+    "mtime": 1794556074.6722043,
+    "seen": 1794560768.48985,
+    "ast_hash": "e310766060c869385ec5db2823e7ad7b",
+    "semantic_hash": ""
+  },
+  "theos-game/src/main.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898515,
+    "ast_hash": "e310766060c869385ec5db2823e7ad7b",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/app_handler.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489852,
+    "ast_hash": "42b397800e1a3fffac03587bed4be834",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/close_to_exit.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898527,
+    "ast_hash": "de94cb86087d488bb884429d9daab1ca",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/escape_to_quit.rs": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.4898531,
+    "ast_hash": "b3a013fd273cfddd374e71a7ac752fe0",
+    "semantic_hash": ""
+  },
+  "theos-launcher/src/main.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898539,
+    "ast_hash": "94f2bbb08e77068458a4a63201626735",
+    "semantic_hash": ""
+  },
+  "theos-launcher/tests/lifecycle.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898546,
+    "ast_hash": "2321592abec37980aa7460d0cc2515e0",
+    "semantic_hash": ""
+  },
+  "theos-launcher/tests/log_filtering.rs": {
+    "mtime": 1794556074.6722043,
+    "seen": 1794560768.489855,
+    "ast_hash": "6d4b11982d90b00694dea693acf161bf",
+    "semantic_hash": ""
+  },
+  "theos-launcher/tests/log_format.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898558,
+    "ast_hash": "95e963658a41b9e5656107c3085a4372",
+    "semantic_hash": ""
+  },
+  "theos-math/benches/math_benches.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898708,
+    "ast_hash": "e3f5029e3058b6927184c46c8b0223a4",
+    "semantic_hash": ""
+  },
+  "theos-math/src/aabb.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898715,
+    "ast_hash": "14b0da350af004bd91b2d35a2916dd2b",
+    "semantic_hash": ""
+  },
+  "theos-math/src/lib.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898725,
+    "ast_hash": "f447cb260abceb693e36e9535986feef",
+    "semantic_hash": ""
+  },
+  "theos-math/src/mat.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.489873,
+    "ast_hash": "d4d03cb9ed55aca4cbb1f9e938baecf9",
+    "semantic_hash": ""
+  },
+  "theos-math/src/plane.rs": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.4898734,
+    "ast_hash": "a8dc4ecf3329a898e961ebba23cdf85b",
+    "semantic_hash": ""
+  },
+  "theos-math/src/quat.rs": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.489874,
+    "ast_hash": "9ec3bbab107ad412d221b18001c3df0e",
+    "semantic_hash": ""
+  },
+  "theos-math/src/ray.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898744,
+    "ast_hash": "879fd7b4143290087a449083d9f1fc22",
+    "semantic_hash": ""
+  },
+  "theos-math/src/vec.rs": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.4898753,
+    "ast_hash": "265626cadc2f96bb33d1b85e0a4668c4",
+    "semantic_hash": ""
+  },
+  "theos-physics/src/event.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898763,
+    "ast_hash": "bdce12353336bdafc41620b883efe08f",
+    "semantic_hash": ""
+  },
+  "theos-physics/src/lib.rs": {
+    "mtime": 1794556074.6722043,
+    "seen": 1794560768.4898767,
+    "ast_hash": "ee74993facd08b6edf6eab517b02c277",
+    "semantic_hash": ""
+  },
+  "theos-plugin-api/src/lib.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898777,
+    "ast_hash": "80381954b30a65e80d588784b63bae31",
+    "semantic_hash": ""
+  },
+  "theos-plugin-loader/src/lib.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489879,
+    "ast_hash": "80381954b30a65e80d588784b63bae31",
+    "semantic_hash": ""
+  },
+  "theos-render/src/lib.rs": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.48988,
+    "ast_hash": "953c2f4af17bc95b8a7f4e6636da4c65",
+    "semantic_hash": ""
+  },
+  "theos-scripting/src/lib.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898813,
+    "ast_hash": "953c2f4af17bc95b8a7f4e6636da4c65",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/error.rs": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.4898818,
+    "ast_hash": "2c417f3ddaa290830ea7035a6aa7e00b",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/event_bus.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898825,
+    "ast_hash": "0e4e9ee4196f216f33be1a06037b5dca",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/kernel_context.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.489883,
+    "ast_hash": "86adc90df4db24ba4f59805b8600dada",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/lib.rs": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.4898834,
+    "ast_hash": "a0ab5fbfbacfc3a14f2f179a78880899",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/module.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898841,
+    "ast_hash": "4f21837f330412947a60ae14cac39ead",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/prelude.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898846,
+    "ast_hash": "94bd468ddd0a6ce65e738179fa981fba",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/service_locator.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898853,
+    "ast_hash": "380bcf8389547e76b2d335057c4b0550",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/shutdown_requester.rs": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.489886,
+    "ast_hash": "a1d815152bfa287932f3619927994095",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/types.rs": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.4898865,
+    "ast_hash": "fe85530d29c7f70926682c392ea7c158",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/window_event.rs": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.4898872,
+    "ast_hash": "96b60d98457b618fdd20d0dd5c67a95c",
+    "semantic_hash": ""
+  },
+  "theos-shared/src/world_access.rs": {
+    "mtime": 1794556074.6762376,
+    "seen": 1794560768.4898877,
+    "ast_hash": "b122bcf5c48b1d2847e69e2db88e6859",
+    "semantic_hash": ""
+  },
+  "theos-window/src/error.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898887,
+    "ast_hash": "acc1634d68b23429e1c7d3bcd0afcec4",
+    "semantic_hash": ""
+  },
+  "theos-window/src/event_translator.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898894,
+    "ast_hash": "e89255175020e9b3a02377333323a397",
+    "semantic_hash": ""
+  },
+  "theos-window/src/key_translate.rs": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.4898899,
+    "ast_hash": "a1cbd81fe39978fa740b63566d64c022",
+    "semantic_hash": ""
+  },
+  "theos-window/src/lib.rs": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.4898903,
+    "ast_hash": "447c22eb6855983703bdd5635256505c",
+    "semantic_hash": ""
+  },
+  "theos-window/src/window_factory.rs": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.4898908,
+    "ast_hash": "f37034ac8804ab6ba188a7425a8f801a",
+    "semantic_hash": ""
+  },
+  "theos-window/src/window_handle.rs": {
+    "mtime": 1794556074.6762376,
+    "seen": 1794560768.4898913,
+    "ast_hash": "903a14abcd08a61d68b7cd77d618c85d",
+    "semantic_hash": ""
+  },
+  "theos-window/src/window_module.rs": {
+    "mtime": 1794556074.6762376,
+    "seen": 1794560768.4898918,
+    "ast_hash": "59b7149b697691bf37eb016ce3baa63e",
+    "semantic_hash": ""
+  },
+  ".github/dependabot.yml": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.4898922,
+    "ast_hash": "3f967ca81558162909ec192b615e6d0f",
+    "semantic_hash": ""
+  },
+  ".github/workflows/check-lint.yml": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.489893,
+    "ast_hash": "5ab146dd998f7054ea04c0bf7c03089c",
+    "semantic_hash": ""
+  },
+  ".github/workflows/release-packaging.yml": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.4898937,
+    "ast_hash": "fd8d91738e48baead0ec4d6dddaab47a",
+    "semantic_hash": ""
+  },
+  ".github/workflows/test.yml": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.4898942,
+    "ast_hash": "15b8065718e7414be04961d3a251bc4e",
+    "semantic_hash": ""
+  },
+  "CLAUDE.md": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898946,
+    "ast_hash": "260b822c69fde326a711f625b7f00e1c",
+    "semantic_hash": ""
+  },
+  "README.md": {
+    "mtime": 1794556074.6675727,
+    "seen": 1794560768.489895,
+    "ast_hash": "6b542f147d017eb2d8062cefa9c15353",
+    "semantic_hash": ""
+  },
+  "agents/mentor.md": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.4898956,
+    "ast_hash": "75f0e60695efbe03a51593d6e49e97e0",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-12.md": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4899557,
+    "ast_hash": "dfbf19ad538e1874da7f463b8972261b",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-147.md": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4899564,
+    "ast_hash": "e4b16a2e398eb94d08fc6dfa0c4fefe3",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-15.md": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.4899578,
+    "ast_hash": "21c9be15f8005a356d06a869960e130d",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-16.md": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.489961,
+    "ast_hash": "c85b9e23949d796439c280a764978e78",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-17.md": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4899614,
+    "ast_hash": "ff4e607529e4513d73fb04dce63fd1e1",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-86.md": {
+    "mtime": 1794556074.6722043,
+    "seen": 1794560768.489965,
+    "ast_hash": "152277f1e5ed631e456074fbc39a716d",
+    "semantic_hash": ""
+  },
+  "plans/test-coverage-2026-06-08.md": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.4899666,
+    "ast_hash": "021089dc944ea78c8bda3831b7d8ed10",
+    "semantic_hash": ""
+  },
+  "qodana.yaml": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489967,
+    "ast_hash": "8346400e25b3619dfba7b4a90da7a537",
+    "semantic_hash": ""
+  },
+  "theos-shared/README.md": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4899676,
+    "ast_hash": "85605a3c4b731c27009ededd6b7c7c1f",
+    "semantic_hash": ""
+  },
+  "theos-window/README.md": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.489968,
+    "ast_hash": "f841b10a46275ee389acbd92ed5bc554",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/chakra.rs": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.489857,
+    "ast_hash": "c069a99237bf6fd2174925e669328b8d",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/context.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898577,
+    "ast_hash": "102f5a9c07f1e90e13b6b2879b7cded9",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/element.rs": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.4898584,
+    "ast_hash": "d21479a66dc78a6718cc671d88abaff4",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/error.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898589,
+    "ast_hash": "e6a857eab1978fb2c0142370b73703e6",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/interface.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898684,
+    "ast_hash": "d773b5687128f62b87e8a910fe03b6f6",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/lib.rs": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.4898689,
+    "ast_hash": "3bc71e597d8cdd3595787c7a6db515cb",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-148.md": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4899569,
+    "ast_hash": "a5bae4152e75bbb19a5483f2c12d523b",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/arena.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898596,
+    "ast_hash": "639e9019ef629b2c18b1dd38c3b5bc1a",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/assembler.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.48986,
+    "ast_hash": "f714177e3bacff8334c743bc9f512963",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/csr.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898615,
+    "ast_hash": "18f397b5743636584816e3d3c9f44647",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/mod.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489864,
+    "ast_hash": "3449819ff3c10f91fee5dff541d81585",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/phase.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898646,
+    "ast_hash": "6195a31a7aa15b4f0d3d5bcaae9f76db",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-149.md": {
+    "mtime": 1794556074.6752255,
+    "seen": 1794560768.4899573,
+    "ast_hash": "d3aed2156c8eb42d4819a685969e71be",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/injection.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898636,
+    "ast_hash": "1b4d63f42dc1e3ae479c681c8cf7c973",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-158.md": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.48996,
+    "ast_hash": "bccf015bbbb12ad79701812dc4465173",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/transfer.rs": {
+    "mtime": 1794556074.6722043,
+    "seen": 1794560768.489866,
+    "ast_hash": "8c1cca913f40bfe089a43257caf0da8b",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/tuning.rs": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898698,
+    "ast_hash": "41c625145cfa226710f4aecd82a00ebb",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-157.md": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.4899595,
+    "ast_hash": "ad52ca47bc43436f16ada7ddc6868416",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-156.md": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489959,
+    "ast_hash": "f0a4b414f5b7d8c9cce92cbfc05e6dc5",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/energy.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898624,
+    "ast_hash": "6d2798a6093a02c4639d104cb4392851",
+    "semantic_hash": ""
+  },
+  "plans/SPRINT-PLANNING-GOAL.md": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4899552,
+    "ast_hash": "e711a2ef09f201c8a1a4a053bd62116d",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-150.md": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.4899583,
+    "ast_hash": "e76ff028b04cc2ca82787cda3c795b3f",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-159.md": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4899604,
+    "ast_hash": "addf285533a9c38a25c35913bcb184c0",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-171.md": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.489962,
+    "ast_hash": "a4b89ea62c8c82f20e269aaf6dd656eb",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-173.md": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4899626,
+    "ast_hash": "e2b90567edce971e20e77b6bcd60cc0b",
+    "semantic_hash": ""
+  },
+  "plans/element-cosmology-2026-06-21.md": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4899657,
+    "ast_hash": "7bb8914c39457a30d05c6699190e5bad",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/stability.rs": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898655,
+    "ast_hash": "731943b352ef6d84c3194af79642136d",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/cast.rs": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.489861,
+    "ast_hash": "45d79cf6736d9028dbfb2295396fb3b9",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/gain.rs": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.489863,
+    "ast_hash": "6f86c761cfeff50db2d747435b3ce616",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-176.md": {
+    "mtime": 1794556074.6680791,
+    "seen": 1794560768.489963,
+    "ast_hash": "93cea58cac1f9cecae6a14c1fa38f048",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-177.md": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.4899635,
+    "ast_hash": "d1425e03fd4f4c2fe98911f027ef3a4b",
+    "semantic_hash": ""
+  },
+  "plugins/theos-audio/Cargo.toml": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.4898286,
+    "ast_hash": "7cac2d51c9fe7c5c72ed362311244535",
+    "semantic_hash": ""
+  },
+  "theos-ai/Cargo.toml": {
+    "mtime": 1794557720.436247,
+    "seen": 1794560768.4898298,
+    "ast_hash": "c5ee58cee5624c918b2b838dd45eefec",
+    "semantic_hash": ""
+  },
+  "theos-assets/Cargo.toml": {
+    "mtime": 1794556074.6722043,
+    "seen": 1794560768.4898396,
+    "ast_hash": "861eb7f5b26541ff8a99defefc3cdd81",
+    "semantic_hash": ""
+  },
+  "theos-ecs/Cargo.toml": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898477,
+    "ast_hash": "40d0abbf011dd59ba77345475f293286",
+    "semantic_hash": ""
+  },
+  "theos-editor/Cargo.toml": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898493,
+    "ast_hash": "0bc5c697fca1a424f9b0dfe7348868f7",
+    "semantic_hash": ""
+  },
+  "theos-game/Cargo.toml": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898505,
+    "ast_hash": "ce27d7cd3981608efeae6da1d77cb388",
+    "semantic_hash": ""
+  },
+  "theos-magic/Cargo.toml": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898562,
+    "ast_hash": "203d1451731500a7df46162b3afe8a5c",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/token.rs": {
+    "mtime": 1794556074.669083,
+    "seen": 1794560768.4898694,
+    "ast_hash": "66e922041e2dbf3d66363089d8de375a",
+    "semantic_hash": ""
+  },
+  "theos-math/Cargo.toml": {
+    "mtime": 1794556074.670593,
+    "seen": 1794560768.4898703,
+    "ast_hash": "b0bad46a3ba0a7db664801094f632ab3",
+    "semantic_hash": ""
+  },
+  "theos-physics/Cargo.toml": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898758,
+    "ast_hash": "5e73977d544ed42785e5aec95723e07d",
+    "semantic_hash": ""
+  },
+  "theos-plugin-api/Cargo.toml": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.4898772,
+    "ast_hash": "a51a5f1f7e91e3c166525c6b56f82340",
+    "semantic_hash": ""
+  },
+  "theos-plugin-loader/Cargo.toml": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.4898782,
+    "ast_hash": "d24f94b64d1f491c69b9594d400ab1a0",
+    "semantic_hash": ""
+  },
+  "theos-render/Cargo.toml": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.4898794,
+    "ast_hash": "7a982cb30c63e100c36f8fd94d3f5c7d",
+    "semantic_hash": ""
+  },
+  "theos-scripting/Cargo.toml": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4898806,
+    "ast_hash": "6d3805dc0238d447dd218272ffadea3c",
+    "semantic_hash": ""
+  },
+  "theos-window/Cargo.toml": {
+    "mtime": 1794556074.6737149,
+    "seen": 1794560768.4898882,
+    "ast_hash": "477b8c1c4235c97fd75127bf78d1bfbc",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/upkeep.rs": {
+    "mtime": 1794556074.6742198,
+    "seen": 1794560768.4898674,
+    "ast_hash": "1bb9f87e0af36cd2a6d258b624f00fa8",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-180.md": {
+    "mtime": 1794556074.669588,
+    "seen": 1794560768.489964,
+    "ast_hash": "36315305d2e14a1382d826e609e06587",
+    "semantic_hash": ""
+  },
+  "theos-magic/src/graph/transient.rs": {
+    "mtime": 1794556074.672711,
+    "seen": 1794560768.489867,
+    "ast_hash": "1b419c4aa6750aa060f26659d4162a41",
+    "semantic_hash": ""
+  },
+  "plans/THEOS-181.md": {
+    "mtime": 1794556074.671098,
+    "seen": 1794560768.4899645,
+    "ast_hash": "696e641f5bb4e163b323ba6d588f136b",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/expected/corpus.json": {
+    "mtime": 1794557357.5218272,
+    "seen": 1794560768.4898176,
+    "ast_hash": "c251a3da873ea6a3c88e5bbd3411a77e",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/expected/visible.json": {
+    "mtime": 1794556080.8017826,
+    "seen": 1794560768.4898188,
+    "ast_hash": "0423020791f6bc0cc9934111d68c1e94",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/Cargo.toml": {
+    "mtime": 1794935701.1020558,
+    "seen": 1794935870.5039937,
+    "ast_hash": "6e451eeabaade612ea0257664fd1b5c9",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/convert.rs": {
+    "mtime": 1794557406.0119133,
+    "seen": 1794560768.4898205,
+    "ast_hash": "992e5865ed3d45a5d19b4fcf176ac45f",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/main.rs": {
+    "mtime": 1794935823.0771596,
+    "seen": 1794935870.5040855,
+    "ast_hash": "a67ee12b3f12d412117a24ebb875d977",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/report.rs": {
+    "mtime": 1794935833.842064,
+    "seen": 1794935870.5040865,
+    "ast_hash": "5c697000e0ab21e1859d5af4bc6dec9b",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/run.rs": {
+    "mtime": 1794936023.130713,
+    "seen": 1794936054.2052457,
+    "ast_hash": "deef4fe04a702b5a059f5031613a0303",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/scenarios.rs": {
+    "mtime": 1794579005.5423977,
+    "seen": 1794671608.6085572,
+    "ast_hash": "208cf315bd342e2aa997462e66124ece",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/score.rs": {
+    "mtime": 1794934326.9980605,
+    "seen": 1794934407.767079,
+    "ast_hash": "ce8aff294ad8f93e6b87e82ca2b60f61",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/Cargo.toml": {
+    "mtime": 1794559208.952516,
+    "seen": 1794560768.4898238,
+    "ast_hash": "5f175cbce3f762d9792127c115f5bab6",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/examples/spike.rs": {
+    "mtime": 1794556842.3517888,
+    "seen": 1794560768.4898243,
+    "ast_hash": "6a254bba8ab2ba03951dda6fbecd0267",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/src/embedder.rs": {
+    "mtime": 1794559468.332579,
+    "seen": 1794560768.489825,
+    "ast_hash": "cd52711489c2bc9751bd38d39ae3616e",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/src/generator.rs": {
+    "mtime": 1794935034.8767407,
+    "seen": 1794935133.0017455,
+    "ast_hash": "32b16c73f22e7463a8c01299f14f7da3",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/src/lib.rs": {
+    "mtime": 1794559468.3355987,
+    "seen": 1794560768.4898257,
+    "ast_hash": "d99a2af69cffc7b7851818413aab6266",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/src/vram.rs": {
+    "mtime": 1794559422.1633546,
+    "seen": 1794560768.4898262,
+    "ast_hash": "70c94e118893a2b23a7368298badeb9e",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/tests/real_model.rs": {
+    "mtime": 1794935003.3953261,
+    "seen": 1794935133.0018997,
+    "ast_hash": "db8a39954118b47bb0dfbe79142e09d3",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/backend.rs": {
+    "mtime": 1794672001.1453476,
+    "seen": 1794672351.8109393,
+    "ast_hash": "5bad51dd934856fa09f7152fb5499326",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/clock.rs": {
+    "mtime": 1794558268.3808079,
+    "seen": 1794560768.489831,
+    "ast_hash": "6a29fb274b3ff62b613dde598970e617",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/context.rs": {
+    "mtime": 1794943665.304917,
+    "seen": 1794943724.228705,
+    "ast_hash": "6b6f6972a85a37070ac3cf4306aa591d",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/driver.rs": {
+    "mtime": 1794943660.1825154,
+    "seen": 1794943724.228707,
+    "ast_hash": "f907757aa2c766288c5be052c11dcc66",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/embed.rs": {
+    "mtime": 1794934683.622806,
+    "seen": 1794934703.0910861,
+    "ast_hash": "1c8a405088795e48ed1c8f5a4136b48d",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/knowledge.rs": {
+    "mtime": 1794557121.6258328,
+    "seen": 1794560768.489834,
+    "ast_hash": "81609472d64ce4f6aa84075475009053",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/lore.rs": {
+    "mtime": 1794557001.1532242,
+    "seen": 1794560768.4898355,
+    "ast_hash": "a373a707a29dad308d8a5a4f85246c5d",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/memory.rs": {
+    "mtime": 1794558268.4110308,
+    "seen": 1794560768.4898357,
+    "ast_hash": "bdcf97e2eefc5e8584c679419d0daa65",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/reply.rs": {
+    "mtime": 1794558268.5160544,
+    "seen": 1794560768.4898362,
+    "ast_hash": "3c7239f9965da2f2663b27ad7f098714",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/retrieval.rs": {
+    "mtime": 1794557857.4380536,
+    "seen": 1794560768.4898367,
+    "ast_hash": "f97a3694d016ae7fe469fc7f0b7bf139",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/test_support.rs": {
+    "mtime": 1794556948.8584852,
+    "seen": 1794560768.4898374,
+    "ast_hash": "d72e3bcd3ee06380ec77fea3d424e97e",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/testkit.rs": {
+    "mtime": 1794581589.9850054,
+    "seen": 1794671608.6101034,
+    "ast_hash": "e6b6834e6b5dd1e3710df1a653a2e6f0",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/worker.rs": {
+    "mtime": 1794933853.1836307,
+    "seen": 1794933936.090865,
+    "ast_hash": "e9da3618a99fb72cbded7c3ce1f85186",
+    "semantic_hash": ""
+  },
+  "theos-ai/tests/lore_poc.rs": {
+    "mtime": 1794933853.2355952,
+    "seen": 1794933936.0908656,
+    "ast_hash": "7cf64d6013ba3e978ed4ce0ddcaa0df4",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-11-13-npc-llm-poc-design.md": {
+    "mtime": 1794556080.9158015,
+    "seen": 1794560768.4898963,
+    "ast_hash": "51e66783c43fab27f3caa5e7d09b512b",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/README.md": {
+    "mtime": 1794556080.8815415,
+    "seen": 1794560768.4898968,
+    "ast_hash": "31ffb0f4629a9615d957bcd5493623ab",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-901.md": {
+    "mtime": 1794556080.861373,
+    "seen": 1794560768.4898973,
+    "ast_hash": "22dda0165fe9411b8536c848d39669f4",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-902.md": {
+    "mtime": 1794556080.8618696,
+    "seen": 1794560768.4898977,
+    "ast_hash": "d552725d841b55a919d3cb0faaf77d12",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-903.md": {
+    "mtime": 1794556080.8623767,
+    "seen": 1794560768.4898982,
+    "ast_hash": "df975cfc36bc2d8df1898fcb2291f6ca",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-904.md": {
+    "mtime": 1794556080.8628829,
+    "seen": 1794560768.4898987,
+    "ast_hash": "5f0f2dbad64a9ffd89fb973bb911ca75",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-905.md": {
+    "mtime": 1794556080.8633878,
+    "seen": 1794560768.489899,
+    "ast_hash": "70fbf114fdee34ccfed50880247c14e3",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-906.md": {
+    "mtime": 1794556080.863891,
+    "seen": 1794560768.4898996,
+    "ast_hash": "f32723ec12ea43c603afbfcd9b87876e",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-907.md": {
+    "mtime": 1794556080.863891,
+    "seen": 1794560768.4899004,
+    "ast_hash": "43ac3626f7d01959ad9b8bef5fe0abe4",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-908.md": {
+    "mtime": 1794556080.863891,
+    "seen": 1794560768.4899006,
+    "ast_hash": "d68db2ba1c6b06d259991fcbee457dab",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-909.md": {
+    "mtime": 1794556080.8648982,
+    "seen": 1794560768.489901,
+    "ast_hash": "572afac29bee73c08ff03ccb3e1c4035",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-910.md": {
+    "mtime": 1794556080.865403,
+    "seen": 1794560768.4899015,
+    "ast_hash": "cb8d635e21b0c0dd269fbaf1a8f11897",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-911.md": {
+    "mtime": 1794556080.865403,
+    "seen": 1794560768.4899018,
+    "ast_hash": "ca13144cc370c073051e4b028861d504",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-912.md": {
+    "mtime": 1794556080.8664086,
+    "seen": 1794560768.4899023,
+    "ast_hash": "a776c64c49cd8da95dcc746652c0d697",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-913.md": {
+    "mtime": 1794556080.8669145,
+    "seen": 1794560768.4899027,
+    "ast_hash": "ba048748e5691c40f9250ff87ba86856",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-914.md": {
+    "mtime": 1794556080.8669145,
+    "seen": 1794560768.4899044,
+    "ast_hash": "78c36d68add26a18784fe8ee47462a40",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-915.md": {
+    "mtime": 1794556080.8679204,
+    "seen": 1794560768.4899049,
+    "ast_hash": "bd4df3c0929d56cc3822ee5d59b9fc74",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-916.md": {
+    "mtime": 1794556080.8684275,
+    "seen": 1794560768.4899054,
+    "ast_hash": "b50d389001ef0cbcdf978db235c698a5",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-917.md": {
+    "mtime": 1794556080.8689284,
+    "seen": 1794560768.4899058,
+    "ast_hash": "c1a8e311f5ed0da276b1d4f5da72b9ec",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-918.md": {
+    "mtime": 1794556080.8694313,
+    "seen": 1794560768.489906,
+    "ast_hash": "ecb9ddcea2b8d65d31330a66dc8a3754",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-919.md": {
+    "mtime": 1794556080.8699372,
+    "seen": 1794560768.4899068,
+    "ast_hash": "27834fcf86e6e7919b3bbf11372c00dd",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-920.md": {
+    "mtime": 1794556080.8699372,
+    "seen": 1794560768.4899073,
+    "ast_hash": "45845c03d07605d2e2b89eb9900eef55",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-921.md": {
+    "mtime": 1794556080.8709402,
+    "seen": 1794560768.4899077,
+    "ast_hash": "7cc0d20755976bb9af093732f55451f7",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-922.md": {
+    "mtime": 1794556080.8714461,
+    "seen": 1794560768.4899082,
+    "ast_hash": "07de65e858865be0cc76c727bbf1fc96",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-923.md": {
+    "mtime": 1794556080.8714461,
+    "seen": 1794560768.4899085,
+    "ast_hash": "5356d7b7b6cdd1a995df7611b66f96df",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-924.md": {
+    "mtime": 1794556080.8714461,
+    "seen": 1794560768.489909,
+    "ast_hash": "6b57e17f94575d00b27c745c4149d480",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-925.md": {
+    "mtime": 1794556080.8724523,
+    "seen": 1794560768.4899094,
+    "ast_hash": "c216db316f9b2c3e8497e74f7c15a336",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-926.md": {
+    "mtime": 1794556080.8734753,
+    "seen": 1794560768.4899096,
+    "ast_hash": "9b5f6f4f95f45289e6549d4edd1c81ab",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-927.md": {
+    "mtime": 1794556080.8739815,
+    "seen": 1794560768.4899104,
+    "ast_hash": "846022289ccca55151a23412b31a35ca",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-928.md": {
+    "mtime": 1794556080.8744845,
+    "seen": 1794560768.4899108,
+    "ast_hash": "cce76a06600cd643abcfcbddd9a573a2",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-929.md": {
+    "mtime": 1794556080.8744845,
+    "seen": 1794560768.489911,
+    "ast_hash": "37a0a262906c1e4d5b100af6f475933b",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-930.md": {
+    "mtime": 1794556080.8754907,
+    "seen": 1794560768.4899116,
+    "ast_hash": "2e58da65eb20821111b66dc710bf1f31",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-931.md": {
+    "mtime": 1794556080.8759992,
+    "seen": 1794560768.4899118,
+    "ast_hash": "4b35eb1782ab13467fcccb8a54f54e35",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-932.md": {
+    "mtime": 1794556080.8759992,
+    "seen": 1794560768.4899123,
+    "ast_hash": "d3360cb2722797c03b2e418158ed018f",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-933.md": {
+    "mtime": 1794556080.880035,
+    "seen": 1794560768.4899127,
+    "ast_hash": "2ae202d6c6fe1da7e018b068718246ab",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-934.md": {
+    "mtime": 1794556080.877002,
+    "seen": 1794560768.4899132,
+    "ast_hash": "137a5f2f6587edd17f8c3e7be3635997",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-935.md": {
+    "mtime": 1794556080.880535,
+    "seen": 1794560768.4899137,
+    "ast_hash": "72e40f535acb3754d9717a488c0af55c",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-936.md": {
+    "mtime": 1794556080.877002,
+    "seen": 1794560768.4899142,
+    "ast_hash": "3e2c613d3d13b483aed27ad614436aeb",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-937.md": {
+    "mtime": 1794556080.877002,
+    "seen": 1794560768.4899147,
+    "ast_hash": "dec48df067f88db7c3794571af1f0abf",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-938.md": {
+    "mtime": 1794556080.878014,
+    "seen": 1794560768.489915,
+    "ast_hash": "2cd246ff8a2620d8f08a3be77c89a09d",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-939.md": {
+    "mtime": 1794556080.8785193,
+    "seen": 1794560768.4899154,
+    "ast_hash": "39541f20fd464e792adcce69f1f46798",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-940.md": {
+    "mtime": 1794556080.8790205,
+    "seen": 1794560768.4899158,
+    "ast_hash": "9b24740fd8677b839b50aacacaf0bf62",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-941.md": {
+    "mtime": 1794556080.8795264,
+    "seen": 1794560768.4899163,
+    "ast_hash": "9555cb2831109748356b01b7a9a2bb05",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-942.md": {
+    "mtime": 1794556080.8543277,
+    "seen": 1794560768.489917,
+    "ast_hash": "17fd1512636432edfb3cfeb39013519a",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-943.md": {
+    "mtime": 1794556080.8553343,
+    "seen": 1794560768.4899173,
+    "ast_hash": "b09ca6fe74d94469a2cb66b5ca3268ac",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-944.md": {
+    "mtime": 1794556080.855839,
+    "seen": 1794560768.4899178,
+    "ast_hash": "85dbb83ebb6f26890bdadd299888ff65",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-945.md": {
+    "mtime": 1794556080.8563406,
+    "seen": 1794560768.489918,
+    "ast_hash": "089a13bb05f9e778973f9d7a3f25a0a7",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-946.md": {
+    "mtime": 1794556080.8568428,
+    "seen": 1794560768.4899185,
+    "ast_hash": "4d92682fa90eecd0c77558651b5a9000",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-947.md": {
+    "mtime": 1794556080.857349,
+    "seen": 1794560768.489919,
+    "ast_hash": "ae4186b51a2500379b24ea0d40a3d356",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-948.md": {
+    "mtime": 1794556080.8578472,
+    "seen": 1794560768.4899194,
+    "ast_hash": "3b5f036a5b1e4a2eb3ec80f39de928b7",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-949.md": {
+    "mtime": 1794556080.8583496,
+    "seen": 1794560768.4899197,
+    "ast_hash": "34b931fdcde1eda5f8278bdb1dc5b7d4",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-950.md": {
+    "mtime": 1794556080.858853,
+    "seen": 1794560768.4899201,
+    "ast_hash": "7def8c6622d201c8edd991e2dbd7998d",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-951.md": {
+    "mtime": 1794556080.8593564,
+    "seen": 1794560768.4899209,
+    "ast_hash": "cc66834e554b38d8874a9f2832fce06e",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-952.md": {
+    "mtime": 1794556080.8603642,
+    "seen": 1794560768.489921,
+    "ast_hash": "d3e9f7aeb43b21bd9de99333e86414aa",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/beliefs/B-953.md": {
+    "mtime": 1794556080.8608727,
+    "seen": 1794560768.4899216,
+    "ast_hash": "500924d526ab91f0985b4c5caed3d640",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-901.md": {
+    "mtime": 1794556080.8235478,
+    "seen": 1794560768.489922,
+    "ast_hash": "8d6991c234aa57f7e1934d063ffee8f2",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-902.md": {
+    "mtime": 1794556080.824053,
+    "seen": 1794560768.4899223,
+    "ast_hash": "db310b110d51e43fefeeaf6d41964b64",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-903.md": {
+    "mtime": 1794556080.8250585,
+    "seen": 1794560768.4899228,
+    "ast_hash": "17b931154a58f5001e69d59cf64a3b13",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-904.md": {
+    "mtime": 1794556080.8255663,
+    "seen": 1794560768.4899232,
+    "ast_hash": "cc580833fbab0b74d144a373aa3b53d2",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-905.md": {
+    "mtime": 1794556080.8255663,
+    "seen": 1794560768.489924,
+    "ast_hash": "43c098e74777cbc2a58d2f728a5dc5d5",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-906.md": {
+    "mtime": 1794556080.8265724,
+    "seen": 1794560768.4899242,
+    "ast_hash": "eb7ec2006fbc78d94e0292683c4b2162",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-907.md": {
+    "mtime": 1794556080.8280845,
+    "seen": 1794560768.4899247,
+    "ast_hash": "f70ba51e7ed38005238c3dead9fc6990",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-908.md": {
+    "mtime": 1794556080.828588,
+    "seen": 1794560768.4899251,
+    "ast_hash": "593a94ddcadbe9b995e3acd03f5b5460",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-909.md": {
+    "mtime": 1794556080.828588,
+    "seen": 1794560768.4899254,
+    "ast_hash": "0d739b1c625bbb7c042be7f14ea564a8",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/clues/C-910.md": {
+    "mtime": 1794556080.8295937,
+    "seen": 1794560768.4899259,
+    "ast_hash": "a6b64928a2f0727d40263d514a8f94f0",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/chanting-explaining.md": {
+    "mtime": 1794556080.8300989,
+    "seen": 1794560768.4899263,
+    "ast_hash": "b6de30a07293ea16ecbd61a3ce3553aa",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/chanting-in-world.md": {
+    "mtime": 1794556080.831105,
+    "seen": 1794560768.4899266,
+    "ast_hash": "5d9eeab44afb3e20252cf296c7494cfd",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/martial-arts-explaining.md": {
+    "mtime": 1794556080.8316097,
+    "seen": 1794560768.489927,
+    "ast_hash": "c238bad4204d0adf0a77b16768ae8320",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/martial-arts-in-world.md": {
+    "mtime": 1794556080.8326151,
+    "seen": 1794560768.4899278,
+    "ast_hash": "2af3e668c34faf57209d42fe73a89c0b",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/runes-explaining.md": {
+    "mtime": 1794556080.8331232,
+    "seen": 1794560768.4899282,
+    "ast_hash": "10d4ef89b234315e72dfb6e18f38f586",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/runes-in-world.md": {
+    "mtime": 1794556080.8331232,
+    "seen": 1794560768.4899287,
+    "ast_hash": "96c871d4ab511f370be6ca6d0d1a6969",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/spirit-magic-explaining.md": {
+    "mtime": 1794556080.834129,
+    "seen": 1794560768.4899292,
+    "ast_hash": "476d95597fc690c2485c96a83d268ef7",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/spirit-magic-in-world.md": {
+    "mtime": 1794556080.8346379,
+    "seen": 1794560768.4899297,
+    "ast_hash": "4eb1a7b0d5688fdff6396623027b679b",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/summit-and-endings-explaining.md": {
+    "mtime": 1794556080.8346379,
+    "seen": 1794560768.4899302,
+    "ast_hash": "5960219d0fc1d5a99e2b24648efe1b02",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/summit-and-endings-in-world.md": {
+    "mtime": 1794556080.8361506,
+    "seen": 1794560768.4899309,
+    "ast_hash": "36a8143195f091b954bf84de3804caf0",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/tower-and-weave-explaining.md": {
+    "mtime": 1794556080.8371546,
+    "seen": 1794560768.4899313,
+    "ast_hash": "1f79b469fc70f1232348d81b2843f8c8",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/topics/tower-and-weave-in-world.md": {
+    "mtime": 1794556080.837659,
+    "seen": 1794560768.4899318,
+    "ast_hash": "40a2331b9cc6991e9587ca6658c78c06",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-901.md": {
+    "mtime": 1794556080.8386648,
+    "seen": 1794560768.4899323,
+    "ast_hash": "92e8303864fbcc94e76b40d65b592763",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-902.md": {
+    "mtime": 1794556080.8391702,
+    "seen": 1794560768.4899328,
+    "ast_hash": "aa8e22287eb3bf407f32534512f67045",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-903.md": {
+    "mtime": 1794556080.8391702,
+    "seen": 1794560768.4899333,
+    "ast_hash": "9d9e19e6c279e2147eeeaca6aca23ead",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-904.md": {
+    "mtime": 1794556080.8401759,
+    "seen": 1794560768.4899337,
+    "ast_hash": "c7e9cd1e62f83c7445052bfe8591b949",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-905.md": {
+    "mtime": 1794556080.841201,
+    "seen": 1794560768.489934,
+    "ast_hash": "42a7b4501d99fa569e9d2373ee090c21",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-906.md": {
+    "mtime": 1794556080.8417044,
+    "seen": 1794560768.4899347,
+    "ast_hash": "4aeb4927136f16a196973edaef202242",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-907.md": {
+    "mtime": 1794556080.8422048,
+    "seen": 1794560768.489935,
+    "ast_hash": "94e89239e4d6cd10a0eba8837239bcdc",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-908.md": {
+    "mtime": 1794556080.8422048,
+    "seen": 1794560768.4899354,
+    "ast_hash": "c4dce4b1ed8eedf05f371d6fa3d84626",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-909.md": {
+    "mtime": 1794556080.8437169,
+    "seen": 1794560768.4899359,
+    "ast_hash": "a395a89406cb64712c51fa4b2fe34447",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-910.md": {
+    "mtime": 1794556080.8437169,
+    "seen": 1794560768.4899364,
+    "ast_hash": "ae26882b8e1546766cd14dc7b5d80ba6",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-911.md": {
+    "mtime": 1794556080.8447237,
+    "seen": 1794560768.4899368,
+    "ast_hash": "5b40a8244d6cb1bdc05c194150578c63",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-912.md": {
+    "mtime": 1794556080.845229,
+    "seen": 1794560768.489937,
+    "ast_hash": "27447e2d8c5a7140a0c9f95127a766d0",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-913.md": {
+    "mtime": 1794556080.8462348,
+    "seen": 1794560768.4899378,
+    "ast_hash": "d9b7946b5630d8aa98b232f689be83b3",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-914.md": {
+    "mtime": 1794556080.84674,
+    "seen": 1794560768.4899383,
+    "ast_hash": "4ab02a538ecb9353ab24ea377ebc5ca2",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-915.md": {
+    "mtime": 1794556080.84674,
+    "seen": 1794560768.4899387,
+    "ast_hash": "50617f71c60dc6a870c76840cf07c34a",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-916.md": {
+    "mtime": 1794556080.847746,
+    "seen": 1794560768.4899392,
+    "ast_hash": "beba14cd6912da6e00924b730bcaa8a1",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-917.md": {
+    "mtime": 1794556080.848251,
+    "seen": 1794560768.4899397,
+    "ast_hash": "ae276e760d0e6688ee4f60f8d094d8e7",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-918.md": {
+    "mtime": 1794556080.8492565,
+    "seen": 1794560768.4899402,
+    "ast_hash": "ae22ef14ae16cc049144d32c6749a5a3",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-919.md": {
+    "mtime": 1794556080.8497694,
+    "seen": 1794560768.4899404,
+    "ast_hash": "dbe641244cbf7649a1febe7b60f76c09",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-920.md": {
+    "mtime": 1794556080.85078,
+    "seen": 1794560768.489941,
+    "ast_hash": "e352f342ae0373a2f00e282cf368fd92",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-921.md": {
+    "mtime": 1794556080.85078,
+    "seen": 1794560768.4899416,
+    "ast_hash": "ee803045208b034d858051dad265c2b6",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-922.md": {
+    "mtime": 1794556080.8518085,
+    "seen": 1794560768.4899418,
+    "ast_hash": "127d0700690515aa4e86ae6d5c054cfa",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-923.md": {
+    "mtime": 1794556080.852312,
+    "seen": 1794560768.4899423,
+    "ast_hash": "751d7783264fce729cfe8ae1cf6a75db",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-924.md": {
+    "mtime": 1794556080.853319,
+    "seen": 1794560768.4899428,
+    "ast_hash": "94ea857311bd9de5940347cfe8777517",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/lore/truths/T-925.md": {
+    "mtime": 1794556080.853824,
+    "seen": 1794560768.4899433,
+    "ast_hash": "138e6ae398afe866ab2abb7f4a6b7c13",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/cantors.md": {
+    "mtime": 1794556080.8037984,
+    "seen": 1794560768.4899435,
+    "ast_hash": "41cba01922065ccbdc95345bf46bb3ea",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/cantors/order-of-the-measured-voice.md": {
+    "mtime": 1794556080.8073273,
+    "seen": 1794560768.489944,
+    "ast_hash": "680ac10a6dbe6f3866d7066cc12792d2",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/cantors/order-of-the-measured-voice/fx-cantor.md": {
+    "mtime": 1794556080.808408,
+    "seen": 1794560768.4899442,
+    "ast_hash": "17dfbf69025f10147c994652df14123a",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/concordance.md": {
+    "mtime": 1794556080.8037984,
+    "seen": 1794560768.489945,
+    "ast_hash": "a47c67d7c2b502847d99ed35cfd1b227",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/concordance/concordance-heretics.md": {
+    "mtime": 1794556080.8099277,
+    "seen": 1794560768.4899454,
+    "ast_hash": "eac419d3a31c03969520fd6cfb319ce4",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/concordance/concordance-heretics/fx-heretic.md": {
+    "mtime": 1794556080.8114424,
+    "seen": 1794560768.489946,
+    "ast_hash": "05cef0bc04c5a8bc7dc18a3dbf216520",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/concordance/fx-plate-reader.md": {
+    "mtime": 1794556080.8104362,
+    "seen": 1794560768.4899464,
+    "ast_hash": "9f5bef08008248a03e0eb04144660f5b",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/hearth-folk.md": {
+    "mtime": 1794556080.8048046,
+    "seen": 1794560768.4899468,
+    "ast_hash": "35a5c0719e19ba564ad54be258c86bf0",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/hearth-folk/fates-cult.md": {
+    "mtime": 1794556080.8119512,
+    "seen": 1794560768.4899473,
+    "ast_hash": "28fd0689645371a0a5dc745bf93e2768",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/hearth-folk/fates-cult/fx-shrine-keeper.md": {
+    "mtime": 1794556080.8119512,
+    "seen": 1794560768.4899476,
+    "ast_hash": "6062a9595cc8062060e84c1d6dd5ed2b",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/martial-sects.md": {
+    "mtime": 1794556080.805812,
+    "seen": 1794560768.4899483,
+    "ast_hash": "616b9f444795e022127a2912bf6ea8f7",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/martial-sects/quiet-river-sect.md": {
+    "mtime": 1794556080.8134654,
+    "seen": 1794560768.4899487,
+    "ast_hash": "316d3aa2dd96f1e6f8800d94a2504fab",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/martial-sects/quiet-river-sect/fx-sect-elder.md": {
+    "mtime": 1794556080.814473,
+    "seen": 1794560768.4899492,
+    "ast_hash": "749bdc32fa7ce66f114baf6d5bb35469",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/scribes.md": {
+    "mtime": 1794556080.805812,
+    "seen": 1794560768.4899495,
+    "ast_hash": "1a6344787db8248b2642566035ca1b2a",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/scribes/academy-scribes.md": {
+    "mtime": 1794556080.8149786,
+    "seen": 1794560768.48995,
+    "ast_hash": "74594ce40db6b5a16f5e23fc9446968d",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/scribes/academy-scribes/fx-academy-scribe.md": {
+    "mtime": 1794556080.815984,
+    "seen": 1794560768.4899504,
+    "ast_hash": "55004a714e715e878b3929c6d37498d6",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/scribes/hedge-scribes.md": {
+    "mtime": 1794556080.8149786,
+    "seen": 1794560768.489951,
+    "ast_hash": "9cd83c78fe8626188bdb03f25df65190",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/scribes/hedge-scribes/fx-hedge-scribe.md": {
+    "mtime": 1794556080.8164892,
+    "seen": 1794560768.4899514,
+    "ast_hash": "571e60337c49a17d3dd9a9bb82a64be3",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/throat-kin.md": {
+    "mtime": 1794556080.8068197,
+    "seen": 1794560768.4899518,
+    "ast_hash": "18d0f8a04ec87652344fc7615cb2c7e5",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/people/throat-kin/fx-binder.md": {
+    "mtime": 1794556080.8174956,
+    "seen": 1794560768.4899523,
+    "ast_hash": "8562b5977336e21f641477a3ac3f6226",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/world/apex.md": {
+    "mtime": 1794556080.818001,
+    "seen": 1794560768.4899528,
+    "ast_hash": "17f69f8d3ddda0541d5223d8665a270f",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/world/crucible.md": {
+    "mtime": 1794556080.8190067,
+    "seen": 1794560768.4899533,
+    "ast_hash": "c81fa323da0e6fd26019382f57a6e551",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/world/hearth.md": {
+    "mtime": 1794556080.819515,
+    "seen": 1794560768.4899535,
+    "ast_hash": "abeaad5aae941c59043ce6dcab6a9bdb",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/world/tower.md": {
+    "mtime": 1794556080.8205218,
+    "seen": 1794560768.489954,
+    "ast_hash": "8c29cfbac480ba7d40455d6bebe68644",
+    "semantic_hash": ""
+  },
+  "fixtures/lore-poc/records/world/wilds.md": {
+    "mtime": 1794556080.8210273,
+    "seen": 1794560768.4899545,
+    "ast_hash": "9ba77703a3bc9399b3f4b5f35004a9b1",
+    "semantic_hash": ""
+  },
+  "plans/npc-llm-poc-2026-11-13.md": {
+    "mtime": 1794578505.5995593,
+    "seen": 1794671608.634569,
+    "ast_hash": "8099db6bead705ee6e701aa2ce08eb44",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/check.py": {
+    "mtime": 1794580579.0345013,
+    "seen": 1794671608.608084,
+    "ast_hash": "9836b4863cdfd6a21b4ac93d07de1b33",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/expected/reference.json": {
+    "mtime": 1794580579.0350041,
+    "seen": 1794671608.6080863,
+    "ast_hash": "84e89d3cbd748672ae1531ec49b70ec4",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/prompt-examples.json": {
+    "mtime": 1794580579.0350041,
+    "seen": 1794671608.6080873,
+    "ast_hash": "2caad73772eacf29c71a47d6085ba5d9",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b01-bad.json": {
+    "mtime": 1794580579.0365114,
+    "seen": 1794671608.6080878,
+    "ast_hash": "f9a5caa284d6cda196aa9bdc7d13cc49",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b01-good.json": {
+    "mtime": 1794580579.0365114,
+    "seen": 1794671608.6080885,
+    "ast_hash": "91f0cf7e3686406fa4dc9575a4cc8b22",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b02-bad.json": {
+    "mtime": 1794580579.037515,
+    "seen": 1794671608.608089,
+    "ast_hash": "8f069235b5244b036716c38dbca3e5fb",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b02-good.json": {
+    "mtime": 1794580579.037515,
+    "seen": 1794671608.6080902,
+    "ast_hash": "1631ccd2c539b0659182ebfa97e4e1d1",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b03-bad.json": {
+    "mtime": 1794580579.037515,
+    "seen": 1794671608.6080909,
+    "ast_hash": "7db038cee5edf3826b6a0e917bb13bd7",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b03-good.json": {
+    "mtime": 1794580579.0380182,
+    "seen": 1794671608.6080914,
+    "ast_hash": "106bae23c1146019774c196ec217bd5f",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b04-bad.json": {
+    "mtime": 1794580579.0380182,
+    "seen": 1794671608.608092,
+    "ast_hash": "ed7346a0b258ce5e2c4e44839ccc262f",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b04-good.json": {
+    "mtime": 1794580579.0385194,
+    "seen": 1794671608.6080928,
+    "ast_hash": "81c4355ed613ed9fdcd1aff17fd8ad38",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b05-bad.json": {
+    "mtime": 1794580579.0385194,
+    "seen": 1794671608.6080933,
+    "ast_hash": "1dec0a707bb569bb83f65710f87f46e0",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b05-good.json": {
+    "mtime": 1794580579.0385194,
+    "seen": 1794671608.608094,
+    "ast_hash": "46e93572413248b1d1d00b039d189a93",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b06-bad.json": {
+    "mtime": 1794580579.0390222,
+    "seen": 1794671608.6080947,
+    "ast_hash": "e3f08176d63b9d9726dbc391e1175bfc",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b06-good.json": {
+    "mtime": 1794580579.0390222,
+    "seen": 1794671608.6080952,
+    "ast_hash": "7ca04039dc38c17c260668615172ea0b",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b07-bad.json": {
+    "mtime": 1794580579.0390222,
+    "seen": 1794671608.608096,
+    "ast_hash": "5fe351c7265fbb03d36116a0cfd74afc",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b07-good.json": {
+    "mtime": 1794580579.0395253,
+    "seen": 1794671608.6080968,
+    "ast_hash": "85ad3a447475be326a09d5549de816fb",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b08-bad.json": {
+    "mtime": 1794580579.0395253,
+    "seen": 1794671608.6080976,
+    "ast_hash": "8794a631310373d57ac8790711567f46",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b08-good.json": {
+    "mtime": 1794580579.0395253,
+    "seen": 1794671608.6080985,
+    "ast_hash": "7c777699c2506a898462bd6c682f0401",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b09-bad.json": {
+    "mtime": 1794580579.0395253,
+    "seen": 1794671608.608099,
+    "ast_hash": "bc05b750c871019d606222eaa0fb4710",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b09-good.json": {
+    "mtime": 1794580579.0395253,
+    "seen": 1794671608.6080997,
+    "ast_hash": "a516a9c25d072b5d21e66754e800fe13",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b10-bad.json": {
+    "mtime": 1794580579.0405288,
+    "seen": 1794671608.6081002,
+    "ast_hash": "53eb06f23b5bec1decca984c195e6269",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b10-good.json": {
+    "mtime": 1794580579.0405288,
+    "seen": 1794671608.608101,
+    "ast_hash": "6a54899a09fd7e4ff3c2e0849337c561",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b11-bad.json": {
+    "mtime": 1794580579.0405288,
+    "seen": 1794671608.6081016,
+    "ast_hash": "5e45f853731ea359733eca040bbc5e0c",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b11-good.json": {
+    "mtime": 1794580579.0405288,
+    "seen": 1794671608.608102,
+    "ast_hash": "027610ecf823083f25fa1b6cb50250b1",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b12-bad.json": {
+    "mtime": 1794580579.0405288,
+    "seen": 1794671608.6081028,
+    "ast_hash": "1c3a11a31faeb881028d471829b8e613",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b12-good.json": {
+    "mtime": 1794580579.04154,
+    "seen": 1794671608.6081038,
+    "ast_hash": "468b9e6c0771018dabebd215d3fad6dc",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b13-bad.json": {
+    "mtime": 1794580579.04154,
+    "seen": 1794671608.6081045,
+    "ast_hash": "781278a96b62951097efaca22f24a8af",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b13-good.json": {
+    "mtime": 1794580579.0420434,
+    "seen": 1794671608.608105,
+    "ast_hash": "c42ffd372dab2a46605cf75d44fdd1c7",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b14-bad.json": {
+    "mtime": 1794580579.0420434,
+    "seen": 1794671608.6081054,
+    "ast_hash": "8f73c133318a5b6ed4cda505a9f481eb",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b14-good.json": {
+    "mtime": 1794580579.0420434,
+    "seen": 1794671608.608106,
+    "ast_hash": "a9d240ecf2ea3645e708a50330de12ba",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b15-bad.json": {
+    "mtime": 1794580579.0425508,
+    "seen": 1794671608.6081066,
+    "ast_hash": "fa6e604aa695bd97f79603ecbca436a5",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b15-good.json": {
+    "mtime": 1794580579.0425508,
+    "seen": 1794671608.6081073,
+    "ast_hash": "8ed45ed087f4f20aae8024123a268c76",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b16-bad.json": {
+    "mtime": 1794580579.0425508,
+    "seen": 1794671608.6081078,
+    "ast_hash": "b3df15e751863b14e61c88db841a88c0",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b16-good.json": {
+    "mtime": 1794580579.0425508,
+    "seen": 1794671608.6081085,
+    "ast_hash": "272d71e8bd2d1f31fc459a313c66a07a",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b17-bad.json": {
+    "mtime": 1794580579.0425508,
+    "seen": 1794671608.6081092,
+    "ast_hash": "7ab3eecf1dc18f2c2c4bfc8c8921ab0e",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b17-good.json": {
+    "mtime": 1794580579.04356,
+    "seen": 1794671608.6081102,
+    "ast_hash": "680d78369728171ec9e6f7b182682962",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b18-bad.json": {
+    "mtime": 1794580579.04356,
+    "seen": 1794671608.6081107,
+    "ast_hash": "b73f34d93456a053471345a4a65492bb",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b18-good.json": {
+    "mtime": 1794580579.04356,
+    "seen": 1794671608.6081114,
+    "ast_hash": "e40dcb39fff3114b401bf3ea6304810b",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b19-bad.json": {
+    "mtime": 1794580579.04407,
+    "seen": 1794671608.6081119,
+    "ast_hash": "2deb7f04415a35fe83e849c2f29cee70",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b19-good.json": {
+    "mtime": 1794580579.04407,
+    "seen": 1794671608.6081123,
+    "ast_hash": "6584b2ddaa4178dfa38b007d73cbe17b",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b20-bad.json": {
+    "mtime": 1794580579.04407,
+    "seen": 1794671608.608113,
+    "ast_hash": "da156a25a2e957a0d4e7bdd145e3c3a7",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/b20-good.json": {
+    "mtime": 1794580579.04407,
+    "seen": 1794671608.6081138,
+    "ast_hash": "fbaa2a45108e1b36b5086cd85bc905c6",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g1-gate.json": {
+    "mtime": 1794580579.04407,
+    "seen": 1794671608.6081142,
+    "ast_hash": "613b7cad80a699abfdeb82a886de11e3",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g10-gate.json": {
+    "mtime": 1794580579.0450728,
+    "seen": 1794671608.6081147,
+    "ast_hash": "3fafb4f73673c4e6271090587160fc6c",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g2-gate.json": {
+    "mtime": 1794580579.0450728,
+    "seen": 1794671608.6081154,
+    "ast_hash": "3df36b5a859fcd8dd28f7bd6174c8602",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g3-gate.json": {
+    "mtime": 1794580579.0450728,
+    "seen": 1794671608.6081161,
+    "ast_hash": "1ba1ff82b715f5d57c5fcdfb54850531",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g4-gate.json": {
+    "mtime": 1794580579.0455768,
+    "seen": 1794671608.608117,
+    "ast_hash": "be729bb20f68bb503f7d4048d6d98028",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g5-gate.json": {
+    "mtime": 1794580579.0455768,
+    "seen": 1794671608.6081176,
+    "ast_hash": "4d0bf2b6c71fe57f6c864c89ed32e624",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g6-gate.json": {
+    "mtime": 1794580579.0455768,
+    "seen": 1794671608.6081183,
+    "ast_hash": "f179a3380d67ba66b55217f63d8e4768",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g7-gate.json": {
+    "mtime": 1794580579.0455768,
+    "seen": 1794671608.608119,
+    "ast_hash": "4a0570553c63a351b6c3f0bdf738ebce",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g8-gate.json": {
+    "mtime": 1794580579.0455768,
+    "seen": 1794671608.6081195,
+    "ast_hash": "d1d9f49e39dc5609d330311a4a55512c",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/reference/g9-gate.json": {
+    "mtime": 1794580579.0465794,
+    "seen": 1794671608.60812,
+    "ast_hash": "5d1ef27e49c78468e237f31c9ee10a9e",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/vocabulary.json": {
+    "mtime": 1794580579.0465794,
+    "seen": 1794671608.608121,
+    "ast_hash": "84553bf78d80967a4ed918b4b62bf608",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/Cargo.toml": {
+    "mtime": 1794936350.8982081,
+    "seen": 1794936595.005284,
+    "ast_hash": "40c1017df4b9ceede2a1511297c2e51c",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/score.py": {
+    "mtime": 1794583373.4280972,
+    "seen": 1794671608.6083233,
+    "ast_hash": "8eacfc790b9454af83466c26a549570e",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/extract.rs": {
+    "mtime": 1794582688.1569824,
+    "seen": 1794671608.6083243,
+    "ast_hash": "fc5c051a84884ea5a5f1b79b418eb833",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/fixture.rs": {
+    "mtime": 1794665493.8567042,
+    "seen": 1794671608.608325,
+    "ast_hash": "95443c6eaf5b681d21c3a72227de70d1",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/inject.rs": {
+    "mtime": 1794936566.3767557,
+    "seen": 1794936595.0056064,
+    "ast_hash": "b85acea9bfd79356f109918df543d1d0",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/main.rs": {
+    "mtime": 1794936484.858677,
+    "seen": 1794936595.0056074,
+    "ast_hash": "0850278e9d4b99e0ff266434abf5e8f5",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/prompt.rs": {
+    "mtime": 1794936531.3037412,
+    "seen": 1794936595.0056078,
+    "ast_hash": "3f6b15f0254e50b1131ca734907a90f3",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/report.rs": {
+    "mtime": 1794936566.3597174,
+    "seen": 1794936595.0056088,
+    "ast_hash": "f9d0036dded2081a23988e8b9374228b",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/run.rs": {
+    "mtime": 1794936531.3187454,
+    "seen": 1794936595.0056093,
+    "ast_hash": "dd0867534599f9694140bb15aea79175",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/schema.rs": {
+    "mtime": 1794583004.8809922,
+    "seen": 1794671608.6083393,
+    "ast_hash": "ddc7a85b1f4a4e5adf11c7ca61a5c97b",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/score.rs": {
+    "mtime": 1794583373.5692797,
+    "seen": 1794671608.6083398,
+    "ast_hash": "f4931e43cc9ec79449073519c9597259",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/tests/real_model.rs": {
+    "mtime": 1794582711.881225,
+    "seen": 1794671608.6083403,
+    "ast_hash": "d4828ac5225b55236df270803fee9041",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/inject.rs": {
+    "mtime": 1794935593.281756,
+    "seen": 1794935870.5040846,
+    "ast_hash": "81938ea28f2bb36da14f4aec98d7f632",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/theos-ai-llama/examples/bt_spike.rs": {
+    "mtime": 1794581311.7466397,
+    "seen": 1794671608.6086469,
+    "ast_hash": "2c57ef217b6d3ddf41e8da8986403a61",
+    "semantic_hash": ""
+  },
+  "docs/research/2026-11-13-npc-prompt-injection-guardrails.md": {
+    "mtime": 1794580374.58828,
+    "seen": 1794671608.6202664,
+    "ast_hash": "b7fa15624508fac55745173a811b9854",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-11-13-bt-poc-design.md": {
+    "mtime": 1794580741.4702566,
+    "seen": 1794671608.6202676,
+    "ast_hash": "5939aae46e7c11def7c93e5ed2a6c803",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/README.md": {
+    "mtime": 1794580579.0345013,
+    "seen": 1794671608.6203654,
+    "ast_hash": "c5f97a083ba5154280c069f741b47407",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/records/enemies/fx-reed-lurker.md": {
+    "mtime": 1794580579.036007,
+    "seen": 1794671608.6203663,
+    "ast_hash": "886e3b4de100e856eb865b6efa32876c",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/records/enemies/fx-stone-brute.md": {
+    "mtime": 1794580579.036007,
+    "seen": 1794671608.620367,
+    "ast_hash": "8620b4ac3c0a482f3dc97f66419a1a4a",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/records/enemies/fx-thorn-archer.md": {
+    "mtime": 1794580579.036007,
+    "seen": 1794671608.6203682,
+    "ast_hash": "6cdd8a28c8a7f881b6b86a4d5e2be73a",
+    "semantic_hash": ""
+  },
+  "fixtures/bt-poc/records/enemies/fx-warden-captain.md": {
+    "mtime": 1794580579.0365114,
+    "seen": 1794671608.620369,
+    "ast_hash": "c2d6aa8c549d17cc1eea5b668cb2cfda",
+    "semantic_hash": ""
+  },
+  "plans/bt-poc-2026-11-13.md": {
+    "mtime": 1794689890.75807,
+    "seen": 1794689946.1992607,
+    "ast_hash": "f0c6cef7050af5a7271decf6faf802b7",
+    "semantic_hash": ""
+  },
+  "plans/npc-injection-suite-2026-11-13.md": {
+    "mtime": 1794579754.3341932,
+    "seen": 1794671608.6345675,
+    "ast_hash": "3f368f1bb83da9fdf164a72b0082f1c1",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/src/hash.rs": {
+    "mtime": 1794672980.046286,
+    "seen": 1794673052.8744357,
+    "ast_hash": "ad975f3503e3ce5e318443eb0ecedccb",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/compare_rows.py": {
+    "mtime": 1794932804.0726025,
+    "seen": 1794933674.7552557,
+    "ast_hash": "44d16ea78b002fc6498216060f8b2de4",
+    "semantic_hash": ""
+  },
+  "docs/superpowers/specs/2026-11-17-npc-guardrails-design.md": {
+    "mtime": 1794931397.596014,
+    "seen": 1794933674.7651324,
+    "ast_hash": "7771fe6aa5271b418653c19cd6e032f9",
+    "semantic_hash": ""
+  },
+  "fixtures/moderation/README.md": {
+    "mtime": 1794939800.087207,
+    "seen": 1794943724.2554882,
+    "ast_hash": "bf5970500920f99e6e96a8a02ebfdac6",
+    "semantic_hash": ""
+  },
+  "plans/npc-guardrails-2026-11-17.md": {
+    "mtime": 1794945187.944276,
+    "seen": 1794945205.3211594,
+    "ast_hash": "f58ba01577e0faf10bf679c839974412",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/moderation/knn.rs": {
+    "mtime": 1794943807.021233,
+    "seen": 1794943888.7553177,
+    "ast_hash": "7e0ab8d89be37f1712778fbd89fc9db5",
+    "semantic_hash": ""
+  },
+  "theos-ai/src/moderation/mod.rs": {
+    "mtime": 1794943791.3029854,
+    "seen": 1794943888.755319,
+    "ast_hash": "831cc5376301d3c1638b92fbbd1ac26d",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/guard-kit/Cargo.toml": {
+    "mtime": 1794935358.1370564,
+    "seen": 1794935389.392454,
+    "ast_hash": "f82d146134943e3c55fd77e57d9d8027",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/guard-kit/src/guards.rs": {
+    "mtime": 1794935372.9573827,
+    "seen": 1794935389.3924553,
+    "ast_hash": "fb86684500538b7f099b99e10d87fa59",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/guard-kit/src/lib.rs": {
+    "mtime": 1794935372.9587839,
+    "seen": 1794935389.3924563,
+    "ast_hash": "5b86a8555c1859a1764461b355f349d9",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/guard-kit/src/lists.rs": {
+    "mtime": 1794935373.1665187,
+    "seen": 1794935389.3924568,
+    "ast_hash": "2484b274d1fb09727328a27ec2d1f24e",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/guard-kit/src/record.rs": {
+    "mtime": 1794935372.9605427,
+    "seen": 1794935389.3924572,
+    "ast_hash": "47d26eec6d5dbd79afbba48f5c7f2bf9",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/guard-kit/src/review.rs": {
+    "mtime": 1794935373.1675198,
+    "seen": 1794935389.392458,
+    "ast_hash": "56f80ab1a28e8a94b5d05ad00ca0810b",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/guard-kit/tests/real_lists.rs": {
+    "mtime": 1794935460.5914154,
+    "seen": 1794935870.5039914,
+    "ast_hash": "618a7c360513291aa32b408cc0126d5d",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/npc-poc/src/tune.rs": {
+    "mtime": 1794943872.8249867,
+    "seen": 1794943888.7537372,
+    "ast_hash": "0408dd4bd87605fe808bacba54188025",
+    "semantic_hash": ""
+  },
+  "plugins/llm-poc/bt-poc/tests/data/prompts-none.json": {
+    "mtime": 1794936238.576638,
+    "seen": 1794936595.0057657,
+    "ast_hash": "c7c18464ac2308a247399a47c128ac8d",
+    "semantic_hash": ""
+  }
+}

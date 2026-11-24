@@ -186,9 +186,16 @@ fn no_forbidden_record_reaches_any_prompt() {
                     let ctx = assemble(
                         &corpus,
                         speaker,
-                        &sc.question,
+                        &theos_ai::PlayerTurn {
+                            question: &sc.question,
+                            player_name: None,
+                            extra_instruction: None,
+                        },
                         &ids,
-                        &ContextOptions { persona_bodies },
+                        &ContextOptions {
+                            persona_bodies,
+                            ..ContextOptions::default()
+                        },
                     );
                     for id in &ctx.lore_ids {
                         let rec = corpus.get(id).expect("rendered id is in corpus");
@@ -207,17 +214,17 @@ fn no_forbidden_record_reaches_any_prompt() {
                     }
                     for rec in &outside {
                         assert!(
-                            !ctx.prompt.system.contains(&format!("[{}]", rec.id)),
+                            !ctx.prompt.system_text().contains(&format!("[{}]", rec.id)),
                             "{label}: id of {} in prompt",
                             rec.id
                         );
                         assert!(
-                            !contains_bare_id(&ctx.prompt.system, rec.id.as_str()),
+                            !contains_bare_id(&ctx.prompt.system_text(), rec.id.as_str()),
                             "{label}: bare id of {} in prompt",
                             rec.id
                         );
                         assert!(
-                            !ctx.prompt.system.contains(&rec.title),
+                            !ctx.prompt.system_text().contains(&rec.title),
                             "{label}: title of {} in prompt",
                             rec.id
                         );

@@ -7,6 +7,7 @@ publish = false
 [dependencies]
 theos-ai = { path = "../../../theos-ai", features = ["testkit"] }
 theos-ai-llama = { path = "../theos-ai-llama" }
+guard-kit = { path = "../guard-kit" }
 clap = { version = "4", features = ["derive"] }
 serde = { version = "1", features = ["derive"] }
 serde_json = { version = "1", features = ["preserve_order"] }

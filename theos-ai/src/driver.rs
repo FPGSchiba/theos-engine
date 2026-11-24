@@ -10,10 +10,14 @@ use serde_json::Value;
 
 use crate::backend::{Backend, BackendError, GenerationRequest, Phase, Thinking};
 use crate::clock::Clock;
-use crate::context::{ContextOptions, Prompt, assemble};
+use crate::context::{ContextOptions, PlayerTurn, Prompt, assemble, strip_spotlight_marks};
 use crate::embed::{EmbedError, Embedder};
 use crate::lore::{Corpus, RecordId, Speaker};
 use crate::memory::MemoryProbe;
+use crate::moderation::{
+    AllowAll, ContentModerator, ModerationCategory, ModerationError, ModerationSource,
+    ModerationVerdict,
+};
 use crate::reply::{Reply, ReplyError, parse_reply};
 use crate::retrieval::{LoreScope, Retriever};
 
@@ -49,6 +53,8 @@ pub struct Metrics {
     pub answer_tokens: u32,
     /// Time spent selecting lore.
     pub retrieval: Duration,
+    /// Time spent in moderation checks on the returned path.
+    pub moderation: Duration,
     /// Time from the start of the request to the first token, if any token came.
     pub time_to_first_token: Option<Duration>,
     /// Time from the start of the request to the first answer-phase token, if
@@ -58,7 +64,10 @@ pub struct Metrics {
     /// Generation speed between the first and last token; `0.0` when it cannot
     /// be measured (fewer than two tokens, or no time between them).
     pub tokens_per_second: f32,
-    /// Time from the start of the request to its end.
+    /// Time from the start of the request to its end. For
+    /// [`Npc::answer`] this includes the reply moderation check, which is not
+    /// bounded by the deadline: only generation is cut off at the deadline, so
+    /// a slow reply check can make `total` exceed it.
     pub total: Duration,
     /// Highest video-memory sample taken, if the probe reported any.
     pub vram_peak_bytes: Option<u64>,
@@ -83,6 +92,10 @@ pub struct NpcRequest {
     pub thinking: Thinking,
     /// Time allowed from the start of the request until generation is cut off.
     pub deadline: Duration,
+    /// The name the player goes by, if known; placed by the assembler.
+    pub player_name: Option<String>,
+    /// Game-written text appended at the very end of the system prompt.
+    pub extra_instruction: Option<String>,
 }
 
 /// One prompt to run through the model as it stands, with no retrieval and no
@@ -110,8 +123,14 @@ pub struct GenerateJob {
 #[derive(Clone, Debug, PartialEq)]
 pub struct GenerateResponse {
     /// The answer-phase text exactly as generated.
+    ///
+    /// Unmoderated: [`Npc::generate`] checks the prompt's untrusted segments,
+    /// never the output. Never show it to a player and never store it in
+    /// memory.
     pub raw: String,
     /// The thinking-phase text exactly as generated.
+    ///
+    /// Unmoderated. Never show it to a player and never store it in memory.
     pub thinking: String,
     /// What the run measured; lore ids are empty and retrieval is zero.
     pub metrics: Metrics,
@@ -120,11 +139,17 @@ pub struct GenerateResponse {
 /// The outcome of one [`Npc::answer`] call.
 #[derive(Clone, Debug, PartialEq)]
 pub struct NpcResponse {
-    /// The parsed reply, or why the output could not be used.
+    /// The parsed reply, or why the output could not be used. A parsed reply's
+    /// `text` has passed moderation; its other fields have not been checked.
     pub reply: Result<Reply, ReplyError>,
     /// The answer-phase text exactly as generated.
+    ///
+    /// Unmoderated: only `reply.text` is checked, and only when the reply
+    /// parsed. Never show it to a player and never store it in memory.
     pub raw: String,
     /// The thinking-phase text exactly as generated.
+    ///
+    /// Unmoderated. Never show it to a player and never store it in memory.
     pub thinking: String,
     /// What the run measured.
     pub metrics: Metrics,
@@ -134,6 +159,13 @@ pub struct NpcResponse {
 ///
 /// An unusable model output is not one of these; it is a [`ReplyError`] inside
 /// the [`NpcResponse`].
+///
+/// The moderation variants carry only a category or the moderator's own error,
+/// never the text that was checked. Two rules follow for callers:
+///
+/// - Do not show streamed or partial text before moderation has passed.
+/// - No memory system may store an exchange that ended in
+///   [`NpcError::PlayerModerated`] or [`NpcError::ReplyModerated`].
 #[derive(Clone, Debug, PartialEq, Eq, thiserror::Error)]
 #[non_exhaustive]
 pub enum NpcError {
@@ -149,6 +181,16 @@ pub enum NpcError {
     /// The backend failed.
     #[error(transparent)]
     Backend(#[from] BackendError),
+    /// A player-supplied text (question, name or untrusted segment) was blocked;
+    /// the backend was not called.
+    #[error("player message blocked by moderation ({})", .0.id())]
+    PlayerModerated(ModerationCategory),
+    /// The model's reply was blocked; its text is not part of this error.
+    #[error("model reply blocked by moderation ({})", .0.id())]
+    ReplyModerated(ModerationCategory),
+    /// Moderation could not reach a verdict. Treated as a block (fail closed).
+    #[error(transparent)]
+    ModerationFailed(ModerationError),
     /// The worker thread ended before it finished starting up, or panicked
     /// while answering this request (after which it stops).
     #[error("the NPC worker thread ended before it could answer")]
@@ -182,6 +224,7 @@ pub struct Npc {
     options: ContextOptions,
     clock: Box<dyn Clock>,
     probe: Box<dyn MemoryProbe>,
+    moderator: Box<dyn ContentModerator>,
 }
 
 impl Npc {
@@ -215,7 +258,45 @@ impl Npc {
             options,
             clock,
             probe,
+            moderator: Box::new(AllowAll),
         })
+    }
+
+    /// Replaces the content moderator; the default is [`AllowAll`].
+    #[must_use]
+    pub fn with_moderator(mut self, moderator: Box<dyn ContentModerator>) -> Npc {
+        self.moderator = moderator;
+        self
+    }
+
+    /// Checks one text with the configured moderator.
+    ///
+    /// # Errors
+    ///
+    /// Only [`NpcError::ModerationFailed`], when the moderator reaches no
+    /// verdict. A block is the `Ok` verdict. [`ModerationVerdict`] is
+    /// non-exhaustive: callers must treat any verdict other than `Allow`,
+    /// including variants added later, as a block (fail closed).
+    pub fn moderate(
+        &mut self,
+        source: ModerationSource,
+        text: &str,
+    ) -> Result<ModerationVerdict, NpcError> {
+        self.moderator
+            .check(source, text)
+            .map_err(NpcError::ModerationFailed)
+    }
+
+    /// Checks one player-supplied text; a block becomes
+    /// [`NpcError::PlayerModerated`]. Adds the time taken to `spent`.
+    fn check_player_text(&mut self, text: &str, spent: &mut Duration) -> Result<(), NpcError> {
+        let start = self.clock.now();
+        let verdict = self.moderate(ModerationSource::PlayerMessage, text);
+        *spent += self.clock.now().duration_since(start);
+        match verdict? {
+            ModerationVerdict::Allow => Ok(()),
+            ModerationVerdict::Block(c) => Err(NpcError::PlayerModerated(c)),
+        }
     }
 
     /// Answers one question, stopping generation at the deadline or the token cap.
@@ -224,8 +305,29 @@ impl Npc {
     /// error: the response carries `Err(ReplyError::Unfinished(_))` and the
     /// metrics of what was generated.
     ///
+    /// The question and then the player name are moderated before retrieval. The
+    /// moderator always checks the text with the spotlight mark characters removed;
+    /// with spotlighting on the model sees the same text, with it off the model sees
+    /// the marks as typed. Question and name are checked separately, one text each,
+    /// for the same reason untrusted segments are (see [`crate::Segment`]). A block or a
+    /// moderator failure ends the call before the backend is used.
+    /// A reply that parses is moderated before it is returned: only
+    /// `reply.text` is checked. When a reply is blocked, or the moderator
+    /// fails, the call returns an error that carries no reply text. A
+    /// malformed or unfinished reply, `raw` and the thinking text are not
+    /// moderated, and they are returned in the response: see
+    /// [`NpcResponse::raw`].
+    ///
+    /// The reply check is not bounded by the deadline (only generation is), and
+    /// `metrics.total` includes it.
+    ///
+    /// Callers must not show streamed text before moderation has passed, and no
+    /// memory system may store an exchange that ended in a moderation error.
+    ///
     /// # Errors
     ///
+    /// [`NpcError::PlayerModerated`], [`NpcError::ReplyModerated`] and
+    /// [`NpcError::ModerationFailed`] for moderation outcomes,
     /// [`NpcError::UnknownSpeaker`] for an unsupplied speaker,
     /// [`NpcError::Embed`] when retrieval fails and [`NpcError::Backend`] when
     /// the backend fails (a full context window excepted).
@@ -233,6 +335,16 @@ impl Npc {
         let t0 = self.clock.now();
         let vram_start = self.probe.vram_bytes();
 
+        let mut moderation = Duration::ZERO;
+        // The moderator sees what the model sees: spotlighting removes the marks a player
+        // typed, so they are removed here too (always: with G4 off it only gives the
+        // moderator a cleaner view, as `generate` does).
+        self.check_player_text(&strip_spotlight_marks(&request.question), &mut moderation)?;
+        if let Some(name) = &request.player_name {
+            self.check_player_text(&strip_spotlight_marks(name), &mut moderation)?;
+        }
+
+        let retrieval_start = self.clock.now();
         let speaker = self
             .speakers
             .iter()
@@ -244,11 +356,15 @@ impl Npc {
             request.scope,
             self.embedder.as_mut(),
         )?;
-        let retrieval = self.clock.now().duration_since(t0);
+        let retrieval = self.clock.now().duration_since(retrieval_start);
         let ctx = assemble(
             self.retriever.corpus(),
             speaker,
-            &request.question,
+            &PlayerTurn {
+                question: &request.question,
+                player_name: request.player_name.as_deref(),
+                extra_instruction: request.extra_instruction.as_deref(),
+            },
             &ids,
             &self.options,
         );
@@ -269,12 +385,24 @@ impl Npc {
         } else {
             Err(ReplyError::Unfinished(out.stop))
         };
+        if let Ok(r) = &reply {
+            let start = self.clock.now();
+            let verdict = self.moderate(ModerationSource::ModelReply, &r.text);
+            moderation += self.clock.now().duration_since(start);
+            match verdict? {
+                ModerationVerdict::Allow => {}
+                ModerationVerdict::Block(c) => return Err(NpcError::ReplyModerated(c)),
+            }
+        }
         let cited_ids = reply
             .as_ref()
             .map(|r| r.sources.clone())
             .unwrap_or_default();
 
         let mut metrics = out.metrics(retrieval);
+        metrics.moderation = moderation;
+        // The reply check is part of the request: end `total` after it.
+        metrics.total = self.clock.now().duration_since(t0);
         metrics.context_ids = ctx.lore_ids;
         metrics.cited_ids = cited_ids;
         Ok(NpcResponse {
@@ -291,13 +419,28 @@ impl Npc {
     /// why in `metrics.stop`. `metrics.context_ids` and `cited_ids` are empty
     /// and `metrics.retrieval` is zero.
     ///
+    /// Every untrusted segment of the prompt is moderated as a player message
+    /// before generation, one by one (one player utterance belongs in one
+    /// segment; a caller that splits an utterance across segments weakens
+    /// moderation), with the spotlight marks removed: the moderator sees
+    /// the text the player wrote, whether or not the prompt was spotlighted.
+    /// The output is not moderated (it is free text the
+    /// caller interprets). Callers must not show streamed text to a player
+    /// without moderating it, and no memory system may store a moderated
+    /// exchange.
+    ///
     /// # Errors
     ///
-    /// [`NpcError::Backend`] when the backend fails (a full context window
-    /// excepted).
+    /// [`NpcError::PlayerModerated`] and [`NpcError::ModerationFailed`] for
+    /// moderation outcomes, and [`NpcError::Backend`] when the backend fails (a
+    /// full context window excepted).
     pub fn generate(&mut self, job: &GenerateJob) -> Result<GenerateResponse, NpcError> {
         let t0 = self.clock.now();
         let vram_start = self.probe.vram_bytes();
+        let mut moderation = Duration::ZERO;
+        for text in job.prompt.untrusted() {
+            self.check_player_text(&strip_spotlight_marks(text), &mut moderation)?;
+        }
         let out = self.run_loop(
             &job.prompt,
             job.schema.as_ref(),
@@ -308,7 +451,8 @@ impl Npc {
             t0,
             vram_start,
         )?;
-        let metrics = out.metrics(Duration::ZERO);
+        let mut metrics = out.metrics(Duration::ZERO);
+        metrics.moderation = moderation;
         Ok(GenerateResponse {
             raw: out.raw,
             thinking: out.thinking,
@@ -455,6 +599,7 @@ impl LoopOutcome {
             thinking_tokens: self.thinking_tokens,
             answer_tokens: self.answer_tokens,
             retrieval,
+            moderation: Duration::ZERO,
             time_to_first_token: self.time_to_first_token,
             time_to_first_answer_token: self.time_to_first_answer_token,
             tokens_per_second: self.tokens_per_second,
@@ -471,9 +616,10 @@ impl LoopOutcome {
 mod tests {
     use super::*;
     use crate::backend::Piece;
-    use crate::context::Prompt;
+    use crate::context::{Prompt, Segment};
     use crate::test_support::mini;
     use crate::testkit::{FakeClock, FakeEmbedder, FakeProbe, Script, ScriptedBackend};
+    use std::sync::{Arc, Mutex};
 
     const MS: Duration = Duration::from_millis(1);
 
@@ -511,6 +657,7 @@ mod tests {
     struct Rig {
         npc: Npc,
         backend: ScriptedBackend,
+        clock: FakeClock,
     }
 
     fn rig_with(scripts: Vec<Script>, probe: FakeProbe, speakers: Vec<Speaker>) -> Rig {
@@ -526,11 +673,15 @@ mod tests {
             corpus,
             speakers,
             options: ContextOptions::default(),
-            clock: Box::new(clock),
+            clock: Box::new(clock.clone()),
             probe: Box::new(probe),
         })
         .expect("rig builds");
-        Rig { npc, backend }
+        Rig {
+            npc,
+            backend,
+            clock,
+        }
     }
 
     fn rig(scripts: Vec<Script>) -> Rig {
@@ -545,6 +696,8 @@ mod tests {
             scope: LoreScope::AllVisible,
             thinking: Thinking::On,
             deadline,
+            player_name: None,
+            extra_instruction: None,
         }
     }
 
@@ -569,7 +722,11 @@ mod tests {
         let expected = assemble(
             &corpus,
             &speaker,
-            "who?",
+            &PlayerTurn {
+                question: "who?",
+                player_name: None,
+                extra_instruction: None,
+            },
             &Retriever::build(corpus.clone(), &mut FakeEmbedder::default())
                 .unwrap()
                 .select(
@@ -593,7 +750,7 @@ mod tests {
         assert_eq!(requests.len(), 1);
         let sent = &requests[0];
         assert_eq!(sent.thinking, Thinking::On);
-        assert_eq!(sent.prompt.user, "who?");
+        assert_eq!(sent.prompt.user_text(), "who?");
         let schema = sent.schema.as_ref().unwrap();
         let listed = schema["properties"]["sources"]["items"]["enum"]
             .as_array()
@@ -602,6 +759,19 @@ mod tests {
         for id in &resp.metrics.context_ids {
             assert!(listed.iter().any(|v| v == id.as_str()));
         }
+    }
+
+    #[test]
+    fn answer_passes_player_name_and_extra_instruction_to_the_assembler() {
+        let mut r = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let mut req = request(DEFAULT_DEADLINE);
+        req.player_name = Some("Ada".into());
+        req.extra_instruction = Some("Be brief.".into());
+        r.npc.answer(&req).unwrap();
+        let requests = r.backend.requests();
+        let sys = requests[0].prompt.system_text();
+        assert!(sys.ends_with("is called Ada.\n\nBe brief."));
+        assert_eq!(requests[0].prompt.user_text(), "who?");
     }
 
     #[test]
@@ -824,10 +994,7 @@ mod tests {
     fn job(pieces: Vec<Piece>) -> (Rig, GenerateJob) {
         let r = rig(vec![script(MS, MS, pieces)]);
         let job = GenerateJob {
-            prompt: Prompt {
-                system: "sys".into(),
-                user: "usr".into(),
-            },
+            prompt: Prompt::engine("sys", "usr"),
             schema: None,
             thinking: Thinking::Off,
             thinking_budget: None,
@@ -855,7 +1022,7 @@ mod tests {
         r.npc.generate(&j).unwrap();
         let requests = r.backend.requests();
         assert_eq!(requests[0].schema, None);
-        assert_eq!(requests[0].prompt.system, "sys");
+        assert_eq!(requests[0].prompt.system_text(), "sys");
     }
 
     #[test]
@@ -894,10 +1061,7 @@ mod tests {
     fn generate_stops_at_the_deadline() {
         let mut r = rig(vec![script(ms(100), ms(20), answer_pieces(400))]);
         let j = GenerateJob {
-            prompt: Prompt {
-                system: String::new(),
-                user: String::new(),
-            },
+            prompt: Prompt::engine("", ""),
             schema: None,
             thinking: Thinking::Off,
             thinking_budget: None,
@@ -959,6 +1123,342 @@ mod tests {
                 .select(&RecordId::new("ghost"), "who?", LoreScope::AllVisible)
                 .unwrap_err(),
             NpcError::UnknownSpeaker(RecordId::new("ghost"))
+        );
+    }
+
+    type Seen = Arc<Mutex<Vec<(ModerationSource, String)>>>;
+
+    /// Blocks texts containing a word, fails on texts containing another, and
+    /// records every check it is asked to make.
+    struct TestMod {
+        block: Vec<(&'static str, ModerationCategory)>,
+        fail_on: Option<&'static str>,
+        seen: Seen,
+        clock: Option<(FakeClock, Duration)>,
+    }
+
+    impl TestMod {
+        fn new() -> (TestMod, Seen) {
+            let seen = Seen::default();
+            (
+                TestMod {
+                    block: Vec::new(),
+                    fail_on: None,
+                    seen: seen.clone(),
+                    clock: None,
+                },
+                seen,
+            )
+        }
+
+        fn blocking(mut self, word: &'static str, c: ModerationCategory) -> TestMod {
+            self.block.push((word, c));
+            self
+        }
+
+        fn failing_on(mut self, word: &'static str) -> TestMod {
+            self.fail_on = Some(word);
+            self
+        }
+    }
+
+    impl ContentModerator for TestMod {
+        fn check(
+            &mut self,
+            source: ModerationSource,
+            text: &str,
+        ) -> Result<ModerationVerdict, ModerationError> {
+            self.seen.lock().unwrap().push((source, text.to_owned()));
+            if let Some((clock, by)) = &self.clock {
+                clock.advance(*by);
+            }
+            if self.fail_on.is_some_and(|w| text.contains(w)) {
+                return Err(ModerationError::Failed("down".into()));
+            }
+            for (word, c) in &self.block {
+                if text.contains(word) {
+                    return Ok(ModerationVerdict::Block(c.clone()));
+                }
+            }
+            Ok(ModerationVerdict::Allow)
+        }
+    }
+
+    fn moderated(r: Rig, m: TestMod) -> Rig {
+        Rig {
+            npc: r.npc.with_moderator(Box::new(m)),
+            ..r
+        }
+    }
+
+    #[test]
+    fn blocked_question_never_reaches_the_backend() {
+        let (m, seen) = TestMod::new();
+        let m = m.blocking("who", ModerationCategory::SelfHarm);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(GOOD))]), m);
+        let err = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap_err();
+        assert_eq!(err, NpcError::PlayerModerated(ModerationCategory::SelfHarm));
+        assert!(r.backend.requests().is_empty());
+        assert_eq!(
+            *seen.lock().unwrap(),
+            vec![(ModerationSource::PlayerMessage, "who?".to_owned())]
+        );
+    }
+
+    #[test]
+    fn blocked_player_name_never_reaches_the_backend() {
+        let (m, seen) = TestMod::new();
+        let m = m.blocking("Slur", ModerationCategory::Hate);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(GOOD))]), m);
+        let mut req = request(DEFAULT_DEADLINE);
+        req.player_name = Some("Slur".into());
+        let err = r.npc.answer(&req).unwrap_err();
+        assert_eq!(err, NpcError::PlayerModerated(ModerationCategory::Hate));
+        assert!(r.backend.requests().is_empty());
+        let texts: Vec<String> = seen.lock().unwrap().iter().map(|c| c.1.clone()).collect();
+        assert_eq!(texts, vec!["who?".to_owned(), "Slur".to_owned()]);
+    }
+
+    #[test]
+    fn marks_typed_in_the_question_do_not_hide_it_from_the_moderator() {
+        let (m, seen) = TestMod::new();
+        let m = m.blocking("bomb", ModerationCategory::RealWorldHarm);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(GOOD))]), m);
+        let mut req = request(DEFAULT_DEADLINE);
+        req.question = "b\u{27e6}o\u{27e7}m\u{27e6}b\u{27e7}".into();
+        let err = r.npc.answer(&req).unwrap_err();
+        assert_eq!(
+            err,
+            NpcError::PlayerModerated(ModerationCategory::RealWorldHarm)
+        );
+        assert!(r.backend.requests().is_empty());
+        assert_eq!(seen.lock().unwrap()[0].1, "bomb");
+    }
+
+    #[test]
+    fn marks_typed_in_the_name_do_not_hide_it_from_the_moderator() {
+        let (m, _) = TestMod::new();
+        let m = m.blocking("bomb", ModerationCategory::RealWorldHarm);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(GOOD))]), m);
+        let mut req = request(DEFAULT_DEADLINE);
+        req.player_name = Some("b\u{27e6}o\u{27e7}mb".into());
+        let err = r.npc.answer(&req).unwrap_err();
+        assert_eq!(
+            err,
+            NpcError::PlayerModerated(ModerationCategory::RealWorldHarm)
+        );
+        assert!(r.backend.requests().is_empty());
+    }
+
+    #[test]
+    fn moderator_error_on_input_is_moderation_failed_and_backend_not_called() {
+        let (m, _) = TestMod::new();
+        let mut r = moderated(
+            rig(vec![script(MS, MS, spelled(GOOD))]),
+            m.failing_on("who"),
+        );
+        let err = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap_err();
+        assert_eq!(
+            err,
+            NpcError::ModerationFailed(ModerationError::Failed("down".into()))
+        );
+        assert!(r.backend.requests().is_empty());
+    }
+
+    #[test]
+    fn blocked_reply_is_reply_moderated() {
+        let (m, seen) = TestMod::new();
+        let m = m.blocking("Aye", ModerationCategory::WorldBreak);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(GOOD))]), m);
+        let err = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap_err();
+        assert_eq!(
+            err,
+            NpcError::ReplyModerated(ModerationCategory::WorldBreak)
+        );
+        assert_eq!(
+            seen.lock().unwrap().last().unwrap(),
+            &(ModerationSource::ModelReply, "Aye.".to_owned())
+        );
+    }
+
+    #[test]
+    fn moderator_error_on_reply_is_moderation_failed() {
+        let (m, _) = TestMod::new();
+        let mut r = moderated(
+            rig(vec![script(MS, MS, spelled(GOOD))]),
+            m.failing_on("Aye"),
+        );
+        let err = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap_err();
+        assert!(matches!(err, NpcError::ModerationFailed(_)));
+    }
+
+    #[test]
+    fn reply_moderated_error_carries_no_reply_text() {
+        let secret = r#"{"sources":["B-1"],"reply":"Zebra-secret-text."}"#;
+        let (m, _) = TestMod::new();
+        let m = m.blocking("Zebra", ModerationCategory::RealWorldHarm);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled(secret))]), m);
+        let e = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap_err();
+        assert!(!format!("{e}").contains("Zebra"));
+        assert!(!format!("{e:?}").contains("Zebra"));
+    }
+
+    #[test]
+    fn malformed_and_thinking_text_are_not_moderated() {
+        let (m, seen) = TestMod::new();
+        let mut pieces = vec![piece("THINKWORD", Phase::Thinking)];
+        pieces.extend(spelled("not json"));
+        let mut r = moderated(rig(vec![script(MS, MS, pieces)]), m);
+        let resp = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        assert!(matches!(resp.reply, Err(ReplyError::Malformed(_))));
+        assert_eq!(
+            *seen.lock().unwrap(),
+            vec![(ModerationSource::PlayerMessage, "who?".to_owned())]
+        );
+    }
+
+    #[test]
+    fn unfinished_reply_is_not_moderated() {
+        let (m, seen) = TestMod::new();
+        let mut r = moderated(rig(vec![script(MS, MS, answer_pieces(300))]), m);
+        let resp = r.npc.answer(&request(Duration::from_secs(60))).unwrap();
+        assert_eq!(resp.metrics.stop, StopReason::TokenCap);
+        assert_eq!(seen.lock().unwrap().len(), 1);
+    }
+
+    #[test]
+    fn allow_all_answers_exactly_as_before() {
+        let mut plain = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let mut with = rig(vec![script(MS, MS, spelled(GOOD))]);
+        with.npc = with.npc.with_moderator(Box::new(AllowAll));
+        let a = plain.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        let b = with.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        assert_eq!(a, b);
+        assert_eq!(a.metrics.moderation, Duration::ZERO);
+    }
+
+    #[test]
+    fn total_includes_the_reply_moderation_time() {
+        let mut plain = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let base = plain.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        let mut r = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let (mut m, _) = TestMod::new();
+        m.clock = Some((r.clock.clone(), ms(7)));
+        r.npc = r.npc.with_moderator(Box::new(m));
+        let resp = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        // One input check and one reply check, both inside the total.
+        assert_eq!(resp.metrics.moderation, ms(14));
+        assert_eq!(resp.metrics.total, base.metrics.total + ms(14));
+    }
+
+    #[test]
+    fn metrics_report_moderation_time() {
+        let mut r = rig(vec![script(MS, MS, spelled(GOOD))]);
+        let (mut m, _) = TestMod::new();
+        m.clock = Some((r.clock.clone(), ms(7)));
+        r.npc = r.npc.with_moderator(Box::new(m));
+        let resp = r.npc.answer(&request(DEFAULT_DEADLINE)).unwrap();
+        // One input check and one reply check.
+        assert_eq!(resp.metrics.moderation, ms(14));
+        // Retrieval does not include the input check.
+        assert_eq!(resp.metrics.retrieval, Duration::ZERO);
+    }
+
+    fn untrusted_job(user: Vec<Segment>) -> GenerateJob {
+        GenerateJob {
+            prompt: Prompt {
+                system: vec![Segment::engine("trusted-sys")],
+                user,
+            },
+            schema: None,
+            thinking: Thinking::Off,
+            thinking_budget: None,
+            deadline: DEFAULT_DEADLINE,
+            token_cap: ANSWER_TOKEN_CAP,
+        }
+    }
+
+    #[test]
+    fn generate_checks_untrusted_segments_only() {
+        let (m, seen) = TestMod::new();
+        let mut r = moderated(rig(vec![script(MS, MS, spelled("ok"))]), m);
+        let j = untrusted_job(vec![
+            Segment::untrusted("one"),
+            Segment::engine("trusted-usr"),
+        ]);
+        r.npc.generate(&j).unwrap();
+        assert_eq!(
+            *seen.lock().unwrap(),
+            vec![(ModerationSource::PlayerMessage, "one".to_owned())]
+        );
+    }
+
+    #[test]
+    fn generate_moderates_spotlighted_text_without_marks() {
+        let (m, seen) = TestMod::new();
+        let mut r = moderated(rig(vec![script(MS, MS, spelled("ok"))]), m);
+        let mut j = untrusted_job(vec![Segment::untrusted("hello")]);
+        j.prompt = j.prompt.spotlighted();
+        r.npc.generate(&j).unwrap();
+        assert_eq!(
+            *seen.lock().unwrap(),
+            vec![(ModerationSource::PlayerMessage, "hello".to_owned())]
+        );
+    }
+
+    #[test]
+    fn generate_blocks_a_spotlighted_banned_text() {
+        let (m, _) = TestMod::new();
+        let m = m.blocking("bad", ModerationCategory::Hate);
+        let mut r = moderated(rig(vec![script(MS, MS, spelled("ok"))]), m);
+        let mut j = untrusted_job(vec![Segment::untrusted("so bad")]);
+        j.prompt = j.prompt.spotlighted();
+        assert_eq!(
+            r.npc.generate(&j).unwrap_err(),
+            NpcError::PlayerModerated(ModerationCategory::Hate)
+        );
+        assert!(r.backend.requests().is_empty());
+    }
+
+    #[test]
+    fn generate_blocked_or_failed_input_never_reaches_the_backend() {
+        for (m, expected) in [
+            (
+                TestMod::new().0.blocking("bad", ModerationCategory::Hate),
+                NpcError::PlayerModerated(ModerationCategory::Hate),
+            ),
+            (
+                TestMod::new().0.failing_on("bad"),
+                NpcError::ModerationFailed(ModerationError::Failed("down".into())),
+            ),
+        ] {
+            let mut r = moderated(rig(vec![script(MS, MS, spelled("ok"))]), m);
+            let j = untrusted_job(vec![Segment::untrusted("so bad")]);
+            assert_eq!(r.npc.generate(&j).unwrap_err(), expected);
+            assert!(r.backend.requests().is_empty());
+        }
+    }
+
+    #[test]
+    fn moderate_is_public_and_maps_errors() {
+        let (m, _) = TestMod::new();
+        let m = m
+            .blocking("bad", ModerationCategory::Hate)
+            .failing_on("boom");
+        let mut r = moderated(rig(vec![]), m);
+        assert_eq!(
+            r.npc.moderate(ModerationSource::PlayerMessage, "fine"),
+            Ok(ModerationVerdict::Allow)
+        );
+        assert_eq!(
+            r.npc.moderate(ModerationSource::ModelReply, "bad"),
+            Ok(ModerationVerdict::Block(ModerationCategory::Hate))
+        );
+        assert_eq!(
+            r.npc.moderate(ModerationSource::PlayerMessage, "boom"),
+            Err(NpcError::ModerationFailed(ModerationError::Failed(
+                "down".into()
+            )))
         );
     }
 

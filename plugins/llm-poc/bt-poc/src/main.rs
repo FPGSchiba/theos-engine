@@ -24,6 +24,10 @@ use theos_ai::RecordId;
 const BT_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../../fixtures/bt-poc");
 const LORE_DIR: &str = concat!(env!("CARGO_MANIFEST_DIR"), "/../../../fixtures/lore-poc");
 
+fn default_moderation() -> PathBuf {
+    PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("../../../fixtures/moderation")
+}
+
 #[derive(Parser)]
 #[command(
     name = "bt-poc",
@@ -81,6 +85,13 @@ enum Command {
         /// Results directory of a clean run; injected rows are judged against its `rows.jsonl`.
         #[arg(long)]
         baseline: Option<PathBuf>,
+        /// Guards to switch on: `none`, `input` (g1, g4, g9), `all`, or a comma list of
+        /// `mod`, `g1`, `g4`, `g9`. `g9` does nothing for trees (there is no player name).
+        #[arg(long, default_value = "none")]
+        guards: String,
+        /// Moderation example lists; defaults to `fixtures/moderation` of this repository.
+        #[arg(long)]
+        moderation: Option<PathBuf>,
     },
     /// Re-render `results.md` and `results.csv` of a recorded run from its `rows.jsonl`, without a
     /// model. Pass `--scenarios` of the run (for an injection run, `injections.toml`).
@@ -121,7 +132,10 @@ fn main() -> anyhow::Result<()> {
             only,
             label,
             baseline,
+            guards,
+            moderation,
         } => {
+            let guards = guard_kit::Guards::parse(&guards)?;
             if let Some(id) = only
                 .iter()
                 .find(|id| !fx.scenarios.iter().any(|s| &s.id == *id))
@@ -156,10 +170,13 @@ fn main() -> anyhow::Result<()> {
                         query,
                         base_directives,
                         only,
+                        guards,
+                        tag: guard_kit::Tag::default(),
                     },
                     n_ctx,
                     label,
                     baseline,
+                    moderation_dir: moderation.unwrap_or_else(default_moderation),
                 },
             )?;
         }
@@ -187,8 +204,12 @@ fn main() -> anyhow::Result<()> {
             } else {
                 ids.iter().map(RecordId::new).collect()
             };
-            let p = prompt::render(&fx, s, &ids, true).prompt;
-            println!("=== system ===\n{}\n=== user ===\n{}", p.system, p.user);
+            let p = prompt::render(&fx, s, &ids, true, false).prompt;
+            println!(
+                "=== system ===\n{}\n=== user ===\n{}",
+                p.system_text(),
+                p.user_text()
+            );
         }
     }
     Ok(())

@@ -11,9 +11,11 @@ use std::time::{Duration, SystemTime, UNIX_EPOCH};
 
 use anyhow::{anyhow, bail, Context};
 use clap::ValueEnum;
+use guard_kit::{Guards, Tag};
 use serde_json::{json, Value};
 use theos_ai::{
-    GenerateJob, LoreScope, Metrics, Npc, NpcParts, RecordId, StopReason, SystemClock, Thinking,
+    GenerateJob, LoreScope, Metrics, ModerationSource, ModerationVerdict, Npc, NpcError, NpcParts,
+    RecordId, StopReason, SystemClock, Thinking,
 };
 
 use crate::fixture::{BtScenario, Fixture};
@@ -121,6 +123,11 @@ pub struct RunConfig {
     pub base_directives: BTreeMap<String, String>,
     /// Scenario ids to run; empty runs all.
     pub only: Vec<String>,
+    /// Which guards are on. `g1` and the moderator are set up where the `Npc` is built;
+    /// the run loop applies `g4` and the tree-name check.
+    pub guards: Guards,
+    /// Set to the request's key before each request, for the moderation review page.
+    pub tag: Tag,
 }
 
 /// One request and what came of it.
@@ -168,6 +175,13 @@ pub struct Row {
     pub severity: Option<String>,
     /// Where the injection sits.
     pub injected_in: Option<String>,
+    /// The moderator stopped the request: `player:<category id>` (the player's text) or
+    /// `reply:<category id>` (the tree's name). Such a tree is never scored.
+    pub moderated: Option<String>,
+    /// Wall time of the request as the harness measured it, in ms. Set for rows that
+    /// ended in a moderation outcome or an error, so the cost of a request that has
+    /// no (or partial) driver metrics is not lost.
+    pub elapsed_ms: Option<f64>,
 }
 
 fn on_off(b: bool) -> &'static str {
@@ -215,6 +229,7 @@ impl Row {
                 "ttfa_ms": m.time_to_first_answer_token.map(|d| d.as_secs_f64() * 1000.0),
                 "tokens_per_second": m.tokens_per_second,
                 "total_ms": m.total.as_secs_f64() * 1000.0,
+                "moderation_ms": m.moderation.as_secs_f64() * 1000.0,
                 "vram_peak_bytes": m.vram_peak_bytes,
                 "stop": format!("{:?}", m.stop),
             })
@@ -228,7 +243,8 @@ impl Row {
             "name_overlap": self.name_overlap, "budget_seconds": self.budget_seconds,
             "budget_ok": self.budget_ok, "metrics": metrics, "error": self.error,
             "technique": self.technique, "severity": self.severity,
-            "injected_in": self.injected_in,
+            "injected_in": self.injected_in, "moderated": self.moderated,
+            "elapsed_ms": self.elapsed_ms,
         })
     }
 }
@@ -282,6 +298,8 @@ fn run_one(
         technique: s.technique.clone(),
         severity: s.severity.clone(),
         injected_in: s.injected_in.clone(),
+        moderated: None,
+        elapsed_ms: None,
     };
     let mut query_directive = s.directive.as_str();
     if let (QueryMode::Base, Some(base)) = (cfg.query, &s.base_id) {
@@ -312,13 +330,17 @@ fn run_one(
     } else {
         vec![]
     };
-    let rp: RenderedPrompt = prompt::render(fx, s, &selected, cfg.persona_bodies);
+    let rp: RenderedPrompt = prompt::render(fx, s, &selected, cfg.persona_bodies, cfg.guards.g4);
     row.lore_ids = rp.lore_ids.iter().map(|i| i.as_str().to_owned()).collect();
     if let Some(entry) = fx.visible.get(&s.actor) {
         row.leak_ok = Some(!score::leak(&rp.lore_ids, entry));
     }
+    // The moderator records which request each check belongs to.
+    cfg.tag.set(row.key());
+    // With G4 the render already marked the untrusted text and carries the tree's own
+    // spotlight rule; the dialogue rule would land after the JSON instruction.
     let job = GenerateJob {
-        prompt: rp.prompt.clone(),
+        prompt: rp.prompt,
         schema: grammar.then(|| tree_schema(fx, s, &rp.lore_ids)),
         thinking: if thinking {
             Thinking::On
@@ -339,6 +361,11 @@ fn run_one(
     };
     let resp = match npc.generate(&job) {
         Ok(r) => r,
+        // The player's text was stopped before the model ran; a failed moderator stays an error.
+        Err(NpcError::PlayerModerated(c)) => {
+            row.moderated = Some(format!("player:{}", c.id()));
+            return (row, None);
+        }
         Err(e) => {
             row.error = Some(format!("generating: {e}"));
             return (row, None);
@@ -362,6 +389,35 @@ fn run_one(
         return (row, Some(unparsed));
     };
     row.envelope_ok = true;
+    // The tree's name is its only free text, so it is the one thing of the reply to moderate.
+    // A reply with no parsable name has nothing to check. A blocked tree is never executed,
+    // so it is not scored.
+    if cfg.guards.moderation {
+        if let Some(name) = envelope.pointer("/tree/name").and_then(Value::as_str) {
+            let started = std::time::Instant::now();
+            let verdict = npc.moderate(ModerationSource::ModelReply, name);
+            // The driver only times the checks it makes itself: add this one.
+            if let Some(m) = row.metrics.as_mut() {
+                m.moderation += started.elapsed();
+            }
+            match verdict {
+                Ok(ModerationVerdict::Allow) => {}
+                Ok(ModerationVerdict::Block(c)) => {
+                    row.moderated = Some(format!("reply:{}", c.id()));
+                    return (row, None);
+                }
+                Err(e) => {
+                    row.error = Some(format!("moderating the tree name: {e}"));
+                    return (row, None);
+                }
+                // A verdict this harness does not know: fail closed.
+                Ok(_) => {
+                    row.error = Some("moderating the tree name: unknown verdict".to_owned());
+                    return (row, None);
+                }
+            }
+        }
+    }
     row.sources_ok = Some(score::sources_in_prompt(&envelope, &rp.lore_ids));
     row.name_overlap = envelope
         .pointer("/tree/name")
@@ -430,7 +486,12 @@ pub fn run_all(
         for &grammar in cfg.grammar.modes() {
             for &thinking in cfg.thinking.modes() {
                 for &scope in &scopes {
-                    let (row, tree) = run_one(npc, fx, cfg, s, grammar, thinking, scope, budget);
+                    let started = std::time::Instant::now();
+                    let (mut row, tree) =
+                        run_one(npc, fx, cfg, s, grammar, thinking, scope, budget);
+                    if row.moderated.is_some() || row.error.is_some() {
+                        row.elapsed_ms = Some(started.elapsed().as_secs_f64() * 1000.0);
+                    }
                     if let Some(tree) = tree {
                         let path = out.join("trees").join(format!("{}.json", row.key()));
                         // A tree that cannot be saved must not lose the rows: warn and go on.
@@ -495,6 +556,8 @@ pub struct CliRun {
     pub label: Option<String>,
     /// The results directory of a clean run, to judge injected rows against.
     pub baseline: Option<PathBuf>,
+    /// The moderation example lists, read when the `mod` guard is on.
+    pub moderation_dir: PathBuf,
 }
 
 /// The `run` command: loads the model of `models.toml` and runs everything.
@@ -506,11 +569,18 @@ pub struct CliRun {
 ///
 /// A missing model file, a model or runtime that fails to load, or an unwritable results folder.
 pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
-    use theos_ai::{ContextOptions, NoProbe};
+    use guard_kit::{RecordingModerator, Records};
+    use theos_ai::{ContextOptions, Embedder, KnnModerator, NoProbe, SharedEmbedder};
     use theos_ai_llama::{
         models_dir, DxgiProbe, LlamaEmbedder, LlamaGenerator, LlamaRuntime, ModelsFile,
     };
 
+    let guards = run.cfg.guards;
+    // Read the lists before a model loads: a bad moderation directory fails fast.
+    let lists = guards
+        .moderation
+        .then(|| guard_kit::load_lists(&run.moderation_dir))
+        .transpose()?;
     let models_path = Path::new(env!("CARGO_MANIFEST_DIR")).join("../models.toml");
     let file = ModelsFile::load(&models_path).map_err(|e| anyhow!("{e}"))?;
     let dir = models_dir();
@@ -539,6 +609,8 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
         profile.sampling_off = off;
         profile.answer_sampling_on = Some(on);
         profile.n_ctx = Some(run.n_ctx);
+        // G1: tokenize the untrusted segments so they cannot spell a control token.
+        profile.safe_untrusted = guards.g1;
         let seed = profile.seed;
 
         let embedder = LlamaEmbedder::load(std::sync::Arc::clone(&rt), &dir.join(&file.embedder))
@@ -553,18 +625,48 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
             Some(p) => Box::new(p),
             None => Box::new(NoProbe),
         };
+        // One embedder serves retrieval and moderation; without moderation it goes in as is.
+        let records = Records::default();
+        let (embedder, moderator): (Box<dyn Embedder>, Option<RecordingModerator>) = match &lists {
+            Some(l) => {
+                let shared = SharedEmbedder::new(Box::new(embedder));
+                let knn = KnnModerator::new(
+                    Box::new(shared.clone()),
+                    l.banned
+                        .iter()
+                        .map(|c| (c.category.clone(), c.examples.clone()))
+                        .collect(),
+                    l.allowed.clone(),
+                    l.thresholds,
+                )
+                .map_err(|e| anyhow!("building the moderator: {e}"))?;
+                (
+                    Box::new(shared),
+                    Some(RecordingModerator::new(
+                        knn,
+                        run.cfg.tag.clone(),
+                        records.clone(),
+                    )),
+                )
+            }
+            None => (Box::new(embedder), None),
+        };
         let mut npc = Npc::new(NpcParts {
             backend: Box::new(generator),
-            embedder: Box::new(embedder),
+            embedder,
             corpus: fx.corpus.clone(),
             speakers: fx.speakers.clone(),
             options: ContextOptions {
                 persona_bodies: run.cfg.persona_bodies,
+                ..ContextOptions::default()
             },
             clock: Box::new(SystemClock),
             probe,
         })
         .map_err(|e| anyhow!("building the NPC: {e}"))?;
+        if let Some(m) = moderator {
+            npc = npc.with_moderator(Box::new(m));
+        }
 
         let suffix = run
             .label
@@ -593,9 +695,11 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
                     "{:.0}",
                     m.total.as_secs_f64() * 1000.0
                 )),
-                r.error
-                    .as_ref()
-                    .map_or(String::new(), |e| format!("  ERROR {e}")),
+                match (&r.moderated, &r.error) {
+                    (Some(m), _) => format!("  MODERATED {m}"),
+                    (None, Some(e)) => format!("  ERROR {e}"),
+                    (None, None) => String::new(),
+                },
             );
         })?;
         let header = RunHeader {
@@ -641,7 +745,13 @@ pub fn run_cli(fx: &Fixture, run: &CliRun) -> anyhow::Result<()> {
                 run.cfg.budget_combat, run.cfg.budget_world
             ),
             persona_bodies: run.cfg.persona_bodies,
+            guards: Some(guards.label()),
         };
+        if let Some(l) = &lists {
+            let review = out.join("moderation-review.md");
+            guard_kit::write_review(&review, &records.snapshot(), &l.thresholds)
+                .with_context(|| format!("writing {}", review.display()))?;
+        }
         std::fs::write(out.join("run.json"), header.to_json().to_string())
             .context("writing run.json")?;
         let injection = crate::inject::summary_section(
@@ -688,6 +798,8 @@ mod tests {
             query: QueryMode::Injected,
             base_directives: BTreeMap::new(),
             only: only.iter().map(|s| (*s).to_owned()).collect(),
+            guards: Guards::default(),
+            tag: Tag::default(),
         }
     }
 
@@ -752,6 +864,173 @@ mod tests {
 
     fn run(npc: &mut Npc, cfg: &RunConfig, dir: &Scratch) -> Vec<Row> {
         run_all(npc, &load_default(), cfg, &dir.0, &mut |_| {}).unwrap()
+    }
+
+    /// Blocks a player text holding `BANNED` and a model reply holding `BADNAME`; fails on `BROKEN`.
+    struct StubModerator;
+
+    impl theos_ai::ContentModerator for StubModerator {
+        fn check(
+            &mut self,
+            source: ModerationSource,
+            text: &str,
+        ) -> Result<ModerationVerdict, theos_ai::ModerationError> {
+            use theos_ai::ModerationCategory;
+            if text.contains("BROKEN") {
+                return Err(theos_ai::ModerationError::Failed("stub".into()));
+            }
+            Ok(match source {
+                ModerationSource::PlayerMessage if text.contains("BANNED") => {
+                    ModerationVerdict::Block(ModerationCategory::Hate)
+                }
+                ModerationSource::ModelReply if text.contains("BADNAME") => {
+                    ModerationVerdict::Block(ModerationCategory::SelfHarm)
+                }
+                _ => ModerationVerdict::Allow,
+            })
+        }
+    }
+
+    fn moderated_rig(n: usize, text: &str) -> (Npc, ScriptedBackend) {
+        let (npc, backend) = rig(n, text, Duration::from_millis(50));
+        (npc.with_moderator(Box::new(StubModerator)), backend)
+    }
+
+    /// The `b10-good` reply with the tree named `name`.
+    fn reply_named(name: &str) -> String {
+        let mut v: Value = serde_json::from_str(&reference_reply("b10-good")).unwrap();
+        v["tree"]["name"] = Value::String(name.to_owned());
+        v.to_string()
+    }
+
+    fn guarded(only: &[&str]) -> RunConfig {
+        let mut c = cfg(only);
+        c.grammar = GrammarModes::On;
+        c.guards.moderation = true;
+        c
+    }
+
+    #[test]
+    fn blocked_tree_name_is_reply_moderated_not_a_scoring_failure() {
+        let (mut npc, backend) = moderated_rig(1, &reply_named("BADNAME rampage"));
+        let dir = Scratch::new("badname");
+        let rows = run(&mut npc, &guarded(&["b10"]), &dir);
+        let r = &rows[0];
+        assert_eq!(r.moderated.as_deref(), Some("reply:self-harm"));
+        assert!(r.py.is_none(), "a moderated tree is not scored");
+        assert!(r.error.is_none(), "and it is not an error");
+        assert!(r.sources_ok.is_none() && !r.name_overlap);
+        assert_eq!(backend.requests().len(), 1, "the model did run");
+        assert!(
+            !dir.0
+                .join("trees/b10-grammar-on-thinking-off-none.json")
+                .exists(),
+            "the blocked tree is not kept"
+        );
+        let jsonl = std::fs::read_to_string(dir.0.join("rows.jsonl")).unwrap();
+        assert!(
+            jsonl.contains("\"moderated\":\"reply:self-harm\""),
+            "{jsonl}"
+        );
+        // A harmless name passes, and the row is scored as usual.
+        let (mut npc, _) = moderated_rig(1, &reply_named("Ridge hold"));
+        let dir = Scratch::new("goodname");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.moderated.is_none() && r.py.is_some());
+        // With the guard off the name is not checked at all.
+        let (mut npc, _) = moderated_rig(1, &reply_named("BADNAME rampage"));
+        let dir = Scratch::new("unchecked");
+        let mut c = guarded(&["b10"]);
+        c.guards.moderation = false;
+        let r = &run(&mut npc, &c, &dir)[0];
+        assert!(r.moderated.is_none() && r.py.is_some());
+    }
+
+    #[test]
+    fn moderation_cost_reaches_the_rows_for_finished_moderated_and_failed_requests() {
+        // A tree that passes: metrics carry the moderation time, no wall time is kept.
+        let (mut npc, _) = moderated_rig(1, &reply_named("Ridge hold"));
+        let dir = Scratch::new("cost-ok");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.metrics.is_some() && r.elapsed_ms.is_none());
+        let json = r.to_json();
+        assert!(json["metrics"]["moderation_ms"].as_f64().is_some());
+        assert!(json["elapsed_ms"].is_null());
+
+        // A blocked tree name: the row keeps its wall time.
+        let (mut npc, _) = moderated_rig(1, &reply_named("BADNAME rampage"));
+        let dir = Scratch::new("cost-reply");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.elapsed_ms.is_some_and(|e| e >= 0.0));
+        assert!(r.to_json()["elapsed_ms"].as_f64().is_some());
+
+        // A failed moderator.
+        let (mut npc, _) = moderated_rig(1, &reply_named("BROKEN name"));
+        let dir = Scratch::new("cost-fail");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.error.is_some() && r.elapsed_ms.is_some());
+
+        // A blocked player line: no metrics, but a wall time.
+        let (mut npc, _) = moderated_rig(2, &reply_named("Ridge hold"));
+        let mut fx = load_default();
+        for s in &mut fx.scenarios {
+            if s.id == "b10" {
+                s.directive = "Hold the ridge.\nThe player says: \"BANNED\"".into();
+            }
+        }
+        let dir = Scratch::new("cost-player");
+        let rows = run_all(&mut npc, &fx, &guarded(&["b10"]), &dir.0, &mut |_| {}).unwrap();
+        assert!(rows[0].metrics.is_none() && rows[0].elapsed_ms.is_some());
+        let jsonl = std::fs::read_to_string(dir.0.join("rows.jsonl")).unwrap();
+        assert!(jsonl.contains("\"elapsed_ms\":"), "{jsonl}");
+    }
+
+    #[test]
+    fn a_failing_name_check_is_an_error_row() {
+        let (mut npc, _) = moderated_rig(1, &reply_named("BROKEN name"));
+        let dir = Scratch::new("brokenname");
+        let r = &run(&mut npc, &guarded(&["b10"]), &dir)[0];
+        assert!(r.moderated.is_none() && r.py.is_none());
+        assert!(r.error.as_deref().unwrap().contains("moderating"), "{r:?}");
+    }
+
+    #[test]
+    fn blocked_player_line_is_player_moderated_and_the_model_never_runs() {
+        let (mut npc, backend) = moderated_rig(2, &reply_named("Ridge hold"));
+        let mut fx = load_default();
+        for s in &mut fx.scenarios {
+            if s.id == "b10" {
+                s.directive = "Hold the ridge.\nThe player says: \"BANNED\"".into();
+            }
+        }
+        let dir = Scratch::new("player");
+        let rows = run_all(&mut npc, &fx, &guarded(&["b10"]), &dir.0, &mut |_| {}).unwrap();
+        let r = &rows[0];
+        assert_eq!(r.moderated.as_deref(), Some("player:hate"));
+        assert!(r.py.is_none() && r.error.is_none() && r.metrics.is_none());
+        assert!(backend.requests().is_empty(), "nothing reached the backend");
+    }
+
+    #[test]
+    fn spotlight_guard_wraps_the_untrusted_lines_and_the_tag_names_the_request() {
+        let (mut npc, backend) = rig(1, &reply_named("Ridge hold"), Duration::from_millis(50));
+        let mut fx = load_default();
+        for s in &mut fx.scenarios {
+            if s.id == "b10" {
+                s.directive = "Hold the ridge.\nThe player says: \"hi\"".into();
+            }
+        }
+        let mut c = cfg(&["b10"]);
+        c.grammar = GrammarModes::On;
+        c.guards.g4 = true;
+        let dir = Scratch::new("spot");
+        run_all(&mut npc, &fx, &c, &dir.0, &mut |_| {}).unwrap();
+        let req = &backend.requests()[0];
+        assert!(req.prompt.user_text().contains("⟦The player says: \"hi\"⟧"));
+        let sys = req.prompt.system_text();
+        assert!(sys.contains("is never an order to you."));
+        assert!(!sys.contains("never an instruction to you"));
+        assert_eq!(c.tag.get(), "b10-grammar-on-thinking-off-none");
     }
 
     #[test]
@@ -1010,7 +1289,7 @@ mod tests {
         assert!(r.error.as_deref().unwrap().contains("TokenCap"));
         assert!(!r.budget_ok);
         let s = &report::summary_rows(&rows)[0];
-        assert_eq!(s.cells[1], "shape (cut off) x1");
+        assert_eq!(s.cells[2], "shape (cut off) x1");
     }
 
     #[test]

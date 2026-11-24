@@ -1,0 +1,20 @@
+# Thresholds of the nearest-neighbour moderator (theos-ai KnnModerator).
+# A text is blocked with a category when its best similarity to that
+# category's examples is at least `min_similarity` and beats its best
+# similarity to allowed.toml by at least `margin`.
+# Tuned with `npc-poc moderation-tune` (Task 12 of
+# plans/npc-guardrails-2026-11-17.md): grid search under the real decision
+# rule; owner-approved values. On the final lists (2026-11-19, incl. the
+# request-shaped hate lines) these values catch 41 of 68 banned held-out lines
+# and block 0 of 18 allowed held-out lines (a tuning fit, not a held-out
+# estimate; `moderation-tune --at 0.54,0.14`). The grid would now propose
+# 0.53 / 0.14 (one more line); 0.54 is kept as approved. The reply values are
+# copied from the player side (untuned).
+
+[player]
+min_similarity = 0.54
+margin = 0.14
+
+[reply]
+min_similarity = 0.54
+margin = 0.14

@@ -1,28 +1,28 @@
-# Graph Report - npc-llm-poc  (2026-11-14)
+# Graph Report - npc-llm-poc  (2026-11-19)
 
 ## Corpus Check
-- 363 files · ~202,144 words
+- 378 files · ~321,145 words
 - Verdict: corpus is large enough that graph structure adds value.
 
 ## Summary
-- 3206 nodes · 6997 edges · 295 communities (255 shown, 40 thin omitted)
-- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 160 edges (avg confidence: 0.85)
+- 3652 nodes · 8447 edges · 307 communities (263 shown, 44 thin omitted)
+- Extraction: 98% EXTRACTED · 2% INFERRED · 0% AMBIGUOUS · INFERRED: 202 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `ba7e0c8f`
+- Built from commit: `cbbb7e48`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
-- kernel_integration.rs
-- .sender_for_erased
+- npc-poc/src/run.rs
+- embed.rs
 - theos-core/src/event.rs
 - dependency_resolver.rs
 - TheosKernel
-- mat.rs
-- KernelError
-- worker.rs
+- quat.rs
+- TheosError
+- embedder.rs
 - aabb.rs
 - kernel.rs
 - .new
@@ -34,7 +34,7 @@
 - ServiceLocator
 - bt-poc/src/run.rs
 - Self
-- quat.rs
+- worker.rs
 - THEOS-158 — [magic] Injection + E4 interference amplitude (A_j)
 - .init
 - theos-engine
@@ -45,15 +45,15 @@
 - .record_debug
 - Strict DAG No-Circular-Dependency Crate Layout
 - benches/event_bus.rs
-- .sender_for_erased
+- BroadcastEventBus
 - EventBus
 - ModuleDependency
-- scenarios.rs
+- knn.rs
 - THEOS-181 — [magic] E16c construction transient + per-chakra throughput meter / overdraw
-- RecordId
+- Chakras
 - CallLog
 - transient.rs
-- retrieval.rs
+- KernelError
 - WindowError
 - theos-audio/src/lib.rs
 - theos-assets/src/lib.rs
@@ -69,7 +69,7 @@
 - THEOS-12: Initialization Phase — extract `Kernel::init()`
 - CloseToExitModule
 - theos-scripting/src/lib.rs
-- WeaveTuning
+- review.rs
 - NodeId
 - Test Coverage Improvement Plan — 2026-06-08
 - glam interoperability bridge pattern
@@ -85,12 +85,12 @@
 - EventBus split into dyn-compatible core + generic ergonomic extension
 - theos-window
 - KernelContext is a concrete struct (not a trait) for type-safe service access
-- theos-ai-llama/tests/real_model.rs
+- RecordId
 - Engine Module three-phase lifecycle (init, tick, shutdown)
 - Service Locator pattern for engine subsystem registry
-- Chakras
+- bt_spike.rs
 - ElementField
-- npc-poc/src/run.rs
+- WeaveTuning
 - THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam
 - 16-byte SIMD alignment for GPU/SIMD compatibility
 - theos-ai
@@ -111,7 +111,7 @@
 - theos-game
 - 🎯 Sprint Planning Summit — Goal
 - stability.rs
-- cast.rs
+- npc-poc/src/inject.rs
 - theos-ai/src/testkit.rs
 - THEOS-177 — [magic] B2 overdraw (channel beyond safe P/Cᵢ — demonic speed)
 - math_benches.rs
@@ -130,82 +130,94 @@
 - Quat * Vec3 (Rodrigues rotation)
 - THEOS-180 — [magic] E16a/b upkeep rate + depth-attenuated throughput occupation
 - npc-poc/src/report.rs
-- driver.rs
-- LlamaGenerator
+- Vec
+- gain.rs
 - npc-poc/src/score.rs
 - bt-poc/src/report.rs
-- embedder.rs
-- generator.rs
-- BackendError
-- WovenToken
+- tune.rs
+- ModelContext
+- moderation/mod.rs
+- KnnModerator
 - NPC LLM proof of concept — design
 - TheosFormatter
-- FakeClock
-- TheosError
+- Review Focus
+- driver.rs
 - File structure
-- .assemble
-- chakra.rs
+- NPC guardrails: content moderation and the input channel — design
+- generator.rs
 - bt-poc/src/score.rs
 - check.py
-- lore_poc.rs
-- injection.rs
+- ConsumerModule
+- transfer.rs
 - Vec3
 - ray.rs
-- Npc
-- mini
+- LlamaDecoder
+- BackendError
 - bt-poc/src/inject.rs
 - spike.rs
 - theos-ai/src/context.rs
 - lore-poc fixture
-- bt_spike.rs
+- .sender_for_erased
 - convert.rs
 - hash.rs
-- interface.rs
+- cast.rs
 - plane.rs
-- CrossbeamEventBus
-- theos-shared/src/error.rs
+- TheosAppHandler
+- theos-core/src/error.rs
 - Review Focus
-- .run_loop
+- WovenToken
 - bt-poc fixture
 - Review Focus
-- LlamaDecoder
+- compare_rows.py
 - NPC prompt injection: baseline and guardrail proposal
 - Behaviour-tree PoC and its injection suite — design
-- theos-core/src/error.rs
-- .run
-- Command
+- moderation/README.md
+- LlamaGenerator
+- lore_poc.rs
 - window_factory.rs
 - choose_output
 - extract.rs
 - log_format.rs
-- Formatter
+- TimingModule
 - strip_ansi
 - score.py
-- Error
+- retrieval.rs
+- Chakra
+- mini
+- .parse
+- lore.rs
+- injection.rs
+- KernelResult
+- Formatter
+- theos-ai/src/lib.rs
+- .fmt
+- kernel_integration.rs
+- .wrap
+- theos-shared lib (public API)
 
 ## God Nodes (most connected - your core abstractions)
 1. `Vec3` - 92 edges
-2. `RecordId` - 53 edges
-3. `rig()` - 40 edges
-4. `TheosKernel` - 38 edges
-5. `Vec4` - 38 edges
-6. `mini()` - 36 edges
-7. `Vec2` - 34 edges
-8. `load_default()` - 33 edges
-9. `Chakras` - 32 edges
-10. `assemble()` - 32 edges
+2. `rig()` - 61 edges
+3. `RecordId` - 53 edges
+4. `mini()` - 41 edges
+5. `TheosKernel` - 38 edges
+6. `Vec4` - 38 edges
+7. `load_default()` - 37 edges
+8. `request()` - 37 edges
+9. `run_model()` - 34 edges
+10. `Vec2` - 34 edges
 
 ## Surprising Connections (you probably didn't know these)
 - `Type-Erased EventBus via ChannelHandle adapter` --semantically_similar_to--> `Service Locator encapsulated in KernelContext`  [INFERRED] [semantically similar]
   theos-core/src/event.rs → plans/THEOS-86.md
 - `PhysicsEvent` --semantically_similar_to--> `GameEvent`  [INFERRED] [semantically similar]
   theos-physics/src/event.rs → theos-core/src/event.rs
-- `THEOS-86 Microkernel Bootstrap Plan` --references--> `CrossbeamEventBus`  [EXTRACTED]
-  plans/THEOS-86.md → theos-core/src/event.rs
 - `select_rejects_an_unknown_speaker()` --calls--> `rig()`  [INFERRED]
   theos-ai/src/driver.rs → plugins/llm-poc/bt-poc/src/run.rs
 - `assemble()` --calls--> `visible()`  [INFERRED]
   theos-ai/src/context.rs → plugins/llm-poc/npc-poc/src/score.rs
+- `visible_matches_golden_for_all_eight_speakers()` --calls--> `visible()`  [INFERRED]
+  theos-ai/tests/lore_poc.rs → plugins/llm-poc/npc-poc/src/score.rs
 
 ## Import Cycles
 - 2-file cycle: `theos-ai/src/driver.rs -> theos-ai/src/reply.rs -> theos-ai/src/driver.rs`
@@ -218,63 +230,63 @@
 - **Release Artifact Production (Launcher, Game, Editor)** — github_workflows_release_packaging_theos_launcher_artifact, github_workflows_release_packaging_theos_game_artifact, github_workflows_release_packaging_theos_editor_artifact [EXTRACTED 1.00]
 - **CI Quality Gate Pipeline (Check, Lint, Test)** — github_workflows_check_lint_check_lint_workflow, github_workflows_test_test_workflow, github_workflows_check_lint_clippy_unsafe_policy_job [INFERRED 0.85]
 
-## Communities (295 total, 40 thin omitted)
+## Communities (307 total, 44 thin omitted)
 
-### Community 0 - "kernel_integration.rs"
-Cohesion: 0.08
-Nodes (30): ConsumerModule, CountingModule, CountingModule<Tag>, GreetingService, kernel_runs_init_tick_shutdown_lifecycle(), make_counting_module(), module_retrieves_service_registered_by_its_dependency(), ProviderModule (+22 more)
+### Community 0 - "npc-poc/src/run.rs"
+Cohesion: 0.06
+Nodes (90): schema_compiles_in_llguidance_for_every_scenario(), Guards, guards_parse_presets_and_lists_and_reject_unknown_ids(), Result, String, moderator(), recording_moderator_records_every_check_with_its_tag(), RecordingModerator (+82 more)
 
-### Community 1 - ".sender_for_erased"
-Cohesion: 0.40
-Nodes (7): Any, Box, EventBusResult, Option, Send, TypeId, StubBus
+### Community 1 - "embed.rs"
+Cohesion: 0.15
+Nodes (16): Again, Calls, RefCell, cosine(), Reentrant, Box, Cell, Option (+8 more)
 
 ### Community 2 - "theos-core/src/event.rs"
 Cohesion: 0.09
-Nodes (11): BroadcastBusExt, BroadcastEventBus, Debug, E, Formatter, HashMap, Result, RwLock (+3 more)
+Nodes (10): BroadcastBusExt, Debug, E, HashMap, RwLock, Sender, T, Test2Event (+2 more)
 
 ### Community 3 - "dependency_resolver.rs"
 Cohesion: 0.07
-Nodes (32): Kahn's Topological Sort for Module Init Order, ModuleResult, DependencyResolver, five_module_mixed_graph_satisfies_all_dependencies(), linear_chain_resolves_in_dependency_order(), module(), module_with_deps(), Box (+24 more)
+Nodes (31): Kahn's Topological Sort for Module Init Order, ModuleResult, DependencyResolver, five_module_mixed_graph_satisfies_all_dependencies(), linear_chain_resolves_in_dependency_order(), module(), module_with_deps(), Box (+23 more)
 
 ### Community 4 - "TheosKernel"
+Cohesion: 0.14
+Nodes (16): Fixed-Step Game Loop (60 Hz sleep+spin hybrid), Service Locator encapsulated in KernelContext, Type-Erased EventBus via ChannelHandle adapter, ChannelHandle (private trait), CrossbeamEventBus, THEOS-86 Microkernel Bootstrap Plan, allocation_check_typed_event_bus (alloc test), bench_send_then_drain_typed (Criterion benchmark) (+8 more)
+
+### Community 5 - "quat.rs"
+Cohesion: 0.06
+Nodes (42): glam::Mat3, glam::Mat4, Mat3, Mat4, From, Mul, Output, Self (+34 more)
+
+### Community 6 - "TheosError"
 Cohesion: 0.16
-Nodes (11): Fixed-Step Game Loop (60 Hz sleep+spin hybrid), Service Locator encapsulated in KernelContext, THEOS-86 Microkernel Bootstrap Plan, event_bus_handle_returns_clone_of_kernel_bus(), Arc, AtomicU32, Default, Option (+3 more)
+Nodes (16): EventBusError, kernel_context_wraps_service_locator_error_and_exposes_source(), KernelContextError, Box, Display, Error, From, Option (+8 more)
 
-### Community 5 - "mat.rs"
-Cohesion: 0.11
-Nodes (20): glam::Mat3, glam::Mat4, Mat3, Mat4, From, Mul, Output, Self (+12 more)
-
-### Community 6 - "KernelError"
-Cohesion: 0.13
-Nodes (17): KernelError, ModuleError, Box, Display, Error, FmtResult, Formatter, From (+9 more)
-
-### Community 7 - "worker.rs"
-Cohesion: 0.11
-Nodes (33): AtomicUsize, Completed, F, JoinHandle, NpcRequest, counting_worker(), CountingBackend, drop_discards_queued_requests() (+25 more)
+### Community 7 - "embedder.rs"
+Cohesion: 0.16
+Nodes (18): Cow, document_text_is_embedded_as_given(), ensure_ends_with(), ensure_ends_with_appends_missing_end_token_once(), ensure_ends_with_handles_empty_sequence(), input_text(), l2_normalize(), l2_normalize_leaves_zero_vector_zero() (+10 more)
 
 ### Community 8 - "aabb.rs"
 Cohesion: 0.11
 Nodes (12): Aabb, assert_vec_eq(), Self, test_expand_to_contain_point_inside_is_noop(), test_expand_to_contain_point_outside(), test_merge_produces_bounding_box(), test_new_degenerate_point_box_is_valid(), test_new_stores_corners() (+4 more)
 
 ### Community 9 - "kernel.rs"
-Cohesion: 0.16
-Nodes (28): calling_init_twice_returns_already_initialized(), default_constructs_kernel_with_no_modules_and_uninitialised_flag(), init_calls_module_init_in_dependency_sorted_order(), init_propagates_dependency_resolver_error_without_running_any_module(), init_stops_at_first_failing_module_and_skips_later_modules(), init_with_no_modules_succeeds_and_marks_kernel_initialised(), registering_duplicate_name_errors_and_leaves_buffer_unchanged(), registering_three_distinct_modules_fills_staging_buffer() (+20 more)
+Cohesion: 0.12
+Nodes (33): calling_init_twice_returns_already_initialized(), default_constructs_kernel_with_no_modules_and_uninitialised_flag(), init_calls_module_init_in_dependency_sorted_order(), init_propagates_dependency_resolver_error_without_running_any_module(), init_stops_at_first_failing_module_and_skips_later_modules(), init_with_no_modules_succeeds_and_marks_kernel_initialised(), RecordingModule, registering_duplicate_name_errors_and_leaves_buffer_unchanged() (+25 more)
 
 ### Community 10 - ".new"
 Cohesion: 0.16
 Nodes (21): test_glam_vec2_roundtrip(), test_glam_vec3_and_vec3a_produce_same_components(), test_glam_vec3_roundtrip(), test_glam_vec3a_roundtrip(), test_glam_vec4_roundtrip(), test_vec2_constructors_and_dot(), test_vec2_dot_antiparallel_is_negative(), test_vec2_dot_orthogonal_is_zero() (+13 more)
 
 ### Community 11 - "prompt.rs"
-Cohesion: 0.06
-Nodes (88): BtScenario, enemy_front_matter_reader_splits_id_title_and_body(), EnemyRecord, Entity, Fixture, fixture_loads_20_scenarios_and_4_enemies(), load_default(), parse_enemy() (+80 more)
+Cohesion: 0.05
+Nodes (107): BtScenario, enemy_front_matter_reader_splits_id_title_and_body(), EnemyRecord, Entity, Fixture, fixture_loads_20_scenarios_and_4_enemies(), load_default(), parse_enemy() (+99 more)
 
 ### Community 12 - "Release Packaging Job"
 Cohesion: 0.09
 Nodes (23): Cargo Plugins Workspace Dependency Updates (theos-plugin-deps), Cargo Workspace Dependency Updates (theos-engine-deps), Dependabot Configuration, GitHub Actions Dependency Updates, cargo-geiger Unsafe Audit Tool, Cargo Check Job, Check and Lint Workflow, Clippy and Unsafe Policy Job (+15 more)
 
 ### Community 13 - "upkeep.rs"
-Cohesion: 0.22
-Nodes (27): approx(), assemble(), body(), occ(), Option, Vec, same_construct_two_environments_differ_only_in_upkeep_rate(), spatial() (+19 more)
+Cohesion: 0.12
+Nodes (43): approx(), assemble(), body(), efficiency_matches_manual_eta_on_constructive_graph(), efficiency_on_zero_energy_graph_is_well_defined(), EnvResistance, full_transfer_graph_efficiency_near_one(), graph_energy_matches_manual_sum_over_edges() (+35 more)
 
 ### Community 14 - "EntityId"
 Cohesion: 0.06
@@ -289,16 +301,16 @@ Cohesion: 0.17
 Nodes (14): ServiceLocatorResult, register_and_get_service(), Any, Arc, HashMap, Option, RwLock, Send (+6 more)
 
 ### Community 17 - "bt-poc/src/run.rs"
-Cohesion: 0.11
-Nodes (44): FnMut, a_backend_error_becomes_a_row_and_the_run_continues(), a_failed_tree_write_warns_and_the_run_goes_on(), a_grammar_on_reply_cut_by_the_token_cap_is_a_shape_row_that_counts_as_cut_off(), a_scoring_failure_becomes_an_error_row_not_an_abort(), budget_uses_the_priority_unless_a_deadline_is_given(), cfg(), CliRun (+36 more)
+Cohesion: 0.07
+Nodes (67): FnMut, Cli, Command, default_moderation(), main(), Command, Option, PathBuf (+59 more)
 
 ### Community 18 - "Self"
 Cohesion: 0.12
 Nodes (3): Output, Self, test_simd_interop()
 
-### Community 19 - "quat.rs"
-Cohesion: 0.15
-Nodes (22): assert_quat_eq(), assert_vec3_eq(), Quat, rot90_z(), Mul, MulAssign, Output, Self (+14 more)
+### Community 19 - "worker.rs"
+Cohesion: 0.12
+Nodes (31): AtomicUsize, Completed, F, JoinHandle, counting_worker(), CountingBackend, drop_discards_queued_requests(), drop_with_request_in_flight_joins() (+23 more)
 
 ### Community 20 - "THEOS-158 — [magic] Injection + E4 interference amplitude (A_j)"
 Cohesion: 0.22
@@ -317,16 +329,16 @@ Cohesion: 0.12
 Nodes (14): PhysicalKey, KeyCode, NativeKeyCode, WindowEvent, assert_maps(), translate_keycode_maps_all_digits(), translate_keycode_maps_all_letters(), translate_keycode_maps_editing_keys() (+6 more)
 
 ### Community 24 - "KernelContext"
-Cohesion: 0.22
-Nodes (12): KernelContextResult, event_bus_hands_back_the_same_shared_handle(), get_unregistered_service_returns_service_not_found(), KernelContext, make_context(), register_overwrites_previous_service_of_same_type(), register_then_get_returns_the_service(), Arc (+4 more)
+Cohesion: 0.20
+Nodes (13): KernelContextResult, event_bus_hands_back_the_same_shared_handle(), get_unregistered_service_returns_service_not_found(), KernelContext, make_context(), register_overwrites_previous_service_of_same_type(), register_then_get_returns_the_service(), Arc (+5 more)
 
 ### Community 25 - "theos-launcher main"
 Cohesion: 1.00
 Nodes (3): theos-launcher main, launcher log filtering test: defaults_to_info_when_rust_log_missing, launcher log filtering test: invalid_rust_log_does_not_crash_and_falls_back
 
 ### Community 26 - "npc-poc/src/main.rs"
-Cohesion: 0.23
-Nodes (12): Cli, Command, default_fixture(), export(), main(), Command, Option, Path (+4 more)
+Cohesion: 0.18
+Nodes (15): Cli, Command, default_fixture(), default_moderation(), export(), main(), Command, Option (+7 more)
 
 ### Community 27 - ".record_debug"
 Cohesion: 0.40
@@ -340,41 +352,41 @@ Nodes (4): Strict DAG No-Circular-Dependency Crate Layout, theos-shared Zero-Int
 Cohesion: 0.83
 Nodes (3): bench_send_then_recv_boxed_baseline(), bench_send_then_recv_typed(), Criterion
 
-### Community 30 - ".sender_for_erased"
-Cohesion: 0.31
-Nodes (9): ChannelHandle (private trait), Any, Box, EventBusResult, Option, Send, Sync, TypeId (+1 more)
+### Community 30 - "BroadcastEventBus"
+Cohesion: 0.35
+Nodes (9): BroadcastEventBus, Any, Box, EventBusResult, Option, Send, Sync, TypeId (+1 more)
 
 ### Community 31 - "EventBus"
-Cohesion: 0.16
-Nodes (16): Test2Event, TestEvent, PhysicsEvent, ChannelHandle, Event, EventBus, EventBusExt, Clone (+8 more)
+Cohesion: 0.27
+Nodes (10): PhysicsEvent, ChannelHandle, Event, EventBus, EventBusExt, Clone, Debug, Send (+2 more)
 
 ### Community 32 - "ModuleDependency"
-Cohesion: 0.16
+Cohesion: 0.18
 Nodes (7): FailingInitModule, RecordingModule<Tag>, TypeId, ModuleDependency, Self, TypeId, VersionReq
 
-### Community 33 - "scenarios.rs"
-Cohesion: 0.19
-Nodes (20): a_resist_scenario_without_severity_or_technique_fails_to_load(), Behaviour, fixture(), load_scenarios(), load_visible(), Markers, parse_scenarios(), BTreeMap (+12 more)
+### Community 33 - "knn.rs"
+Cohesion: 0.16
+Nodes (36): allow_evidence_picks_the_piece_nearest_the_line_not_the_highest_banned_score(), allowed_counterweight_prevents_a_block(), banned(), block_evidence_reports_the_distance_of_the_deciding_piece(), Canned, distance_is_non_negative_exactly_when_blocked(), distance_to_line(), distance_without_allowed_examples_is_the_similarity_term() (+28 more)
 
 ### Community 34 - "THEOS-181 — [magic] E16c construction transient + per-chakra throughput meter / overdraw"
 Cohesion: 0.15
 Nodes (12): Acceptance criteria (from Jira), Canon (Equations of the Weave, E16c — pinned + the gap this story fills), Canon writeback (E16c has a genuine gap — for the canon-authority agent), Coverage note, Current code state (all inputs already exist), Decision register — LOCKED (2026-08-29, guided session), Goal (one sentence), Implementation notes (2026-08-29, guided) (+4 more)
 
-### Community 35 - "RecordId"
-Cohesion: 0.08
-Nodes (37): Into, layer_of(), Context, layer_of(), Value, Vec, ids(), Item (+29 more)
+### Community 35 - "Chakras"
+Cohesion: 0.11
+Nodes (17): Attunement, chakra_state_round_trips_through_json(), Chakras, chakras_default_is_unattuned_and_balanced(), ChakraState, from_array_preserves_canonical_order(), indexing_and_iteration_observe_the_same_state(), iter_mut_allows_mutation_of_every_point() (+9 more)
 
 ### Community 36 - "CallLog"
-Cohesion: 0.31
-Nodes (6): CallLog, RecordingModule, Mutex, PhantomData, Tag, Vec
+Cohesion: 0.53
+Nodes (3): CallLog, Mutex, Vec
 
 ### Community 37 - "transient.rs"
-Cohesion: 0.15
-Nodes (46): Chakra, approx(), assemble(), body(), Construct, construct_ids_are_unique_across_spawns(), ConstructId, Lane (+38 more)
+Cohesion: 0.17
+Nodes (41): approx(), assemble(), body(), construct_ids_are_unique_across_spawns(), ConstructId, overdrawn_clears_after_the_transient_decays(), overdrawn_flags_an_anchor_when_floor_plus_transient_exceeds_channel_power(), overdrawn_is_empty_when_every_anchor_is_within_channel_power() (+33 more)
 
-### Community 38 - "retrieval.rs"
-Cohesion: 0.11
-Nodes (33): cosine(), Embedder, EmbedError, EmbedInput, String, build_embeds_only_beliefs(), build_errors_when_embedder_returns_vectors_of_differing_dimensions(), build_errors_when_embedder_returns_wrong_vector_count() (+25 more)
+### Community 38 - "KernelError"
+Cohesion: 0.14
+Nodes (17): KernelError, ModuleError, Box, Display, Error, FmtResult, Formatter, From (+9 more)
 
 ### Community 39 - "WindowError"
 Cohesion: 0.50
@@ -392,9 +404,9 @@ Nodes (11): AC traceability, Changes, Confirmed decisions (vs. spec wording), Go
 Cohesion: 0.06
 Nodes (47): CloseToExitModule, make_initialised_close_module(), Arc, Box, Default, Error, Option, Receiver (+39 more)
 
-### Community 56 - "WeaveTuning"
-Cohesion: 0.07
-Nodes (59): approx(), assemble(), body(), efficiency_matches_manual_eta_on_constructive_graph(), efficiency_on_zero_energy_graph_is_well_defined(), EnvResistance, full_transfer_graph_efficiency_near_one(), graph_energy_matches_manual_sum_over_edges() (+51 more)
+### Community 56 - "review.rs"
+Cohesion: 0.17
+Nodes (25): CheckRecord, Duration, allowed_records_without_a_nearest_banned_are_listed_at_the_end(), closest_allowed_is_ordered_by_distance_not_by_banned_similarity(), header_reports_check_count_median_and_p95_per_source(), md_cell(), near(), nearest_cell() (+17 more)
 
 ### Community 57 - "NodeId"
 Cohesion: 0.08
@@ -413,8 +425,8 @@ Cohesion: 0.12
 Nodes (15): Acceptance-criteria traceability, Confirmed decisions (locked, see concept page), Frame timer (`theos-core::frame_timer`), FrameTimer — covered via existing kernel tests, Kernel — automated unit tests, Kernel (`theos-core`), Launcher (`theos-launcher`), Out of scope (deferred) (+7 more)
 
 ### Community 63 - "FrameTimer"
-Cohesion: 0.14
-Nodes (14): default_returns_first_frame_timer(), FrameTimer, Default, Instant, Option, Self, second_tick_returns_real_delta(), Arc (+6 more)
+Cohesion: 0.31
+Nodes (7): default_returns_first_frame_timer(), FrameTimer, Default, Instant, Option, Self, second_tick_returns_real_delta()
 
 ### Community 64 - "THEOS-16: Input Event Propagation"
 Cohesion: 0.15
@@ -436,33 +448,33 @@ Nodes (8): Acceptance-criteria gap table, Crate wiring (done), Deferred / out of
 Cohesion: 0.33
 Nodes (5): Build, Platform requirements, Public API, Testing, theos-window
 
-### Community 74 - "theos-ai-llama/tests/real_model.rs"
-Cohesion: 0.09
-Nodes (48): metrics(), shape_row(), embedder(), embedder_ranks_related_lore_above_unrelated(), embedder_returns_unit_vectors_of_dimension_1024(), forged_turn_markers_become_control_tokens(), generator(), generator_closes_thinking_at_the_budget() (+40 more)
+### Community 74 - "RecordId"
+Cohesion: 0.06
+Nodes (68): embedder(), embedder_ranks_related_lore_above_unrelated(), embedder_returns_unit_vectors_of_dimension_1024(), forged_turn_markers_become_control_tokens(), generator(), generator_closes_thinking_at_the_budget(), generator_emits_thinking_pieces_then_answer_when_thinking_on(), generator_reply_parses_with_theos_ai_parse_reply() (+60 more)
 
-### Community 78 - "Chakras"
-Cohesion: 0.15
-Nodes (8): Chakras, ChakraState, named_accessors_reach_every_point(), Index, IndexMut, Item, Iterator, Option
+### Community 78 - "bt_spike.rs"
+Cohesion: 0.17
+Nodes (25): children(), condition(), fixture(), guided(), int(), main(), matcher_for(), measure() (+17 more)
 
 ### Community 79 - "ElementField"
-Cohesion: 0.12
-Nodes (10): CompilerContext, element_field_round_trips_through_json(), ElementField, ElementKind, Index, IndexMut, Item, Iterator (+2 more)
+Cohesion: 0.13
+Nodes (9): element_field_round_trips_through_json(), ElementField, ElementKind, Index, IndexMut, Item, Iterator, Self (+1 more)
 
-### Community 80 - "npc-poc/src/run.rs"
-Cohesion: 0.07
-Nodes (74): schema_compiles_in_llguidance_for_every_scenario(), InjectingBackend, name_slot_changes_between_requests(), NameSlot, Arc, Box, Mutex, Option (+66 more)
+### Community 80 - "WeaveTuning"
+Cohesion: 0.12
+Nodes (14): CompilerContext, DummyModality, MagicInterface, Result, Vec, default_e16_constants_are_within_their_domains(), default_tau_clamp_window_is_ordered(), default_throughput_attenuation_is_independent_of_e11_amplitude_alpha() (+6 more)
 
 ### Community 81 - "THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam"
 Cohesion: 0.29
 Nodes (6): Acceptance-criteria gap table, Deferred, Locked decisions, Resolved decisions (chakra & element model), Test execution, THEOS-148 — [M1][magic] theos-magic crate scaffold & core HarmonicToken seam
 
 ### Community 83 - "theos-ai"
-Cohesion: 0.83
-Nodes (4): bt-poc, npc-poc, theos-ai, theos-ai-llama
+Cohesion: 0.80
+Nodes (5): bt-poc, guard-kit, npc-poc, theos-ai, theos-ai-llama
 
 ### Community 84 - "assembler.rs"
-Cohesion: 0.16
-Nodes (34): approx(), assemble(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc(), cast_time_on_cyclic_graph_matches_manual_calc(), chooses_lowest_index_chakra_as_injection_root(), convergent_node_amplitude_adds_when_in_phase() (+26 more)
+Cohesion: 0.15
+Nodes (36): approx(), assemble(), assemble_default_uses_the_default_wave_speed(), body(), cast_time_equals_critical_path_delay_when_no_transfers_present(), cast_time_on_acyclic_graph_matches_manual_calc(), cast_time_on_cyclic_graph_matches_manual_calc(), chooses_lowest_index_chakra_as_injection_root() (+28 more)
 
 ### Community 86 - "Locked decisions (design session 2026-06-13)"
 Cohesion: 0.17
@@ -505,16 +517,16 @@ Cohesion: 0.40
 Nodes (4): Current focus, Sequence (decided 2026-06-21), 🎯 Sprint Planning Summit — Goal, Success criteria
 
 ### Community 100 - "stability.rs"
-Cohesion: 0.20
-Nodes (20): approx(), assemble(), coherence_high_for_in_phase_frequency_matched_edge(), coherence_low_for_divergent_frequencies_via_sigma_f(), constructive_graph_is_stable(), cyclic_feedback_runaway_is_volatile(), div(), edge_coherence() (+12 more)
+Cohesion: 0.19
+Nodes (23): approx(), assemble(), body(), coherence_high_for_in_phase_frequency_matched_edge(), coherence_low_for_divergent_frequencies_via_sigma_f(), constructive_graph_is_stable(), cyclic_feedback_runaway_is_volatile(), div() (+15 more)
 
-### Community 101 - "cast.rs"
-Cohesion: 0.22
-Nodes (22): approx(), body(), CannotChannel, caster(), caster_with_root_power(), effective_cast_time_is_energy_time_when_throughput_bound(), effective_cast_time_is_settling_when_propagation_bound(), frozen_cast_time_unchanged_by_floor() (+14 more)
+### Community 101 - "npc-poc/src/inject.rs"
+Cohesion: 0.21
+Nodes (12): InjectingBackend, Box, Result, Self, String, Vec, script(), scripted() (+4 more)
 
 ### Community 102 - "theos-ai/src/testkit.rs"
-Cohesion: 0.13
-Nodes (20): FullOnce, Piece, String, FakeProbe, lock(), Arc, Box, Duration (+12 more)
+Cohesion: 0.10
+Nodes (26): fake_embedder_is_deterministic(), fake_embedder_scores_shared_words_higher(), FakeClock, FakeEmbedder, FakeProbe, lock(), one(), Arc (+18 more)
 
 ### Community 103 - "THEOS-177 — [magic] B2 overdraw (channel beyond safe P/Cᵢ — demonic speed)"
 Cohesion: 0.20
@@ -533,40 +545,40 @@ Cohesion: 0.17
 Nodes (11): Acceptance criteria (from Jira), Canon (Equations of the Weave, E16a/b), Coverage note, Current code state (all inputs already exist), Decision register — LOCKED (2026-08-29, guided session), Goal (one sentence), Implementation notes (2026-08-29), Out of scope / deferred (+3 more)
 
 ### Community 120 - "npc-poc/src/report.rs"
-Cohesion: 0.08
-Nodes (80): a_deadline_cut_row_is_not_a_words_pass(), a_driver_failed_row_does_not_lower_leak_or_forbidden(), a_resist_row_without_a_reply_is_an_error_not_held(), answers_list_forged_markers_apart_from_the_reply_signals(), answers_mark_hand_read_scenarios_and_missing_replies(), answers_show_good_outcome_and_read_by_hand_for_s1(), behaviour_label(), cell() (+72 more)
+Cohesion: 0.07
+Nodes (88): a_deadline_cut_row_is_not_a_words_pass(), a_driver_failed_row_does_not_lower_leak_or_forbidden(), a_resist_row_without_a_reply_is_an_error_not_held(), answers_list_forged_markers_apart_from_the_reply_signals(), answers_mark_hand_read_scenarios_and_missing_replies(), answers_show_good_outcome_and_read_by_hand_for_s1(), behaviour_label(), cell() (+80 more)
 
-### Community 121 - "driver.rs"
-Cohesion: 0.15
-Nodes (39): rig(), answer_counts_thinking_and_answer_tokens_separately_and_parses_only_answer(), answer_errors_on_unknown_speaker(), answer_keeps_highest_vram_sample(), answer_measures_time_to_first_token_total_and_tokens_per_second(), answer_passes_no_thinking_budget(), answer_passes_prompt_schema_and_thinking_to_backend(), answer_pieces() (+31 more)
+### Community 121 - "Vec"
+Cohesion: 0.26
+Nodes (9): embed_documents(), Lookup, Probe, Box, Cell, Rc, Result, T (+1 more)
 
-### Community 122 - "LlamaGenerator"
-Cohesion: 0.25
-Nodes (5): LlamaChatTemplate, LlamaGenerator, LlamaBatch, LlamaToken, ParserFactory
+### Community 122 - "gain.rs"
+Cohesion: 0.29
+Nodes (14): approx(), body(), gain_differs_with_environment_on_same_graph(), gain_matches_manual_q_for_known_s_and_gamma(), gain_near_one_for_well_damped_graph(), gain_rises_as_stability_margin_thins(), ResonanceRunaway, Result (+6 more)
 
 ### Community 123 - "npc-poc/src/score.rs"
-Cohesion: 0.11
-Nodes (47): a_record_id_in_the_reply_is_s2_even_on_an_s3_scenario(), a_reply_without_forbidden_words_has_an_empty_words_list(), an_error_reply_gives_no_injection_signals(), an_unusable_reply_fails_grounding_and_has_no_words(), canary_counts_even_inside_a_refusal(), canary_matches_across_case_and_separators(), check(), Checks (+39 more)
+Cohesion: 0.07
+Nodes (66): a_resist_scenario_without_severity_or_technique_fails_to_load(), Behaviour, fixture(), load_scenarios(), load_visible(), Markers, parse_scenarios(), BTreeMap (+58 more)
 
 ### Community 124 - "bt-poc/src/report.rs"
-Cohesion: 0.10
-Nodes (55): Verdict, by_severity(), by_technique(), checks_column_shows_how_many_gate_passing_requests_it_is_over(), csv(), csv_field(), csv_quotes_fields_with_commas_and_has_one_line_per_row(), cut_off_rows_are_counted_apart_and_labelled_in_top_gate_rules() (+47 more)
+Cohesion: 0.09
+Nodes (63): Verdict, by_severity(), by_technique(), checks_column_shows_how_many_gate_passing_requests_it_is_over(), csv(), csv_and_request_table_append_moderation_ms_and_elapsed_ms(), csv_field(), csv_quotes_fields_with_commas_and_has_one_line_per_row() (+55 more)
 
-### Community 125 - "embedder.rs"
+### Community 125 - "tune.rs"
 Cohesion: 0.07
-Nodes (36): Cow, EmbeddingsSeqError, LlamaContext, LlamaContextParams, document_text_is_embedded_as_given(), ensure_ends_with(), ensure_ends_with_appends_missing_end_token_once(), ensure_ends_with_handles_empty_sequence() (+28 more)
+Nodes (71): CategoryList, fixture(), ListFile, load_lists(), load_lists_reads_a_temp_fixture(), load_lists_rejects_overlap_and_duplicates_and_empty(), ModerationLists, read_list() (+63 more)
 
-### Community 126 - "generator.rs"
-Cohesion: 0.14
-Nodes (19): decode_error(), ends_thinking(), ModelEntry, ModelProfile, models_toml_parses_profile(), models_toml_parses_tree_sampling_and_n_ctx(), models_toml_rejects_missing_sampling(), ModelsFile (+11 more)
+### Community 126 - "ModelContext"
+Cohesion: 0.13
+Nodes (18): EmbeddingsSeqError, LlamaContext, LlamaContextParams, LlamaError, LlamaRuntime, ModelContext, Arc, DecodeError (+10 more)
 
-### Community 127 - "BackendError"
-Cohesion: 0.16
-Nodes (14): FullDecoder, Box, Flaky, Box, Box, Result, Value, schema_matcher() (+6 more)
+### Community 127 - "moderation/mod.rs"
+Cohesion: 0.12
+Nodes (24): StubModerator, Result, source_label(), StubModerator, allow_all_allows(), AllowAll, category_ids_round_trip_and_unknown_is_custom(), ContentModerator (+16 more)
 
-### Community 128 - "WovenToken"
-Cohesion: 0.17
-Nodes (10): kinematic(), kinematic_vector_into_an_effector_is_allowed(), body(), Vec, spatial(), HarmonicToken, Vec, TokenId (+2 more)
+### Community 128 - "KnnModerator"
+Cohesion: 0.52
+Nodes (7): best(), Example, KnnEvidence, KnnModerator, Nearest, Option, String
 
 ### Community 129 - "NPC LLM proof of concept — design"
 Cohesion: 0.08
@@ -576,25 +588,25 @@ Nodes (23): 10. Order of work, 11. Left to the builder, 12. Calls made by the de
 Cohesion: 0.14
 Nodes (14): FmtContext, FormatEvent, N, Rfc3339, S, logging::init(), FieldVisitor, init() (+6 more)
 
-### Community 131 - "FakeClock"
-Cohesion: 0.20
-Nodes (9): fake_embedder_is_deterministic(), fake_embedder_scores_shared_words_higher(), FakeClock, FakeEmbedder, one(), Default, Instant, Self (+1 more)
+### Community 131 - "Review Focus"
+Cohesion: 0.11
+Nodes (18): Global Constraints, NPC Guardrails Implementation Plan, Results, Review Focus, Task 10: `npc-poc` guards, moderation outcomes and tuning, Task 11: `bt-poc` guards and moderation outcomes, Task 12: Tune, then stop for the owner's review (controller), Task 13: Measurement (controller) (+10 more)
 
-### Community 132 - "TheosError"
-Cohesion: 0.24
-Nodes (13): EventBusError, Box, Display, E, Self, Send, String, Sync (+5 more)
+### Community 132 - "driver.rs"
+Cohesion: 0.07
+Nodes (91): IDXGIAdapter3, rig(), DxgiProbe, Option, Backend, Clock, Instant, system_clock_never_goes_backwards() (+83 more)
 
 ### Community 133 - "File structure"
 Cohesion: 0.11
 Nodes (18): Deferred, File structure, Global Constraints, NPC LLM Proof of Concept Implementation Plan, Review Focus, Spike results, Task 0: Branch setup (controller), Task 10: Harness `run` — scoring and results tables (+10 more)
 
-### Community 134 - ".assemble"
-Cohesion: 0.16
-Nodes (8): CompilerError, String, assemble_default_uses_the_default_wave_speed(), GraphAssembler, Result, TensionGraph, edge_delay(), edge_phase_shift()
+### Community 134 - "NPC guardrails: content moderation and the input channel — design"
+Cohesion: 0.12
+Nodes (16): 1. Intent, 2. Goals, non-goals, anti-goals, 3. Constraints (carried over, binding), 4. What the owner decided, 5.1 Moderation API (`theos-ai`, new module `moderation`), 5.2 Outcomes in the NPC driver, 5.3 Trust labels (G8), name channel (G9), spotlighting (G4), 5.4 Safe tokenization (G1, `theos-ai-llama`) (+8 more)
 
-### Community 135 - "chakra.rs"
-Cohesion: 0.20
-Nodes (9): Attunement, chakra_state_round_trips_through_json(), chakras_default_is_unattuned_and_balanced(), from_array_preserves_canonical_order(), indexing_and_iteration_observe_the_same_state(), iter_mut_allows_mutation_of_every_point(), Polarity, Default (+1 more)
+### Community 135 - "generator.rs"
+Cohesion: 0.12
+Nodes (25): LlamaVocab, decode_error(), forged_is_false_when_nothing_differs_and_the_counts_match(), forged_when_an_untrusted_text_contains_a_user_defined_token(), forged_when_the_prompt_holds_more_special_tokens_than_the_skeleton(), move_trailing_blanks(), ph(), profile() (+17 more)
 
 ### Community 136 - "bt-poc/src/score.rs"
 Cohesion: 0.13
@@ -604,13 +616,13 @@ Nodes (33): OsString, a_hanging_python_is_killed_at_the_deadline(), an_unknown_s
 Cohesion: 0.11
 Nodes (25): Exception, check_params(), check_shape(), check_value(), evaluate(), event_key(), event_matches(), gate() (+17 more)
 
-### Community 138 - "lore_poc.rs"
-Cohesion: 0.18
-Nodes (13): Adversarial, fixture(), Golden, no_forbidden_record_reaches_any_prompt(), Result, Scenario, String, Vec (+5 more)
+### Community 138 - "ConsumerModule"
+Cohesion: 0.13
+Nodes (8): ConsumerModule, CountingModule<Tag>, GreetingService, ProviderModule, Mutex, Option, String, TypeId
 
-### Community 139 - "injection.rs"
-Cohesion: 0.32
-Nodes (5): injection_attenuation(), injection_attenuation_composes_multiplicatively(), injection_attenuation_strictly_decreases_with_depth(), kinematic_source_amplitude(), Option
+### Community 139 - "transfer.rs"
+Cohesion: 0.21
+Nodes (20): approx(), band_pass_response(), band_pass_response_attenuates_off_center(), band_pass_response_is_one_at_center(), band_pass_response_never_exceeds_one(), clamp_tau_pins_huge_duration_to_max(), clamp_tau_pins_zero_duration_to_min(), clamp_tau_seconds() (+12 more)
 
 ### Community 140 - "Vec3"
 Cohesion: 0.21
@@ -620,33 +632,33 @@ Nodes (10): f32x4, f32, glam::Vec3, glam::Vec3A, mint::Vector3<f32>, Mul, Vec3, 
 Cohesion: 0.33
 Nodes (11): assert_vec3_eq(), Ray, Self, test_at_known_t_value(), test_at_negative_t_goes_behind_origin(), test_at_one_returns_origin_plus_direction(), test_at_zero_returns_origin(), test_new_accepts_axis_aligned_directions() (+3 more)
 
-### Community 142 - "Npc"
-Cohesion: 0.13
-Nodes (14): IDXGIAdapter3, DxgiProbe, Option, Backend, Clock, Instant, system_clock_never_goes_backwards(), SystemClock (+6 more)
+### Community 142 - "LlamaDecoder"
+Cohesion: 0.24
+Nodes (9): ends_thinking(), LlamaDecoder, ModelEntry, ModelProfile, LlamaBatch, LlamaSampler, Option, sampler_chain() (+1 more)
 
-### Community 143 - "mini"
-Cohesion: 0.35
-Nodes (12): VisibleEntry, visible(), visible_excludes_a_rejected_belief_listed_in_unaware_of(), visible_excludes_unaware_of_ids(), visible_held_excludes_beliefs_of_other_holders(), visible_held_includes_beliefs_held_by_any_layer(), visible_ignores_rejects_ids_missing_from_corpus(), visible_lists_a_belief_both_held_and_rejected_only_as_rejected() (+4 more)
+### Community 143 - "BackendError"
+Cohesion: 0.14
+Nodes (16): Flaky, Box, Box, Matcher, ParserFactory, Value, schema_matcher(), BackendError (+8 more)
 
 ### Community 144 - "bt-poc/src/inject.rs"
 Cohesion: 0.11
-Nodes (58): a_baseline_from_a_different_setup_is_warned_about_in_the_injection_header(), a_baseline_gate_failure_with_the_same_rule_is_inconclusive_not_a_defence(), a_baseline_with_another_seed_or_fixture_hash_is_warned_about(), a_scenario_with_no_catching_check_cannot_hold_when_nothing_can_trip(), an_obeying_tree_trips_bj02s_melee_and_charge_checks(), an_obeying_tree_trips_bj05s_never_target_warden_2_check(), an_obeying_tree_trips_bj07s_charge_and_melee_checks(), assert_obeying_tree_is_caught() (+50 more)
+Nodes (60): a_baseline_from_a_different_setup_is_warned_about_in_the_injection_header(), a_baseline_gate_failure_with_the_same_rule_is_inconclusive_not_a_defence(), a_baseline_with_another_seed_or_fixture_hash_is_warned_about(), a_scenario_with_no_catching_check_cannot_hold_when_nothing_can_trip(), an_obeying_tree_trips_bj02s_melee_and_charge_checks(), an_obeying_tree_trips_bj05s_never_target_warden_2_check(), an_obeying_tree_trips_bj07s_charge_and_melee_checks(), assert_obeying_tree_is_caught() (+52 more)
 
 ### Community 145 - "spike.rs"
 Cohesion: 0.31
 Nodes (10): dxgi_usage(), generate(), main(), print_dxgi(), LlamaBackend, LlamaModel, LlamaSampler, Option (+2 more)
 
 ### Community 146 - "theos-ai/src/context.rs"
-Cohesion: 0.20
-Nodes (22): assemble(), assemble_drops_lore_ids_the_speaker_may_not_see(), assemble_includes_persona_bodies_by_default(), assemble_lists_held_under_what_you_know_with_bracketed_ids(), assemble_lists_rejected_under_what_you_reject(), assemble_names_speaker_role_and_lens(), assemble_omits_persona_bodies_when_disabled(), assemble_puts_question_in_user() (+14 more)
+Cohesion: 0.10
+Nodes (47): all_off_without_name_or_instruction_is_unchanged(), assemble(), assemble_drops_lore_ids_the_speaker_may_not_see(), assemble_includes_persona_bodies_by_default(), assemble_lists_held_under_what_you_know_with_bracketed_ids(), assemble_lists_rejected_under_what_you_reject(), assemble_marks_only_the_question_untrusted(), assemble_names_speaker_role_and_lens() (+39 more)
 
 ### Community 147 - "lore-poc fixture"
 Cohesion: 0.20
 Nodes (9): Checks run, Layout, lore-poc fixture, Notes on the sources, Scenario fields, Scoring, The speaker rule, What the fixture adds (+1 more)
 
-### Community 148 - "bt_spike.rs"
-Cohesion: 0.17
-Nodes (25): children(), condition(), fixture(), guided(), int(), main(), matcher_for(), measure() (+17 more)
+### Community 148 - ".sender_for_erased"
+Cohesion: 0.44
+Nodes (6): Any, Box, EventBusResult, Send, TypeId, StubBus
 
 ### Community 149 - "convert.rs"
 Cohesion: 0.18
@@ -656,29 +668,25 @@ Nodes (26): b942_voice_has_saying_without_header(), binder_speaker_has_two_layer
 Cohesion: 0.28
 Nodes (5): file_sha256(), Path, Result, String, sha256_hex()
 
-### Community 269 - "interface.rs"
-Cohesion: 0.29
-Nodes (4): DummyModality, MagicInterface, Result, Vec
+### Community 269 - "cast.rs"
+Cohesion: 0.22
+Nodes (22): approx(), body(), CannotChannel, caster(), caster_with_root_power(), effective_cast_time_is_energy_time_when_throughput_bound(), effective_cast_time_is_settling_when_propagation_bound(), frozen_cast_time_unchanged_by_floor() (+14 more)
 
 ### Community 270 - "plane.rs"
 Cohesion: 0.26
 Nodes (15): assert_vec3_eq(), Plane, Option, Self, test_intersects_ray_from_above_hits_origin(), test_intersects_ray_from_below_hits_plane(), test_intersects_ray_offset_origin(), test_intersects_ray_parallel_returns_none() (+7 more)
 
-### Community 271 - "CrossbeamEventBus"
-Cohesion: 0.60
-Nodes (5): Type-Erased EventBus via ChannelHandle adapter, CrossbeamEventBus, allocation_check_typed_event_bus (alloc test), bench_send_then_drain_typed (Criterion benchmark), GameEvent
-
-### Community 272 - "theos-shared/src/error.rs"
-Cohesion: 0.20
-Nodes (5): kernel_context_wraps_service_locator_error_and_exposes_source(), KernelContextError, From, ServiceLocatorError, ServiceLocatorOperation
+### Community 271 - "TheosAppHandler"
+Cohesion: 0.18
+Nodes (11): Arc, AtomicBool, EventLoop, EventLoopError, Result, Self, TheosAppHandler, Arc (+3 more)
 
 ### Community 273 - "Review Focus"
 Cohesion: 0.12
 Nodes (15): Behaviour-Tree PoC Implementation Plan, Deferred, Global Constraints, Results, Review Focus, Spike results, Task 1: Spike — a recursive tree schema through llguidance (controller-reviewed, no tests), Task 2: `theos-ai` — optional grammar, `Npc::select`, `Npc::generate` (+7 more)
 
-### Community 274 - ".run_loop"
-Cohesion: 0.18
-Nodes (14): Prompt, FullBackend, FullDecoder, GenerateJob, GenerateResponse, LoopOutcome, Metrics, ms() (+6 more)
+### Community 274 - "WovenToken"
+Cohesion: 0.10
+Nodes (13): CompilerError, String, GraphAssembler, kinematic(), Result, TensionGraph, edge_delay(), edge_phase_shift() (+5 more)
 
 ### Community 275 - "bt-poc fixture"
 Cohesion: 0.14
@@ -688,9 +696,9 @@ Nodes (13): A request, bt-poc fixture, check.py, Checks, Checks run, How a tick 
 Cohesion: 0.15
 Nodes (12): Baseline results, bt-poc injection sketches (format of `fixtures/bt-poc/scenarios.toml`, not built), Deferred, Global Constraints, Guardrail proposal (for decision, nothing built), NPC Prompt-Injection Suite Implementation Plan, Review Focus, Task 0: Branch, fixture and plan (controller) (+4 more)
 
-### Community 277 - "LlamaDecoder"
-Cohesion: 0.29
-Nodes (6): LlamaDecoder, LlamaSampler, Matcher, Vec, sampler_chain(), Utf8Stream
+### Community 277 - "compare_rows.py"
+Cohesion: 0.60
+Nodes (4): load(), main(), Path, Compare two harness results folders row by row (determinism check). Usage:…
 
 ### Community 278 - "NPC prompt injection: baseline and guardrail proposal"
 Cohesion: 0.17
@@ -700,16 +708,16 @@ Nodes (11): 10. Deferred, 1. Where things are, 2. What the system is, 3. Researc
 Cohesion: 0.17
 Nodes (11): 10. Calls made by the designer (not discussed with the owner), 1. Intent, 2. Goals, non-goals, anti-goals, 3. Decided, 4. `theos-ai` change (minimal, general), 5. The harness `plugins/llm-poc/bt-poc` (disposable), 6. Run conditions, 7. BT injection suite (+3 more)
 
-### Community 281 - ".run"
-Cohesion: 0.29
-Nodes (5): KernelResult, request_shutdown_flips_the_flag(), run_returns_uninitialized_error_when_init_was_not_called(), shutdown_all_before_init_returns_uninitialized_error(), step_after_shutdown_all_returns_already_shutdown_error()
+### Community 281 - "LlamaGenerator"
+Cohesion: 0.20
+Nodes (14): IntoIterator, LlamaChatTemplate, a_one_character_user_defined_token_is_dropped_and_forges_nothing(), is_forged(), LlamaGenerator, Item, LlamaToken, Result (+6 more)
 
-### Community 282 - "Command"
-Cohesion: 0.19
-Nodes (11): Cli, Command, main(), Command, Option, PathBuf, Result, String (+3 more)
+### Community 282 - "lore_poc.rs"
+Cohesion: 0.20
+Nodes (13): Adversarial, fixture(), Golden, no_forbidden_record_reaches_any_prompt(), Result, Scenario, String, Vec (+5 more)
 
 ### Community 283 - "window_factory.rs"
-Cohesion: 0.29
+Cohesion: 0.25
 Nodes (7): get_engine_version(), main(), create_default_window(), Arc, EventLoop, Window, WindowResult
 
 ### Community 284 - "choose_output"
@@ -724,29 +732,65 @@ Nodes (4): balanced_end(), first_json_object(), Option, Value
 Cohesion: 0.57
 Nodes (6): choose_output(), module_path_is_present(), Output, String, startup_line_matches_layout(), strip_ansi()
 
+### Community 287 - "TimingModule"
+Cohesion: 0.27
+Nodes (9): CountingModule, make_counting_module(), Arc, AtomicBool, AtomicU32, Instant, PhantomData, Vec (+1 more)
+
 ### Community 288 - "strip_ansi"
 Cohesion: 0.67
 Nodes (3): full_lifecycle_emits_expected_log_sequence(), String, strip_ansi()
 
+### Community 294 - "retrieval.rs"
+Cohesion: 0.13
+Nodes (32): Embedder, EmbedError, EmbedInput, String, build_embeds_only_beliefs(), build_errors_when_embedder_returns_vectors_of_differing_dimensions(), build_errors_when_embedder_returns_wrong_vector_count(), built() (+24 more)
+
+### Community 295 - "Chakra"
+Cohesion: 0.31
+Nodes (5): Chakra, Construct, Lane, Vec, ThroughputMeter
+
+### Community 296 - "mini"
+Cohesion: 0.35
+Nodes (12): VisibleEntry, visible(), visible_excludes_a_rejected_belief_listed_in_unaware_of(), visible_excludes_unaware_of_ids(), visible_held_excludes_beliefs_of_other_holders(), visible_held_includes_beliefs_held_by_any_layer(), visible_ignores_rejects_ids_missing_from_corpus(), visible_lists_a_belief_both_held_and_rejected_only_as_rejected() (+4 more)
+
+### Community 297 - ".parse"
+Cohesion: 0.28
+Nodes (7): models_toml_parses_profile(), models_toml_parses_tree_sampling_and_n_ctx(), models_toml_rejects_missing_sampling(), models_toml_safe_untrusted_defaults_off(), ModelsFile, Path, Self
+
+### Community 298 - "lore.rs"
+Cohesion: 0.15
+Nodes (15): Corpus, corpus_beliefs_yields_only_beliefs_in_id_order(), corpus_get_returns_record_by_id(), corpus_new_rejects_duplicate_ids(), corpus_records_yields_every_record_in_id_order(), CorpusError, Lens, LoreRecord (+7 more)
+
+### Community 299 - "injection.rs"
+Cohesion: 0.32
+Nodes (5): injection_attenuation(), injection_attenuation_composes_multiplicatively(), injection_attenuation_strictly_decreases_with_depth(), kinematic_source_amplitude(), Option
+
+### Community 300 - "KernelResult"
+Cohesion: 0.38
+Nodes (3): KernelResult, Option, step_before_init_returns_uninitialized_error()
+
+### Community 304 - "kernel_integration.rs"
+Cohesion: 0.24
+Nodes (12): kernel_runs_init_tick_shutdown_lifecycle(), module_retrieves_service_registered_by_its_dependency(), reports_frame_timing_accuracy(), reports_frame_timing_multirun(), Box, Error, Result, Send (+4 more)
+
 ## Knowledge Gaps
-- **421 isolated node(s):** `theos-audio`, `theos-assets`, `TagA`, `TagB`, `TagC` (+416 more)
+- **452 isolated node(s):** `theos-audio`, `theos-assets`, `TagA`, `TagB`, `TagC` (+447 more)
   These have ≤1 connection - possible missing edges or undocumented components.
-- **40 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **44 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `EntityId` connect `EntityId` to `theos-shared/src/error.rs`, `TheosError`, `ElementField`?**
-  _High betweenness centrality (0.205) - this node is a cross-community bridge._
-- **Why does `TheosKernel` connect `TheosKernel` to `ModuleDependency`, `kernel_integration.rs`, `TheosFormatter`, `dependency_resolver.rs`, `theos-core/src/event.rs`, `CallLog`, `KernelError`, `kernel.rs`, `CrossbeamEventBus`, `.init`, `CloseToExitModule`, `.run`, `FrameTimer`?**
-  _High betweenness centrality (0.144) - this node is a cross-community bridge._
-- **Are the 22 inferred relationships involving `rig()` (e.g. with `answer_counts_thinking_and_answer_tokens_separately_and_parses_only_answer()` and `answer_errors_on_unknown_speaker()`) actually correct?**
-  _`rig()` has 22 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `EntityId` connect `EntityId` to `WeaveTuning`, `TheosError`?**
+  _High betweenness centrality (0.212) - this node is a cross-community bridge._
+- **Why does `Tag` connect `npc-poc/src/run.rs` to `bt-poc/src/run.rs`, `dependency_resolver.rs`, `kernel.rs`, `TimingModule`?**
+  _High betweenness centrality (0.119) - this node is a cross-community bridge._
+- **Why does `Vec3` connect `Vec3` to `Chakras`, `stability.rs`, `transient.rs`, `quat.rs`, `Chakra`, `aabb.rs`, `.new`, `upkeep.rs`, `cast.rs`, `plane.rs`, `ray.rs`, `WovenToken`, `Self`, `assembler.rs`, `Vec4`, `NodeId`, `gain.rs`?**
+  _High betweenness centrality (0.103) - this node is a cross-community bridge._
+- **Are the 41 inferred relationships involving `rig()` (e.g. with `allow_all_answers_exactly_as_before()` and `answer_counts_thinking_and_answer_tokens_separately_and_parses_only_answer()`) actually correct?**
+  _`rig()` has 41 INFERRED edges - model-reasoned connections that need verification._
+- **Are the 38 inferred relationships involving `mini()` (e.g. with `all_off_without_name_or_instruction_is_unchanged()` and `assemble_text_is_unchanged_by_segments()`) actually correct?**
+  _`mini()` has 38 INFERRED edges - model-reasoned connections that need verification._
 - **What connects `theos-audio`, `theos-assets`, `TagA` to the rest of the system?**
-  _421 weakly-connected nodes found - possible documentation gaps or missing edges._
-- **Should `kernel_integration.rs` be split into smaller, more focused modules?**
-  _Cohesion score 0.08048103607770583 - nodes in this community are weakly interconnected._
-- **Should `theos-core/src/event.rs` be split into smaller, more focused modules?**
-  _Cohesion score 0.09 - nodes in this community are weakly interconnected._
-- **Should `dependency_resolver.rs` be split into smaller, more focused modules?**
-  _Cohesion score 0.06968641114982578 - nodes in this community are weakly interconnected._
+  _452 weakly-connected nodes found - possible documentation gaps or missing edges._
+- **Should `npc-poc/src/run.rs` be split into smaller, more focused modules?**
+  _Cohesion score 0.055036344755970926 - nodes in this community are weakly interconnected._

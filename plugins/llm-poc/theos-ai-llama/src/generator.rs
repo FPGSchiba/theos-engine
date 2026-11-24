@@ -20,12 +20,16 @@ use llama_cpp_2::llama_batch::LlamaBatch;
 use llama_cpp_2::model::{LlamaChatMessage, LlamaChatTemplate};
 use llama_cpp_2::sampling::LlamaSampler;
 use llama_cpp_2::token::LlamaToken;
+use llama_cpp_2::token_type::LlamaTokenAttr;
+use llama_cpp_2::vocab::LlamaVocab;
 use llama_cpp_2::DecodeError;
 use llguidance::api::TopLevelGrammar;
 use llguidance::{Matcher, ParserFactory};
 use serde::Deserialize;
 use serde_json::Value;
-use theos_ai::{Backend, BackendError, Decoder, GenerationRequest, Phase, Piece, Thinking};
+use theos_ai::{
+    Backend, BackendError, Decoder, GenerationRequest, Phase, Piece, Segment, Thinking, Trust,
+};
 
 use crate::{LlamaError, LlamaRuntime, ModelContext};
 
@@ -72,6 +76,25 @@ pub struct ModelProfile {
     pub n_ctx: Option<u32>,
     /// Seed of the final `dist` sampler.
     pub seed: u32,
+    /// G1: keep turn markers a player types as text. The prompt is tokenized
+    /// canonically (byte-identical to G1 off) unless an untrusted segment
+    /// carries special-token text (it tokenizes differently with special
+    /// parsing on, the prompt holds more control or user-defined special tokens
+    /// than its skeleton, or it contains the text of a user-defined token);
+    /// only then the prompt is spliced, with untrusted parts tokenized with
+    /// special parsing off, and token boundaries around untrusted parts may
+    /// differ from the canonical tokenization. Off keeps the old behaviour.
+    ///
+    /// G1 covers CONTROL special tokens (the chat template's turn markers) and
+    /// USER_DEFINED special tokens of the vocabulary (for Qwen3.5: `<think>`,
+    /// `</think>`, `<tool_call>`, `</tool_call>`, `<tool_response>`,
+    /// `</tool_response>`). llama.cpp parses the latter even with special parsing
+    /// off, so on the splice path each occurrence of such a token's text in an
+    /// untrusted part is cut in two halves that are tokenized apart; the text is
+    /// kept, only the special token id is not produced. The list is read from the
+    /// vocabulary at load.
+    #[serde(default)]
+    pub safe_untrusted: bool,
 }
 
 /// One `[[model]]` entry of `models.toml`.
@@ -143,6 +166,8 @@ pub struct LlamaGenerator {
     separator: Vec<LlamaToken>,
     think_end: Vec<LlamaToken>,
     profile: ModelProfile,
+    /// The text of every USER_DEFINED special token of the vocabulary, for G1.
+    user_defined: Vec<String>,
 }
 
 impl LlamaGenerator {
@@ -169,11 +194,12 @@ impl LlamaGenerator {
                 "the answer separator tokenizes to nothing".into(),
             ));
         }
-        // Special parsing on: `</think>` is one control token for Qwen3.5.
+        // Special parsing on: `</think>` is one (user-defined) special token for Qwen3.5.
         let think_end = model.vocab().tokenize(THINK_END.as_bytes(), false, true);
         if think_end.is_empty() {
             return Err(LlamaError::Model("`</think>` tokenizes to nothing".into()));
         }
+        let user_defined = user_defined_tokens(&model.vocab());
         // Built once per model: walking the vocabulary takes a while.
         let env = LlamaSampler::llguidance_tok_env(&model);
         let factory =
@@ -191,7 +217,14 @@ impl LlamaGenerator {
             separator,
             think_end,
             profile,
+            user_defined,
         })
+    }
+
+    /// The text of every USER_DEFINED special token of the vocabulary, the ones G1
+    /// neutralises on top of the CONTROL tokens.
+    pub fn user_defined_tokens(&self) -> &[String] {
+        &self.user_defined
     }
 
     /// How many tokens `text` becomes, without special tokens added, with
@@ -224,22 +257,276 @@ impl LlamaGenerator {
         &self.profile
     }
 
-    /// The chat-templated, prefixed prompt text for `request`.
-    fn prompt_text(&self, request: &GenerationRequest<'_>) -> Result<String, BackendError> {
+    /// How `text` tokenizes, without special tokens added.
+    pub fn tokenize(&self, text: &str, parse_special: bool) -> Vec<LlamaToken> {
+        self.mc
+            .model()
+            .vocab()
+            .tokenize(text.as_bytes(), false, parse_special)
+    }
+
+    /// The chat-templated, prefixed prompt text for `request`, with untrusted
+    /// text in place (whatever the profile's `safe_untrusted` says).
+    ///
+    /// # Errors
+    ///
+    /// [`BackendError::Failed`] when the chat template fails.
+    pub fn prompt_text(&self, request: &GenerationRequest<'_>) -> Result<String, BackendError> {
+        self.templated(request, false).map(|(text, _)| text)
+    }
+
+    /// The prompt token ids `begin` prefills for `request`.
+    ///
+    /// # Errors
+    ///
+    /// [`BackendError::Failed`] when the chat template fails, or, on the splice
+    /// path only (when G1 is on and a segment is forged), when a placeholder does
+    /// not survive the template exactly once. A clean prompt takes the canonical
+    /// path and its placeholders are not validated.
+    pub fn prompt_tokens(
+        &self,
+        request: &GenerationRequest<'_>,
+    ) -> Result<Vec<LlamaToken>, BackendError> {
+        let vocab = self.mc.model().vocab();
+        if !self.profile.safe_untrusted {
+            let prompt = self.prompt_text(request)?;
+            return Ok(vocab.tokenize(prompt.as_bytes(), true, true));
+        }
+        // Canonical first: the same text and tokens as with G1 off.
+        let canonical = self.prompt_text(request)?;
+        let canonical_tokens = vocab.tokenize(canonical.as_bytes(), true, true);
+        let (templated, placeholders) = self.templated(request, true)?;
+        let special: Vec<Vec<LlamaToken>> = placeholders
+            .iter()
+            .map(|(_, text)| vocab.tokenize(text.as_bytes(), false, true))
+            .collect();
+        let plain: Vec<Vec<LlamaToken>> = placeholders
+            .iter()
+            .map(|(_, text)| vocab.tokenize(text.as_bytes(), false, false))
+            .collect();
+        let specials = |tokens: &[LlamaToken]| {
+            tokens
+                .iter()
+                .filter(|t| {
+                    vocab.is_control(**t) || vocab.attr(**t).contains(LlamaTokenAttr::UserDefined)
+                })
+                .count()
+        };
+        let skeleton_tokens = vocab.tokenize(templated.as_bytes(), true, true);
+        let untrusted: Vec<&str> = placeholders.iter().map(|(_, t)| t.as_str()).collect();
+        if !is_forged(
+            &special,
+            &plain,
+            specials(&canonical_tokens),
+            specials(&skeleton_tokens),
+            &untrusted,
+            &self.user_defined,
+        ) {
+            return Ok(canonical_tokens);
+        }
+        let mut tokens = Vec::new();
+        for (i, (text, parse_special)) in splice_plan(&templated, &placeholders)?.iter().enumerate()
+        {
+            // BOS only on the very first part; later empty parts add nothing.
+            if i > 0 && text.is_empty() {
+                continue;
+            }
+            if *parse_special {
+                tokens.extend(vocab.tokenize(text.as_bytes(), i == 0, true));
+            } else {
+                // No piece of an untrusted part equals a user-defined token's text.
+                // Per-piece tokenization relies on a byte-level BPE vocabulary (Qwen); a
+                // SentencePiece vocabulary would add a prefix space to every piece.
+                for piece in split_user_defined(text, &self.user_defined) {
+                    tokens.extend(vocab.tokenize(piece.as_bytes(), false, false));
+                }
+            }
+        }
+        Ok(tokens)
+    }
+
+    /// The text of `tokens`, special tokens spelled out.
+    pub fn detokenize(&self, tokens: &[LlamaToken]) -> String {
+        let bytes = self.mc.model().vocab().detokenize(tokens, false, true);
+        String::from_utf8_lossy(&bytes).into_owned()
+    }
+
+    /// The templated, prefixed prompt. With `placeholders` on, each untrusted
+    /// segment is replaced by `"\u{E000}{i}\u{E001}"` and listed with its text.
+    fn templated(
+        &self,
+        request: &GenerationRequest<'_>,
+        placeholders: bool,
+    ) -> Result<(String, Vec<(String, String)>), BackendError> {
+        let mut found: Vec<(String, String)> = Vec::new();
+        let mut content = |segments: &[Segment]| -> String {
+            segments
+                .iter()
+                .map(|seg| match (placeholders, seg.trust) {
+                    (true, Trust::Untrusted) => {
+                        let ph = format!("\u{E000}{}\u{E001}", found.len());
+                        found.push((ph.clone(), seg.text.clone()));
+                        ph
+                    }
+                    _ => seg.text.clone(),
+                })
+                .collect()
+        };
+        let system = content(&request.prompt.system);
+        let user = content(&request.prompt.user);
         let message = |role: &str, content: &str| {
             LlamaChatMessage::new(role.to_owned(), content.to_owned())
                 .map_err(|e| BackendError::Failed(format!("chat message: {e}")))
         };
-        let chat = [
-            message("system", &request.prompt.system)?,
-            message("user", &request.prompt.user)?,
-        ];
+        let chat = [message("system", &system)?, message("user", &user)?];
         let templated = self
             .mc
             .model()
             .apply_chat_template(&self.template, &chat, true)
             .map_err(|e| BackendError::Failed(format!("chat template: {e}")))?;
-        Ok(render_prompt(&templated, request.thinking, &self.profile))
+        Ok((
+            render_prompt(&templated, request.thinking, &self.profile),
+            found,
+        ))
+    }
+}
+
+/// Splits `templated` at each placeholder into `(text, parse_special)` parts:
+/// engine text `true`, the untrusted text that replaces a placeholder `false`.
+/// Parts alternate engine, untrusted, ..., engine (engine parts may be empty).
+///
+/// # Errors
+///
+/// [`BackendError::Failed`] when a placeholder is missing, appears more than
+/// once, or the placeholders are out of order.
+fn splice_plan(
+    templated: &str,
+    placeholders: &[(String, String)],
+) -> Result<Vec<(String, bool)>, BackendError> {
+    let mut parts = Vec::with_capacity(placeholders.len() * 2 + 1);
+    let mut rest = templated;
+    for (placeholder, text) in placeholders {
+        match templated.matches(placeholder.as_str()).count() {
+            1 => {}
+            0 => {
+                return Err(BackendError::Failed(format!(
+                    "placeholder {placeholder:?} is missing from the templated prompt"
+                )))
+            }
+            n => {
+                return Err(BackendError::Failed(format!(
+                    "placeholder {placeholder:?} appears {n} times in the templated prompt"
+                )))
+            }
+        }
+        let Some((before, after)) = rest.split_once(placeholder.as_str()) else {
+            return Err(BackendError::Failed(format!(
+                "placeholder {placeholder:?} is out of order in the templated prompt"
+            )));
+        };
+        parts.push((before.to_owned(), true));
+        parts.push((text.clone(), false));
+        rest = after;
+    }
+    parts.push((rest.to_owned(), true));
+    move_trailing_blanks(&mut parts);
+    Ok(parts)
+}
+
+/// Whether an untrusted segment carries special-token text: some segment tokenizes
+/// differently with special parsing on (`special`) than off (`plain`), or the canonical
+/// prompt holds more CONTROL or USER_DEFINED special tokens than the skeleton with
+/// placeholders in place of the untrusted texts (`canonical_specials` against
+/// `skeleton_specials`; this catches a token split across adjacent segments), or an
+/// untrusted text (`untrusted`) contains the text of a user-defined token
+/// (`user_defined`). User-defined tokens (Qwen3.5's `</think>` and tool-call tags)
+/// tokenize the same with parsing on and off, so the first check cannot see them (see
+/// `ModelProfile::safe_untrusted`).
+fn is_forged(
+    special: &[Vec<LlamaToken>],
+    plain: &[Vec<LlamaToken>],
+    canonical_specials: usize,
+    skeleton_specials: usize,
+    untrusted: &[&str],
+    user_defined: &[String],
+) -> bool {
+    special.iter().zip(plain).any(|(s, p)| s != p)
+        || canonical_specials > skeleton_specials
+        || untrusted
+            .iter()
+            .any(|u| user_defined.iter().any(|t| u.contains(t.as_str())))
+}
+
+/// The text of every USER_DEFINED token of `vocab`, read from the token attributes
+/// (`LlamaTokenAttr::UserDefined`). Non-UTF-8 texts are skipped, see
+/// [`usable_user_defined`] for the rest.
+fn user_defined_tokens(vocab: &LlamaVocab<'_>) -> Vec<String> {
+    usable_user_defined(
+        (0..vocab.n_tokens())
+            .map(LlamaToken::new)
+            .filter(|t| vocab.attr(*t).contains(LlamaTokenAttr::UserDefined))
+            .filter_map(|t| vocab.text(t).and_then(|c| c.to_str().ok())),
+    )
+}
+
+/// The token texts G1 can act on: those of at least two characters. A one-character
+/// token cannot be cut in two, and keeping it would make `is_forged` flag every prompt
+/// that holds that character and give up the canonical (G1-off identical) tokenization
+/// for nothing.
+fn usable_user_defined<'a>(texts: impl IntoIterator<Item = &'a str>) -> Vec<String> {
+    texts
+        .into_iter()
+        .filter(|s| s.chars().count() >= 2)
+        .map(str::to_owned)
+        .collect()
+}
+
+/// Splits `text` into pieces, none of which contains the text of a token of
+/// `user_defined`: every occurrence is cut in the middle (at a character boundary),
+/// so `"</think>"` becomes `"</th"` and `"ink>"`. The pieces concatenate to `text`.
+/// A token of a single character cannot be cut and is left alone.
+fn split_user_defined(text: &str, user_defined: &[String]) -> Vec<String> {
+    let mut cuts: Vec<usize> = Vec::new();
+    for (start, _) in text.char_indices() {
+        for token in user_defined {
+            if token.chars().count() >= 2 && text[start..].starts_with(token.as_str()) {
+                let half = token.chars().count() / 2;
+                let mid = token
+                    .char_indices()
+                    .nth(half)
+                    .map_or(token.len(), |(i, _)| i);
+                cuts.push(start + mid);
+            }
+        }
+    }
+    cuts.sort_unstable();
+    cuts.dedup();
+    let mut pieces = Vec::with_capacity(cuts.len() + 1);
+    let mut from = 0;
+    for cut in cuts {
+        pieces.push(text[from..cut].to_owned());
+        from = cut;
+    }
+    pieces.push(text[from..].to_owned());
+    pieces.retain(|p| !p.is_empty());
+    pieces
+}
+
+/// Moves the trailing run of horizontal whitespace (spaces and tabs after the last
+/// newline, if any) of each engine part that precedes an untrusted part to the start of
+/// that untrusted part. Tokenized apart, the space would be a token of its own and the
+/// merge of the space with the first word (" Ada") would be lost, so G1 would change
+/// ordinary prompts. Whitespace holds no special-token text, so it is safe in an
+/// untrusted part.
+fn move_trailing_blanks(parts: &mut [(String, bool)]) {
+    for i in (1..parts.len()).step_by(2) {
+        let engine = &mut parts[i - 1].0;
+        let line = engine.rfind('\n').map_or(0, |n| n + 1);
+        let blanks = line + engine[line..].trim_end_matches([' ', '\t']).len();
+        if blanks < engine.len() {
+            let moved = engine.split_off(blanks);
+            parts[i].0.insert_str(0, &moved);
+        }
     }
 }
 
@@ -291,12 +578,7 @@ impl Backend for LlamaGenerator {
         &'a mut self,
         request: &GenerationRequest<'_>,
     ) -> Result<Box<dyn Decoder + 'a>, BackendError> {
-        let prompt = self.prompt_text(request)?;
-        let tokens = self
-            .mc
-            .model()
-            .vocab()
-            .tokenize(prompt.as_bytes(), true, true);
+        let tokens = self.prompt_tokens(request)?;
         if tokens.is_empty() {
             return Err(BackendError::Failed("prompt tokenized to nothing".into()));
         }
@@ -563,6 +845,7 @@ mod tests {
             answer_sampling_on: None,
             n_ctx: None,
             seed: 42,
+            safe_untrusted: false,
         }
     }
 
@@ -691,5 +974,190 @@ answer_sampling_on = { temperature = 0.5, top_p = 0.9, top_k = 10, presence_pena
         let mut s = Utf8Stream::default();
         assert_eq!(s.push(b"a\xFFb"), "a\u{FFFD}b");
         assert_eq!(s.push(b"c"), "c");
+    }
+
+    fn ph(i: usize) -> String {
+        format!("\u{E000}{i}\u{E001}")
+    }
+
+    #[test]
+    fn splice_plan_alternates_engine_and_untrusted_parts() {
+        let templated = format!("A{}B{}C", ph(0), ph(1));
+        let plan = splice_plan(
+            &templated,
+            &[(ph(0), "x<|im_start|>".into()), (ph(1), "y".into())],
+        )
+        .unwrap();
+        assert_eq!(
+            plan,
+            vec![
+                ("A".to_owned(), true),
+                ("x<|im_start|>".to_owned(), false),
+                ("B".to_owned(), true),
+                ("y".to_owned(), false),
+                ("C".to_owned(), true),
+            ]
+        );
+    }
+
+    #[test]
+    fn splice_plan_moves_the_space_before_a_name_into_the_untrusted_part() {
+        let templated = format!("It is called {}.", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "Ada".into())]).unwrap();
+        assert_eq!(
+            plan,
+            vec![
+                ("It is called".to_owned(), true),
+                (" Ada".to_owned(), false),
+                (".".to_owned(), true),
+            ]
+        );
+    }
+
+    #[test]
+    fn splice_plan_moves_nothing_after_a_newline() {
+        let templated = format!("Line\n{}", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "x".into())]).unwrap();
+        assert_eq!(plan[0], ("Line\n".to_owned(), true));
+        assert_eq!(plan[1], ("x".to_owned(), false));
+    }
+
+    #[test]
+    fn splice_plan_moves_only_the_blanks_after_the_last_newline() {
+        let templated = format!("Line\n  \t{}", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "x".into())]).unwrap();
+        assert_eq!(plan[0], ("Line\n".to_owned(), true));
+        assert_eq!(plan[1], ("  \tx".to_owned(), false));
+        // Blanks only, no newline: all of them move; multibyte text before stays whole.
+        let templated = format!("Grüße  {}", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "x".into())]).unwrap();
+        assert_eq!(plan[0], ("Grüße".to_owned(), true));
+        assert_eq!(plan[1], ("  x".to_owned(), false));
+    }
+
+    fn t(ids: &[i32]) -> Vec<LlamaToken> {
+        ids.iter().map(|i| LlamaToken::new(*i)).collect()
+    }
+
+    #[test]
+    fn forged_is_false_when_nothing_differs_and_the_counts_match() {
+        let seg = [t(&[1, 2])];
+        assert!(!is_forged(&seg, &seg, 3, 3, &["hello"], &[]));
+        assert!(!is_forged(&[], &[], 0, 0, &[], &[]));
+    }
+
+    #[test]
+    fn forged_when_a_segment_tokenizes_differently_with_special_parsing() {
+        assert!(is_forged(&[t(&[9])], &[t(&[1, 2, 3])], 3, 3, &[], &[]));
+        // One forged segment among clean ones is enough.
+        assert!(is_forged(
+            &[t(&[1]), t(&[9])],
+            &[t(&[1]), t(&[4, 5])],
+            3,
+            3,
+            &[],
+            &[]
+        ));
+    }
+
+    #[test]
+    fn forged_when_the_prompt_holds_more_special_tokens_than_the_skeleton() {
+        let seg = [t(&[1])];
+        assert!(is_forged(&seg, &seg, 4, 3, &[], &[]));
+        // Fewer is not a forgery (nothing was added).
+        assert!(!is_forged(&seg, &seg, 2, 3, &[], &[]));
+    }
+
+    fn user_defined() -> Vec<String> {
+        ["<think>", "</think>", "<tool_call>"]
+            .map(String::from)
+            .to_vec()
+    }
+
+    #[test]
+    fn forged_when_an_untrusted_text_contains_a_user_defined_token() {
+        let seg = [t(&[1])];
+        let ud = user_defined();
+        assert!(is_forged(&seg, &seg, 3, 3, &["hi", "a </think> b"], &ud));
+        assert!(!is_forged(&seg, &seg, 3, 3, &["hi", "a think b"], &ud));
+        // Half a token is not the token.
+        assert!(!is_forged(&seg, &seg, 3, 3, &["</thi"], &ud));
+    }
+
+    #[test]
+    fn split_user_defined_cuts_each_occurrence_in_two_and_keeps_the_text() {
+        let ud = user_defined();
+        let text = "a </think> b <think><tool_call> äß </think>";
+        let pieces = split_user_defined(text, &ud);
+        assert_eq!(pieces.concat(), text);
+        assert!(pieces[0].ends_with("</th") && pieces[1].starts_with("ink>"));
+        for piece in &pieces {
+            assert!(!piece.is_empty());
+            assert!(ud.iter().all(|t| !piece.contains(t.as_str())), "{piece:?}");
+        }
+    }
+
+    #[test]
+    fn a_one_character_user_defined_token_is_dropped_and_forges_nothing() {
+        let ud = usable_user_defined(["<think>", "|", "", "é"]);
+        assert_eq!(ud, ["<think>"]);
+        let seg = [t(&[1])];
+        assert!(!is_forged(&seg, &seg, 3, 3, &["a | b é"], &ud));
+    }
+
+    #[test]
+    fn split_user_defined_leaves_clean_text_whole() {
+        assert_eq!(
+            split_user_defined("no tags here", &user_defined()),
+            ["no tags here"]
+        );
+        assert!(split_user_defined("", &user_defined()).is_empty());
+        assert_eq!(split_user_defined("x", &[]), ["x"]);
+    }
+
+    #[test]
+    fn split_user_defined_handles_overlapping_and_nested_occurrences() {
+        let ud: Vec<String> = ["<a>", "a><b>"].map(String::from).to_vec();
+        let text = "<<a><b>>";
+        let pieces = split_user_defined(text, &ud);
+        assert_eq!(pieces.concat(), text);
+        for piece in &pieces {
+            assert!(ud.iter().all(|t| !piece.contains(t.as_str())), "{piece:?}");
+        }
+        // A one-character token cannot be cut and is left alone.
+        assert_eq!(split_user_defined("a|b", &["|".to_owned()]), ["a|b"]);
+    }
+
+    #[test]
+    fn splice_plan_errors_on_a_missing_placeholder() {
+        let err = splice_plan("no placeholder here", &[(ph(0), "x".into())]);
+        assert!(matches!(err, Err(BackendError::Failed(_))));
+    }
+
+    #[test]
+    fn splice_plan_errors_on_a_repeated_placeholder() {
+        let templated = format!("{}-{}", ph(0), ph(0));
+        let err = splice_plan(&templated, &[(ph(0), "x".into())]);
+        assert!(matches!(err, Err(BackendError::Failed(_))));
+    }
+
+    #[test]
+    fn splice_plan_keeps_multibyte_text_at_boundaries() {
+        let templated = format!("Grüße⟦{}⟧Grüße", ph(0));
+        let plan = splice_plan(&templated, &[(ph(0), "Füße".into())]).unwrap();
+        assert_eq!(
+            plan,
+            vec![
+                ("Grüße⟦".to_owned(), true),
+                ("Füße".to_owned(), false),
+                ("⟧Grüße".to_owned(), true),
+            ]
+        );
+    }
+
+    #[test]
+    fn models_toml_safe_untrusted_defaults_off() {
+        let file = ModelsFile::parse(include_str!("../../models.toml")).unwrap();
+        assert!(!file.models[0].profile.safe_untrusted);
     }
 }

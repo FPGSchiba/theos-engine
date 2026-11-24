@@ -11,6 +11,7 @@ pub mod embed;
 pub mod knowledge;
 pub mod lore;
 pub mod memory;
+pub mod moderation;
 pub mod reply;
 pub mod retrieval;
 pub mod worker;
@@ -29,9 +30,17 @@ pub use driver::{
     NpcParts, NpcRequest, NpcResponse, StopReason,
 };
 pub use memory::{MemoryProbe, NoProbe};
+pub use moderation::{
+    AllowAll, ContentModerator, KnnEvidence, KnnModerator, KnnThresholds, MIN_PIECE_WORDS,
+    ModerationCategory, ModerationError, ModerationPipeline, ModerationSource, ModerationVerdict,
+    Nearest, SourceThreshold, moderation_pieces,
+};
 
-pub use context::{Context, ContextOptions, Prompt, assemble};
-pub use embed::{EmbedError, EmbedInput, Embedder, cosine};
+pub use context::{
+    Context, ContextOptions, PlayerTurn, Prompt, SPOTLIGHT_CLOSE, SPOTLIGHT_OPEN, SPOTLIGHT_RULE,
+    Segment, Trust, assemble,
+};
+pub use embed::{EmbedError, EmbedInput, Embedder, SharedEmbedder, cosine};
 pub use knowledge::{Visible, visible};
 pub use lore::{
     Corpus, CorpusError, HolderKind, Lens, LoreKind, LoreRecord, PersonaLayer, RecordId, Speaker,
