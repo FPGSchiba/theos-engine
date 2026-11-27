@@ -129,3 +129,7 @@ The hook runs `cargo fmt --all` before each commit to keep CI formatting checks 
 
 - The workspace uses `resolver = "2"` and shared internal path dependencies in root `Cargo.toml`.
 - `.gitignore` excludes `target` and IDE directories, and documents the policy to keep `Cargo.lock` committed.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
